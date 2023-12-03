@@ -1,0 +1,39 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>image/auth_manager.png</file>
+        <file>image/calculate.png</file>
+        <file>image/input.png</file>
+        <file>image/output.png</file>
+        <file>image/prj_manager.png</file>
+        <file>image/closeWindow.jpg</file>
+        <file>image/maxWindow.jpg</file>
+        <file>image/minWindow.jpg</file>
+        <file>image/rect_elbow.jpg</file>
+        <file>image/rect_pipe.jpg</file>
+        <file>image/reducer.jpg</file>
+        <file>image/round_pipe.jpg</file>
+        <file>image/round_reducer.jpg</file>
+        <file>image/static_box.jpg</file>
+        <file>image/tee_formula.jpg</file>
+        <file>image/tee_formula_descr1.jpg</file>
+        <file>image/tee_formula_descr2.jpg</file>
+        <file>image/tee.png</file>
+        <file>image/Q.jpg</file>
+        <file>image/Q1.jpg</file>
+        <file>image/duct_with_multi_ranc.png</file>
+        <file>image/damper_desci2.jpg</file>
+        <file>image/damper_descri1.jpg</file>
+        <file>image/damper_formula.jpg</file>
+        <file>image/reducer_formula.jpg</file>
+        <file>image/terminal_refl_formula_descr1.jpg</file>
+        <file>image/terminal_refl_formula_descr2.jpg</file>
+        <file>image/higer425.png</file>
+        <file>image/lower425.png</file>
+        <file>image/noFurniture.png</file>
+        <file>image/open.png</file>
+        <file>image/rainFan.png</file>
+        <file>image/slotFan.png</file>
+        <file>image/refl.jpg</file>
+        <file>image/logo.png</file>
+    </qresource>
+</RCC>
