@@ -22,6 +22,7 @@
 #include "inputDialog/dialog_elbow.h"
 #include "roomDefineForm/form_room_define.h"
 #include "roomDefineForm/dialog_add_zhushuqu.h"
+#include "roomCal/room_cal_basewidget.h"
 /**窗口类**/
 #include <QDebug>
 #include <QVector>
@@ -4450,9 +4451,24 @@ void Widget::upDateTreeItem7(QTreeWidgetItem *item,QString name,int num) //
     ui->treeWidget->addTopLevelItem(treeitemfj);
     for(int i=0;i<num;i++)
     {
+        // 创建页面对象
+        room_cal_baseWidget *page = new room_cal_baseWidget;
+
+        // 将页面添加到堆栈窗口部件
+        ui->stackedWidget->addWidget(page);
+
         // 这里的主风管还要插入对应page页面
         QTreeWidgetItem *treeitemfg=new QTreeWidgetItem(treeitemfj,QStringList("主风管"+QString::number(i+1)));
         ui->treeWidget->addTopLevelItem(treeitemfg);
+
+        // 关联页面和子项
+        connect(ui->treeWidget, &QTreeWidget::itemClicked, this, [=](QTreeWidgetItem *itemClicked, int column) {
+            if (itemClicked == treeitemfg)
+            {
+                // 设置当前页面为对应的页面
+                ui->stackedWidget->setCurrentWidget(page);
+            }
+        });
     }
 
 }

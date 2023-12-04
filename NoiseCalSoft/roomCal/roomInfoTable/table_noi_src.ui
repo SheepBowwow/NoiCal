@@ -26,7 +26,7 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(255, 255, 255);</string>
+   <string notr="true">background-color: rgb(235, 235, 235);</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1,2">
    <property name="spacing">

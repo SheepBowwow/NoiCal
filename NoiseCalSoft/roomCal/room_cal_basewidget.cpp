@@ -1,6 +1,7 @@
 #include "room_cal_basewidget.h"
 #include "ui_room_cal_basewidget.h"
 #include "roomCal/roomInfoTable/table_noi_src.h"
+#include "roomInfoTable/table_atten.h"
 #include <QVBoxLayout>
 
 room_cal_baseWidget::room_cal_baseWidget(QWidget *parent) :
@@ -14,10 +15,10 @@ room_cal_baseWidget::room_cal_baseWidget(QWidget *parent) :
 
 //    // 设置垂直方向上的间距为10像素
     scrollLayout->setSpacing(30);
-    scrollLayout->setContentsMargins(0, 15, 0, 0);
-    Table_noi_src* table1 = new Table_noi_src;
+    scrollLayout->setContentsMargins(0, 15, 0, 15);
+    Table_atten* table1 = new Table_atten;
     scrollLayout->addWidget(table1);
-    Table_noi_src* table2 = new Table_noi_src;
+    Table_atten* table2 = new Table_atten;
     scrollLayout->addWidget(table2);
 
     Table_noi_src* table3 = new Table_noi_src;

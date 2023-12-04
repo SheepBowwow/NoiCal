@@ -7,14 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>1031</width>
-    <height>199</height>
+    <height>191</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(255, 255, 255);</string>
+   <string notr="true">background-color: rgb(235, 235, 235);</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1,3">
    <property name="spacing">
@@ -139,12 +139,12 @@ border-bottom:1px solid black;
        <string>部件名称:</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_10">
+     <widget class="QComboBox" name="comboBox_3">
       <property name="geometry">
        <rect>
-        <x>880</x>
+        <x>870</x>
         <y>2</y>
-        <width>141</width>
+        <width>131</width>
         <height>31</height>
        </rect>
       </property>
@@ -645,7 +645,7 @@ border-right:none;
 </string>
         </property>
         <property name="text">
-         <string>噪声量(dB)</string>
+         <string>阀门后噪音量(dB)</string>
         </property>
        </widget>
       </item>
@@ -921,18 +921,22 @@ border-bottom:none;</string>
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLineEdit" name="lineEdit_26">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+       <widget class="QLabel" name="label_21">
+        <property name="font">
+         <font>
+          <family>Microsoft YaHei</family>
+          <pointsize>10</pointsize>
+         </font>
         </property>
         <property name="styleSheet">
          <string notr="true">border:1px solid black;
+border-left:2px solid black;
 border-right:none;
 border-bottom:none;
-border-left:2px solid black;</string>
+</string>
+        </property>
+        <property name="text">
+         <string>阀门气流噪声(dB)</string>
         </property>
        </widget>
       </item>

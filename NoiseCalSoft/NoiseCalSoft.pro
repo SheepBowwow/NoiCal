@@ -38,6 +38,8 @@ SOURCES += \
     inputbasedialog.cpp \
     main.cpp \
     roomCal/roomInfoTable/table_airflow_noi.cpp \
+    roomCal/roomInfoTable/table_atten.cpp \
+    roomCal/roomInfoTable/table_atten_noi.cpp \
     roomCal/roomInfoTable/table_noi_src.cpp \
     roomCal/room_cal_basewidget.cpp \
     roomDefineForm/dialog_add_zhushuqu.cpp \
@@ -70,6 +72,8 @@ HEADERS += \
     inputDialog/dialog_vav_terminal.h \
     inputbasedialog.h \
     roomCal/roomInfoTable/table_airflow_noi.h \
+    roomCal/roomInfoTable/table_atten.h \
+    roomCal/roomInfoTable/table_atten_noi.h \
     roomCal/roomInfoTable/table_noi_src.h \
     roomCal/room_cal_basewidget.h \
     roomDefineForm/dialog_add_zhushuqu.h \
@@ -98,6 +102,8 @@ FORMS += \
     inputDialog/dialog_tee.ui \
     inputDialog/dialog_vav_terminal.ui \
     roomCal/roomInfoTable/table_airflow_noi.ui \
+    roomCal/roomInfoTable/table_atten.ui \
+    roomCal/roomInfoTable/table_atten_noi.ui \
     roomCal/roomInfoTable/table_noi_src.ui \
     roomCal/room_cal_basewidget.ui \
     roomDefineForm/dialog_add_zhushuqu.ui \
