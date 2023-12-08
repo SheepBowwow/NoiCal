@@ -2140,7 +2140,7 @@ color : rgb(105, 105, 105);
 }</string>
        </property>
        <property name="text">
-        <string>回风箱+格栅</string>
+        <string>静压箱+格栅</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignBottom|Qt::AlignHCenter</set>

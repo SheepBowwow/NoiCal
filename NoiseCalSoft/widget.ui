@@ -583,7 +583,7 @@ font-size: 13px;
 }</string>
    </property>
    <property name="currentIndex">
-    <number>28</number>
+    <number>30</number>
    </property>
    <widget class="QWidget" name="page_login">
     <layout class="QGridLayout" name="gridLayout" rowstretch="2,5,4">
@@ -1625,8 +1625,8 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>167</width>
-        <height>43</height>
+        <width>101</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_15">
@@ -1657,18 +1657,6 @@ background-color : rgb(105, 105, 105);
        </item>
        <item>
         <widget class="QLabel" name="label_11">
-         <property name="minimumSize">
-          <size>
-           <width>139</width>
-           <height>41</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>120</width>
-           <height>41</height>
-          </size>
-         </property>
          <property name="font">
           <font>
            <family>Microsoft YaHei</family>
@@ -1683,7 +1671,7 @@ color : rgb(105, 105, 105);
 }</string>
          </property>
          <property name="text">
-          <string>风机噪音</string>
+          <string>风机</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -1894,7 +1882,7 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>221</width>
+        <width>161</width>
         <height>45</height>
        </rect>
       </property>
@@ -1940,7 +1928,7 @@ color : rgb(105, 105, 105);
 }</string>
          </property>
          <property name="text">
-          <string>风机盘管噪音</string>
+          <string>风机盘管</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -2147,7 +2135,7 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>191</width>
+        <width>131</width>
         <height>45</height>
        </rect>
       </property>
@@ -2193,7 +2181,7 @@ color : rgb(105, 105, 105);
 }</string>
          </property>
          <property name="text">
-          <string>空调器噪音</string>
+          <string>空调器</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -3171,7 +3159,7 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>372</width>
+        <width>251</width>
         <height>45</height>
        </rect>
       </property>
@@ -3217,7 +3205,7 @@ color : rgb(105, 105, 105);
 }</string>
          </property>
          <property name="text">
-          <string>布风器+散流器气流噪音</string>
+          <string>布风器+散流器</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -3424,7 +3412,7 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>299</width>
+        <width>181</width>
         <height>45</height>
        </rect>
       </property>
@@ -3470,7 +3458,7 @@ color : rgb(105, 105, 105);
 }</string>
          </property>
          <property name="text">
-          <string>抽/送风头气流噪音</string>
+          <string>抽/送风头</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -3482,7 +3470,7 @@ color : rgb(105, 105, 105);
      <widget class="QPushButton" name="pushButton_pump_table">
       <property name="geometry">
        <rect>
-        <x>330</x>
+        <x>210</x>
         <y>15</y>
         <width>111</width>
         <height>41</height>
@@ -3504,7 +3492,7 @@ color : rgb(105, 105, 105);
      <widget class="QPushButton" name="pushButton_send_table">
       <property name="geometry">
        <rect>
-        <x>450</x>
+        <x>330</x>
         <y>15</y>
         <width>111</width>
         <height>41</height>
@@ -3913,7 +3901,7 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>340</width>
+        <width>221</width>
         <height>45</height>
        </rect>
       </property>
@@ -3959,7 +3947,7 @@ color : rgb(105, 105, 105);
 }</string>
          </property>
          <property name="text">
-          <string>回风箱+格栅气流噪音</string>
+          <string>静压箱+格栅</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -4258,7 +4246,7 @@ background:#9DC6E6;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>348</width>
+        <width>221</width>
         <height>45</height>
        </rect>
       </property>
@@ -4304,7 +4292,7 @@ color : rgb(105, 105, 105);
 }</string>
          </property>
          <property name="text">
-          <string>置换通风末端气流噪音</string>
+          <string>置换通风末端</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -4511,7 +4499,7 @@ background:#9DC6E6;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>348</width>
+        <width>231</width>
         <height>45</height>
        </rect>
       </property>
@@ -4557,7 +4545,7 @@ color : rgb(105, 105, 105);
 }</string>
          </property>
          <property name="text">
-          <string>其他送风末端气流噪音</string>
+          <string>其他送风末端</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -5270,7 +5258,7 @@ background:#9DC6E6;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>171</width>
+        <width>101</width>
         <height>45</height>
        </rect>
       </property>
@@ -5316,7 +5304,7 @@ color : rgb(105, 105, 105);
 }</string>
          </property>
          <property name="text">
-          <string>三通衰减</string>
+          <string>三通</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -5523,7 +5511,7 @@ background:#9DC6E6;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>171</width>
+        <width>101</width>
         <height>45</height>
        </rect>
       </property>
@@ -5569,7 +5557,7 @@ color : rgb(105, 105, 105);
 }</string>
          </property>
          <property name="text">
-          <string>直管衰减</string>
+          <string>直管</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -5776,7 +5764,7 @@ background:#9DC6E6;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>161</width>
+        <width>101</width>
         <height>45</height>
        </rect>
       </property>
@@ -5822,7 +5810,7 @@ color : rgb(105, 105, 105);
 }</string>
          </property>
          <property name="text">
-          <string>弯头衰减</string>
+          <string>弯头</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -6029,7 +6017,7 @@ background:#9DC6E6;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>161</width>
+        <width>101</width>
         <height>45</height>
        </rect>
       </property>
@@ -6075,7 +6063,7 @@ color : rgb(105, 105, 105);
 }</string>
          </property>
          <property name="text">
-          <string>变径衰减</string>
+          <string>变径</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -6190,7 +6178,7 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>201</width>
+        <width>141</width>
         <height>45</height>
        </rect>
       </property>
@@ -6236,7 +6224,7 @@ color : rgb(105, 105, 105);
 }</string>
          </property>
          <property name="text">
-          <string>消音器衰减</string>
+          <string>消音器</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -6248,7 +6236,7 @@ color : rgb(105, 105, 105);
      <widget class="QPushButton" name="pushButton_circular_silencer_table">
       <property name="geometry">
        <rect>
-        <x>230</x>
+        <x>170</x>
         <y>13</y>
         <width>161</width>
         <height>41</height>
@@ -6994,7 +6982,7 @@ color: white;
      <widget class="QPushButton" name="pushButton_rect_silencer_table">
       <property name="geometry">
        <rect>
-        <x>400</x>
+        <x>340</x>
         <y>13</y>
         <width>161</width>
         <height>41</height>
@@ -7016,7 +7004,7 @@ color: white;
      <widget class="QPushButton" name="pushButton_circular_silencerEb_table">
       <property name="geometry">
        <rect>
-        <x>580</x>
+        <x>520</x>
         <y>13</y>
         <width>181</width>
         <height>41</height>
@@ -7038,7 +7026,7 @@ color: white;
      <widget class="QPushButton" name="pushButton_rect_silencerEb_table">
       <property name="geometry">
        <rect>
-        <x>780</x>
+        <x>720</x>
         <y>13</y>
         <width>181</width>
         <height>41</height>
@@ -7172,7 +7160,7 @@ background:#9DC6E6;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>372</width>
+        <width>251</width>
         <height>45</height>
        </rect>
       </property>
@@ -7218,7 +7206,7 @@ color : rgb(105, 105, 105);
 }</string>
          </property>
          <property name="text">
-          <string>布风器+散流器末端衰减</string>
+          <string>布风器+散流器</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -7333,7 +7321,7 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>299</width>
+        <width>181</width>
         <height>45</height>
        </rect>
       </property>
@@ -7379,7 +7367,7 @@ color : rgb(105, 105, 105);
 }</string>
          </property>
          <property name="text">
-          <string>抽/送风头末端衰减</string>
+          <string>抽/送风头</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -7391,7 +7379,7 @@ color : rgb(105, 105, 105);
      <widget class="QPushButton" name="pushButton_pump_terminal_atten_table">
       <property name="geometry">
        <rect>
-        <x>320</x>
+        <x>210</x>
         <y>15</y>
         <width>111</width>
         <height>41</height>
@@ -7413,7 +7401,7 @@ color : rgb(105, 105, 105);
      <widget class="QPushButton" name="pushButton_send_terminal_atten_table">
       <property name="geometry">
        <rect>
-        <x>440</x>
+        <x>330</x>
         <y>15</y>
         <width>111</width>
         <height>41</height>
@@ -7822,7 +7810,7 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>340</width>
+        <width>221</width>
         <height>45</height>
        </rect>
       </property>
@@ -7868,7 +7856,7 @@ color : rgb(105, 105, 105);
 }</string>
          </property>
          <property name="text">
-          <string>回风箱+格栅末端衰减</string>
+          <string>静压箱+格栅</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -8167,7 +8155,7 @@ background:#9DC6E6;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>348</width>
+        <width>221</width>
         <height>45</height>
        </rect>
       </property>
@@ -8213,7 +8201,7 @@ color : rgb(105, 105, 105);
 }</string>
          </property>
          <property name="text">
-          <string>置换通风末端末端衰减</string>
+          <string>置换通风末端</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -8420,7 +8408,7 @@ background:#9DC6E6;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>348</width>
+        <width>231</width>
         <height>45</height>
        </rect>
       </property>
@@ -8466,7 +8454,7 @@ color : rgb(105, 105, 105);
 }</string>
          </property>
          <property name="text">
-          <string>其他送风末端末端衰减</string>
+          <string>其他送风末端</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -8673,7 +8661,7 @@ background:#9DC6E6;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>436</width>
+        <width>251</width>
         <height>45</height>
        </rect>
       </property>
@@ -8719,7 +8707,7 @@ color : rgb(105, 105, 105);
 }</string>
          </property>
          <property name="text">
-          <string>布风器+散流器末端反射衰减</string>
+          <string>布风器+散流器</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -8834,7 +8822,7 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>363</width>
+        <width>181</width>
         <height>45</height>
        </rect>
       </property>
@@ -8880,7 +8868,7 @@ color : rgb(105, 105, 105);
 }</string>
          </property>
          <property name="text">
-          <string>抽/送风头末端反射衰减</string>
+          <string>抽/送风头</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -8892,8 +8880,8 @@ color : rgb(105, 105, 105);
      <widget class="QPushButton" name="pushButton_pump_terminal_refl_table">
       <property name="geometry">
        <rect>
-        <x>390</x>
-        <y>15</y>
+        <x>200</x>
+        <y>14</y>
         <width>111</width>
         <height>41</height>
        </rect>
@@ -8914,8 +8902,8 @@ color : rgb(105, 105, 105);
      <widget class="QPushButton" name="pushButton_send_terminal_refl_table">
       <property name="geometry">
        <rect>
-        <x>510</x>
-        <y>15</y>
+        <x>320</x>
+        <y>14</y>
         <width>111</width>
         <height>41</height>
        </rect>
@@ -9323,7 +9311,7 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>404</width>
+        <width>231</width>
         <height>45</height>
        </rect>
       </property>
@@ -9369,7 +9357,7 @@ color : rgb(105, 105, 105);
 }</string>
          </property>
          <property name="text">
-          <string>回风箱+格栅末端反射衰减</string>
+          <string>静压箱+格栅</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -9668,7 +9656,7 @@ background:#9DC6E6;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>351</width>
+        <width>231</width>
         <height>45</height>
        </rect>
       </property>
@@ -9714,7 +9702,7 @@ color : rgb(105, 105, 105);
 }</string>
          </property>
          <property name="text">
-          <string>置换通风末端反射衰减</string>
+          <string>置换通风末端</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -9921,7 +9909,7 @@ background:#9DC6E6;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>416</width>
+        <width>231</width>
         <height>45</height>
        </rect>
       </property>
@@ -9967,7 +9955,7 @@ color : rgb(105, 105, 105);
 }</string>
          </property>
          <property name="text">
-          <string>其他送风末端末端反射衰减</string>
+          <string>其他送风末端</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>

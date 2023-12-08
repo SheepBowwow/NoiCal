@@ -1206,7 +1206,7 @@ border: 1px solid #DCDCDC;
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>161</width>
+      <width>101</width>
       <height>45</height>
      </rect>
     </property>
@@ -1252,7 +1252,7 @@ color : rgb(105, 105, 105);
 }</string>
        </property>
        <property name="text">
-        <string>弯头衰减</string>
+        <string>弯头</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignBottom|Qt::AlignHCenter</set>

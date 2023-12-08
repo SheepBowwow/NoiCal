@@ -1429,8 +1429,8 @@ color: white;
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>167</width>
-      <height>43</height>
+      <width>101</width>
+      <height>45</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_15">
@@ -1461,18 +1461,6 @@ background-color : rgb(105, 105, 105);
      </item>
      <item>
       <widget class="QLabel" name="label_15">
-       <property name="minimumSize">
-        <size>
-         <width>139</width>
-         <height>41</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>120</width>
-         <height>41</height>
-        </size>
-       </property>
        <property name="font">
         <font>
          <family>Microsoft YaHei</family>
@@ -1487,7 +1475,7 @@ color : rgb(105, 105, 105);
 }</string>
        </property>
        <property name="text">
-        <string>风机噪音</string>
+        <string>风机</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignBottom|Qt::AlignHCenter</set>

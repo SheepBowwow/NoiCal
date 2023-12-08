@@ -37,11 +37,8 @@ SOURCES += \
     inputDialog/dialog_vav_terminal.cpp \
     inputbasedialog.cpp \
     main.cpp \
-    roomCal/roomInfoTable/table_airflow_noi.cpp \
-    roomCal/roomInfoTable/table_atten.cpp \
-    roomCal/roomInfoTable/table_atten_noi.cpp \
-    roomCal/roomInfoTable/table_noi_src.cpp \
     roomCal/room_cal_basewidget.cpp \
+    roomCal/roomcaltable.cpp \
     roomDefineForm/dialog_add_zhushuqu.cpp \
     roomDefineForm/dialog_addroom.cpp \
     roomDefineForm/form_room_define.cpp \
@@ -71,11 +68,8 @@ HEADERS += \
     inputDialog/dialog_tee.h \
     inputDialog/dialog_vav_terminal.h \
     inputbasedialog.h \
-    roomCal/roomInfoTable/table_airflow_noi.h \
-    roomCal/roomInfoTable/table_atten.h \
-    roomCal/roomInfoTable/table_atten_noi.h \
-    roomCal/roomInfoTable/table_noi_src.h \
     roomCal/room_cal_basewidget.h \
+    roomCal/roomcaltable.h \
     roomDefineForm/dialog_add_zhushuqu.h \
     roomDefineForm/dialog_addroom.h \
     roomDefineForm/form_room_define.h \
@@ -101,11 +95,8 @@ FORMS += \
     inputDialog/dialog_static_box.ui \
     inputDialog/dialog_tee.ui \
     inputDialog/dialog_vav_terminal.ui \
-    roomCal/roomInfoTable/table_airflow_noi.ui \
-    roomCal/roomInfoTable/table_atten.ui \
-    roomCal/roomInfoTable/table_atten_noi.ui \
-    roomCal/roomInfoTable/table_noi_src.ui \
     roomCal/room_cal_basewidget.ui \
+    roomCal/roomcaltable.ui \
     roomDefineForm/dialog_add_zhushuqu.ui \
     roomDefineForm/dialog_addroom.ui \
     roomDefineForm/form_room_define.ui \

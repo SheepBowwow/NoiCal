@@ -1423,7 +1423,7 @@ color: white;
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>191</width>
+      <width>141</width>
       <height>45</height>
      </rect>
     </property>
@@ -1469,7 +1469,7 @@ color : rgb(105, 105, 105);
 }</string>
        </property>
        <property name="text">
-        <string>空调器噪音</string>
+        <string>空调器</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignBottom|Qt::AlignHCenter</set>

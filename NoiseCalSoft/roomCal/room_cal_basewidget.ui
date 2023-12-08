@@ -299,23 +299,10 @@ border:1px solid black;
 
 }</string>
    </property>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="pushButton_add">
     <property name="geometry">
      <rect>
-      <x>1140</x>
-      <y>5</y>
-      <width>21</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>-</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>1110</x>
+      <x>1155</x>
       <y>5</y>
       <width>21</width>
       <height>21</height>

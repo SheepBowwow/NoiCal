@@ -834,7 +834,7 @@ color: white;
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>171</width>
+      <width>101</width>
       <height>45</height>
      </rect>
     </property>
@@ -880,7 +880,7 @@ color : rgb(105, 105, 105);
 }</string>
        </property>
        <property name="text">
-        <string>直管衰减</string>
+        <string>直管</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignBottom|Qt::AlignHCenter</set>

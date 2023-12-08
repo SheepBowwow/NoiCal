@@ -409,10 +409,8 @@ void Widget::initializeTreeWidget()
     item_rect_damper = new QTreeWidgetItem(item_valve_noise,QStringList("方形调风门"));                                      //2.1.3 方形调风门
     item_terminal_airflow_noise = new QTreeWidgetItem(item_pipe_and_acce_airflow_noise,QStringList("末端气流噪声"));                           //2.2 末端气流噪声
     item_air_diff = new QTreeWidgetItem(item_terminal_airflow_noise,QStringList("布风器+散流器"));                                         //2.2.1 布风器+散流器
-    item_air = new QTreeWidgetItem(item_terminal_airflow_noise,QStringList("布风器"));
-    item_diff = new QTreeWidgetItem(item_terminal_airflow_noise,QStringList("散流器"));
     item_pump_send_tuyere = new QTreeWidgetItem(item_terminal_airflow_noise,QStringList("抽/送风头"));                         //2.2.2 抽/送风头
-    item_return_air_box_grille = new QTreeWidgetItem(item_terminal_airflow_noise,QStringList("回风箱+格栅"));                            //2.2.3 回风箱+格栅
+    item_return_air_box_grille = new QTreeWidgetItem(item_terminal_airflow_noise,QStringList("静压箱+格栅"));                            //2.2.3 回风箱+格栅
     item_disp_vent_terminal = new QTreeWidgetItem(item_terminal_airflow_noise,QStringList("置换通风末端"));                //2.2.4 置换通风末端
     item_other_send_terminal = new QTreeWidgetItem(item_terminal_airflow_noise,QStringList("其他送风末端"));                //2.2.5 静压箱孔板送风
 
@@ -428,8 +426,6 @@ void Widget::initializeTreeWidget()
 
     item_terminal_atten = new QTreeWidgetItem(item_noise_atten_in_pipe_acce,QStringList("末端衰减"));                                //3.6 末端衰减
     item_air_diff_terminal_atten = new QTreeWidgetItem(item_terminal_atten,QStringList("布风器+散流器"));
-    item_air_terminal_atten = new QTreeWidgetItem(item_terminal_atten,QStringList("布风器"));
-    item_diff_terminal_atten = new QTreeWidgetItem(item_terminal_atten,QStringList("散流器"));
     item_pump_send_tuyere_terminal_atten = new QTreeWidgetItem(item_terminal_atten,QStringList("抽/送风头"));
     item_return_air_box_grille_terminal_atten = new QTreeWidgetItem(item_terminal_atten,QStringList("回风箱+格栅"));
     item_disp_vent_terminal_atten = new QTreeWidgetItem(item_terminal_atten,QStringList("置换通风末端"));
@@ -437,8 +433,6 @@ void Widget::initializeTreeWidget()
 
     item_terminal_refl_atten = new QTreeWidgetItem(item_noise_atten_in_pipe_acce,QStringList("末端反射衰减")); //3.7 末端反射衰减
     item_air_diff_relf_atten = new QTreeWidgetItem(item_terminal_refl_atten,QStringList("布风器+散流器"));
-    item_air_relf_atten = new QTreeWidgetItem(item_terminal_refl_atten,QStringList("布风器"));
-    item_diff_relf_atten = new QTreeWidgetItem(item_terminal_refl_atten,QStringList("散流器"));
     item_pump_send_tuyere_relf_atten = new QTreeWidgetItem(item_terminal_refl_atten,QStringList("抽/送风头"));
     item_return_air_box_grille_relf_atten = new QTreeWidgetItem(item_terminal_refl_atten,QStringList("回风箱+格栅"));
     item_disp_vent_relf_atten = new QTreeWidgetItem(item_terminal_refl_atten,QStringList("置换通风末端"));
