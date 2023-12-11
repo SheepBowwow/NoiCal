@@ -4387,12 +4387,16 @@ void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
 {
     if (qApp->mouseButtons() == Qt::RightButton) // 1、首先判断是否为右键点击
     {
-        if(item==item_room_define) // 2、判断右击了哪个项目 点击了6.计算房间
+        if(item_zhufenguan.contains(item)) // 2、判断右击了哪个项目
+        {
+            mzfgMenu->exec(QCursor::pos());
+        }
+        if(item==item_room_define) //  点击了6.计算房间
         {
             if(mAddAct1==mAddMenu1->exec(QCursor::pos()))   // 弹出添加主竖区菜单
             {     
                 Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
-                box->setlabeltext(0);
+                box->setlabeltext("主竖区");
                 if(box->exec()==QDialog::Accepted)
                 {
                     QTreeWidgetItem *treeitem=new QTreeWidgetItem(item_room_define,QStringList(box->getname()));
@@ -4410,21 +4414,24 @@ void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
             if(mAddAct2==mAddMenu2->exec(QCursor::pos()))
             {
                 Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
-                box->setlabeltext(1);
+                box->setlabeltext("甲板");
                 if(box->exec()==QDialog::Accepted)
                 {
                     QTreeWidgetItem *treeitemjb=new QTreeWidgetItem(item,QStringList(box->getname()));
                     ui->treeWidget->addTopLevelItem(treeitemjb);
                     item_jiaban.append(treeitemjb);
-                    QTreeWidgetItem *treeitemx=new QTreeWidgetItem(zsqmap.value(item),QStringList(box->getname()));
-                    ui->treeWidget->addTopLevelItem(treeitemx);
+                    QTreeWidgetItem *treeitemcp=new QTreeWidgetItem(zsqmap.value(item),QStringList(box->getname()));
+                    ui->treeWidget->addTopLevelItem(treeitemcp);
+
                     //  添加甲板的同时要添加一个页面
-                    Form_room_define *form=new Form_room_define;    // 创建定义房间的页面，并关联点击
-                    form->setjiabanItem(treeitemx);
+                    Form_room_define *form=new Form_room_define;
+                    form->setjiabanItem(treeitemcp);
                     ui->stackedWidget->addWidget(form);
-                    // 关联form发出的信号
-                    connect(form,SIGNAL(formsent(QTreeWidgetItem*,QString,int)),
+                    // 关联form发出的添加房间、删除房间信号
+                    connect(form,SIGNAL(roomadd(QTreeWidgetItem*,QString,int)),
                             this,SLOT(upDateTreeItem7(QTreeWidgetItem*,QString,int)));
+                    connect(form,SIGNAL(roomdel(QTreeWidgetItem*,QString)),
+                            this,SLOT(delroom(QTreeWidgetItem*,QString)));
 
                     connect(ui->treeWidget,&QTreeWidget::itemClicked,this,[=](QTreeWidgetItem *item1,int n){
                         if(item1==treeitemjb)     //     点击甲板会显示添加的页面
@@ -4437,7 +4444,7 @@ void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
 
     }
 }
-
+//  更新第七项房间底下的主风管信息 房间名，主风管数量
 void Widget::upDateTreeItem7(QTreeWidgetItem *item,QString name,int num) //
 {
     qDebug()<<num;
@@ -4454,17 +4461,49 @@ void Widget::upDateTreeItem7(QTreeWidgetItem *item,QString name,int num) //
         // 这里的主风管还要插入对应page页面
         QTreeWidgetItem *treeitemfg=new QTreeWidgetItem(treeitemfj,QStringList("主风管"+QString::number(i+1)));
         ui->treeWidget->addTopLevelItem(treeitemfg);
+        item_zhufenguan.append(treeitemfg);     // 保存主风管ID
+        map_zsg_pag.insert(treeitemfg,page);
 
         // 关联页面和子项
-        connect(ui->treeWidget, &QTreeWidget::itemClicked, this, [=](QTreeWidgetItem *itemClicked, int column) {
+        connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
             if (itemClicked == treeitemfg)
             {
                 // 设置当前页面为对应的页面
                 ui->stackedWidget->setCurrentWidget(page);
+                if(page->flag_firstopen)
+                {
+                    Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
+                    box->setlabeltext("主风管命名");
+                    if(box->exec()==QDialog::Accepted)
+                    {
+                        treeitemfg->setText(0,box->getname());
+                    }
+                    page->flag_firstopen=0;
+                }
             }
         });
     }
 
+}
+
+void Widget::delroom(QTreeWidgetItem* itemjb,QString roomid)
+{
+    for(int i=0;i<itemjb->childCount();i++)
+    {
+        qDebug()<<itemjb->child(i)->text(0);
+        if(itemjb->child(i)->text(0)==roomid) // 删除房间
+        {
+            QTreeWidgetItem* itemfj=itemjb->child(i);
+            for(int j=0;j<itemfj->childCount();j++) // 删除房间下的主风管
+            {
+                qDebug()<<itemfj->child(i)->text(0);
+                ui->stackedWidget->removeWidget(map_zsg_pag.value(itemfj->child(j)));
+                map_zsg_pag.remove(itemfj->child(j));      // 删除记录
+                item_zhufenguan.removeOne(itemfj->child(j));
+            }
+            itemjb->removeChild(itemjb->child(i));
+        }
+    }
 }
 
 void Widget::initRightButtonMenu()
@@ -4475,6 +4514,15 @@ void Widget::initRightButtonMenu()
     mAddAct2 = new QAction("添加甲板");
     mAddMenu1->addAction(mAddAct1);
     mAddMenu2->addAction(mAddAct2);
+
+    mzfgMenu = new QMenu(this);
+    addzfgAct = new QAction("添加主风管");
+    delzfgAct = new QAction("删除主风管");
+    modnameAct = new QAction("修改名称");
+    mzfgMenu->addAction(modnameAct);
+    mzfgMenu->addAction(addzfgAct);
+    mzfgMenu->addAction(delzfgAct);
+
     // 关联树Item的点击信号，但是在槽中判断是不是右键
     connect(ui->treeWidget, SIGNAL(itemPressed(QTreeWidgetItem*, int)),
             this, SLOT(TreeWidgetItemPressed_Slot(QTreeWidgetItem*, int)));

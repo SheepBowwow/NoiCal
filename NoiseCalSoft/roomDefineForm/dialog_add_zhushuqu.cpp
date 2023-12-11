@@ -15,16 +15,10 @@ Dialog_add_zhushuqu::~Dialog_add_zhushuqu()
     delete ui;
 }
 
-void Dialog_add_zhushuqu::setlabeltext(int i)
+void Dialog_add_zhushuqu::setlabeltext(QString text)
 {
-    if(i==0){
-        ui->label->setText("主竖区：");
-        ui->label_title->setText("主竖区：");
-    }
-    if(i==1){
-        ui->label->setText("甲板：");
-        ui->label_title->setText("甲板：");
-    }
+    ui->label_title->setText(text);
+    ui->label->setText(text+":");
 }
 
 

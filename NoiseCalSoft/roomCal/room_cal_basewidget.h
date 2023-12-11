@@ -16,6 +16,7 @@ class room_cal_baseWidget : public QWidget
 public:
     explicit room_cal_baseWidget(QWidget *parent = nullptr);
     ~room_cal_baseWidget();
+    int flag_firstopen=1;
 
 private slots:
     void handleAddBefore(int index);

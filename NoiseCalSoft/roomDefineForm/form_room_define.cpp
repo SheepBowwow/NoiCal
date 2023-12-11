@@ -11,25 +11,8 @@ Form_room_define::Form_room_define(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->tableWidget_room_define->verticalHeader()->setVisible(false);
-    int totalWidth = 0;
-    for (int i = 0; i < ui->tableWidget_room_define->columnCount(); ++i)
-    {
-        totalWidth += ui->tableWidget_room_define->columnWidth(i);
-    }
-    for (int i = 0; i < ui->tableWidget_room_define->columnCount(); ++i)
-    {
-        double ratio = static_cast<double>(ui->tableWidget_room_define->columnWidth(i)) / totalWidth;
-        int columnWidth = static_cast<int>(ratio * ui->tableWidget_room_define->width());
-        ui->tableWidget_room_define->setColumnWidth(i, columnWidth);
-    }
-    ui->tableWidget_room_define->horizontalHeader()->setStretchLastSection(true);
-    ui->tableWidget_room_define->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-    this->buttonToHeader(ui->tableWidget_room_define,ui->buttonWidget_room,SLOT(addroom()),SLOT(delroom()));
 
-    dialog = new Dialog_addroom;
-
-    //弹窗点击确定，接收信号并发送提醒主界面改变
-    connect(dialog,SIGNAL(dialogsent(QString,int)),this,SLOT(jieshou(QString,int)));
+    ui->tableWidget_room_define->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
 }
 
@@ -40,48 +23,20 @@ Form_room_define::~Form_room_define()
 
 void Form_room_define::setjiabanItem(QTreeWidgetItem *item)
 {
-    _item=item;
+    _jiabanitem=item;
 }
 
-void Form_room_define::buttonToHeader(QTableWidget *tableWidget, QWidget *buttonWidget, const char *addButtonSlot, const char *delButtonSlot)
+void Form_room_define::jieshou(QString name,int num)
 {
-    QHeaderView *header = tableWidget->horizontalHeader();
-    int lastColumnIndex = header->count() - 1;
-
-    int x = header->sectionViewportPosition(lastColumnIndex);
-    int y = 0;
-    int width = header->sectionSize(lastColumnIndex);
-    int height = header->height();
-
-    // 将相对坐标映射到当前页的坐标系
-    QPoint relativePos = header->mapTo(tableWidget->parentWidget(), QPoint(x, y));
-
-    // 设置按钮的几何位置
-    buttonWidget->setGeometry(
-        relativePos.x() + 1,
-        relativePos.y(),
-        width - 2,
-        height - 2
-    );
-
-    QHBoxLayout* layout = new QHBoxLayout(buttonWidget);
-    // 创建"+"按钮
-    QPushButton* addButton = new QPushButton("+");
-    addButton->setFixedSize(15, 15);  // 设置按钮的尺寸为正方形，例如30x30像素
-    layout->addWidget(addButton);
-    // 创建"-"按钮
-    QPushButton* delButton = new QPushButton("-");
-    delButton->setFixedSize(15, 15);  // 设置按钮的尺寸为正方形，例如30x30像素
-    layout->addWidget(delButton);
-    // 在构造函数或者初始化函数中连接信号和槽函数
-    connect(addButton, SIGNAL(clicked()), this, addButtonSlot);
-    connect(delButton, SIGNAL(clicked()), this, delButtonSlot);
-
-    buttonWidget->setStyleSheet(QString("#%1{background : rgb(157, 198, 230);}").arg(buttonWidget->objectName()));
+    emit roomadd(_jiabanitem,name,num);
 }
 
-void Form_room_define::addroom() // 通过弹窗添加房间
+void Form_room_define::on_buttonadd_clicked()
 {
+    dialog = new Dialog_addroom;
+
+    //弹窗点击确定，接收信号并发送提醒主界面改变
+    connect(dialog,SIGNAL(dialogsent(QString,int)),this,SLOT(jieshou(QString,int)));
 
     if(dialog->exec()==QDialog::Accepted)
     {
@@ -97,53 +52,54 @@ void Form_room_define::addroom() // 通过弹窗添加房间
         layout->setAlignment(Qt::AlignCenter);
         layout->setContentsMargins(0, 0, 0, 0);
         ui->tableWidget_room_define->setCellWidget(RowCount, 0, widget);
-        // 添加加减按钮
-        QWidget* widget2 = new QWidget();
-        QHBoxLayout* layout2 = new QHBoxLayout(widget2);
-        QPushButton* addButton = new QPushButton("+");
-        addButton->setFixedSize(15, 15);
-        layout2->addWidget(addButton);
-        QPushButton* delButton = new QPushButton("-");
-        delButton->setFixedSize(15, 15);
-        layout2->addWidget(delButton);
-        ui->tableWidget_room_define->setCellWidget(RowCount, 8, widget2);
-        // 在构造函数或者初始化函数中连接信号和槽函数
-        //connect(addButton, SIGNAL(clicked()), this, addButtonSlot);
-        //connect(delButton, SIGNAL(clicked()), this, delButtonSlot);
 
         //添加内容
-        QTableWidgetItem *tbitem1=new QTableWidgetItem(QString(dialog->getRoomid()));
-        QTableWidgetItem *tbitem2=new QTableWidgetItem(QString(dialog->getroomclass()));
-        QTableWidgetItem *tbitem5=new QTableWidgetItem(QString::number(dialog->getmainpipe()));
-        QTableWidgetItem *tbitem6=new QTableWidgetItem(QString(dialog->getlimit()));
-        QTableWidgetItem *tbitem7=new QTableWidgetItem(QString(dialog->getroomcalclass()));
+        QTableWidgetItem *tbitem1=new QTableWidgetItem(QString(dialog->getroomid()));
+        QTableWidgetItem *tbitem2=new QTableWidgetItem(QString(dialog->getroomname()));
+        QTableWidgetItem *tbitem3=new QTableWidgetItem(QString(dialog->getroomclass()));
+        QTableWidgetItem *tbitem4=new QTableWidgetItem(_jiabanitem->parent()->text(0));
+        QTableWidgetItem *tbitem5=new QTableWidgetItem(_jiabanitem->text(0));
+        QTableWidgetItem *tbitem6=new QTableWidgetItem(QString::number(dialog->getmainpipe()));
+        QTableWidgetItem *tbitem7=new QTableWidgetItem(QString(dialog->getlimit()));
+        QTableWidgetItem *tbitem8=new QTableWidgetItem(QString(dialog->getroomcalclass()));
         tbitem1->setFlags(Qt::ItemIsEditable); // 设置为只读
         tbitem1->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
         tbitem2->setFlags(Qt::ItemIsEditable); // 设置为只读
         tbitem2->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
+        tbitem3->setFlags(Qt::ItemIsEditable); // 设置为只读
+        tbitem3->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
+        tbitem4->setFlags(Qt::ItemIsEditable); // 设置为只读
+        tbitem4->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
         tbitem5->setFlags(Qt::ItemIsEditable); // 设置为只读
         tbitem5->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
         tbitem6->setFlags(Qt::ItemIsEditable); // 设置为只读
         tbitem6->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
         tbitem7->setFlags(Qt::ItemIsEditable); // 设置为只读
         tbitem7->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
+        tbitem8->setFlags(Qt::ItemIsEditable); // 设置为只读
+        tbitem8->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
 
         ui->tableWidget_room_define->setItem(RowCount,1,tbitem1);
         ui->tableWidget_room_define->setItem(RowCount,2,tbitem2);
+        ui->tableWidget_room_define->setItem(RowCount,3,tbitem3);
+        ui->tableWidget_room_define->setItem(RowCount,4,tbitem4);
         ui->tableWidget_room_define->setItem(RowCount,5,tbitem5);
         ui->tableWidget_room_define->setItem(RowCount,6,tbitem6);
         ui->tableWidget_room_define->setItem(RowCount,7,tbitem7);
+        ui->tableWidget_room_define->setItem(RowCount,8,tbitem8);
 
     }
-
 }
-
-void Form_room_define::delroom()
+void Form_room_define::on_buttondel_clicked()
 {
-
-}
-
-void Form_room_define::jieshou(QString name,int num)
-{
-    emit formsent(_item,name,num);
+    for (int row = ui->tableWidget_room_define->rowCount() - 1; row >= 0; --row)
+    {
+        QWidget *widget = ui->tableWidget_room_define->cellWidget(row, 0); // 提取出第一列的widget
+        QCheckBox* checkBoxItem = widget->findChild<QCheckBox*>();          // widget转成checkbox
+        if (checkBoxItem && checkBoxItem->checkState() == Qt::Checked)
+        {
+            emit roomdel(_jiabanitem,ui->tableWidget_room_define->item(row,1)->text());
+            ui->tableWidget_room_define->removeRow(row);
+        }
+    }
 }

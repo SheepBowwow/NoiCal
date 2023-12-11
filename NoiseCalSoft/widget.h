@@ -156,6 +156,7 @@ public slots:
     
     void TreeWidgetItemPressed_Slot(QTreeWidgetItem* item, int n);
     void upDateTreeItem7(QTreeWidgetItem *item,QString,int num);
+    void delroom(QTreeWidgetItem*,QString roomid);
 private slots:
     void on_pushButto_prj_manage_clicked();
 
@@ -281,6 +282,10 @@ private:
     QMenu *mAddMenu2;
     QAction *mAddAct1;      // 主竖区
     QAction *mAddAct2;      // 甲板
+    QMenu *mzfgMenu;
+    QAction *addzfgAct;
+    QAction *delzfgAct;
+    QAction *modnameAct;
 
     QVector<Room> rooms;
 
@@ -338,10 +343,12 @@ private:
     QTreeWidgetItem *item_room_gap_tuyere;                                   //5.5 条缝风口房间（线噪声源）
     QTreeWidgetItem *item_room_rain;                                   //5.6 雨降风口房间（面噪声源）
 
-    QTreeWidgetItem *item_room_define;
+    QTreeWidgetItem *item_room_define;                                 //6.1定义计算房间
     QVector<QTreeWidgetItem *> item_zhushuqu;
     QVector<QTreeWidgetItem *> item_jiaban;
-    QMap<QTreeWidgetItem *,QTreeWidgetItem *> zsqmap;       // 第六项的主竖区和第七项的主竖区的一一对应
+    QMap<QTreeWidgetItem *,QTreeWidgetItem *> zsqmap;       // 第六项的主竖区和第七项的主竖区对应关系
+    QVector<QTreeWidgetItem *> item_zhufenguan;         // 保存主风管item,方便右键点击
+    QMap<QTreeWidgetItem *,QWidget *> map_zsg_pag;    // 主风管与page对应关系
     QTreeWidgetItem *item_room_calculate;
 };
 #endif // WIDGET_H

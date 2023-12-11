@@ -73,7 +73,7 @@ border: 1px solid #000000;
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>171</width>
+      <width>241</width>
       <height>51</height>
      </rect>
     </property>
@@ -107,13 +107,13 @@ background-color : rgb(105, 105, 105);
       <widget class="QLabel" name="label_title">
        <property name="minimumSize">
         <size>
-         <width>141</width>
+         <width>200</width>
          <height>41</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>141</width>
+         <width>200</width>
          <height>41</height>
         </size>
        </property>
@@ -215,6 +215,11 @@ color: white;
    </widget>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit</tabstop>
+  <tabstop>pushButton</tabstop>
+  <tabstop>close</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
