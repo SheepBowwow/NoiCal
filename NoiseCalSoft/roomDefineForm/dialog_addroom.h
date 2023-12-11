@@ -16,7 +16,8 @@ public:
     explicit Dialog_addroom(QWidget *parent = nullptr);
     ~Dialog_addroom();
 
-    QString getRoomid();
+    QString getroomid();
+    QString getroomname();
     int getmainpipe();
     QString getroomclass();
     QString getlimit();

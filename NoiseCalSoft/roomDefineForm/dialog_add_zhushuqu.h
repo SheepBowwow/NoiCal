@@ -15,7 +15,7 @@ class Dialog_add_zhushuqu : public InputBaseDialog
 public:
     explicit Dialog_add_zhushuqu(QWidget *parent = nullptr);
     ~Dialog_add_zhushuqu();
-    void setlabeltext(int i=0);   // 0为主竖区，1为甲板
+    void setlabeltext(QString text);   //
     QString getname();
     virtual void * getNoi() override;
 

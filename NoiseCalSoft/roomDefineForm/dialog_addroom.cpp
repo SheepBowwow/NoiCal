@@ -15,9 +15,15 @@ Dialog_addroom::~Dialog_addroom()
     delete ui;
 }
 
-QString Dialog_addroom::getRoomid()
+
+QString Dialog_addroom::getroomid()
 {
     return ui->lineEdit_roomid->text();
+}
+
+QString Dialog_addroom::getroomname()
+{
+    return ui->lineEdit_roomname->text();
 }
 
 int Dialog_addroom::getmainpipe()

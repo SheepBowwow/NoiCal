@@ -25,14 +25,18 @@ public:
     void buttonToHeader(QTableWidget *tableWidget, QWidget *buttonWidget, const char *addButtonSlot, const char *delButtonSlot);
 
 signals:
-    void formsent(QTreeWidgetItem *item,QString name,int num);
+    void roomadd(QTreeWidgetItem *item,QString name,int num);
+    void roomdel(QTreeWidgetItem*,QString roomid);
 private slots:
-    void addroom();
-    void delroom();
     void jieshou(QString name,int num);
+
+    void on_buttonadd_clicked();
+
+    void on_buttondel_clicked();
+
 private:
     Ui::Form_room_define *ui;
-    QTreeWidgetItem *_item;
+    QTreeWidgetItem *_jiabanitem;
     Dialog_addroom *dialog;
 };
 
