@@ -107,7 +107,7 @@ void Widget::buttonToHeader(QTableWidget *tableWidget, QWidget *buttonWidget, co
     int height = header->height();
 
     // 将相对坐标映射到当前页的坐标系
-    QPoint relativePos = header->mapTo(tableWidget->parentWidget(), QPoint(x, y));
+    QPoint relativePos = header->mapTo(tableWidget->parentWidget(), QPoint(x, y - height));
 
     // 设置按钮的几何位置
     buttonWidget->setGeometry(
@@ -138,7 +138,7 @@ void Widget::addRowToTable(QTableWidget *tableWidget, const QStringList &data, c
     int rowCount = tableWidget->rowCount();
     tableWidget->setRowCount(rowCount + 1);
 
-    for (int i = 0; i < data.size() + 2; ++i) {
+    for (int i = 0; i < data.size() + 1; ++i) {
         if (i == 0) {
             // 处理复选框
             QCheckBox* checkBox = new QCheckBox();
@@ -149,24 +149,6 @@ void Widget::addRowToTable(QTableWidget *tableWidget, const QStringList &data, c
             layout->setAlignment(Qt::AlignCenter);
             layout->setContentsMargins(0, 0, 0, 0);
             tableWidget->setCellWidget(rowCount, i, widget);
-        } else if (i == data.size() + 2 - 1) {
-            // 处理加减按钮
-            QWidget* widget = new QWidget();
-            QHBoxLayout* layout = new QHBoxLayout(widget);
-
-            QPushButton* addButton = new QPushButton("+");
-            addButton->setFixedSize(15, 15);
-            layout->addWidget(addButton);
-
-            QPushButton* delButton = new QPushButton("-");
-            delButton->setFixedSize(15, 15);
-            layout->addWidget(delButton);
-
-            tableWidget->setCellWidget(rowCount, i, widget);
-
-            // 在构造函数或者初始化函数中连接信号和槽函数
-            connect(addButton, SIGNAL(clicked()), this, addButtonSlot);
-            connect(delButton, SIGNAL(clicked()), this, delButtonSlot);
         }
         else
         {
@@ -197,11 +179,11 @@ void Widget::deleteRowFromTable(QTableWidget *tableWidget, int deleteRowNum)
     for (int i = selectedRows.size() - 1; i >= 0; --i)
     {
         int row = selectedRows[i];
+        tableWidget->removeRow(row);
         if(deleteRowNum == 2)
         {
-            tableWidget->removeRow(row + 1);
+            tableWidget->removeRow(row - 1);
         }
-        tableWidget->removeRow(row);
     }
 
 
@@ -216,7 +198,7 @@ void Widget::deleteRowFromTable(QTableWidget *tableWidget, int deleteRowNum)
     }
     if(deleteRowNum == 2)
     {
-        for(int row = 0; row < tableWidget->rowCount(); row+=2)
+        for(int row = 0; row < tableWidget->rowCount(); row += 2)
         {
             for(int i = 0; i < tableWidget->columnCount(); i++)
             {
@@ -648,23 +630,28 @@ void Widget::on_pushButton_start_clicked()
 //初始化表格
 void Widget::initTableWidget_fan_noi()
 {
-    int colCount = 19;
+    int colCount = 18;
     // 设置表头标题
     QStringList headerText;
     headerText << "" << "序号" << "编号" << "品牌" << "型号" << "风量" << "静压" << "噪音位置" << "63Hz" << "125Hz" << "250Hz"
-               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源" << "";
+               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";
     // 设置每列的宽度
-    int columnWidths[] = {30, 38, 120, 100, 100, 90, 90, 80, 55, 55, 55, 55, 55, 55, 55, 55, 90, 60, 55};
+    int columnWidths[] = {30, 38, 120, 100, 100, 90, 90, 80, 55, 55, 55, 55, 55, 55, 55, 55, 90, 60};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_fan_noi, headerText, columnWidths, colCount);
 
     // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_fan_noi, ui->buttonWidget_fan_noi,
-                      SLOT(onAddButtonFanNoiClicked()), SLOT(onDelButtonFanNoiClicked()));
+    //buttonToHeader(ui->tableWidget_fan_noi, ui->buttonWidget_fan_noi,
+//                      SLOT(onAddButtonFanNoiClicked()), SLOT(onDelButtonFanNoiClicked()));
 }
 
 // 处理"+"按钮点击事件的逻辑
 void Widget::onAddButtonFanNoiClicked()
+{
+
+}
+
+void Widget::on_pushButton_fanNoi_add_clicked()
 {
     QTableWidget *tableWidget = ui->tableWidget_fan_noi;
     int rowCount = tableWidget->rowCount(); //获取当前行数
@@ -739,47 +726,52 @@ void Widget::onAddButtonFanNoiClicked()
     }
 }
 
+void Widget::on_pushButton_fanNoi_del_clicked()
+{
+    deleteRowFromTable(ui->tableWidget_fan_noi, 2);
+}
+
 // 处理"-"按钮点击事件的逻辑
 void Widget::onDelButtonFanNoiClicked()
 {
-    deleteRowFromTable(ui->tableWidget_fan_noi, 2);
+
 }
 
 //修改按钮
 void Widget::on_pushButton_fanNoi_revise_clicked()
 {
-    int colCount = 19;
+    int colCount = 18;
     for (int row = 0; row < ui->tableWidget_fan_noi->rowCount(); ++row) {
+
         QWidget* widget = ui->tableWidget_fan_noi->cellWidget(row, 0); // Assuming the checkbox is in the first column (index 0)
         QCheckBox* checkBox = widget->findChild<QCheckBox*>(); // Find the checkbox within the widget
-
         if (checkBox && checkBox->isChecked()) {
             Fan_noise *noi = new Fan_noise();
-            noi->number = ui->tableWidget_fan_noi->item(row,2)->text();
-            noi->brand = ui->tableWidget_fan_noi->item(row,3)->text();
-            noi->model = ui->tableWidget_fan_noi->item(row,4)->text();
-            noi->air_volume = ui->tableWidget_fan_noi->item(row,5)->text();
-            noi->static_pressure = ui->tableWidget_fan_noi->item(row,6)->text();
+            noi->number = ui->tableWidget_fan_noi->item(row - 1,2)->text();
+            noi->brand = ui->tableWidget_fan_noi->item(row - 1,3)->text();
+            noi->model = ui->tableWidget_fan_noi->item(row - 1,4)->text();
+            noi->air_volume = ui->tableWidget_fan_noi->item(row - 1,5)->text();
+            noi->static_pressure = ui->tableWidget_fan_noi->item(row - 1,6)->text();
 
-            noi->noi_in_63 = ui->tableWidget_fan_noi->item(row,8)->text();
-            noi->noi_in_125 = ui->tableWidget_fan_noi->item(row,9)->text();
-            noi->noi_in_250 = ui->tableWidget_fan_noi->item(row,10)->text();
-            noi->noi_in_500 = ui->tableWidget_fan_noi->item(row,11)->text();
-            noi->noi_in_1k = ui->tableWidget_fan_noi->item(row,12)->text();
-            noi->noi_in_2k = ui->tableWidget_fan_noi->item(row,13)->text();
-            noi->noi_in_4k = ui->tableWidget_fan_noi->item(row,14)->text();
-            noi->noi_in_8k = ui->tableWidget_fan_noi->item(row,15)->text();
-            noi->noi_in_total = ui->tableWidget_fan_noi->item(row,16)->text();
+            noi->noi_in_63 = ui->tableWidget_fan_noi->item(row - 1,8)->text();
+            noi->noi_in_125 = ui->tableWidget_fan_noi->item(row - 1,9)->text();
+            noi->noi_in_250 = ui->tableWidget_fan_noi->item(row - 1,10)->text();
+            noi->noi_in_500 = ui->tableWidget_fan_noi->item(row - 1,11)->text();
+            noi->noi_in_1k = ui->tableWidget_fan_noi->item(row - 1,12)->text();
+            noi->noi_in_2k = ui->tableWidget_fan_noi->item(row - 1,13)->text();
+            noi->noi_in_4k = ui->tableWidget_fan_noi->item(row - 1,14)->text();
+            noi->noi_in_8k = ui->tableWidget_fan_noi->item(row - 1,15)->text();
+            noi->noi_in_total = ui->tableWidget_fan_noi->item(row - 1,16)->text();
 
-            noi->noi_out_63 = ui->tableWidget_fan_noi->item(row + 1,8)->text();
-            noi->noi_out_125 = ui->tableWidget_fan_noi->item(row + 1,9)->text();
-            noi->noi_out_250 = ui->tableWidget_fan_noi->item(row + 1,10)->text();
-            noi->noi_out_500 = ui->tableWidget_fan_noi->item(row + 1,11)->text();
-            noi->noi_out_1k = ui->tableWidget_fan_noi->item(row + 1,12)->text();
-            noi->noi_out_2k = ui->tableWidget_fan_noi->item(row + 1,13)->text();
-            noi->noi_out_4k = ui->tableWidget_fan_noi->item(row + 1,14)->text();
-            noi->noi_out_8k = ui->tableWidget_fan_noi->item(row + 1,15)->text();
-            noi->noi_out_total = ui->tableWidget_fan_noi->item(row + 1,16)->text();
+            noi->noi_out_63 = ui->tableWidget_fan_noi->item(row,8)->text();
+            noi->noi_out_125 = ui->tableWidget_fan_noi->item(row,9)->text();
+            noi->noi_out_250 = ui->tableWidget_fan_noi->item(row,10)->text();
+            noi->noi_out_500 = ui->tableWidget_fan_noi->item(row,11)->text();
+            noi->noi_out_1k = ui->tableWidget_fan_noi->item(row,12)->text();
+            noi->noi_out_2k = ui->tableWidget_fan_noi->item(row,13)->text();
+            noi->noi_out_4k = ui->tableWidget_fan_noi->item(row,14)->text();
+            noi->noi_out_8k = ui->tableWidget_fan_noi->item(row,15)->text();
+            noi->noi_out_total = ui->tableWidget_fan_noi->item(row,16)->text();
             // 创建模态对话框，并设置为模态
             Dialog_fan_noise *fanNoiseDialog = new Dialog_fan_noise(this,row,*noi);
             fanNoiseDialog->setWindowModality(Qt::ApplicationModal);
@@ -789,31 +781,31 @@ void Widget::on_pushButton_fanNoi_revise_clicked()
             if (fanNoiseDialog->exec() == QDialog::Accepted)
             {
                 noi = static_cast<Fan_noise*>(fanNoiseDialog->getNoi());
-                ui->tableWidget_fan_noi->item(row,2)->setText(noi->number);
-                ui->tableWidget_fan_noi->item(row,3)->setText(noi->brand);
-                ui->tableWidget_fan_noi->item(row,4)->setText(noi->model);
-                ui->tableWidget_fan_noi->item(row,5)->setText(noi->air_volume);
-                ui->tableWidget_fan_noi->item(row,6)->setText(noi->static_pressure);
+                ui->tableWidget_fan_noi->item(row - 1,2)->setText(noi->number);
+                ui->tableWidget_fan_noi->item(row - 1,3)->setText(noi->brand);
+                ui->tableWidget_fan_noi->item(row - 1,4)->setText(noi->model);
+                ui->tableWidget_fan_noi->item(row - 1,5)->setText(noi->air_volume);
+                ui->tableWidget_fan_noi->item(row - 1,6)->setText(noi->static_pressure);
 
-                ui->tableWidget_fan_noi->item(row,8)->setText(noi->noi_in_63);
-                ui->tableWidget_fan_noi->item(row,9)->setText(noi->noi_in_125);
-                ui->tableWidget_fan_noi->item(row,10)->setText(noi->noi_in_250);
-                ui->tableWidget_fan_noi->item(row,11)->setText(noi->noi_in_500);
-                ui->tableWidget_fan_noi->item(row,12)->setText(noi->noi_in_1k);
-                ui->tableWidget_fan_noi->item(row,13)->setText(noi->noi_in_2k);
-                ui->tableWidget_fan_noi->item(row,14)->setText(noi->noi_in_4k);
-                ui->tableWidget_fan_noi->item(row,15)->setText(noi->noi_in_8k);
-                ui->tableWidget_fan_noi->item(row,16)->setText(noi->noi_in_total);
+                ui->tableWidget_fan_noi->item(row - 1,8)->setText(noi->noi_in_63);
+                ui->tableWidget_fan_noi->item(row - 1,9)->setText(noi->noi_in_125);
+                ui->tableWidget_fan_noi->item(row - 1,10)->setText(noi->noi_in_250);
+                ui->tableWidget_fan_noi->item(row - 1,11)->setText(noi->noi_in_500);
+                ui->tableWidget_fan_noi->item(row - 1,12)->setText(noi->noi_in_1k);
+                ui->tableWidget_fan_noi->item(row - 1,13)->setText(noi->noi_in_2k);
+                ui->tableWidget_fan_noi->item(row - 1,14)->setText(noi->noi_in_4k);
+                ui->tableWidget_fan_noi->item(row - 1,15)->setText(noi->noi_in_8k);
+                ui->tableWidget_fan_noi->item(row - 1,16)->setText(noi->noi_in_total);
 
-                ui->tableWidget_fan_noi->item(row + 1,8)->setText(noi->noi_out_63);
-                ui->tableWidget_fan_noi->item(row + 1,9)->setText(noi->noi_out_125);
-                ui->tableWidget_fan_noi->item(row + 1,10)->setText(noi->noi_out_250);
-                ui->tableWidget_fan_noi->item(row + 1,11)->setText(noi->noi_out_500);
-                ui->tableWidget_fan_noi->item(row + 1,12)->setText(noi->noi_out_1k);
-                ui->tableWidget_fan_noi->item(row + 1,13)->setText(noi->noi_out_2k);
-                ui->tableWidget_fan_noi->item(row + 1,14)->setText(noi->noi_out_4k);
-                ui->tableWidget_fan_noi->item(row + 1,15)->setText(noi->noi_out_8k);
-                ui->tableWidget_fan_noi->item(row + 1,16)->setText(noi->noi_out_total);
+                ui->tableWidget_fan_noi->item(row,8)->setText(noi->noi_out_63);
+                ui->tableWidget_fan_noi->item(row,9)->setText(noi->noi_out_125);
+                ui->tableWidget_fan_noi->item(row,10)->setText(noi->noi_out_250);
+                ui->tableWidget_fan_noi->item(row,11)->setText(noi->noi_out_500);
+                ui->tableWidget_fan_noi->item(row,12)->setText(noi->noi_out_1k);
+                ui->tableWidget_fan_noi->item(row,13)->setText(noi->noi_out_2k);
+                ui->tableWidget_fan_noi->item(row,14)->setText(noi->noi_out_4k);
+                ui->tableWidget_fan_noi->item(row,15)->setText(noi->noi_out_8k);
+                ui->tableWidget_fan_noi->item(row,16)->setText(noi->noi_out_total);
             }
             delete noi;
         }
@@ -928,6 +920,7 @@ void Widget::on_pushButton_fanCoil_noi_revise_clicked()
         QCheckBox* checkBox = widget->findChild<QCheckBox*>(); // Find the checkbox within the widget
 
         if (checkBox && checkBox->isChecked()) {
+            qDebug() << "row: " << row <<"checkBox" << checkBox->isChecked();
             FanCoil_noise *noi = new FanCoil_noise();
             noi->number = ui->tableWidget_fanCoil_noi->item(row,2)->text();
             noi->brand = ui->tableWidget_fanCoil_noi->item(row,3)->text();
@@ -1103,7 +1096,6 @@ void Widget::on_pushButton_air_noi_revise_clicked()
     for (int row = 0; row < ui->tableWidget_air_noi->rowCount(); ++row) {
         QWidget* widget = ui->tableWidget_air_noi->cellWidget(row, 0); // Assuming the checkbox is in the first column (index 0)
         QCheckBox* checkBox = widget->findChild<QCheckBox*>(); // Find the checkbox within the widget
-
         if (checkBox && checkBox->isChecked()) {
             Aircondition_noise *noi = new Aircondition_noise();
             noi->number = ui->tableWidget_air_noi->item(row,2)->text();

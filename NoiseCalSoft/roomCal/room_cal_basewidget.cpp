@@ -6,6 +6,7 @@
 
 room_cal_baseWidget::room_cal_baseWidget(QWidget *parent) :
     QWidget(parent),
+    isAllCollapsed(false),
     ui(new Ui::room_cal_baseWidget)
 {
     ui->setupUi(this);
@@ -14,7 +15,7 @@ room_cal_baseWidget::room_cal_baseWidget(QWidget *parent) :
     scrollLayout->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
 
 //    // 设置垂直方向上的间距为10像素
-    scrollLayout->setSpacing(30);
+    scrollLayout->setSpacing(2);
     scrollLayout->setContentsMargins(0, 15, 0, 15);
 
     ui->scrollArea->setWidgetResizable(true);
@@ -36,9 +37,21 @@ void room_cal_baseWidget::addTable(int index, QString type)
 
     RoomCalTable *newRoomCalTable = new RoomCalTable(nullptr,type);
     if(index == -1)
+    {
         layout->addWidget(newRoomCalTable);
+        newRoomCalTable->setSerialNum(layout->count());
+    }
     else
+    {
         layout->insertWidget(index, newRoomCalTable);
+        // 遍历垂直布局中的所有widget
+        for (int i = 0; i < layout->count(); ++i) {
+            RoomCalTable *roomCalTable = qobject_cast<RoomCalTable *>(layout->itemAt(i)->widget());
+            if (roomCalTable) {
+                roomCalTable->setSerialNum(i + 1);
+            }
+        }
+    }
     // Connect signals and slots for the new RoomCalTable
     connect(newRoomCalTable, &RoomCalTable::addBeforeClicked, this, &room_cal_baseWidget::handleAddBefore);
     connect(newRoomCalTable, &RoomCalTable::addAfterClicked, this, &room_cal_baseWidget::handleAddAfter);
@@ -105,6 +118,13 @@ void room_cal_baseWidget::handleDelete(int index)
             roomCalTable->setParent(nullptr);
             // 手动删除对象
             delete roomCalTable;
+            // 遍历垂直布局中的所有widget
+            for (int i = 0; i < layout->count(); ++i) {
+                RoomCalTable *roomCalTable = qobject_cast<RoomCalTable *>(layout->itemAt(i)->widget());
+                if (roomCalTable) {
+                    roomCalTable->setSerialNum(i + 1);
+                }
+            }
         }
 
         // 删除布局项
@@ -176,3 +196,27 @@ void room_cal_baseWidget::onSoundPressureClicked()
     // Your code for "声压级计算" action
     addTable(-1,"声压级计算");
 }
+
+void room_cal_baseWidget::on_pushButton_fold_clicked()
+{
+    QVBoxLayout *layout = qobject_cast<QVBoxLayout *>(ui->scrollArea->widget()->layout());
+    if (layout) {
+        // 遍历垂直布局中的所有widget
+        for (int i = 0; i < layout->count(); ++i) {
+            RoomCalTable *roomCalTable = qobject_cast<RoomCalTable *>(layout->itemAt(i)->widget());
+            if (roomCalTable) {
+                if(isAllCollapsed)
+                {
+                    roomCalTable->setIsCollapsed(true);
+                }
+                else
+                {
+                    roomCalTable->setIsCollapsed(false);
+                }
+                roomCalTable->setCollapsed();
+            }
+        }
+    }
+    isAllCollapsed = !isAllCollapsed;
+}
+

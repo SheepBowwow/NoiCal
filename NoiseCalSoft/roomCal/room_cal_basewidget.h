@@ -32,9 +32,12 @@ private slots:
     void onAttenClicked();
     void onSoundPressureClicked();
 
+    void on_pushButton_fold_clicked();
+
 private:
     Ui::room_cal_baseWidget *ui;
     QPointer<RoomCalTable> selectedTable;
+    bool isAllCollapsed;
 };
 
 #endif // ROOM_CAL_BASEWIDGET_H

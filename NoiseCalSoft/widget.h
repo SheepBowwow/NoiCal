@@ -269,6 +269,10 @@ private slots:
 
     void on_pushButton_other_send_terminal_refl_revise_clicked();
 
+    void on_pushButton_fanNoi_del_clicked();
+
+    void on_pushButton_fanNoi_add_clicked();
+
 private:
     Ui::Widget *ui;
     QTreeWidgetItem *item_prj;   //工程

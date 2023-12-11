@@ -9,6 +9,7 @@
 
 RoomCalTable::RoomCalTable(QWidget *parent,QString type) :
     QWidget(parent),
+    isCollapsed(false),
     ui(new Ui::RoomCalTable)
 {
     ui->setupUi(this);
@@ -87,6 +88,13 @@ RoomCalTable::RoomCalTable(QWidget *parent,QString type) :
                 break;
             }
         }
+    }
+
+
+    auto qComboBoxGroup= this->findChildren<QComboBox*>();
+    for(auto each:qComboBoxGroup)
+    {
+       each->installEventFilter(this);
     }
 }
 
@@ -352,3 +360,75 @@ void RoomCalTable::on_comboBox_sound_type_room_currentTextChanged(const QString 
     }
 }
 
+void RoomCalTable::setIsCollapsed(bool isCollapsed)
+{
+    this->isCollapsed = isCollapsed;
+}
+
+void RoomCalTable::setCollapsed()
+{
+    if(!isCollapsed)
+    {
+        ui->stackedWidget_info->setVisible(false);
+        ui->stackedWidget_table->setVisible(false);
+        this->setMinimumSize(QSize(this->width(), ui->widget_title->height()));
+        this->setMaximumSize(QSize(this->width(), ui->widget_title->height()));
+        ui->widget_title->setStyleSheet(QString("#widget_title{ border:2px solid black;}"));
+    }
+    else
+    {
+        ui->stackedWidget_info->setVisible(true);
+        ui->stackedWidget_table->setVisible(true);
+        // 清除最小和最大大小限制
+        this->setMinimumSize(QSize(0, 0));
+        this->setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
+        // 获取当前显示的页面的部件
+        QWidget *currentWidget = ui->stackedWidget_table->currentWidget();
+
+        if (currentWidget) {
+            // 获取所有子对象
+            QList<QObject *> childObjects = currentWidget->children();
+
+            // 遍历所有子对象
+            for (QObject *childObject : childObjects) {
+                // 判断是否是 QWidget 类型
+                if (QWidget *childWidget = qobject_cast<QWidget *>(childObject)) {
+                    int widgetHeight = childWidget->height();
+
+                    // 设置 QStackedWidget 的高度
+                    ui->stackedWidget_table->setFixedHeight(widgetHeight);
+
+                    // 设置窗口的高度
+                    this->setMinimumSize(QSize(this->width(), 75 + widgetHeight));
+                    this->setMaximumSize(QSize(this->width(), 75 + widgetHeight));
+
+                    // 假设只需要获取第一个符合条件的子部件，可以注释下面这行来继续查找其他子部件
+                    break;
+                }
+            }
+        }
+        ui->widget_title->setStyleSheet(QString("#widget_title{ border:2px solid black;border-bottom:1px solid black;}"));
+    }
+    isCollapsed = !isCollapsed;
+}
+
+void RoomCalTable::on_pushButton_number_clicked()
+{
+    setCollapsed();
+}
+
+bool RoomCalTable::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::Wheel && qobject_cast<QComboBox*>(obj)) {
+        // 如果事件是鼠标滚轮事件，并且发生在 QComboBox 上，阻止事件传递
+        return true;
+    }
+
+    // 其他事件按默认处理方式进行
+    return QObject::eventFilter(obj, event);
+}
+
+void RoomCalTable::setSerialNum(int num)
+{
+    ui->pushButton_number->setText(QString::number(num));
+}

@@ -4,7 +4,6 @@
 #include <QCheckBox>
 
 
-
 Form_room_define::Form_room_define(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Form_room_define)

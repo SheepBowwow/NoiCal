@@ -330,6 +330,27 @@ border:1px solid black;
      <string>添加部件进行计算</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButton_fold">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>2</y>
+      <width>91</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="text">
+     <string>全部折叠/展开</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

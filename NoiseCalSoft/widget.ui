@@ -583,7 +583,7 @@ font-size: 13px;
 }</string>
    </property>
    <property name="currentIndex">
-    <number>30</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="page_login">
     <layout class="QGridLayout" name="gridLayout" rowstretch="2,5,4">
@@ -1686,7 +1686,7 @@ color : rgb(105, 105, 105);
         <x>10</x>
         <y>60</y>
         <width>1161</width>
-        <height>561</height>
+        <height>611</height>
        </rect>
       </property>
       <property name="focusPolicy">
@@ -1756,51 +1756,58 @@ QTableWidget::item:selected
        <enum>QFrame::StyledPanel</enum>
       </property>
      </widget>
-     <widget class="QWidget" name="buttonWidget_fan_noi" native="true">
+     <widget class="QPushButton" name="pushButton_fanNoi_add">
       <property name="geometry">
        <rect>
-        <x>980</x>
+        <x>1120</x>
         <y>20</y>
-        <width>81</width>
+        <width>51</width>
         <height>31</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>Microsoft YaHei</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="styleSheet">
-       <string notr="true">#buttonWidget_fan_noi
+       <string notr="true">QPushButton
 {
-background:#9DC6E6;
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
 }</string>
+      </property>
+      <property name="text">
+       <string>新增</string>
       </property>
      </widget>
-     <widget class="QWidget" name="widget" native="true">
+     <widget class="QPushButton" name="pushButton_fanNoi_del">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>620</y>
-        <width>1161</width>
-        <height>51</height>
+        <x>1000</x>
+        <y>20</y>
+        <width>51</width>
+        <height>31</height>
        </rect>
       </property>
-      <property name="styleSheet">
-       <string notr="true">border: 1px solid #000000;</string>
+      <property name="font">
+       <font>
+        <family>Microsoft YaHei</family>
+        <pointsize>12</pointsize>
+       </font>
       </property>
-      <widget class="QPushButton" name="pushButton_fanNoi_input">
-       <property name="geometry">
-        <rect>
-         <x>990</x>
-         <y>10</y>
-         <width>71</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <family>Microsoft YaHei</family>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton
+      <property name="styleSheet">
+       <string notr="true">QPushButton
 {
 	color:#ffffff; /*文字颜色*/
     background-color: #00ACB9;/*背景色*/
@@ -1814,28 +1821,28 @@ QPushButton:hover
 background-color: rgb(0,142,153);
 color: white;
 }</string>
-       </property>
-       <property name="text">
-        <string>导入</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="pushButton_fanNoi_revise">
-       <property name="geometry">
-        <rect>
-         <x>1080</x>
-         <y>10</y>
-         <width>71</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <family>Microsoft YaHei</family>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton
+      </property>
+      <property name="text">
+       <string>删除</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_fanNoi_revise">
+      <property name="geometry">
+       <rect>
+        <x>1060</x>
+        <y>20</y>
+        <width>51</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft YaHei</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton
 {
 	color:#ffffff; /*文字颜色*/
     background-color: #00ACB9;/*背景色*/
@@ -1849,16 +1856,52 @@ QPushButton:hover
 background-color: rgb(0,142,153);
 color: white;
 }</string>
-       </property>
-       <property name="text">
-        <string>修改</string>
-       </property>
-      </widget>
+      </property>
+      <property name="text">
+       <string>修改</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_fanNoi_input">
+      <property name="geometry">
+       <rect>
+        <x>940</x>
+        <y>20</y>
+        <width>51</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft YaHei</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+      </property>
+      <property name="text">
+       <string>导入</string>
+      </property>
      </widget>
      <zorder>tableWidget_fan_noi</zorder>
      <zorder>layoutWidget_2</zorder>
-     <zorder>buttonWidget_fan_noi</zorder>
-     <zorder>widget</zorder>
+     <zorder>pushButton_fanNoi_add</zorder>
+     <zorder>pushButton_fanNoi_del</zorder>
+     <zorder>pushButton_fanNoi_revise</zorder>
+     <zorder>pushButton_fanNoi_input</zorder>
     </widget>
    </widget>
    <widget class="QWidget" name="page_fanCoil_noi">

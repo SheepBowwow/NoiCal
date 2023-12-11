@@ -15,6 +15,9 @@ public:
     explicit RoomCalTable(QWidget *parent = nullptr, QString type = "");
     ~RoomCalTable();
     int getIndexInLayout() const;
+    void setCollapsed();
+    void setIsCollapsed(bool isCollapsed);
+    void setSerialNum(int num);
 
 signals:
     void addBeforeClicked(int index);
@@ -23,6 +26,8 @@ signals:
 
 protected:
     void contextMenuEvent(QContextMenuEvent *event) override;
+
+    bool eventFilter(QObject *obj, QEvent *event) override;
 
 private slots:
     void on_comboBox_sound_type_currentTextChanged(const QString &arg1);
@@ -33,10 +38,13 @@ private slots:
 
     void on_stackedWidget_table_currentChanged(int arg1);
 
+    void on_pushButton_number_clicked();
+
 private:
     Ui::RoomCalTable *ui;
 
     void clearPage(QWidget *widget);
+    bool isCollapsed;
 };
 
 #endif // ROOMCALTABLE_H
