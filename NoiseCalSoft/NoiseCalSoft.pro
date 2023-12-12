@@ -15,7 +15,6 @@ QMAKE_CXXFLAGS += -Wno-unknown-pragmas
 
 SOURCES += \
     Component/ComponentManager.cpp \
-    create_prj.cpp \
     databasemanager.cpp \
     globle_var.cpp \
     inputDialog/dialog_air_diff.cpp \
@@ -28,11 +27,12 @@ SOURCES += \
     inputDialog/dialog_fancoil_noise.cpp \
     inputDialog/dialog_other_send_terminal.cpp \
     inputDialog/dialog_pipe.cpp \
+    inputDialog/dialog_prj_manager.cpp \
     inputDialog/dialog_pump_send.cpp \
     inputDialog/dialog_rect_damper.cpp \
     inputDialog/dialog_reducer.cpp \
-    inputDialog/dialog_returnairbox_grille.cpp \
     inputDialog/dialog_silencer.cpp \
+    inputDialog/dialog_staticBox_grille.cpp \
     inputDialog/dialog_static_box.cpp \
     inputDialog/dialog_tee.cpp \
     inputDialog/dialog_vav_terminal.cpp \
@@ -48,7 +48,6 @@ SOURCES += \
 HEADERS += \
     Component/ComponentManager.h \
     Component/ComponentStructs.h \
-    create_prj.h \
     databasemanager.h \
     global_constant.h \
     globle_var.h \
@@ -62,11 +61,12 @@ HEADERS += \
     inputDialog/dialog_fancoil_noise.h \
     inputDialog/dialog_other_send_terminal.h \
     inputDialog/dialog_pipe.h \
+    inputDialog/dialog_prj_manager.h \
     inputDialog/dialog_pump_send.h \
     inputDialog/dialog_rect_damper.h \
     inputDialog/dialog_reducer.h \
-    inputDialog/dialog_returnairbox_grille.h \
     inputDialog/dialog_silencer.h \
+    inputDialog/dialog_staticBox_grille.h \
     inputDialog/dialog_static_box.h \
     inputDialog/dialog_tee.h \
     inputDialog/dialog_vav_terminal.h \
@@ -79,7 +79,6 @@ HEADERS += \
     widget.h
 
 FORMS += \
-    create_prj.ui \
     inputDialog/dialog_air_diff.ui \
     inputDialog/dialog_aircondition_noise.ui \
     inputDialog/dialog_circular_damper.ui \
@@ -90,11 +89,12 @@ FORMS += \
     inputDialog/dialog_fancoil_noise.ui \
     inputDialog/dialog_other_send_terminal.ui \
     inputDialog/dialog_pipe.ui \
+    inputDialog/dialog_prj_manager.ui \
     inputDialog/dialog_pump_send.ui \
     inputDialog/dialog_rect_damper.ui \
     inputDialog/dialog_reducer.ui \
-    inputDialog/dialog_returnairbox_grille.ui \
     inputDialog/dialog_silencer.ui \
+    inputDialog/dialog_staticBox_grille.ui \
     inputDialog/dialog_static_box.ui \
     inputDialog/dialog_tee.ui \
     inputDialog/dialog_vav_terminal.ui \

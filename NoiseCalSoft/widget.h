@@ -35,9 +35,9 @@ public:
     void initializeTreeWidget();
     void initTableWidget(QTableWidget *tableWidget, const QStringList &headerText, const int *columnWidths, int colCount);
     void buttonToHeader(QTableWidget *tableWidget, QWidget *buttonWidget, const char *addButtonSlot, const char *delButtonSlot);
-    void addRowToTable(QTableWidget *tableWidget, const QStringList &data, const char *addButtonSlot, const char *delButtonSlot);
-    void deleteRowFromTable(QTableWidget *tableWidget, int deleteRowNum);
-    void deleteRowFromTable(QTableWidget *tableWidget_noise, QTableWidget *tableWidget_atten, QTableWidget *tableWidget_refl);
+    void addRowToTable(QTableWidget *tableWidget, const QStringList &data);
+    void deleteRowFromTable(QTableWidget *tableWidget, int deleteRowNum, QString componentName);
+    void deleteRowFromTable(QTableWidget *tableWidget_noise, QTableWidget *tableWidget_atten, QTableWidget *tableWidget_refl, QString componentName);
     template <typename NoiType, typename DialogType>
     void noiseRevision(QTableWidget *tableWidget, int row,NoiType *noi, QVector<QString*>& items, int* cols, QString name = "");
     template <typename NoiType, typename DialogType>
@@ -54,7 +54,7 @@ public:
     void initTableWidget_pump_send_tuyere();
     void initTableWidget_pump_tuyere();
     void initTableWidget_send_tuyere();
-    void initTableWidget_return_air_box_grille();
+    void initTableWidget_staticBox_grille();
     void initTableWidget_VAV_terminal();
     void initTableWidget_disp_vent_terminal();
     void initTableWidget_static_box();
@@ -85,75 +85,6 @@ private:
     int canmove=0;
 
 public slots:
-    void onAddButtonNoiLimitClicked();
-    void onDelButtonNoiLimitClicked();
-
-    void onAddButtonFanNoiClicked();
-    void onDelButtonFanNoiClicked();
-
-    void onAddButtonFanCoilNoiClicked();
-    void onDelButtonFanCoilNoiClicked();
-
-    void onAddButtonAirDiffNoiClicked();
-    void onDelButtonAirDiffNoiClicked();
-
-    void onAddButtonPumpClicked();
-    void onDelButtonPumpClicked();
-
-    void onAddButtonSendClicked();
-    void onDelButtonSendClicked();
-
-    void onAddButtonReturnAirBoxGriClicked();
-    void onDelButtonReturnAirBoxGriClicked();
-
-    void onAddButtonVAVTerminalClicked();
-    void onDelButtonVAVTerminalClicked();
-
-    void onAddButtonDispVentTerminalClicked();
-    void onDelButtonDispVentTerminalClicked();
-
-    void onAddButtonStaticBoxClicked();
-    void onDelButtonStaticBoxClicked();
-
-    void onAddButtonOtherSendTerClicked();
-    void onDelButtonOtherSendTerClicked();
-
-    void onAddButtonCSilencerClicked();
-    void onDelButtonCSilencerClicked();
-
-    void onAddButtonRSilencerClicked();
-    void onDelButtonRSilencerClicked();
-
-    void onAddButtonCSilencerEbClicked();
-    void onDelButtonCSilencerEbClicked();
-
-    void onAddButtonRSilencerEbClicked();
-    void onDelButtonRSilencerEbClicked();
-
-    void onAddButtonTeeClicked();
-    void onDelButtonTeeClicked();
-
-    void onAddButtonMultiRancClicked();
-    void onDelButtonMultiRancClicked();
-
-    void onAddButtonCirDamperClicked();
-    void onDelButtonCirDamperClicked();
-
-    void onAddButtonRectDamperClicked();
-    void onDelButtonRectDamperClicked();
-
-    void onAddButtonPipeClicked();
-    void onDelButtonPipeClicked();
-
-    void onAddButtonAirNoiClicked();
-    void onDelButtonAirNoiClicked();
-
-    void onAddButtonReducerClicked();
-    void onDelButtonReducerClicked();
-
-    void onAddButtonElbowClicked();
-    void onDelButtonElbowClicked();
-    
     void TreeWidgetItemPressed_Slot(QTreeWidgetItem* item, int n);
     void upDateTreeItem7(QTreeWidgetItem *item,QString,int num);
     void delroom(QTreeWidgetItem*,QString roomid);
@@ -178,11 +109,7 @@ private slots:
 
     void on_pushButton_air_diff_revise_clicked();
 
-    void on_pushButton_pump_tuyere_revise_clicked();
-
-    void on_pushButton_send_tuyere_revise_clicked();
-
-    void on_pushButton_return_air_box_grille_revise_clicked();
+    void on_pushButton_staticBox_grille_revise_clicked();
 
     void on_pushButton_VAV_terminal_revise_clicked();
 
@@ -191,14 +118,6 @@ private slots:
     void on_pushButton_static_box_revise_clicked();
 
     void on_pushButton_other_send_terminal_revise_clicked();
-
-    void on_pushButton_circular_silencer_revise_clicked();
-
-    void on_pushButton_rect_silencer_revise_clicked();
-
-    void on_pushButton_circular_silencerEb_revise_clicked();
-
-    void on_pushButton_rect_silencerEb_revise_clicked();
 
     void on_pushButton_tee_revise_clicked();
 
@@ -242,14 +161,6 @@ private slots:
 
     void on_pushButton_air_diff_terminal_refl_revise_clicked();
 
-    void on_pushButton_pump_tuyere_terminal_atten_revise_clicked();
-
-    void on_pushButton_send_tuyere_terminal_atten_revise_clicked();
-
-    void on_pushButton_pump_tuyere_terminal_refl_revise_clicked();
-
-    void on_pushButton_send_tuyere_terminal_refl_revise_clicked();
-
     void on_pushButton_pump_terminal_atten_table_clicked();
 
     void on_pushButton_send_terminal_atten_table_clicked();
@@ -258,9 +169,9 @@ private slots:
 
     void on_pushButton_pump_terminal_refl_table_clicked();
 
-    void on_pushButton_return_air_box_grille_terminal_atten_revise_clicked();
+    void on_pushButton_staticBox_grille_terminal_atten_revise_clicked();
 
-    void on_pushButton_return_air_box_grille_terminal_refl_revise_clicked();
+    void on_pushButton_staticBox_grille_terminal_refl_revise_clicked();
 
     void on_pushButton_disp_vent_terminal_atten_revise_clicked();
 
@@ -273,6 +184,129 @@ private slots:
     void on_pushButton_fanNoi_del_clicked();
 
     void on_pushButton_fanNoi_add_clicked();
+
+    void on_pushButton_fanCoil_noi_add_clicked();
+
+    void on_pushButton_fanCoil_noi_del_clicked();
+
+    void on_pushButton_air_noi_add_clicked();
+
+    void on_pushButton_air_noi_del_clicked();
+
+    void on_pushButton_VAV_terminal_add_clicked();
+
+    void on_pushButton_VAV_terminal_del_clicked();
+
+    void on_pushButton_circular_damper_add_clicked();
+
+    void on_pushButton_circular_damper_del_clicked();
+
+    void on_pushButton_rect_damper_add_clicked();
+
+    void on_pushButton_rect_damper_del_clicked();
+
+    void on_pushButton_air_diff_add_clicked();
+
+    void on_pushButton_air_diff_del_clicked();
+
+    void on_pushButton_pump_send_add_clicked();
+
+    void on_pushButton_pump_send_del_clicked();
+
+    void on_pushButton_air_diff_terminal_atten_add_clicked();
+
+    void on_pushButton_air_diff_terminal_atten_del_clicked();
+
+
+    void on_pushButton_air_diff_terminal_refl_add_clicked();
+
+    void on_pushButton_air_diff_terminal_refl_del_clicked();
+
+    void on_pushButton_pump_send_terminal_atten_add_clicked();
+
+    void on_pushButton_pump_send_terminal_atten_del_clicked();
+
+    void on_pushButton_pump_send_terminal_refl_del_clicked();
+
+    void on_pushButton_staticBox_grille_terminal_atten_add_clicked();
+
+    void on_pushButton_staticBox_grille_terminal_atten_del_clicked();
+
+    void on_pushButton_staticBox_grille_terminal_refl_add_clicked();
+
+    void on_pushButton_staticBox_grille_terminal_refl_del_clicked();
+
+    void on_pushButton_staticBox_grille_add_clicked();
+
+    void on_pushButton_staticBox_grille_del_clicked();
+
+    void on_pushButton_disp_vent_terminal_add_clicked();
+
+    void on_pushButton_disp_vent_terminal_del_clicked();
+
+    void on_pushButton_disp_vent_terminal_atten_add_clicked();
+
+    void on_pushButton_disp_vent_terminal_atten_del_clicked();
+
+    void on_pushButton_disp_vent_terminal_refl_add_clicked();
+
+    void on_pushButton_disp_vent_terminal_refl_del_clicked();
+
+    void on_pushButton_other_send_terminal_add_clicked();
+
+    void on_pushButton_other_send_terminal_del_clicked();
+
+    void on_pushButton_other_send_terminal_atten_add_clicked();
+
+    void on_pushButton_other_send_terminal_atten_del_clicked();
+
+    void on_pushButton_other_send_terminal_refl_add_clicked();
+
+    void on_pushButton_other_send_terminal_refl_del_clicked();
+
+    void on_pushButton_pump_send_terminal_refl_add_clicked();
+
+    void on_pushButton_static_box_add_clicked();
+
+    void on_pushButton_static_box_del_clicked();
+
+    void on_pushButton_duct_with_multi_ranc_add_clicked();
+
+    void on_pushButton_duct_with_multi_ranc_del_clicked();
+
+    void on_pushButton_tee_add_clicked();
+
+    void on_pushButton_tee_del_clicked();
+
+    void on_pushButton_pipe_add_clicked();
+
+    void on_pushButton_pipe_del_clicked();
+
+    void on_pushButton_elbow_add_clicked();
+
+    void on_pushButton_elbow_del_clicked();
+
+    void on_pushButton_reducer_add_clicked();
+
+    void on_pushButton_reducer_del_clicked();
+
+    void on_pushButton_silencer_add_clicked();
+
+    void on_pushButton_silencer_del_clicked();
+
+    void onCreateProjectClicked(QString projectName);
+
+    void on_pushButton_pump_send_revise_clicked();
+
+    void on_pushButton_pump_send_terminal_refl_revise_clicked();
+
+    void on_pushButton_pump_send_terminal_atten_revise_clicked();
+
+    void on_pushButton_silencer_revise_clicked();
+
+    void on_pushButton_noi_limit_add_clicked();
+
+    void on_pushButton_noi_limit_del_clicked();
 
 private:
     Ui::Widget *ui;
@@ -308,7 +342,7 @@ private:
     QTreeWidgetItem *item_air;                                         //2.2.1 布风器
     QTreeWidgetItem *item_diff;                                         //2.2.1 散流器
     QTreeWidgetItem *item_pump_send_tuyere;                         //2.2.2 抽/送风头                   1
-    QTreeWidgetItem *item_return_air_box_grille;                            //2.2.3 回风箱+格栅          1
+    QTreeWidgetItem *item_staticBox_grille;                            //2.2.3 回风箱+格栅          1
     QTreeWidgetItem *item_disp_vent_terminal;                //2.2.4 置换通风末端
     QTreeWidgetItem *item_other_send_terminal;                //2.2.5 其他送风末端
     QTreeWidgetItem *item_noise_atten_in_pipe_acce;                //3. 管路及附件噪音衰减
@@ -326,7 +360,7 @@ private:
     QTreeWidgetItem *item_air_terminal_atten;
     QTreeWidgetItem *item_diff_terminal_atten;
     QTreeWidgetItem *item_pump_send_tuyere_terminal_atten;
-    QTreeWidgetItem *item_return_air_box_grille_terminal_atten;
+    QTreeWidgetItem *item_staticBox_grille_terminal_atten;
     QTreeWidgetItem *item_disp_vent_terminal_atten;
     QTreeWidgetItem *item_other_send_terminal_atten;
 
@@ -335,7 +369,7 @@ private:
     QTreeWidgetItem *item_air_relf_atten;
     QTreeWidgetItem *item_diff_relf_atten;
     QTreeWidgetItem *item_pump_send_tuyere_relf_atten;
-    QTreeWidgetItem *item_return_air_box_grille_relf_atten;
+    QTreeWidgetItem *item_staticBox_grille_relf_atten;
     QTreeWidgetItem *item_disp_vent_relf_atten;
     QTreeWidgetItem *item_other_send_relf_atten;
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog_returnAirBox_grille</class>
- <widget class="QDialog" name="Dialog_returnAirBox_grille">
+ <class>Dialog_staticBox_grille</class>
+ <widget class="QDialog" name="Dialog_staticBox_grille">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -14,7 +14,7 @@
    <string>Dialog</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">#Dialog_returnAirBox_grille
+   <string notr="true">#Dialog_staticBox_grille
 {
 background-color: rgb(255, 255, 255);
 }
@@ -31,7 +31,7 @@ font-family: 'Microsoft YaHei';
 font-size: 13px;
 }</string>
   </property>
-  <widget class="QWidget" name="widget_return_air_box_grille" native="true">
+  <widget class="QWidget" name="widget_staticBox_grille" native="true">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -41,7 +41,7 @@ font-size: 13px;
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">#widget_return_air_box_grille
+    <string notr="true">#widget_staticBox_grille
 {
 border: 1px solid #000000;
 }</string>

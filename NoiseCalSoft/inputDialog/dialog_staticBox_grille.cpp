@@ -1,5 +1,5 @@
-#include "inputDialog/dialog_returnairbox_grille.h"
-#include "ui_dialog_returnairbox_grille.h"
+#include "inputDialog/dialog_staticBox_grille.h"
+#include "ui_dialog_staticBox_grille.h"
 #include "databasemanager.h"
 #include "global_constant.h"
 #include "globle_var.h"
@@ -8,10 +8,10 @@
 #include <QSet>
 #define Pi 3.14159265358979323846
 
-Dialog_returnAirBox_grille::Dialog_returnAirBox_grille(QWidget *parent, int editRow,  const StaticBox_grille_noise& data) :
+Dialog_staticBox_grille::Dialog_staticBox_grille(QWidget *parent, int editRow,  const StaticBox_grille_noise& data) :
     InputBaseDialog(parent),
     editRow(editRow), // 初始化editRow
-    ui(new Ui::Dialog_returnAirBox_grille)
+    ui(new Ui::Dialog_staticBox_grille)
 {
     ui->setupUi(this);
     setTopWidget(ui->widget_top);  // 设置顶部部件
@@ -106,19 +106,19 @@ Dialog_returnAirBox_grille::Dialog_returnAirBox_grille(QWidget *parent, int edit
     this->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint | Qt::WindowStaysOnTopHint);
 }
 
-Dialog_returnAirBox_grille::~Dialog_returnAirBox_grille()
+Dialog_staticBox_grille::~Dialog_staticBox_grille()
 {
     delete ui;
 }
 
 
-void* Dialog_returnAirBox_grille::getNoi()
+void* Dialog_staticBox_grille::getNoi()
 {
     return noi == nullptr ? nullptr : noi;
 }
 
 //计算总值
-void Dialog_returnAirBox_grille::total_noi()
+void Dialog_staticBox_grille::total_noi()
 {
     double noi_63 = ui->lineEdit_63->text().toDouble();
     double noi_125 = ui->lineEdit_125->text().toDouble();
@@ -136,7 +136,7 @@ void Dialog_returnAirBox_grille::total_noi()
 }
 
 //计算总值 槽函数实现
-void Dialog_returnAirBox_grille::calTotalNoise() {
+void Dialog_staticBox_grille::calTotalNoise() {
     // 检查所有八个QLineEdit是否都有数据
     if(ui->lineEdit_63->text().isEmpty() || ui->lineEdit_125->text().isEmpty()
        || ui->lineEdit_250->text().isEmpty() || ui->lineEdit_500->text().isEmpty() ||
@@ -150,7 +150,7 @@ void Dialog_returnAirBox_grille::calTotalNoise() {
 }
 
 //计算总值 槽函数实现
-void Dialog_returnAirBox_grille::calReflNoi()
+void Dialog_staticBox_grille::calReflNoi()
 {
     double D = 0;
     if(ui->radioButton_circle->isChecked())
@@ -177,7 +177,7 @@ void Dialog_returnAirBox_grille::calReflNoi()
 }
 
 //点击确认键
-void Dialog_returnAirBox_grille::on_pushButton_confirm_clicked()
+void Dialog_staticBox_grille::on_pushButton_confirm_clicked()
 {
     this->noi = new StaticBox_grille_noise;
 
@@ -239,7 +239,7 @@ void Dialog_returnAirBox_grille::on_pushButton_confirm_clicked()
 }
 
 
-void Dialog_returnAirBox_grille::on_comboBox_model_currentTextChanged(const QString &arg1)
+void Dialog_staticBox_grille::on_comboBox_model_currentTextChanged(const QString &arg1)
 {
     int band[8] = {63 , 125, 250, 500, 1000, 2000, 4000, 8000};
     QVector<QLineEdit*> v_lineEdit = {ui->lineEdit_63, ui->lineEdit_125, ui->lineEdit_250, ui->lineEdit_500, ui->lineEdit_1k, ui->lineEdit_2k, ui->lineEdit_4k, ui->lineEdit_8k};
@@ -252,13 +252,13 @@ void Dialog_returnAirBox_grille::on_comboBox_model_currentTextChanged(const QStr
     }
 }
 
-void Dialog_returnAirBox_grille::on_close_clicked()
+void Dialog_staticBox_grille::on_close_clicked()
 {
     this->close();
 }
 
 
-void Dialog_returnAirBox_grille::on_radioButton_circle_clicked()
+void Dialog_staticBox_grille::on_radioButton_circle_clicked()
 {
     ui->lineEdit_63_refl->clear();
     ui->lineEdit_125_refl->clear();
@@ -275,7 +275,7 @@ void Dialog_returnAirBox_grille::on_radioButton_circle_clicked()
 }
 
 
-void Dialog_returnAirBox_grille::on_radioButton_rect_clicked()
+void Dialog_staticBox_grille::on_radioButton_rect_clicked()
 {
     ui->lineEdit_63_refl->clear();
     ui->lineEdit_125_refl->clear();
@@ -291,7 +291,7 @@ void Dialog_returnAirBox_grille::on_radioButton_rect_clicked()
 }
 
 
-void Dialog_returnAirBox_grille::on_radioButton_known_clicked()
+void Dialog_staticBox_grille::on_radioButton_known_clicked()
 {
     ui->lineEdit_63_refl->clear();
     ui->lineEdit_125_refl->clear();
@@ -313,7 +313,7 @@ void Dialog_returnAirBox_grille::on_radioButton_known_clicked()
 }
 
 
-void Dialog_returnAirBox_grille::on_radioButton_formula_clicked()
+void Dialog_staticBox_grille::on_radioButton_formula_clicked()
 {
     ui->lineEdit_63_refl->clear();
     ui->lineEdit_125_refl->clear();
@@ -335,7 +335,7 @@ void Dialog_returnAirBox_grille::on_radioButton_formula_clicked()
 }
 
 
-void Dialog_returnAirBox_grille::on_pushButton_clicked()
+void Dialog_staticBox_grille::on_pushButton_clicked()
 {
     // 使用资源路径
     QString imagePath = ":/images/image/refl.jpg"; // 替换为你的资源路径

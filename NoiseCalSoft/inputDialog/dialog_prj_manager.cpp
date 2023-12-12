@@ -1,23 +1,23 @@
-#include "create_prj.h"
-#include "ui_create_prj.h"
+#include "dialog_prj_manager.h"
+#include "ui_dialog_prj_manager.h"
 #include "globle_var.h"
-#include <QDebug>
 
-create_prj::create_prj(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::create_prj)
+Dialog_prj_manager::Dialog_prj_manager(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::Dialog_prj_manager)
 {
     ui->setupUi(this);
     this->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint | Qt::WindowStaysOnTopHint);
 }
 
-create_prj::~create_prj()
+Dialog_prj_manager::~Dialog_prj_manager()
 {
     delete ui;
 }
+
 //可以在构造函数中初始一下last变量用其成员函数setX,setY就是了
 //接下来就是对三个鼠标事件的重写
-void create_prj::mousePressEvent(QMouseEvent *e)
+void Dialog_prj_manager::mousePressEvent(QMouseEvent *e)
 {
     if(e->button()==Qt::LeftButton&&!this->isMaximized())
     {
@@ -29,7 +29,7 @@ void create_prj::mousePressEvent(QMouseEvent *e)
         }
     }
 }
-void create_prj::mouseMoveEvent(QMouseEvent *e)
+void Dialog_prj_manager::mouseMoveEvent(QMouseEvent *e)
 {
     if(canmove==1)
     {
@@ -39,7 +39,7 @@ void create_prj::mouseMoveEvent(QMouseEvent *e)
         move(x()+dx, y()+dy);
     }
 }
-void create_prj::mouseReleaseEvent(QMouseEvent *e)
+void Dialog_prj_manager::mouseReleaseEvent(QMouseEvent *e)
 {
     if(canmove==1)
     {
@@ -50,18 +50,19 @@ void create_prj::mouseReleaseEvent(QMouseEvent *e)
     }
 }
 
-void create_prj::on_close_clicked()
+void Dialog_prj_manager::on_close_clicked()
 {
     this->close();
 }
 
-void create_prj::on_pushButton_create_prj_clicked()
+void Dialog_prj_manager::on_pushButton_create_prj_clicked()
 {
     QString projectName = ui->lineEdit_prj_num->text();
     project.prj_name = projectName;
 
+    // 发射新的信号，传递项目名称
+    emit createProjectClicked(projectName);
+
     // 关闭新建项目窗口
     this->close();
-
 }
-

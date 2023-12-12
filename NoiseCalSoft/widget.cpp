@@ -1,12 +1,12 @@
 #include "widget.h"
 #include "ui_widget.h"
 /**窗口类**/
-#include "create_prj.h"
+#include "inputDialog/dialog_prj_manager.h""
 #include "inputDialog/dialog_fan_noise.h"
 #include "inputDialog/dialog_fancoil_noise.h"
 #include "inputDialog/dialog_air_diff.h"
 #include "inputDialog/dialog_pump_send.h"
-#include "inputDialog/dialog_returnairbox_grille.h"
+#include "inputDialog/dialog_staticBox_grille.h"
 #include "inputDialog/dialog_vav_terminal.h"
 #include "inputDialog/dialog_disp_vent_terminal.h"
 #include "inputDialog/dialog_static_box.h"
@@ -31,7 +31,9 @@
 #include <QTimer>
 #include <QStandardItemModel>
 #include <QCheckBox>
-#include <QGraphicsDropShadowEffect>
+#include "Component/ComponentManager.h"
+
+ComponentManager& componentManager = ComponentManager::getInstance();
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
@@ -45,7 +47,7 @@ Widget::Widget(QWidget *parent)
     this->initTableWidget_fanCoil_noi();
     this->initTableWidget_air_diff();
     this->initTableWidget_pump_send_tuyere();
-    this->initTableWidget_return_air_box_grille();
+    this->initTableWidget_staticBox_grille();
     this->initTableWidget_VAV_terminal();
     this->initTableWidget_disp_vent_terminal();
     this->initTableWidget_static_box();
@@ -133,7 +135,7 @@ void Widget::buttonToHeader(QTableWidget *tableWidget, QWidget *buttonWidget, co
     buttonWidget->setStyleSheet(QString("#%1{background : rgb(157, 198, 230);}").arg(buttonWidget->objectName()));
 }
 
-void Widget::addRowToTable(QTableWidget *tableWidget, const QStringList &data, const char *addButtonSlot, const char *delButtonSlot)
+void Widget::addRowToTable(QTableWidget *tableWidget, const QStringList &data)
 {
     int rowCount = tableWidget->rowCount();
     tableWidget->setRowCount(rowCount + 1);
@@ -162,7 +164,7 @@ void Widget::addRowToTable(QTableWidget *tableWidget, const QStringList &data, c
     }
 }
 
-void Widget::deleteRowFromTable(QTableWidget *tableWidget, int deleteRowNum)
+void Widget::deleteRowFromTable(QTableWidget *tableWidget, int deleteRowNum, QString componentName)
 {
     // 获取选中的行索引
     QList<int> selectedRows;
@@ -175,53 +177,79 @@ void Widget::deleteRowFromTable(QTableWidget *tableWidget, int deleteRowNum)
         }
     }
 
-
-    for (int i = selectedRows.size() - 1; i >= 0; --i)
+    // 弹窗确认
+    QString confirmationMessage = "确认删除以下行吗？\n";
+    for (int i = 0; i < selectedRows.size(); ++i)
     {
         int row = selectedRows[i];
-        tableWidget->removeRow(row);
+        confirmationMessage += QString::number(deleteRowNum == 1 ? (row + 1) : ((row + 1) / 2)) + "\n"; // 从1开始计数
+    }
+
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("确认删除");
+    msgBox.setText(confirmationMessage);
+    msgBox.setIcon(QMessageBox::Warning);
+    QPushButton *yesButton = msgBox.addButton("确认", QMessageBox::YesRole);
+    QPushButton *noButton = msgBox.addButton("取消", QMessageBox::NoRole);
+    msgBox.exec();
+
+    if (msgBox.clickedButton() == yesButton)
+    {
+        for (int i = selectedRows.size() - 1; i >= 0; --i)
+        {
+            int row = selectedRows[i];
+            tableWidget->removeRow(row);
+            if(deleteRowNum == 2)
+            {
+                tableWidget->removeRow(row - 1);
+            }
+            if(deleteRowNum == 2)
+                componentManager.del_and_updateTableID((row + 1) / 2, componentName);
+            else
+                componentManager.del_and_updateTableID(row + 1, componentName);
+        }
+
+
+        // 重新编号
+        for (int row = 0; row < tableWidget->rowCount(); ++row) {
+            QTableWidgetItem* item = new QTableWidgetItem(QString::number(deleteRowNum == 1 ? (row + 1) : (row / 2 + 1)));
+            tableWidget->setItem(row, 1, item); // Assuming the sequence numbers are in the second column (index 1)
+            item->setTextAlignment(Qt::AlignCenter);
+            item->setFlags(Qt::ItemIsEditable);
+            item->setBackground(QBrush(Qt::lightGray));
+            item->setData(Qt::ForegroundRole, QColor(70, 70, 70));
+        }
         if(deleteRowNum == 2)
         {
-            tableWidget->removeRow(row - 1);
-        }
-    }
-
-
-    // 重新编号
-    for (int row = 0; row < tableWidget->rowCount(); ++row) {
-        QTableWidgetItem* item = new QTableWidgetItem(QString::number(deleteRowNum == 1 ? (row + 1) : (row / 2 + 1)));
-        tableWidget->setItem(row, 1, item); // Assuming the sequence numbers are in the second column (index 1)
-        item->setTextAlignment(Qt::AlignCenter);
-        item->setFlags(Qt::ItemIsEditable);
-        item->setBackground(QBrush(Qt::lightGray));
-        item->setData(Qt::ForegroundRole, QColor(70, 70, 70));
-    }
-    if(deleteRowNum == 2)
-    {
-        for(int row = 0; row < tableWidget->rowCount(); row += 2)
-        {
-            for(int i = 0; i < tableWidget->columnCount(); i++)
+            for(int row = 0; row < tableWidget->rowCount(); row += 2)
             {
-                if(tableWidget == ui->tableWidget_fanCoil_noi)
+                for(int i = 0; i < tableWidget->columnCount(); i++)
                 {
-                    if(i < 8 || i > 17)
+                    if(tableWidget == ui->tableWidget_fanCoil_noi)
                     {
-                        tableWidget->setSpan(row, i, 2, 1);
+                        if(i < 8 || i > 17)
+                        {
+                            tableWidget->setSpan(row, i, 2, 1);
+                        }
                     }
-                }
-                else
-                {
-                    if(i < 7 || i > 16)
+                    else
                     {
-                        tableWidget->setSpan(row, i, 2, 1);
+                        if(i < 7 || i > 16)
+                        {
+                            tableWidget->setSpan(row, i, 2, 1);
+                        }
                     }
                 }
             }
         }
     }
+    else if (msgBox.clickedButton() == noButton)
+    {
+        return;
+    }
 }
 
-void Widget::deleteRowFromTable(QTableWidget *tableWidget_noise, QTableWidget *tableWidget_atten, QTableWidget *tableWidget_refl)
+void Widget::deleteRowFromTable(QTableWidget *tableWidget_noise, QTableWidget *tableWidget_atten, QTableWidget *tableWidget_refl, QString componentName)
 {
     // 获取选中的行索引
     QSet<int> selectedRows;
@@ -243,6 +271,8 @@ void Widget::deleteRowFromTable(QTableWidget *tableWidget_noise, QTableWidget *t
         tableWidget_noise->removeRow(row);
         tableWidget_atten->removeRow(row);
         tableWidget_refl->removeRow(row);
+
+        componentManager.del_and_updateTableID(row + 1, componentName);
     }
 
 
@@ -273,6 +303,10 @@ void Widget::noiseRevision(QTableWidget *tableWidget, int row,NoiType *noi, QVec
             *(items[i]) = tableWidget->item(row,cols[i])->text();
         }
     }
+    else
+    {
+        return;
+    }
 
     // 创建模态对话框，并设置为模态
     DialogType* dialog;
@@ -298,8 +332,9 @@ void Widget::noiseRevision(QTableWidget *tableWidget, int row,NoiType *noi, QVec
         {
             tableWidget->item(row,cols[i])->setText(*(items[i]));
         }
+        delete dialogNoi;  // 删除 dialogNoi，而不是 noi
     }
-    delete noi;
+    delete dialog;
 }
 
 template <typename NoiType, typename DialogType>
@@ -323,6 +358,10 @@ void Widget::noiseRevision(QTableWidget *currentTableWidget, QTableWidget *table
                 *(items[i][j]) = tableWidgets[i]->item(row,cols[i][j])->text();
             }
         }
+    }
+    else
+    {
+        return;
     }
 
     // 创建模态对话框，并设置为模态
@@ -352,8 +391,9 @@ void Widget::noiseRevision(QTableWidget *currentTableWidget, QTableWidget *table
                 tableWidgets[i]->item(row,cols[i][j])->setText(*(items[i][j]));
             }
         }
+        delete dialogNoi;  // 删除 dialogNoi，而不是 noi
     }
-    delete noi;
+    delete dialog;  // 只在这里删除对话框，而不是 noi
 }
 
 #pragma endregion }
@@ -373,10 +413,6 @@ void Widget::initializeTreeWidget()
     item_prj = new QTreeWidgetItem(QStringList("工程-" + project.prj_name));  //工程名
     ui->treeWidget->setHeaderItem(item_prj);
     item_prj_info = new QTreeWidgetItem(QStringList("1.项目信息"));   //工程信息
-//    item_input = new QTreeWidgetItem(item_prj,QStringList("输入模块"));        //输入模块
-//    item_cal = new QTreeWidgetItem(item_prj,QStringList("计算模块"));          //计算模块
-//    item_output = new QTreeWidgetItem(item_prj,QStringList("输出模块"));       //输出模块
-//    item_auth_manage = new QTreeWidgetItem(item_prj,QStringList("权限管理"));   //权限管理
 
     //输出模块
     item_sound_sorce_noise = new QTreeWidgetItem(QStringList("2.声源噪音"));   //1音源噪音
@@ -392,7 +428,7 @@ void Widget::initializeTreeWidget()
     item_terminal_airflow_noise = new QTreeWidgetItem(item_pipe_and_acce_airflow_noise,QStringList("末端气流噪声"));                           //2.2 末端气流噪声
     item_air_diff = new QTreeWidgetItem(item_terminal_airflow_noise,QStringList("布风器+散流器"));                                         //2.2.1 布风器+散流器
     item_pump_send_tuyere = new QTreeWidgetItem(item_terminal_airflow_noise,QStringList("抽/送风头"));                         //2.2.2 抽/送风头
-    item_return_air_box_grille = new QTreeWidgetItem(item_terminal_airflow_noise,QStringList("静压箱+格栅"));                            //2.2.3 回风箱+格栅
+    item_staticBox_grille = new QTreeWidgetItem(item_terminal_airflow_noise,QStringList("静压箱+格栅"));                            //2.2.3 回风箱+格栅
     item_disp_vent_terminal = new QTreeWidgetItem(item_terminal_airflow_noise,QStringList("置换通风末端"));                //2.2.4 置换通风末端
     item_other_send_terminal = new QTreeWidgetItem(item_terminal_airflow_noise,QStringList("其他送风末端"));                //2.2.5 静压箱孔板送风
 
@@ -409,14 +445,14 @@ void Widget::initializeTreeWidget()
     item_terminal_atten = new QTreeWidgetItem(item_noise_atten_in_pipe_acce,QStringList("末端衰减"));                                //3.6 末端衰减
     item_air_diff_terminal_atten = new QTreeWidgetItem(item_terminal_atten,QStringList("布风器+散流器"));
     item_pump_send_tuyere_terminal_atten = new QTreeWidgetItem(item_terminal_atten,QStringList("抽/送风头"));
-    item_return_air_box_grille_terminal_atten = new QTreeWidgetItem(item_terminal_atten,QStringList("回风箱+格栅"));
+    item_staticBox_grille_terminal_atten = new QTreeWidgetItem(item_terminal_atten,QStringList("静压箱+格栅"));
     item_disp_vent_terminal_atten = new QTreeWidgetItem(item_terminal_atten,QStringList("置换通风末端"));
     item_other_send_terminal_atten = new QTreeWidgetItem(item_terminal_atten,QStringList("其他送风末端"));
 
     item_terminal_refl_atten = new QTreeWidgetItem(item_noise_atten_in_pipe_acce,QStringList("末端反射衰减")); //3.7 末端反射衰减
     item_air_diff_relf_atten = new QTreeWidgetItem(item_terminal_refl_atten,QStringList("布风器+散流器"));
     item_pump_send_tuyere_relf_atten = new QTreeWidgetItem(item_terminal_refl_atten,QStringList("抽/送风头"));
-    item_return_air_box_grille_relf_atten = new QTreeWidgetItem(item_terminal_refl_atten,QStringList("回风箱+格栅"));
+    item_staticBox_grille_relf_atten = new QTreeWidgetItem(item_terminal_refl_atten,QStringList("静压箱+格栅"));
     item_disp_vent_relf_atten = new QTreeWidgetItem(item_terminal_refl_atten,QStringList("置换通风末端"));
     item_other_send_relf_atten = new QTreeWidgetItem(item_terminal_refl_atten,QStringList("其他送风末端"));
 
@@ -447,31 +483,27 @@ void Widget::initializeTreeWidget()
 //工程管理按钮
 void Widget::on_pushButto_prj_manage_clicked()
 {
-    create_prj *newPrjWindow = new create_prj();  // 创建create_prj对象，传入当前窗口为父窗口
+    Dialog_prj_manager *dialog = new Dialog_prj_manager(this);
 
-    // 禁用主窗口的用户输入
-    setEnabled(false);
-
-    // 显示新窗口
-    newPrjWindow->show();
+    // 连接新的信号和槽
+    connect(dialog, SIGNAL(createProjectClicked(QString)), this, SLOT(onCreateProjectClicked(QString)));
 
     if(ui->stackedWidget->currentWidget() != ui->page_prj_info)
         ui->stackedWidget->setCurrentWidget(ui->page_prj_info);
 
-    // 等待新窗口关闭
-    while (newPrjWindow->isVisible()) {
-        QCoreApplication::processEvents();
+    if (dialog->exec() == QDialog::Accepted)
+    {
+        // 如果对话框返回 Accepted，可以在这里执行一些操作
     }
+}
 
-    // 禁用主窗口的用户输入
-    setEnabled(true);
-
-    ui->lineEdit_boat_num->setText(project.prj_name);
+void Widget::onCreateProjectClicked(QString projectName)
+{
+    ui->lineEdit_boat_num->setText(projectName);
     initializeTreeWidget();
 }
 
-// 处理"+"按钮点击事件的逻辑
-void Widget::onAddButtonNoiLimitClicked()
+void Widget::on_pushButton_noi_limit_add_clicked()
 {
     int rowCount = ui->tableWidget_noi_limit->rowCount();
     ui->tableWidget_noi_limit->setRowCount(rowCount + 1);
@@ -489,35 +521,53 @@ void Widget::onAddButtonNoiLimitClicked()
     ui->tableWidget_noi_limit->setItem(rowCount, 1, item);
     item->setTextAlignment(Qt::AlignCenter); // 将内容居中对齐
     item->setFlags(Qt::ItemIsEditable); // 设置为只读
-
-    // 处理加减按钮
-    QWidget* widget_addDel = new QWidget();
-    QHBoxLayout* layout_addDel = new QHBoxLayout(widget_addDel);
-
-    QPushButton* addButton = new QPushButton("+");
-    addButton->setFixedSize(15, 15);
-    layout_addDel->addWidget(addButton);
-
-    QPushButton* delButton = new QPushButton("-");
-    delButton->setFixedSize(15, 15);
-    layout_addDel->addWidget(delButton);
-
-    ui->tableWidget_noi_limit->setCellWidget(rowCount, ui->tableWidget_noi_limit->columnCount() - 1, widget_addDel);
-
-    // 在构造函数或者初始化函数中连接信号和槽函数
-    connect(addButton, SIGNAL(clicked()), this, SLOT(onAddButtonNoiLimitClicked()));
-    connect(delButton, SIGNAL(clicked()), this, SLOT(onDelButtonNoiLimitClicked()));
 }
 
-// 处理"-"按钮点击事件的逻辑
-void Widget::onDelButtonNoiLimitClicked()
+void Widget::on_pushButton_noi_limit_del_clicked()
 {
-    deleteRowFromTable(ui->tableWidget_noi_limit, 1);
-
+    // 获取选中的行索引
+    QList<int> selectedRows;
     for (int row = 0; row < ui->tableWidget_noi_limit->rowCount(); ++row) {
-        QTableWidgetItem* item = ui->tableWidget_noi_limit->item(row, 1);
-        item->setBackground(QBrush(Qt::white));
-        item->setData(Qt::ForegroundRole, QColor(0, 0, 0));
+        QWidget* widget = ui->tableWidget_noi_limit->cellWidget(row, 0); // Assuming the checkbox is in the first column (index 0)
+        QCheckBox* checkBox = widget->findChild<QCheckBox*>(); // Find the checkbox within the widget
+
+        if (checkBox && checkBox->isChecked()) {
+            selectedRows.append(row);
+        }
+    }
+
+    // 弹窗确认
+    QString confirmationMessage = "确认删除以下行吗？\n";
+    for (int i = 0; i < selectedRows.size(); ++i)
+    {
+        int row = selectedRows[i];
+        confirmationMessage += QString::number(row + 1) + "\n"; // 从1开始计数
+    }
+
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("确认删除");
+    msgBox.setText(confirmationMessage);
+    msgBox.setIcon(QMessageBox::Warning);
+    QPushButton *yesButton = msgBox.addButton("确认", QMessageBox::YesRole);
+    QPushButton *noButton = msgBox.addButton("取消", QMessageBox::NoRole);
+    msgBox.exec();
+
+    if (msgBox.clickedButton() == yesButton)
+    {
+        for (int i = selectedRows.size() - 1; i >= 0; --i)
+        {
+            int row = selectedRows[i];
+            ui->tableWidget_noi_limit->removeRow(row);
+        }
+
+
+        // 重新编号
+        for (int row = 0; row < ui->tableWidget_noi_limit->rowCount(); ++row) {
+            QTableWidgetItem* item = new QTableWidgetItem(QString::number(row + 1));
+            ui->tableWidget_noi_limit->setItem(row, 1, item); // Assuming the sequence numbers are in the second column (index 1)
+            item->setTextAlignment(Qt::AlignCenter);
+            item->setFlags(Qt::ItemIsEditable);
+        }
     }
 }
 
@@ -555,18 +605,14 @@ void Widget::on_pushButton_prj_save_clicked()
 //初始化表格
 void Widget::initTableWidget_noi_limit()
 {
-    int colCount = 6;
+    int colCount = 5;
     // 设置表头标题
     QStringList headerText;
-    headerText << "" << "序号" << "房间类型" << "噪声限值dB(A)" << "处所类型" << "";
+    headerText << "" << "序号" << "房间类型" << "噪声限值dB(A)" << "处所类型";
     // 设置每列的宽度
-    int columnWidths[] = {30, 38, 130, 190, 125, 90};
+    int columnWidths[] = {30, 38, 130, 190, 125};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_noi_limit, headerText, columnWidths, colCount);
-
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_noi_limit, ui->buttonWidget_noi_limit,
-                      SLOT(onAddButtonNoiLimitClicked()), SLOT(onDelButtonNoiLimitClicked()));
 }
 
 //当表格item改变，rooms跟着改变
@@ -645,27 +691,20 @@ void Widget::initTableWidget_fan_noi()
 //                      SLOT(onAddButtonFanNoiClicked()), SLOT(onDelButtonFanNoiClicked()));
 }
 
-// 处理"+"按钮点击事件的逻辑
-void Widget::onAddButtonFanNoiClicked()
-{
-
-}
-
 void Widget::on_pushButton_fanNoi_add_clicked()
 {
     QTableWidget *tableWidget = ui->tableWidget_fan_noi;
     int rowCount = tableWidget->rowCount(); //获取当前行数
     std::unique_ptr<Fan_noise> noi;
     Dialog_fan_noise *dialog = new Dialog_fan_noise(this);
-    const char *addButtonSlot = SLOT(onAddButtonFanNoiClicked());
-    const char *delButtonSlot = SLOT(onDelButtonFanNoiClicked());
 
     if (dialog->exec() == QDialog::Accepted) {
         // 使用 std::make_unique 创建 std::unique_ptr
         noi = std::make_unique<Fan_noise>(std::move(*static_cast<Fan_noise*>(dialog->getNoi())));
+        noi->table_id = QString::number(tableWidget->rowCount() / 2 + 1);
         if (noi != nullptr) {
             QStringList data_in = {
-                QString::number(tableWidget->rowCount() / 2 + 1),
+                noi->table_id,
                 noi->number,
                 noi->brand,
                 noi->model,
@@ -703,8 +742,10 @@ void Widget::on_pushButton_fanNoi_add_clicked()
                 "厂家"
             };
             // 使用通用函数添加行
-            addRowToTable(tableWidget, data_in, addButtonSlot, delButtonSlot);
-            addRowToTable(tableWidget, data_out, addButtonSlot, delButtonSlot);
+            addRowToTable(tableWidget, data_in);
+            addRowToTable(tableWidget, data_out);
+
+            componentManager.addFan(QSharedPointer<Fan_noise>(noi.release()));
             for(int i = 0; i < tableWidget->columnCount(); i++)
             {
                 if(tableWidget == ui->tableWidget_fanCoil_noi)
@@ -728,13 +769,7 @@ void Widget::on_pushButton_fanNoi_add_clicked()
 
 void Widget::on_pushButton_fanNoi_del_clicked()
 {
-    deleteRowFromTable(ui->tableWidget_fan_noi, 2);
-}
-
-// 处理"-"按钮点击事件的逻辑
-void Widget::onDelButtonFanNoiClicked()
-{
-
+    deleteRowFromTable(ui->tableWidget_fan_noi, 2, "风机");
 }
 
 //修改按钮
@@ -825,35 +860,29 @@ void Widget::on_pushButton_fanNoi_revise_clicked()
 //初始化表格
 void Widget::initTableWidget_fanCoil_noi()
 {
-    int colCount = 20;
+    int colCount = 19;
     QStringList headerText;
     headerText << "" << "序号" << "编号" << "品牌" << "类型" << "型号" << "风量" << "静压" << "噪音位置" << "63Hz" << "125Hz" << "250Hz"
-               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源" << "";
-    int columnWidths[] = {30, 40, 120, 90, 90, 90, 90, 90, 80, 55, 55, 55, 55, 55, 55, 55, 55, 80, 55, 60};
+               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";
+    int columnWidths[] = {30, 40, 120, 90, 90, 90, 90, 90, 80, 55, 55, 55, 55, 55, 55, 55, 55, 80, 55};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_fanCoil_noi, headerText, columnWidths, colCount);
-
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_fanCoil_noi, ui->buttonWidget_fanCoil_noi,
-                      SLOT(onAddButtonFanCoilNoiClicked()), SLOT(onDelButtonFanCoilNoiClicked()));
 }
 
-// 处理"+"按钮点击事件的逻辑
-void Widget::onAddButtonFanCoilNoiClicked()
+void Widget::on_pushButton_fanCoil_noi_add_clicked()
 {
     //修改
     QTableWidget *tableWidget = ui->tableWidget_fanCoil_noi;
     Dialog_fanCoil_noise *dialog = new Dialog_fanCoil_noise(this);
-    FanCoil_noise* noi;
-    const char *addButtonSlot = SLOT(onAddButtonFanCoilNoiClicked());
-    const char *delButtonSlot = SLOT(onDelButtonFanCoilNoiClicked());
+    std::unique_ptr<FanCoil_noise> noi;
 
     int rowCount = tableWidget->rowCount(); //获取当前行数
     if (dialog->exec() == QDialog::Accepted) {
-        noi = static_cast<FanCoil_noise*>(dialog->getNoi());
+        noi = std::make_unique<FanCoil_noise>(std::move(*static_cast<FanCoil_noise*>(dialog->getNoi())));
+        noi->table_id = QString::number(tableWidget->rowCount() / 2 + 1);
         if (noi != nullptr) {
             QStringList data_in = {
-                QString::number(tableWidget->rowCount() / 2 + 1),
+                noi->table_id,
                 noi->number,
                 noi->brand,
                 noi->type,
@@ -893,8 +922,10 @@ void Widget::onAddButtonFanCoilNoiClicked()
                 "厂家"
             };
             // 使用通用函数添加行
-            addRowToTable(tableWidget, data_in, addButtonSlot, delButtonSlot);
-            addRowToTable(tableWidget, data_out, addButtonSlot, delButtonSlot);
+            addRowToTable(tableWidget, data_in);
+            addRowToTable(tableWidget, data_out);
+
+            componentManager.addFanCoil(QSharedPointer<FanCoil_noise>(noi.release()));
             for(int i = 0; i < tableWidget->columnCount(); i++)
             {
                 if(i < 8 || i > 17)
@@ -906,10 +937,10 @@ void Widget::onAddButtonFanCoilNoiClicked()
     }
 }
 
-// 处理"-"按钮点击事件的逻辑
-void Widget::onDelButtonFanCoilNoiClicked()
+
+void Widget::on_pushButton_fanCoil_noi_del_clicked()
 {
-    deleteRowFromTable(ui->tableWidget_fanCoil_noi, 2);
+    deleteRowFromTable(ui->tableWidget_fanCoil_noi, 2, "风机盘管");
 }
 
 //修改按钮
@@ -1002,37 +1033,31 @@ void Widget::on_pushButton_fanCoil_noi_revise_clicked()
 //初始化表格
 void Widget::initTableWidget_air_noi()
 {
-    int colCount = 19;
+    int colCount = 18;
 
     QStringList headerText;
     headerText << "" << "序号" << "编号" << "品牌" << "型号" << "风量" << "静压" << "噪音位置" << "63Hz" << "125Hz" << "250Hz"
-               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源" << "";
+               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";
 
-    int columnWidths[] = {30, 38, 120, 100, 100, 90, 90, 80, 55, 55, 55, 55, 55, 55, 55, 55, 90, 60, 55};
+    int columnWidths[] = {30, 38, 120, 100, 100, 90, 90, 80, 55, 55, 55, 55, 55, 55, 55, 55, 90, 60};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_air_noi, headerText, columnWidths, colCount);
-
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_air_noi, ui->buttonWidget_air_noi,
-                      SLOT(onAddButtonAirNoiClicked()), SLOT(onDelButtonAirNoiClicked()));
 }
 
-// 处理"+"按钮点击事件的逻辑
-void Widget::onAddButtonAirNoiClicked()
+void Widget::on_pushButton_air_noi_add_clicked()
 {
     QTableWidget *tableWidget = ui->tableWidget_air_noi;
     Dialog_aircondition_noise *dialog = new Dialog_aircondition_noise(this);
-    Aircondition_noise* noi;
-    const char *addButtonSlot = SLOT(onAddButtonAirNoiClicked());
-    const char *delButtonSlot = SLOT(onDelButtonAirNoiClicked());
+    std::unique_ptr<Aircondition_noise> noi;
 
     int rowCount = tableWidget->rowCount(); //获取当前行数
     if (dialog->exec() == QDialog::Accepted) {
-        noi = static_cast<Aircondition_noise*>(dialog->getNoi());
+        noi = std::make_unique<Aircondition_noise>(std::move(*static_cast<Aircondition_noise*>(dialog->getNoi())));
+        noi->table_id = QString::number(tableWidget->rowCount() / 2 + 1);
         if (noi != nullptr) {
             QStringList data_in = {
-                QString::number(tableWidget->rowCount() / 2 + 1),
+                noi->table_id,
                 noi->number,
                 noi->brand,
                 noi->model,
@@ -1070,8 +1095,10 @@ void Widget::onAddButtonAirNoiClicked()
                 "厂家"
             };
             // 使用通用函数添加行
-            addRowToTable(tableWidget, data_in, addButtonSlot, delButtonSlot);
-            addRowToTable(tableWidget, data_out, addButtonSlot, delButtonSlot);
+            addRowToTable(tableWidget, data_in);
+            addRowToTable(tableWidget, data_out);
+
+            componentManager.addAirCondition(QSharedPointer<Aircondition_noise>(noi.release()));
             for(int i = 0; i < tableWidget->columnCount(); i++)
             {
                 if(i < 7 || i > 16)
@@ -1083,10 +1110,10 @@ void Widget::onAddButtonAirNoiClicked()
     }
 }
 
-// 处理"-"按钮点击事件的逻辑
-void Widget::onDelButtonAirNoiClicked()
+
+void Widget::on_pushButton_air_noi_del_clicked()
 {
-    deleteRowFromTable(ui->tableWidget_air_noi, 2);
+    deleteRowFromTable(ui->tableWidget_air_noi, 2, "空调器");
 }
 
 //修改按钮
@@ -1175,33 +1202,27 @@ void Widget::on_pushButton_air_noi_revise_clicked()
 //初始化表格
 void Widget::initTableWidget_VAV_terminal()
 {
-    int colCount = 18;
+    int colCount = 17;
     QStringList headerText;
     headerText<< "" << "序号" << "编号" << "品牌" << "型号" << "阀门开度" << "风量" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源" << "";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 140, 110, 140, 100, 100, 80, 80, 80, 80, 80, 80, 80, 80, 95 ,90, 70};
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {40, 50, 140, 110, 140, 100, 100, 80, 80, 80, 80, 80, 80, 80, 80, 95 ,90};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_VAV_terminal, headerText, columnWidths, colCount);
-
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_VAV_terminal, ui->buttonWidget_VAV_terminal,
-                      SLOT(onAddButtonVAVTerminalClicked()), SLOT(onDelButtonVAVTerminalClicked()));
 }
 
-// 处理"+"按钮点击事件的逻辑
-void Widget::onAddButtonVAVTerminalClicked()
+void Widget::on_pushButton_VAV_terminal_add_clicked()
 {
     QTableWidget *tableWidget = ui->tableWidget_VAV_terminal;
     Dialog_VAV_terminal *dialog = new Dialog_VAV_terminal(this);
-    VAV_terminal_noise* noi;
-    const char *addButtonSlot = SLOT(onAddButtonVAVTerminalClicked());
-    const char *delButtonSlot = SLOT(onDelButtonVAVTerminalClicked());
+    std::unique_ptr<VAV_terminal_noise> noi;
 
     if (dialog->exec() == QDialog::Accepted) {
-       noi = static_cast<VAV_terminal_noise*>(dialog->getNoi());
+        noi = std::make_unique<VAV_terminal_noise>(std::move(*static_cast<VAV_terminal_noise*>(dialog->getNoi())));
+        noi->table_id = QString::number(tableWidget->rowCount() + 1);
         if (noi != nullptr) {
             QStringList data = {
-                QString::number(tableWidget->rowCount() + 1),
+                noi->table_id,
                 noi->number,
                 noi->brand,
                 noi->model,
@@ -1220,15 +1241,17 @@ void Widget::onAddButtonVAVTerminalClicked()
             };
 
             // 使用通用函数添加行
-            addRowToTable(tableWidget, data, addButtonSlot, delButtonSlot);
+            addRowToTable(tableWidget, data);
+
+            componentManager.addVAVTerminal(QSharedPointer<VAV_terminal_noise>(noi.release()));
         }
     }
+
 }
 
-// 处理"-"按钮点击事件的逻辑
-void Widget::onDelButtonVAVTerminalClicked()
+void Widget::on_pushButton_VAV_terminal_del_clicked()
 {
-    deleteRowFromTable(ui->tableWidget_VAV_terminal, 1);
+    deleteRowFromTable(ui->tableWidget_VAV_terminal, 1,"变风量末端");
 }
 
 //修改按钮
@@ -1271,33 +1294,27 @@ void Widget::on_pushButton_VAV_terminal_revise_clicked()
 //初始化表格
 void Widget::initTableWidget_circular_damper()
 {
-    int colCount = 17;
+    int colCount = 16;
     QStringList headerText;
     headerText<< "" << "序号" << "品牌" << "型号" << "阀门开度" << "风量" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源" << "";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 100, 120, 100, 100, 65, 65, 65, 65, 65, 65, 65, 65, 90, 70, 70};
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {40, 50, 100, 120, 100, 100, 65, 65, 65, 65, 65, 65, 65, 65, 90, 70};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_circular_damper, headerText, columnWidths, colCount);
-
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_circular_damper, ui->buttonWidget_circular_damper,
-                      SLOT(onAddButtonCirDamperClicked()), SLOT(onDelButtonCirDamperClicked()));
 }
 
-// 处理"+"按钮点击事件的逻辑
-void Widget::onAddButtonCirDamperClicked()
+void Widget::on_pushButton_circular_damper_add_clicked()
 {
     QTableWidget *tableWidget = ui->tableWidget_circular_damper;
     Dialog_circular_damper *dialog = new Dialog_circular_damper(this);
-    Circular_damper_noi* noi;
-    const char *addButtonSlot = SLOT(onAddButtonCirDamperClicked());
-    const char *delButtonSlot = SLOT(onDelButtonCirDamperClicked());
+    std::unique_ptr<Circular_damper_noi> noi;
 
     if (dialog->exec() == QDialog::Accepted) {
-       noi = static_cast<Circular_damper_noi*>(dialog->getNoi());
+        noi = std::make_unique<Circular_damper_noi>(std::move(*static_cast<Circular_damper_noi*>(dialog->getNoi())));
+        noi->table_id = QString::number(tableWidget->rowCount() + 1);
         if (noi != nullptr) {
             QStringList data = {
-                QString::number(tableWidget->rowCount() + 1),
+                noi->table_id,
                 noi->brand,
                 noi->model,
                 noi->angle,
@@ -1315,15 +1332,16 @@ void Widget::onAddButtonCirDamperClicked()
             };
 
             // 使用通用函数添加行
-            addRowToTable(tableWidget, data, addButtonSlot, delButtonSlot);
+            addRowToTable(tableWidget, data);
+
+            componentManager.addCircularDamper(QSharedPointer<Circular_damper_noi>(noi.release()));
         }
     }
 }
 
-// 处理"-"按钮点击事件的逻辑
-void Widget::onDelButtonCirDamperClicked()
+void Widget::on_pushButton_circular_damper_del_clicked()
 {
-    deleteRowFromTable(ui->tableWidget_circular_damper, 1);
+    deleteRowFromTable(ui->tableWidget_circular_damper, 1, "圆形调风门");
 }
 
 //修改按钮
@@ -1366,33 +1384,27 @@ void Widget::on_pushButton_circular_damper_revise_clicked()
 //初始化表格
 void Widget::initTableWidget_rect_damper()
 {
-    int colCount = 17;
+    int colCount = 16;
     QStringList headerText;
     headerText<< "" << "序号" << "品牌" << "型号" << "阀门开度" << "风量" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源" << "";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 110, 130, 110, 110, 65, 65, 65, 65, 65, 65, 65, 65, 90, 70, 70};
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {40, 50, 110, 130, 110, 110, 65, 65, 65, 65, 65, 65, 65, 65, 90, 70};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_rect_damper, headerText, columnWidths, colCount);
-
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_rect_damper, ui->buttonWidget_rect_damper,
-                      SLOT(onAddButtonRectDamperClicked()), SLOT(onDelButtonRectDamperClicked()));
 }
 
-// 处理"+"按钮点击事件的逻辑
-void Widget::onAddButtonRectDamperClicked()
+void Widget::on_pushButton_rect_damper_add_clicked()
 {
     QTableWidget *tableWidget = ui->tableWidget_rect_damper;
     Dialog_rect_damper *dialog = new Dialog_rect_damper(this);
-    Rect_damper_noi* noi;
-    const char *addButtonSlot = SLOT(onAddButtonRectDamperClicked());
-    const char *delButtonSlot = SLOT(onDelButtonRectDamperClicked());
+    std::unique_ptr<Rect_damper_noi> noi;
 
     if (dialog->exec() == QDialog::Accepted) {
-        noi = static_cast<Rect_damper_noi*>(dialog->getNoi());
+        noi = std::make_unique<Rect_damper_noi>(std::move(*static_cast<Rect_damper_noi*>(dialog->getNoi())));
+        noi->table_id = QString::number(tableWidget->rowCount() + 1);
         if (noi != nullptr) {
             QStringList data = {
-                QString::number(tableWidget->rowCount() + 1),
+                noi->table_id,
                 noi->brand,
                 noi->model,
                 noi->angle,
@@ -1410,15 +1422,18 @@ void Widget::onAddButtonRectDamperClicked()
             };
 
             // 使用通用函数添加行
-            addRowToTable(tableWidget, data, addButtonSlot, delButtonSlot);
+            addRowToTable(tableWidget, data);
+
+            componentManager.addRectDamper(QSharedPointer<Rect_damper_noi>(noi.release()));
         }
     }
+
 }
 
-// 处理"-"按钮点击事件的逻辑
-void Widget::onDelButtonRectDamperClicked()
+
+void Widget::on_pushButton_rect_damper_del_clicked()
 {
-    deleteRowFromTable(ui->tableWidget_rect_damper, 1);
+    deleteRowFromTable(ui->tableWidget_rect_damper, 1, "方形调风门");
 }
 
 //修改按钮
@@ -1462,61 +1477,47 @@ void Widget::on_pushButton_rect_damper_revise_clicked()
 //初始化表格
 void Widget::initTableWidget_air_diff()
 {
-    int colCount = 17;
+    int colCount = 16;
     QStringList headerText;
     headerText<< "" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源" << "";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 130, 250, 130, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90, 70};
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {40, 50, 130, 250, 130, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_air_diff, headerText, columnWidths, colCount);
 
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_air_diff, ui->buttonWidget_air_diff,
-                      SLOT(onAddButtonAirDiffNoiClicked()), SLOT(onDelButtonAirDiffNoiClicked()));
-
-    colCount = 16;
+    colCount = 15;
     QStringList headerText_atten;
     headerText_atten<< "" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
-                    << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "";  //表头标题用QStringList来表示
-    int atten_columnWidths[] = {40, 50, 140, 230, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90, 70};
+                    << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
+    int atten_columnWidths[] = {40, 50, 140, 230, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_air_diff_terminal_atten, headerText_atten, atten_columnWidths, colCount);
 
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_air_diff_terminal_atten, ui->buttonWidget_air_diff_terminal_atten,
-                      SLOT(onAddButtonAirDiffNoiClicked()), SLOT(onDelButtonAirDiffNoiClicked()));
-
-    colCount = 16;
+    colCount = 15;
     QStringList headerText_refl;
     headerText_refl<< "" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "";  //表头标题用QStringList来表示
-    int refl_columnWidths[] = {40, 50, 140, 230, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90, 70};
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
+    int refl_columnWidths[] = {40, 50, 140, 230, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_air_diff_terminal_refl, headerText_refl, refl_columnWidths, colCount);
-
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_air_diff_terminal_refl, ui->buttonWidget_air_diff_terminal_refl,
-                      SLOT(onAddButtonAirDiffNoiClicked()), SLOT(onDelButtonAirDiffNoiClicked()));
 }
 
-// 处理"+"按钮点击事件的逻辑
-void Widget::onAddButtonAirDiffNoiClicked()
+void Widget::on_pushButton_air_diff_add_clicked()
 {
     QTableWidget *tableWidget_noise = ui->tableWidget_air_diff;
     QTableWidget *tableWidget_atten = ui->tableWidget_air_diff_terminal_atten;
     QTableWidget *tableWidget_refl = ui->tableWidget_air_diff_terminal_refl;
     Dialog_air_diff *dialog = new Dialog_air_diff("布风器+散流器",this);
-    AirDiff_noise* noi;
-    const char *addButtonSlot = SLOT(onAddButtonAirDiffNoiClicked());
-    const char *delButtonSlot = SLOT(onDelButtonAirDiffNoiClicked());
+    std::unique_ptr<AirDiff_noise> noi;
 
     if (dialog->exec() == QDialog::Accepted) {
-        noi = static_cast<AirDiff_noise*>(dialog->getNoi());
+        noi = std::make_unique<AirDiff_noise>(std::move(*static_cast<AirDiff_noise*>(dialog->getNoi())));
+        noi->table_id = QString::number(tableWidget_noise->rowCount() + 1);
         if (noi != nullptr) {
             QStringList data_noise = {
-                QString::number(tableWidget_noise->rowCount() + 1),
+                noi->table_id,
                 noi->brand,
                 noi->model,
                 noi->type,
@@ -1534,7 +1535,7 @@ void Widget::onAddButtonAirDiffNoiClicked()
             };
 
             QStringList data_atten = {
-                QString::number(tableWidget_noise->rowCount() + 1),
+                noi->table_id,
                 noi->brand,
                 noi->model,
                 noi->type,
@@ -1551,7 +1552,7 @@ void Widget::onAddButtonAirDiffNoiClicked()
             };
 
             QStringList data_refl = {
-                QString::number(tableWidget_noise->rowCount() + 1),
+                noi->table_id,
                 noi->brand,
                 noi->model,
                 noi->type,
@@ -1568,17 +1569,40 @@ void Widget::onAddButtonAirDiffNoiClicked()
             };
 
             // 使用通用函数添加行
-            addRowToTable(tableWidget_noise, data_noise, addButtonSlot, delButtonSlot);
-            addRowToTable(tableWidget_atten, data_atten, addButtonSlot, delButtonSlot);
-            addRowToTable(tableWidget_refl, data_refl, addButtonSlot, delButtonSlot);
+            addRowToTable(tableWidget_noise, data_noise);
+            addRowToTable(tableWidget_atten, data_atten);
+            addRowToTable(tableWidget_refl, data_refl);
+
+            componentManager.addAirDiff(QSharedPointer<AirDiff_noise>(noi.release()));
         }
     }
 }
 
-// 处理"-"按钮点击事件的逻辑
-void Widget::onDelButtonAirDiffNoiClicked()
+void Widget::on_pushButton_air_diff_del_clicked()
 {
-    deleteRowFromTable(ui->tableWidget_air_diff, ui->tableWidget_air_diff_terminal_atten, ui->tableWidget_air_diff_terminal_refl);
+    deleteRowFromTable(ui->tableWidget_air_diff, ui->tableWidget_air_diff_terminal_atten, ui->tableWidget_air_diff_terminal_refl, "布风器+散流器");
+}
+
+void Widget::on_pushButton_air_diff_terminal_atten_add_clicked()
+{
+    on_pushButton_air_diff_add_clicked();
+}
+
+
+void Widget::on_pushButton_air_diff_terminal_atten_del_clicked()
+{
+    on_pushButton_air_diff_del_clicked();
+}
+
+void Widget::on_pushButton_air_diff_terminal_refl_add_clicked()
+{
+    on_pushButton_air_diff_add_clicked();
+}
+
+
+void Widget::on_pushButton_air_diff_terminal_refl_del_clicked()
+{
+    on_pushButton_air_diff_del_clicked();
 }
 
 //修改按钮
@@ -1793,101 +1817,91 @@ void Widget::initTableWidget_pump_send_tuyere()
 
 void Widget::initTableWidget_pump_tuyere()
 {
-    int colCount = 17;
+    int colCount = 16;
     QStringList headerText;
     headerText<< "抽" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源" << "";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 130, 250, 130, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90, 70};
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {40, 50, 130, 250, 130, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90};
 
     initTableWidget(ui->tableWidget_pump_tuyere, headerText, columnWidths, colCount);
 
-    buttonToHeader(ui->tableWidget_pump_tuyere, ui->buttonWidget_pump_tuyere,
-                      SLOT(onAddButtonPumpClicked()), SLOT(onDelButtonPumpClicked()));
-
-    colCount = 16;
+    colCount = 15;
     QStringList headerText_atten;
     headerText_atten<< "抽" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
-                    << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "";  //表头标题用QStringList来表示
-    int atten_columnWidths[] = {40, 50, 140, 230, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90, 70};
+                    << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
+    int atten_columnWidths[] = {40, 50, 140, 230, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_pump_tuyere_terminal_atten, headerText_atten, atten_columnWidths, colCount);
 
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_pump_tuyere_terminal_atten, ui->buttonWidget_pump_tuyere_terminal_atten,
-                      SLOT(onAddButtonPumpClicked()), SLOT(onDelButtonPumpClicked()));
-
-    colCount = 16;
+    colCount = 15;
     QStringList headerText_refl;
     headerText_refl<< "抽" << "序号" << "品牌" << "型号" << "类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "";  //表头标题用QStringList来表示
-    int refl_columnWidths[] = {40, 50, 100, 160, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90, 70};
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
+    int refl_columnWidths[] = {40, 50, 100, 160, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_pump_tuyere_terminal_refl, headerText_refl, refl_columnWidths, colCount);
-
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_pump_tuyere_terminal_refl, ui->buttonWidget_pump_tuyere_terminal_refl,
-                      SLOT(onAddButtonPumpClicked()), SLOT(onDelButtonPumpClicked()));
 }
 
 void Widget::initTableWidget_send_tuyere()
 {
-    int colCount = 17;
+    int colCount = 16;
     QStringList headerText;
     headerText<< "送" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源" << "";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 130, 250, 130, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90, 70};
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {40, 50, 130, 250, 130, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90};
 
     initTableWidget(ui->tableWidget_send_tuyere, headerText, columnWidths, colCount);
 
-    buttonToHeader(ui->tableWidget_send_tuyere, ui->buttonWidget_send_tuyere,
-                      SLOT(onAddButtonSendClicked()), SLOT(onDelButtonSendClicked()));
-
-    colCount = 16;
+    colCount = 15;
     QStringList headerText_atten;
     headerText_atten<< "送" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
-                    << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "";  //表头标题用QStringList来表示
-    int atten_columnWidths[] = {40, 50, 140, 230, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90, 70};
+                    << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
+    int atten_columnWidths[] = {40, 50, 140, 230, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_send_tuyere_terminal_atten, headerText_atten, atten_columnWidths, colCount);
 
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_send_tuyere_terminal_atten, ui->buttonWidget_send_tuyere_terminal_atten,
-                      SLOT(onAddButtonSendClicked()), SLOT(onDelButtonSendClicked()));
-
-    colCount = 16;
+    colCount = 15;
     QStringList headerText_refl;
     headerText_refl<< "送" << "序号" << "品牌" << "型号" << "类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "";  //表头标题用QStringList来表示
-    int refl_columnWidths[] = {40, 50, 100, 160, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90, 70};
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
+    int refl_columnWidths[] = {40, 50, 100, 160, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_send_tuyere_terminal_refl, headerText_refl, refl_columnWidths, colCount);
-
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_send_tuyere_terminal_refl, ui->buttonWidget_send_tuyere_terminal_refl,
-                      SLOT(onAddButtonSendClicked()), SLOT(onDelButtonSendClicked()));
 }
 
-
-// 处理"+"按钮点击事件的逻辑
-void Widget::onAddButtonPumpClicked()
+void Widget::on_pushButton_pump_send_add_clicked()
 {
-    QTableWidget *tableWidget_noise = ui->tableWidget_pump_tuyere;
-    QTableWidget *tableWidget_atten = ui->tableWidget_pump_tuyere_terminal_atten;
-    QTableWidget *tableWidget_refl = ui->tableWidget_pump_tuyere_terminal_refl;
-    Dialog_pump_send *dialog = new Dialog_pump_send("抽风头",this);
-    PumpSend_noise* noi;
-    const char *addButtonSlot = SLOT(onAddButtonPumpClicked());
-    const char *delButtonSlot = SLOT(onDelButtonPumpClicked());
+    QTableWidget *tableWidget_noise = nullptr;
+    QTableWidget *tableWidget_atten = nullptr;
+    QTableWidget *tableWidget_refl = nullptr;
+    Dialog_pump_send *dialog = nullptr;
+    std::unique_ptr<PumpSend_noise> noi;
+
+    if(ui->stackedWidget_pump_send_table->currentWidget() == ui->page_pump)
+    {
+        tableWidget_noise = ui->tableWidget_pump_tuyere;
+        tableWidget_atten = ui->tableWidget_pump_tuyere_terminal_atten;
+        tableWidget_refl = ui->tableWidget_pump_tuyere_terminal_refl;
+        dialog = new Dialog_pump_send("抽风头",this);
+    }
+    else if(ui->stackedWidget_pump_send_table->currentWidget() == ui->page_send)
+    {
+        tableWidget_noise = ui->tableWidget_send_tuyere;
+        tableWidget_atten = ui->tableWidget_send_tuyere_terminal_atten;
+        tableWidget_refl = ui->tableWidget_send_tuyere_terminal_refl;
+        dialog = new Dialog_pump_send("送风头",this);
+    }
 
     if (dialog->exec() == QDialog::Accepted) {
-        noi = static_cast<PumpSend_noise*>(dialog->getNoi());
+        noi = std::make_unique<PumpSend_noise>(std::move(*static_cast<PumpSend_noise*>(dialog->getNoi())));
+        noi->table_id = QString::number(tableWidget_noise->rowCount() + 1);
         if (noi != nullptr) {
             QStringList data_noise = {
-                QString::number(tableWidget_noise->rowCount() + 1),
+                noi->table_id,
                 noi->brand,
                 noi->model,
                 noi->type,
@@ -1905,7 +1919,7 @@ void Widget::onAddButtonPumpClicked()
             };
 
             QStringList data_atten = {
-                QString::number(tableWidget_noise->rowCount() + 1),
+                noi->table_id,
                 noi->brand,
                 noi->model,
                 noi->type,
@@ -1922,7 +1936,7 @@ void Widget::onAddButtonPumpClicked()
             };
 
             QStringList data_refl = {
-                QString::number(tableWidget_noise->rowCount() + 1),
+                noi->table_id,
                 noi->brand,
                 noi->model,
                 noi->type,
@@ -1939,107 +1953,85 @@ void Widget::onAddButtonPumpClicked()
             };
 
             // 使用通用函数添加行
-            addRowToTable(tableWidget_noise, data_noise, addButtonSlot, delButtonSlot);
-            addRowToTable(tableWidget_atten, data_atten, addButtonSlot, delButtonSlot);
-            addRowToTable(tableWidget_refl, data_refl, addButtonSlot, delButtonSlot);
+            addRowToTable(tableWidget_noise, data_noise);
+            addRowToTable(tableWidget_atten, data_atten);
+            addRowToTable(tableWidget_refl, data_refl);
+
+            componentManager.addPumpSend(QSharedPointer<PumpSend_noise>(noi.release()));
         }
     }
 }
 
-void Widget::onAddButtonSendClicked()
+void Widget::on_pushButton_pump_send_del_clicked()
 {
-    QTableWidget *tableWidget_noise = ui->tableWidget_send_tuyere;
-    QTableWidget *tableWidget_atten = ui->tableWidget_send_tuyere_terminal_atten;
-    QTableWidget *tableWidget_refl = ui->tableWidget_send_tuyere_terminal_refl;
-    Dialog_pump_send *dialog = new Dialog_pump_send("送风头",this);
-    PumpSend_noise* noi;
-    const char *addButtonSlot = SLOT(onAddButtonSendClicked());
-    const char *delButtonSlot = SLOT(onDelButtonSendClicked());
+    if(ui->stackedWidget_pump_send_table->currentWidget() == ui->page_pump)
+        deleteRowFromTable(ui->tableWidget_pump_tuyere, ui->tableWidget_pump_tuyere_terminal_atten, ui->tableWidget_pump_tuyere_terminal_refl,"抽/送风头");
+    else if(ui->stackedWidget_pump_send_table->currentWidget() == ui->page_send)
+        deleteRowFromTable(ui->tableWidget_send_tuyere, ui->tableWidget_send_tuyere_terminal_atten, ui->tableWidget_send_tuyere_terminal_refl,"抽/送风头");
+}
 
-    if (dialog->exec() == QDialog::Accepted) {
-        noi = static_cast<PumpSend_noise*>(dialog->getNoi());
-        if (noi != nullptr) {
-            QStringList data_noise = {
-                QString::number(tableWidget_noise->rowCount() + 1),
-                noi->brand,
-                noi->model,
-                noi->type,
-                noi->size,
-                noi->noi_63,
-                noi->noi_125,
-                noi->noi_250,
-                noi->noi_500,
-                noi->noi_1k,
-                noi->noi_2k,
-                noi->noi_4k,
-                noi->noi_8k,
-                noi->noi_total,
-                "厂家"
-            };
+void Widget::on_pushButton_pump_send_terminal_atten_add_clicked()
+{
+    on_pushButton_pump_send_add_clicked();
+}
 
-            QStringList data_atten = {
-                QString::number(tableWidget_noise->rowCount() + 1),
-                noi->brand,
-                noi->model,
-                noi->type,
-                noi->size,
-                noi->atten_63,
-                noi->atten_125,
-                noi->atten_250,
-                noi->atten_500,
-                noi->atten_1k,
-                noi->atten_2k,
-                noi->atten_4k,
-                noi->atten_8k,
-                "厂家"
-            };
+void Widget::on_pushButton_pump_send_terminal_atten_del_clicked()
+{
+    on_pushButton_pump_send_del_clicked();
+}
 
-            QStringList data_refl = {
-                QString::number(tableWidget_noise->rowCount() + 1),
-                noi->brand,
-                noi->model,
-                noi->type,
-                noi->size,
-                noi->refl_63,
-                noi->refl_125,
-                noi->refl_250,
-                noi->refl_500,
-                noi->refl_1k,
-                noi->refl_2k,
-                noi->refl_4k,
-                noi->refl_8k,
-                noi->getMode
-            };
+void Widget::on_pushButton_pump_send_terminal_refl_add_clicked()
+{
+    on_pushButton_pump_send_add_clicked();
+}
 
-            // 使用通用函数添加行
-            addRowToTable(tableWidget_noise, data_noise, addButtonSlot, delButtonSlot);
-            addRowToTable(tableWidget_atten, data_atten, addButtonSlot, delButtonSlot);
-            addRowToTable(tableWidget_refl, data_refl, addButtonSlot, delButtonSlot);
-        }
+void Widget::on_pushButton_pump_send_terminal_refl_del_clicked()
+{
+    on_pushButton_pump_send_del_clicked();
+}
+
+void Widget::on_pushButton_pump_send_revise_clicked()
+{
+    QTableWidget* currentTableWidget = nullptr;
+    QTableWidget *tableWidget_noise = nullptr;
+    QTableWidget *tableWidget_atten = nullptr;
+    QTableWidget *tableWidget_refl = nullptr;
+    Dialog_pump_send *dialog = nullptr;
+    PumpSend_noise* noi = new PumpSend_noise();
+    QString typeName = "";
+    if((ui->stackedWidget->currentWidget() == ui->page_pump_send_tuyere && ui->stackedWidget_pump_send_table->currentWidget() == ui->page_pump)
+            || (ui->stackedWidget->currentWidget() == ui->page_pump_send_tuyere_terminal_atten && ui->stackedWidget_pump_send_terminal_atten_table->currentWidget() == ui->page_pump_atten)
+            || (ui->stackedWidget->currentWidget() == ui->page_pump_send_tuyere_terminal_refl && ui->stackedWidget_pump_send_terminal_refl_table->currentWidget() == ui->page_pump_refl))
+    {
+        if(ui->stackedWidget->currentWidget() == ui->page_pump_send_tuyere && ui->stackedWidget_pump_send_table->currentWidget() == ui->page_pump)
+            currentTableWidget = ui->tableWidget_pump_tuyere;
+        else if(ui->stackedWidget->currentWidget() == ui->page_pump_send_tuyere_terminal_atten && ui->stackedWidget_pump_send_terminal_atten_table->currentWidget() == ui->page_pump_atten)
+            currentTableWidget = ui->tableWidget_pump_tuyere_terminal_atten;
+        else if(ui->stackedWidget->currentWidget() == ui->page_pump_send_tuyere_terminal_refl && ui->stackedWidget_pump_send_terminal_refl_table->currentWidget() == ui->page_pump_refl)
+            currentTableWidget = ui->tableWidget_pump_tuyere_terminal_refl;
+
+        tableWidget_noise = ui->tableWidget_pump_tuyere;
+        tableWidget_atten = ui->tableWidget_pump_tuyere_terminal_atten;
+        tableWidget_refl = ui->tableWidget_pump_tuyere_terminal_refl;
+        typeName = "抽风头";
     }
-}
+    else if((ui->stackedWidget->currentWidget() == ui->page_pump_send_tuyere && ui->stackedWidget_pump_send_table->currentWidget() == ui->page_send)
+            || (ui->stackedWidget->currentWidget() == ui->page_pump_send_tuyere_terminal_atten && ui->stackedWidget_pump_send_terminal_atten_table->currentWidget() == ui->page_send_atten)
+            || (ui->stackedWidget->currentWidget() == ui->page_pump_send_tuyere_terminal_refl && ui->stackedWidget_pump_send_terminal_refl_table->currentWidget() == ui->page_send_refl))
+    {
+        if(ui->stackedWidget->currentWidget() == ui->page_pump_send_tuyere && ui->stackedWidget_pump_send_table->currentWidget() == ui->page_send)
+            currentTableWidget = ui->tableWidget_send_tuyere;
+        else if(ui->stackedWidget->currentWidget() == ui->page_pump_send_tuyere_terminal_atten && ui->stackedWidget_pump_send_terminal_atten_table->currentWidget() == ui->page_send_atten)
+            currentTableWidget = ui->tableWidget_send_tuyere_terminal_atten;
+        else if(ui->stackedWidget->currentWidget() == ui->page_pump_send_tuyere_terminal_refl && ui->stackedWidget_pump_send_terminal_refl_table->currentWidget() == ui->page_send_refl)
+            currentTableWidget = ui->tableWidget_send_tuyere_terminal_refl;
 
+        tableWidget_noise = ui->tableWidget_send_tuyere;
+        tableWidget_atten = ui->tableWidget_send_tuyere_terminal_atten;
+        tableWidget_refl = ui->tableWidget_send_tuyere_terminal_refl;
+        typeName = "送风头";
+    }
 
-// 处理"-"按钮点击事件的逻辑
-void Widget::onDelButtonPumpClicked()
-{
-    deleteRowFromTable(ui->tableWidget_pump_tuyere, ui->tableWidget_pump_tuyere_terminal_atten, ui->tableWidget_pump_tuyere_terminal_refl);
-}
-
-void Widget::onDelButtonSendClicked()
-{
-    deleteRowFromTable(ui->tableWidget_send_tuyere, ui->tableWidget_send_tuyere_terminal_atten, ui->tableWidget_send_tuyere_terminal_refl);
-}
-
-
-//修改按钮
-void Widget::on_pushButton_pump_tuyere_revise_clicked()
-{
-    QTableWidget* currentTableWidget = ui->tableWidget_pump_tuyere;
-    QTableWidget* tableWidget_noise = ui->tableWidget_pump_tuyere;
-    QTableWidget* tableWidget_atten = ui->tableWidget_pump_tuyere_terminal_atten;
-    QTableWidget* tableWidget_refl = ui->tableWidget_pump_tuyere_terminal_refl;
-    PumpSend_noise *noi = new PumpSend_noise();
     QVector<QString*> items_noise = {
         &noi->brand,
         &noi->model,
@@ -2095,339 +2087,22 @@ void Widget::on_pushButton_pump_tuyere_revise_clicked()
     {
         noiseRevision<PumpSend_noise, Dialog_pump_send>(currentTableWidget, tableWidget_noise, tableWidget_atten,
                                                         tableWidget_refl, row, noi, items_noise, items_atten, items_refl,
-                                                        cols_noise, cols_atten, cols_refl,"抽风头");
+                                                        cols_noise, cols_atten, cols_refl,typeName);
     }
+
+    delete noi;  // 在这里删除 noi 对象
 }
 
-void Widget::on_pushButton_send_tuyere_revise_clicked()
+void Widget::on_pushButton_pump_send_terminal_refl_revise_clicked()
 {
-    QTableWidget* currentTableWidget = ui->tableWidget_send_tuyere;
-    QTableWidget* tableWidget_noise = ui->tableWidget_send_tuyere;
-    QTableWidget* tableWidget_atten = ui->tableWidget_send_tuyere_terminal_atten;
-    QTableWidget* tableWidget_refl = ui->tableWidget_send_tuyere_terminal_refl;
-    PumpSend_noise *noi = new PumpSend_noise();
-    QVector<QString*> items_noise = {
-        &noi->brand,
-        &noi->model,
-        &noi->type,
-        &noi->size,
-        &noi->noi_63,
-        &noi->noi_125,
-        &noi->noi_250,
-        &noi->noi_500,
-        &noi->noi_1k,
-        &noi->noi_2k,
-        &noi->noi_4k,
-        &noi->noi_8k,
-        &noi->noi_total,
-    };
-    int cols_noise[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
-
-    QVector<QString*> items_atten = {
-        &noi->brand,
-        &noi->model,
-        &noi->type,
-        &noi->size,
-        &noi->atten_63,
-        &noi->atten_125,
-        &noi->atten_250,
-        &noi->atten_500,
-        &noi->atten_1k,
-        &noi->atten_2k,
-        &noi->atten_4k,
-        &noi->atten_8k,
-    };
-    int cols_atten[] = {2,3,4,5,6,7,8,9,10,11,12,13};
-
-    QVector<QString*> items_refl = {
-        &noi->brand,
-        &noi->model,
-        &noi->type,
-        &noi->size,
-        &noi->refl_63,
-        &noi->refl_125,
-        &noi->refl_250,
-        &noi->refl_500,
-        &noi->refl_1k,
-        &noi->refl_2k,
-        &noi->refl_4k,
-        &noi->refl_8k,
-        &noi->getMode
-    };
-    int cols_refl[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
-
-
-    for (int row = 0; row < currentTableWidget->rowCount(); ++row)
-    {
-        noiseRevision<PumpSend_noise, Dialog_pump_send>(currentTableWidget, tableWidget_noise, tableWidget_atten,
-                                                        tableWidget_refl, row, noi, items_noise, items_atten, items_refl,
-                                                        cols_noise, cols_atten, cols_refl,"送风头");
-    }
+    on_pushButton_pump_send_revise_clicked();
 }
 
-void Widget::on_pushButton_pump_tuyere_terminal_atten_revise_clicked()
+void Widget::on_pushButton_pump_send_terminal_atten_revise_clicked()
 {
-    QTableWidget* currentTableWidget = ui->tableWidget_pump_tuyere_terminal_atten;
-    QTableWidget* tableWidget_noise = ui->tableWidget_pump_tuyere;
-    QTableWidget* tableWidget_atten = ui->tableWidget_pump_tuyere_terminal_atten;
-    QTableWidget* tableWidget_refl = ui->tableWidget_pump_tuyere_terminal_refl;
-    PumpSend_noise *noi = new PumpSend_noise();
-    QVector<QString*> items_noise = {
-        &noi->brand,
-        &noi->model,
-        &noi->type,
-        &noi->size,
-        &noi->noi_63,
-        &noi->noi_125,
-        &noi->noi_250,
-        &noi->noi_500,
-        &noi->noi_1k,
-        &noi->noi_2k,
-        &noi->noi_4k,
-        &noi->noi_8k,
-        &noi->noi_total,
-    };
-    int cols_noise[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
-
-    QVector<QString*> items_atten = {
-        &noi->brand,
-        &noi->model,
-        &noi->type,
-        &noi->size,
-        &noi->atten_63,
-        &noi->atten_125,
-        &noi->atten_250,
-        &noi->atten_500,
-        &noi->atten_1k,
-        &noi->atten_2k,
-        &noi->atten_4k,
-        &noi->atten_8k,
-    };
-    int cols_atten[] = {2,3,4,5,6,7,8,9,10,11,12,13};
-
-    QVector<QString*> items_refl = {
-        &noi->brand,
-        &noi->model,
-        &noi->type,
-        &noi->size,
-        &noi->refl_63,
-        &noi->refl_125,
-        &noi->refl_250,
-        &noi->refl_500,
-        &noi->refl_1k,
-        &noi->refl_2k,
-        &noi->refl_4k,
-        &noi->refl_8k,
-        &noi->getMode
-    };
-    int cols_refl[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
-
-
-    for (int row = 0; row < currentTableWidget->rowCount(); ++row)
-    {
-        noiseRevision<PumpSend_noise, Dialog_pump_send>(currentTableWidget, tableWidget_noise, tableWidget_atten,
-                                                        tableWidget_refl, row, noi, items_noise, items_atten, items_refl,
-                                                        cols_noise, cols_atten, cols_refl,"抽风头");
-    }
+    on_pushButton_pump_send_revise_clicked();
 }
 
-void Widget::on_pushButton_send_tuyere_terminal_atten_revise_clicked()
-{
-    QTableWidget* currentTableWidget = ui->tableWidget_send_tuyere_terminal_atten;
-    QTableWidget* tableWidget_noise = ui->tableWidget_send_tuyere;
-    QTableWidget* tableWidget_atten = ui->tableWidget_send_tuyere_terminal_atten;
-    QTableWidget* tableWidget_refl = ui->tableWidget_send_tuyere_terminal_refl;
-    PumpSend_noise *noi = new PumpSend_noise();
-    QVector<QString*> items_noise = {
-        &noi->brand,
-        &noi->model,
-        &noi->type,
-        &noi->size,
-        &noi->noi_63,
-        &noi->noi_125,
-        &noi->noi_250,
-        &noi->noi_500,
-        &noi->noi_1k,
-        &noi->noi_2k,
-        &noi->noi_4k,
-        &noi->noi_8k,
-        &noi->noi_total,
-    };
-    int cols_noise[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
-
-    QVector<QString*> items_atten = {
-        &noi->brand,
-        &noi->model,
-        &noi->type,
-        &noi->size,
-        &noi->atten_63,
-        &noi->atten_125,
-        &noi->atten_250,
-        &noi->atten_500,
-        &noi->atten_1k,
-        &noi->atten_2k,
-        &noi->atten_4k,
-        &noi->atten_8k,
-    };
-    int cols_atten[] = {2,3,4,5,6,7,8,9,10,11,12,13};
-
-    QVector<QString*> items_refl = {
-        &noi->brand,
-        &noi->model,
-        &noi->type,
-        &noi->size,
-        &noi->refl_63,
-        &noi->refl_125,
-        &noi->refl_250,
-        &noi->refl_500,
-        &noi->refl_1k,
-        &noi->refl_2k,
-        &noi->refl_4k,
-        &noi->refl_8k,
-        &noi->getMode
-    };
-    int cols_refl[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
-
-
-    for (int row = 0; row < currentTableWidget->rowCount(); ++row)
-    {
-        noiseRevision<PumpSend_noise, Dialog_pump_send>(currentTableWidget, tableWidget_noise, tableWidget_atten,
-                                                        tableWidget_refl, row, noi, items_noise, items_atten, items_refl,
-                                                        cols_noise, cols_atten, cols_refl,"送风头");
-    }
-}
-
-void Widget::on_pushButton_pump_tuyere_terminal_refl_revise_clicked()
-{
-    QTableWidget* currentTableWidget = ui->tableWidget_pump_tuyere_terminal_refl;
-    QTableWidget* tableWidget_noise = ui->tableWidget_pump_tuyere;
-    QTableWidget* tableWidget_atten = ui->tableWidget_pump_tuyere_terminal_atten;
-    QTableWidget* tableWidget_refl = ui->tableWidget_pump_tuyere_terminal_refl;
-    PumpSend_noise *noi = new PumpSend_noise();
-    QVector<QString*> items_noise = {
-        &noi->brand,
-        &noi->model,
-        &noi->type,
-        &noi->size,
-        &noi->noi_63,
-        &noi->noi_125,
-        &noi->noi_250,
-        &noi->noi_500,
-        &noi->noi_1k,
-        &noi->noi_2k,
-        &noi->noi_4k,
-        &noi->noi_8k,
-        &noi->noi_total,
-    };
-    int cols_noise[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
-
-    QVector<QString*> items_atten = {
-        &noi->brand,
-        &noi->model,
-        &noi->type,
-        &noi->size,
-        &noi->atten_63,
-        &noi->atten_125,
-        &noi->atten_250,
-        &noi->atten_500,
-        &noi->atten_1k,
-        &noi->atten_2k,
-        &noi->atten_4k,
-        &noi->atten_8k,
-    };
-    int cols_atten[] = {2,3,4,5,6,7,8,9,10,11,12,13};
-
-    QVector<QString*> items_refl = {
-        &noi->brand,
-        &noi->model,
-        &noi->type,
-        &noi->size,
-        &noi->refl_63,
-        &noi->refl_125,
-        &noi->refl_250,
-        &noi->refl_500,
-        &noi->refl_1k,
-        &noi->refl_2k,
-        &noi->refl_4k,
-        &noi->refl_8k,
-        &noi->getMode
-    };
-    int cols_refl[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
-
-
-    for (int row = 0; row < currentTableWidget->rowCount(); ++row)
-    {
-        noiseRevision<PumpSend_noise, Dialog_pump_send>(currentTableWidget, tableWidget_noise, tableWidget_atten,
-                                                        tableWidget_refl, row, noi, items_noise, items_atten, items_refl,
-                                                        cols_noise, cols_atten, cols_refl,"抽风头");
-    }
-}
-
-void Widget::on_pushButton_send_tuyere_terminal_refl_revise_clicked()
-{
-    QTableWidget* currentTableWidget = ui->tableWidget_send_tuyere_terminal_refl;
-    QTableWidget* tableWidget_noise = ui->tableWidget_send_tuyere;
-    QTableWidget* tableWidget_atten = ui->tableWidget_send_tuyere_terminal_atten;
-    QTableWidget* tableWidget_refl = ui->tableWidget_send_tuyere_terminal_refl;
-    PumpSend_noise *noi = new PumpSend_noise();
-    QVector<QString*> items_noise = {
-        &noi->brand,
-        &noi->model,
-        &noi->type,
-        &noi->size,
-        &noi->noi_63,
-        &noi->noi_125,
-        &noi->noi_250,
-        &noi->noi_500,
-        &noi->noi_1k,
-        &noi->noi_2k,
-        &noi->noi_4k,
-        &noi->noi_8k,
-        &noi->noi_total,
-    };
-    int cols_noise[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
-
-    QVector<QString*> items_atten = {
-        &noi->brand,
-        &noi->model,
-        &noi->type,
-        &noi->size,
-        &noi->atten_63,
-        &noi->atten_125,
-        &noi->atten_250,
-        &noi->atten_500,
-        &noi->atten_1k,
-        &noi->atten_2k,
-        &noi->atten_4k,
-        &noi->atten_8k,
-    };
-    int cols_atten[] = {2,3,4,5,6,7,8,9,10,11,12,13};
-
-    QVector<QString*> items_refl = {
-        &noi->brand,
-        &noi->model,
-        &noi->type,
-        &noi->size,
-        &noi->refl_63,
-        &noi->refl_125,
-        &noi->refl_250,
-        &noi->refl_500,
-        &noi->refl_1k,
-        &noi->refl_2k,
-        &noi->refl_4k,
-        &noi->refl_8k,
-        &noi->getMode
-    };
-    int cols_refl[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
-
-
-    for (int row = 0; row < currentTableWidget->rowCount(); ++row)
-    {
-        noiseRevision<PumpSend_noise, Dialog_pump_send>(currentTableWidget, tableWidget_noise, tableWidget_atten,
-                                                        tableWidget_refl, row, noi, items_noise, items_atten, items_refl,
-                                                        cols_noise, cols_atten, cols_refl,"送风头");
-    }
-}
 
 /**切换表格**/
 void Widget::on_pushButton_pump_table_clicked()
@@ -2483,7 +2158,7 @@ void Widget::on_tableWidget_pump_tuyere_itemDoubleClicked(QTableWidgetItem *item
     QWidget* widget = ui->tableWidget_pump_tuyere->cellWidget(item->row(), 0); // Assuming the checkbox is in the first column (index 0)
     QCheckBox* checkBox = widget->findChild<QCheckBox*>(); // Find the checkbox within the widget
     checkBox->setChecked(true);
-    on_pushButton_pump_tuyere_revise_clicked();
+    //on_pushButton_pump_tuyere_revise_clicked();
     checkBox->setChecked(false);
     item->setFlags(Qt::ItemIsEnabled); // 设置为只读
 }
@@ -2495,7 +2170,7 @@ void Widget::on_tableWidget_send_tuyere_itemDoubleClicked(QTableWidgetItem *item
     QWidget* widget = ui->tableWidget_send_tuyere->cellWidget(item->row(), 0); // Assuming the checkbox is in the first column (index 0)
     QCheckBox* checkBox = widget->findChild<QCheckBox*>(); // Find the checkbox within the widget
     checkBox->setChecked(true);
-    on_pushButton_send_tuyere_revise_clicked();
+    //on_pushButton_send_tuyere_revise_clicked();
     checkBox->setChecked(false);
     item->setFlags(Qt::ItemIsEnabled); // 设置为只读
 }
@@ -2505,63 +2180,52 @@ void Widget::on_tableWidget_send_tuyere_itemDoubleClicked(QTableWidgetItem *item
 
 
 
-/**********回风箱+格栅**********/
-#pragma region "stack_return_air_box_grille"{
-void Widget::initTableWidget_return_air_box_grille()
+/**********静压箱+格栅**********/
+#pragma region "stack_staticBox_grille"{
+void Widget::initTableWidget_staticBox_grille()
 {
-    int colCount = 17;
+    int colCount = 16;
     QStringList headerText;
     headerText<< "" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源" << "";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 130, 250, 130, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90, 70};
-    initTableWidget(ui->tableWidget_return_air_box_grille, headerText, columnWidths, colCount);
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {40, 50, 130, 250, 130, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90};
+    initTableWidget(ui->tableWidget_staticBox_grille, headerText, columnWidths, colCount);
 
-    buttonToHeader(ui->tableWidget_return_air_box_grille, ui->buttonWidget_return_air_box_grille,
-                      SLOT(onAddButtonReturnAirBoxGriClicked()), SLOT(onDelButtonReturnAirBoxGriClicked()));
 
-    colCount = 16;
+    colCount = 15;
     QStringList headerText_atten;
     headerText_atten<< "" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
-                    << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "";  //表头标题用QStringList来表示
-    int atten_columnWidths[] = {40, 50, 140, 230, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90, 70};
+                    << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
+    int atten_columnWidths[] = {40, 50, 140, 230, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     // 调用封装好的初始化表格函数
-    initTableWidget(ui->tableWidget_return_air_box_grille_terminal_atten, headerText_atten, atten_columnWidths, colCount);
+    initTableWidget(ui->tableWidget_staticBox_grille_terminal_atten, headerText_atten, atten_columnWidths, colCount);
 
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_return_air_box_grille_terminal_atten, ui->buttonWidget_return_air_box_grille_terminal_atten,
-                      SLOT(onAddButtonReturnAirBoxGriClicked()), SLOT(onDelButtonReturnAirBoxGriClicked()));
 
-    colCount = 16;
+    colCount = 15;
     QStringList headerText_refl;
     headerText_refl<< "" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "";  //表头标题用QStringList来表示
-    int refl_columnWidths[] = {40, 50, 140, 230, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90, 70};
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
+    int refl_columnWidths[] = {40, 50, 140, 230, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     // 调用封装好的初始化表格函数
-    initTableWidget(ui->tableWidget_return_air_box_grille_terminal_refl, headerText_refl, refl_columnWidths, colCount);
-
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_return_air_box_grille_terminal_refl, ui->buttonWidget_return_air_box_grille_terminal_refl,
-                      SLOT(onAddButtonReturnAirBoxGriClicked()), SLOT(onDelButtonReturnAirBoxGriClicked()));
+    initTableWidget(ui->tableWidget_staticBox_grille_terminal_refl, headerText_refl, refl_columnWidths, colCount);
 }
 
-// 处理"+"按钮点击事件的逻辑
-void Widget::onAddButtonReturnAirBoxGriClicked()
+void Widget::on_pushButton_staticBox_grille_add_clicked()
 {
-    QTableWidget *tableWidget_noise = ui->tableWidget_return_air_box_grille;
-    QTableWidget *tableWidget_atten = ui->tableWidget_return_air_box_grille_terminal_atten;
-    QTableWidget *tableWidget_refl = ui->tableWidget_return_air_box_grille_terminal_refl;
-    Dialog_returnAirBox_grille *dialog = new Dialog_returnAirBox_grille(this);
-    StaticBox_grille_noise* noi;
-    const char *addButtonSlot = SLOT(onAddButtonReturnAirBoxGriClicked());
-    const char *delButtonSlot = SLOT(onDelButtonReturnAirBoxGriClicked());
+    QTableWidget *tableWidget_noise = ui->tableWidget_staticBox_grille;
+    QTableWidget *tableWidget_atten = ui->tableWidget_staticBox_grille_terminal_atten;
+    QTableWidget *tableWidget_refl = ui->tableWidget_staticBox_grille_terminal_refl;
+    Dialog_staticBox_grille *dialog = new Dialog_staticBox_grille(this);
+    std::unique_ptr<StaticBox_grille_noise> noi;
 
     if (dialog->exec() == QDialog::Accepted) {
-        noi = static_cast<StaticBox_grille_noise*>(dialog->getNoi());
+        noi = std::make_unique<StaticBox_grille_noise>(std::move(*static_cast<StaticBox_grille_noise*>(dialog->getNoi())));
+        noi->table_id = QString::number(tableWidget_noise->rowCount() + 1);
         if (noi != nullptr) {
             QStringList data_noise = {
-                QString::number(tableWidget_noise->rowCount() + 1),
+                noi->table_id,
                 noi->brand,
                 noi->model,
                 noi->type,
@@ -2579,7 +2243,7 @@ void Widget::onAddButtonReturnAirBoxGriClicked()
             };
 
             QStringList data_atten = {
-                QString::number(tableWidget_noise->rowCount() + 1),
+                noi->table_id,
                 noi->brand,
                 noi->model,
                 noi->type,
@@ -2613,26 +2277,49 @@ void Widget::onAddButtonReturnAirBoxGriClicked()
             };
 
             // 使用通用函数添加行
-            addRowToTable(tableWidget_noise, data_noise, addButtonSlot, delButtonSlot);
-            addRowToTable(tableWidget_atten, data_atten, addButtonSlot, delButtonSlot);
-            addRowToTable(tableWidget_refl, data_refl, addButtonSlot, delButtonSlot);
+            addRowToTable(tableWidget_noise, data_noise);
+            addRowToTable(tableWidget_atten, data_atten);
+            addRowToTable(tableWidget_refl, data_refl);
+
+            componentManager.addStaticBoxGrille(QSharedPointer<StaticBox_grille_noise>(noi.release()));
         }
     }
 }
 
-// 处理"-"按钮点击事件的逻辑
-void Widget::onDelButtonReturnAirBoxGriClicked()
+void Widget::on_pushButton_staticBox_grille_del_clicked()
 {
-    deleteRowFromTable(ui->tableWidget_return_air_box_grille, ui->tableWidget_return_air_box_grille_terminal_atten, ui->tableWidget_return_air_box_grille_terminal_refl);
+    deleteRowFromTable(ui->tableWidget_staticBox_grille, ui->tableWidget_staticBox_grille_terminal_atten, ui->tableWidget_staticBox_grille_terminal_refl, "静压箱+格栅");
+}
+
+void Widget::on_pushButton_staticBox_grille_terminal_atten_add_clicked()
+{
+    on_pushButton_staticBox_grille_add_clicked();
+}
+
+
+void Widget::on_pushButton_staticBox_grille_terminal_atten_del_clicked()
+{
+    on_pushButton_staticBox_grille_del_clicked();
+}
+
+void Widget::on_pushButton_staticBox_grille_terminal_refl_add_clicked()
+{
+    on_pushButton_staticBox_grille_add_clicked();
+}
+
+
+void Widget::on_pushButton_staticBox_grille_terminal_refl_del_clicked()
+{
+    on_pushButton_staticBox_grille_del_clicked();
 }
 
 //修改按钮
-void Widget::on_pushButton_return_air_box_grille_terminal_atten_revise_clicked()
+void Widget::on_pushButton_staticBox_grille_terminal_atten_revise_clicked()
 {
-    QTableWidget* currentTableWidget = ui->tableWidget_return_air_box_grille_terminal_atten;
-    QTableWidget* tableWidget_noise = ui->tableWidget_return_air_box_grille;
-    QTableWidget* tableWidget_atten = ui->tableWidget_return_air_box_grille_terminal_atten;
-    QTableWidget* tableWidget_refl = ui->tableWidget_return_air_box_grille_terminal_refl;
+    QTableWidget* currentTableWidget = ui->tableWidget_staticBox_grille_terminal_atten;
+    QTableWidget* tableWidget_noise = ui->tableWidget_staticBox_grille;
+    QTableWidget* tableWidget_atten = ui->tableWidget_staticBox_grille_terminal_atten;
+    QTableWidget* tableWidget_refl = ui->tableWidget_staticBox_grille_terminal_refl;
     StaticBox_grille_noise *noi = new StaticBox_grille_noise();
     QVector<QString*> items_noise = {
         &noi->brand,
@@ -2687,16 +2374,16 @@ void Widget::on_pushButton_return_air_box_grille_terminal_atten_revise_clicked()
 
     for (int row = 0; row < currentTableWidget->rowCount(); ++row)
     {
-        noiseRevision<StaticBox_grille_noise, Dialog_returnAirBox_grille>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl);
+        noiseRevision<StaticBox_grille_noise, Dialog_staticBox_grille>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl);
     }
 }
 
-void Widget::on_pushButton_return_air_box_grille_terminal_refl_revise_clicked()
+void Widget::on_pushButton_staticBox_grille_terminal_refl_revise_clicked()
 {
-    QTableWidget* currentTableWidget = ui->tableWidget_return_air_box_grille_terminal_refl;
-    QTableWidget* tableWidget_noise = ui->tableWidget_return_air_box_grille;
-    QTableWidget* tableWidget_atten = ui->tableWidget_return_air_box_grille_terminal_atten;
-    QTableWidget* tableWidget_refl = ui->tableWidget_return_air_box_grille_terminal_refl;
+    QTableWidget* currentTableWidget = ui->tableWidget_staticBox_grille_terminal_refl;
+    QTableWidget* tableWidget_noise = ui->tableWidget_staticBox_grille;
+    QTableWidget* tableWidget_atten = ui->tableWidget_staticBox_grille_terminal_atten;
+    QTableWidget* tableWidget_refl = ui->tableWidget_staticBox_grille_terminal_refl;
     StaticBox_grille_noise *noi = new StaticBox_grille_noise();
     QVector<QString*> items_noise = {
         &noi->brand,
@@ -2751,16 +2438,16 @@ void Widget::on_pushButton_return_air_box_grille_terminal_refl_revise_clicked()
 
     for (int row = 0; row < currentTableWidget->rowCount(); ++row)
     {
-        noiseRevision<StaticBox_grille_noise, Dialog_returnAirBox_grille>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl);
+        noiseRevision<StaticBox_grille_noise, Dialog_staticBox_grille>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl);
     }
 }
 
-void Widget::on_pushButton_return_air_box_grille_revise_clicked()
+void Widget::on_pushButton_staticBox_grille_revise_clicked()
 {
-    QTableWidget* currentTableWidget = ui->tableWidget_return_air_box_grille;
-    QTableWidget* tableWidget_noise = ui->tableWidget_return_air_box_grille;
-    QTableWidget* tableWidget_atten = ui->tableWidget_return_air_box_grille_terminal_atten;
-    QTableWidget* tableWidget_refl = ui->tableWidget_return_air_box_grille_terminal_refl;
+    QTableWidget* currentTableWidget = ui->tableWidget_staticBox_grille;
+    QTableWidget* tableWidget_noise = ui->tableWidget_staticBox_grille;
+    QTableWidget* tableWidget_atten = ui->tableWidget_staticBox_grille_terminal_atten;
+    QTableWidget* tableWidget_refl = ui->tableWidget_staticBox_grille_terminal_refl;
     StaticBox_grille_noise *noi = new StaticBox_grille_noise();
     QVector<QString*> items_noise = {
         &noi->brand,
@@ -2815,12 +2502,12 @@ void Widget::on_pushButton_return_air_box_grille_revise_clicked()
 
     for (int row = 0; row < currentTableWidget->rowCount(); ++row)
     {
-        noiseRevision<StaticBox_grille_noise, Dialog_returnAirBox_grille>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl);
+        noiseRevision<StaticBox_grille_noise, Dialog_staticBox_grille>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl);
     }
 }
 
 #pragma endregion}
-/**********回风箱+格栅**********/
+/**********静压箱+格栅**********/
 
 
 
@@ -2830,58 +2517,44 @@ void Widget::on_pushButton_return_air_box_grille_revise_clicked()
 //初始化表格
 void Widget::initTableWidget_disp_vent_terminal()
 {
-    int colCount = 17;
+    int colCount = 16;
     QStringList headerText;
     headerText<< "" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源" << "";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 130, 250, 130, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90, 70};
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {40, 50, 130, 250, 130, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90};
 
     initTableWidget(ui->tableWidget_disp_vent_terminal, headerText, columnWidths, colCount);
 
-    buttonToHeader(ui->tableWidget_disp_vent_terminal, ui->buttonWidget_disp_vent_terminal,
-                      SLOT(onAddButtonDispVentTerminalClicked()), SLOT(onDelButtonDispVentTerminalClicked()));
-
-    colCount = 16;
+    colCount = 15;
     QStringList headerText_atten;
     headerText_atten<< "" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
-                    << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "";  //表头标题用QStringList来表示
-    int atten_columnWidths[] = {40, 50, 140, 230, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90, 70};
+                    << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
+    int atten_columnWidths[] = {40, 50, 140, 230, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_disp_vent_terminal_atten, headerText_atten, atten_columnWidths, colCount);
 
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_disp_vent_terminal_atten, ui->buttonWidget_disp_vent_terminal_atten,
-                      SLOT(onAddButtonDispVentTerminalClicked()), SLOT(onDelButtonDispVentTerminalClicked()));
-
-    colCount = 16;
+    colCount = 15;
     QStringList headerText_refl;
     headerText_refl<< "" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "";  //表头标题用QStringList来表示
-    int refl_columnWidths[] = {40, 50, 140, 230, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90, 70};
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
+    int refl_columnWidths[] = {40, 50, 140, 230, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_disp_vent_terminal_refl, headerText_refl, refl_columnWidths, colCount);
-
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_disp_vent_terminal_refl, ui->buttonWidget_disp_vent_terminal_refl,
-                      SLOT(onAddButtonDispVentTerminalClicked()), SLOT(onDelButtonDispVentTerminalClicked()));
-
 }
 
-// 处理"+"按钮点击事件的逻辑
-void Widget::onAddButtonDispVentTerminalClicked()
+void Widget::on_pushButton_disp_vent_terminal_add_clicked()
 {
     QTableWidget *tableWidget_noise = ui->tableWidget_disp_vent_terminal;
     QTableWidget *tableWidget_atten = ui->tableWidget_disp_vent_terminal_atten;
     QTableWidget *tableWidget_refl = ui->tableWidget_disp_vent_terminal_refl;
     Dialog_disp_vent_terminal *dialog = new Dialog_disp_vent_terminal(this);
-    Disp_vent_terminal_noise* noi;
-    const char *addButtonSlot = SLOT(onAddButtonDispVentTerminalClicked());
-    const char *delButtonSlot = SLOT(onDelButtonDispVentTerminalClicked());
+    std::unique_ptr<Disp_vent_terminal_noise> noi;
 
     if (dialog->exec() == QDialog::Accepted) {
-        noi = static_cast<Disp_vent_terminal_noise*>(dialog->getNoi());
+        noi = std::make_unique<Disp_vent_terminal_noise>(std::move(*static_cast<Disp_vent_terminal_noise*>(dialog->getNoi())));
+        noi->table_id = QString::number(tableWidget_noise->rowCount() + 1);
         if (noi != nullptr) {
             QStringList data_noise = {
                 QString::number(tableWidget_noise->rowCount() + 1),
@@ -2936,17 +2609,43 @@ void Widget::onAddButtonDispVentTerminalClicked()
             };
 
             // 使用通用函数添加行
-            addRowToTable(tableWidget_noise, data_noise, addButtonSlot, delButtonSlot);
-            addRowToTable(tableWidget_atten, data_atten, addButtonSlot, delButtonSlot);
-            addRowToTable(tableWidget_refl, data_refl, addButtonSlot, delButtonSlot);
+            addRowToTable(tableWidget_noise, data_noise);
+            addRowToTable(tableWidget_atten, data_atten);
+            addRowToTable(tableWidget_refl, data_refl);
+
+            componentManager.addDispVentTerminal(QSharedPointer<Disp_vent_terminal_noise>(noi.release()));
         }
     }
 }
 
-// 处理"-"按钮点击事件的逻辑
-void Widget::onDelButtonDispVentTerminalClicked()
+
+void Widget::on_pushButton_disp_vent_terminal_del_clicked()
 {
-    deleteRowFromTable(ui->tableWidget_disp_vent_terminal, ui->tableWidget_disp_vent_terminal_atten, ui->tableWidget_disp_vent_terminal_refl);
+    deleteRowFromTable(ui->tableWidget_disp_vent_terminal, ui->tableWidget_disp_vent_terminal_atten, ui->tableWidget_disp_vent_terminal_refl,"置换通风末端");
+}
+
+
+void Widget::on_pushButton_disp_vent_terminal_atten_add_clicked()
+{
+    on_pushButton_disp_vent_terminal_add_clicked();
+}
+
+
+void Widget::on_pushButton_disp_vent_terminal_atten_del_clicked()
+{
+    on_pushButton_disp_vent_terminal_del_clicked();
+}
+
+
+void Widget::on_pushButton_disp_vent_terminal_refl_add_clicked()
+{
+    on_pushButton_disp_vent_terminal_add_clicked();
+}
+
+
+void Widget::on_pushButton_disp_vent_terminal_refl_del_clicked()
+{
+    on_pushButton_disp_vent_terminal_del_clicked();
 }
 
 //修改按钮
@@ -3153,58 +2852,46 @@ void Widget::on_pushButton_disp_vent_terminal_refl_revise_clicked()
 //初始化表格
 void Widget::initTableWidget_other_send_terminal()
 {
-    int colCount = 18;
+    int colCount = 17;
     QStringList headerText;
     headerText<< "" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源" << "备注" << "";  //表头标题用QStringList来表示
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源" << "备注";  //表头标题用QStringList来表示
 
-    int columnWidths[] = {40, 50, 130, 250, 110, 110, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90, 180, 70};
+    int columnWidths[] = {40, 50, 130, 250, 110, 110, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90, 180};
 
     initTableWidget(ui->tableWidget_other_send_terminal, headerText, columnWidths, colCount);
 
-    buttonToHeader(ui->tableWidget_other_send_terminal, ui->buttonWidget_other_send_terminal,
-                      SLOT(onAddButtonOtherSendTerClicked()), SLOT(onDelButtonOtherSendTerClicked()));
-
-    colCount = 17;
+    colCount = 16;
     QStringList headerText_atten;
     headerText_atten<< "" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
-                    << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "备注" << "";  //表头标题用QStringList来表示
-    int atten_columnWidths[] = {40, 50, 140, 230, 110, 110, 80, 80, 80, 80, 80, 80, 80, 80, 90, 180, 70};
+                    << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "备注";  //表头标题用QStringList来表示
+    int atten_columnWidths[] = {40, 50, 140, 230, 110, 110, 80, 80, 80, 80, 80, 80, 80, 80, 90, 180};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_other_send_terminal_atten, headerText_atten, atten_columnWidths, colCount);
 
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_other_send_terminal_atten, ui->buttonWidget_other_send_terminal_atten,
-                      SLOT(onAddButtonOtherSendTerClicked()), SLOT(onDelButtonOtherSendTerClicked()));
 
-    colCount = 17;
+    colCount = 16;
     QStringList headerText_refl;
     headerText_refl<< "" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "备注" << "";  //表头标题用QStringList来表示
-    int refl_columnWidths[] = {40, 50, 140, 230, 110, 110, 80, 80, 80, 80, 80, 80, 80, 80, 90, 180, 70};
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "备注";  //表头标题用QStringList来表示
+    int refl_columnWidths[] = {40, 50, 140, 230, 110, 110, 80, 80, 80, 80, 80, 80, 80, 80, 90, 180};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_other_send_terminal_refl, headerText_refl, refl_columnWidths, colCount);
-
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_other_send_terminal_refl, ui->buttonWidget_other_send_terminal_refl,
-                      SLOT(onAddButtonOtherSendTerClicked()), SLOT(onDelButtonOtherSendTerClicked()));
 }
 
-// 处理"+"按钮点击事件的逻辑
-void Widget::onAddButtonOtherSendTerClicked()
+void Widget::on_pushButton_other_send_terminal_add_clicked()
 {
     QTableWidget *tableWidget_noise = ui->tableWidget_other_send_terminal;
     QTableWidget *tableWidget_atten = ui->tableWidget_other_send_terminal_atten;
     QTableWidget *tableWidget_refl = ui->tableWidget_other_send_terminal_refl;
     Dialog_other_send_terminal *dialog = new Dialog_other_send_terminal(this);
-    Other_send_terminal_noise* noi;
-    const char *addButtonSlot = SLOT(onAddButtonOtherSendTerClicked());
-    const char *delButtonSlot = SLOT(onDelButtonOtherSendTerClicked());
+    std::unique_ptr<Other_send_terminal_noise> noi;
 
     if (dialog->exec() == QDialog::Accepted) {
-        noi = static_cast<Other_send_terminal_noise*>(dialog->getNoi());
+        noi = std::make_unique<Other_send_terminal_noise>(std::move(*static_cast<Other_send_terminal_noise*>(dialog->getNoi())));
+        noi->table_id = QString::number(tableWidget_noise->rowCount() + 1);
         if (noi != nullptr) {
             QStringList data_noise = {
                 QString::number(tableWidget_noise->rowCount() + 1),
@@ -3262,17 +2949,43 @@ void Widget::onAddButtonOtherSendTerClicked()
             };
 
             // 使用通用函数添加行
-            addRowToTable(tableWidget_noise, data_noise, addButtonSlot, delButtonSlot);
-            addRowToTable(tableWidget_atten, data_atten, addButtonSlot, delButtonSlot);
-            addRowToTable(tableWidget_refl, data_refl, addButtonSlot, delButtonSlot);
+            addRowToTable(tableWidget_noise, data_noise);
+            addRowToTable(tableWidget_atten, data_atten);
+            addRowToTable(tableWidget_refl, data_refl);
+
+            componentManager.addOtherSendTerminal(QSharedPointer<Other_send_terminal_noise>(noi.release()));
         }
     }
+
 }
 
-// 处理"-"按钮点击事件的逻辑
-void Widget::onDelButtonOtherSendTerClicked()
+void Widget::on_pushButton_other_send_terminal_del_clicked()
 {
-    deleteRowFromTable(ui->tableWidget_other_send_terminal, ui->tableWidget_other_send_terminal_atten, ui->tableWidget_other_send_terminal_refl);
+    deleteRowFromTable(ui->tableWidget_other_send_terminal, ui->tableWidget_other_send_terminal_atten, ui->tableWidget_other_send_terminal_refl,"其他送风末端");
+}
+
+
+void Widget::on_pushButton_other_send_terminal_atten_add_clicked()
+{
+    on_pushButton_other_send_terminal_add_clicked();
+}
+
+
+void Widget::on_pushButton_other_send_terminal_atten_del_clicked()
+{
+    on_pushButton_other_send_terminal_del_clicked();
+}
+
+
+void Widget::on_pushButton_other_send_terminal_refl_add_clicked()
+{
+    on_pushButton_other_send_terminal_add_clicked();
+}
+
+
+void Widget::on_pushButton_other_send_terminal_refl_del_clicked()
+{
+    on_pushButton_other_send_terminal_del_clicked();
 }
 
 //修改按钮
@@ -3488,32 +3201,28 @@ void Widget::on_pushButton_other_send_terminal_refl_revise_clicked()
 //初始化表格
 void Widget::initTableWidget_static_box()
 {
-    int colCount = 14;
+    int colCount = 13;
     QStringList headerText;
     headerText<< "" << "序号" << "品牌" << "型号" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 100, 120, 80, 80, 80, 80, 80, 80, 80, 80, 90, 70};
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {40, 50, 100, 120, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     initTableWidget(ui->tableWidget_static_box, headerText, columnWidths, colCount);
 
-    buttonToHeader(ui->tableWidget_static_box, ui->buttonWidget_static_box,
-                      SLOT(onAddButtonStaticBoxClicked()), SLOT(onDelButtonStaticBoxClicked()));
 }
 
-// 处理"+"按钮点击事件的逻辑
-void Widget::onAddButtonStaticBoxClicked()
+void Widget::on_pushButton_static_box_add_clicked()
 {
     QTableWidget *tableWidget = ui->tableWidget_static_box;
     Dialog_static_box *dialog = new Dialog_static_box(this);
-    Static_box* noi;
-    const char *addButtonSlot = SLOT(onAddButtonStaticBoxClicked());
-    const char *delButtonSlot = SLOT(onDelButtonStaticBoxClicked());
+    std::unique_ptr<Static_box> noi;
 
     if (dialog->exec() == QDialog::Accepted) {
-        noi = static_cast<Static_box*>(dialog->getNoi());
+        noi = std::make_unique<Static_box>(std::move(*static_cast<Static_box*>(dialog->getNoi())));
+        noi->table_id = QString::number(tableWidget->rowCount() + 1);
         if (noi != nullptr) {
             QStringList data = {
-                QString::number(tableWidget->rowCount() + 1),
+                noi->table_id,
                 noi->brand,
                 noi->model,
                 noi->noi_63,
@@ -3528,15 +3237,17 @@ void Widget::onAddButtonStaticBoxClicked()
             };
 
             // 使用通用函数添加行
-            addRowToTable(tableWidget, data, addButtonSlot, delButtonSlot);
+            addRowToTable(tableWidget, data);
+
+            componentManager.addStaticBox(QSharedPointer<Static_box>(noi.release()));
         }
     }
 }
 
-// 处理"-"按钮点击事件的逻辑
-void Widget::onDelButtonStaticBoxClicked()
+
+void Widget::on_pushButton_static_box_del_clicked()
 {
-    deleteRowFromTable(ui->tableWidget_static_box, 1);
+    deleteRowFromTable(ui->tableWidget_static_box, 1, "静压箱");
 }
 
 //修改按钮
@@ -3569,125 +3280,31 @@ void Widget::on_pushButton_static_box_revise_clicked()
 
 
 
-
-
-/**********三通衰减**********/
-#pragma region "stack_tee_atten"{
-void Widget::initTableWidegt_tee()
-{
-    int colCount = 14;
-    QStringList headerText;
-    headerText<< "" << "序号" << "品牌" << "型号" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "";  //表头标题用QStringList来表示
-
-    int columnWidths[] = {40, 50, 100, 120, 80, 80, 80, 80, 80, 80, 80, 80, 90, 70};
-    initTableWidget(ui->tableWidget_tee, headerText, columnWidths, colCount);
-
-    buttonToHeader(ui->tableWidget_tee, ui->buttonWidget_tee,
-                      SLOT(onAddButtonTeeClicked()), SLOT(onDelButtonTeeClicked()));
-}
-
-// 处理"+"按钮点击事件的逻辑
-void Widget::onAddButtonTeeClicked()
-{
-    QTableWidget *tableWidget = ui->tableWidget_tee;
-    Dialog_tee *dialog = new Dialog_tee(this);
-    Tee_atten* noi;
-    const char *addButtonSlot = SLOT(onAddButtonTeeClicked());
-    const char *delButtonSlot = SLOT(onDelButtonTeeClicked());
-
-    if (dialog->exec() == QDialog::Accepted) {
-       noi = static_cast<Tee_atten*>(dialog->getNoi());
-        if (noi != nullptr) {
-            QStringList data = {
-               QString::number(tableWidget->rowCount() + 1),
-               noi->brand,
-               noi->model,
-               noi->noi_63,
-               noi->noi_125,
-               noi->noi_250,
-               noi->noi_500,
-               noi->noi_1k,
-               noi->noi_2k,
-               noi->noi_4k,
-               noi->noi_8k,
-               noi->getMode
-            };
-
-            // 使用通用函数添加行
-            addRowToTable(tableWidget, data, addButtonSlot, delButtonSlot);
-        }
-    }
-}
-
-// 处理"-"按钮点击事件的逻辑
-void Widget::onDelButtonTeeClicked()
-{
-    deleteRowFromTable(ui->tableWidget_tee, 1);
-}
-
-//修改按钮
-void Widget::on_pushButton_tee_revise_clicked()
-{
-    QTableWidget* tableWidget = ui->tableWidget_tee;
-    Tee_atten *noi = new Tee_atten();
-    QVector<QString*> items = {
-        &noi->brand,
-        &noi->model,
-        &noi->noi_63,
-        &noi->noi_125,
-        &noi->noi_250,
-        &noi->noi_500,
-        &noi->noi_1k,
-        &noi->noi_2k,
-        &noi->noi_4k,
-        &noi->noi_8k,
-        &noi->getMode
-    };
-    int cols[] = {2,3,4,5,6,7,8,9,10,11,12};
-
-    for (int row = 0; row < tableWidget->rowCount(); ++row)
-    {
-        noiseRevision<Tee_atten, Dialog_tee>(tableWidget, row, noi, items, cols);
-    }
-}
-
-
-#pragma endregion}
-/**********三通衰减**********/
-
-
-
 /**********风道多分支**********/
 #pragma region "stack_duct_with_multi_ranc"{
 void Widget::initTableWidegt_duct_with_multi_ranc()
 {
-    int colCount = 14;
+    int colCount = 13;
     QStringList headerText;
     headerText<< "" << "序号" << "品牌" << "型号" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 100, 120, 80, 80, 80, 80, 80, 80, 80, 80, 90, 70};
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {40, 50, 100, 120, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     initTableWidget(ui->tableWidget_duct_with_multi_ranc, headerText, columnWidths, colCount);
-
-    buttonToHeader(ui->tableWidget_duct_with_multi_ranc, ui->buttonWidget_duct_with_multi_ranc,
-                      SLOT(onAddButtonMultiRancClicked()), SLOT(onDelButtonMultiRancClicked()));
 }
 
-// 处理"+"按钮点击事件的逻辑
-void Widget::onAddButtonMultiRancClicked()
+void Widget::on_pushButton_duct_with_multi_ranc_add_clicked()
 {
     QTableWidget *tableWidget = ui->tableWidget_duct_with_multi_ranc;
     Dialog_duct_with_multi_ranc *dialog = new Dialog_duct_with_multi_ranc(this);
-    Multi_ranc_atten* noi;
-    const char *addButtonSlot = SLOT(onAddButtonMultiRancClicked());
-    const char *delButtonSlot = SLOT(onDelButtonMultiRancClicked());
+    std::unique_ptr<Multi_ranc_atten> noi;
 
     if (dialog->exec() == QDialog::Accepted) {
-       noi = static_cast<Multi_ranc_atten*>(dialog->getNoi());
+        noi = std::make_unique<Multi_ranc_atten>(std::move(*static_cast<Multi_ranc_atten*>(dialog->getNoi())));
+        noi->table_id = QString::number(tableWidget->rowCount() + 1);
         if (noi != nullptr) {
             QStringList data = {
-               QString::number(tableWidget->rowCount() + 1),
+               noi->table_id,
                noi->brand,
                noi->model,
                noi->noi_63,
@@ -3702,15 +3319,18 @@ void Widget::onAddButtonMultiRancClicked()
             };
 
             // 使用通用函数添加行
-            addRowToTable(tableWidget, data, addButtonSlot, delButtonSlot);
+            addRowToTable(tableWidget, data);
+
+            componentManager.addMultiRanc(QSharedPointer<Multi_ranc_atten>(noi.release()));
         }
     }
+
 }
 
-// 处理"-"按钮点击事件的逻辑
-void Widget::onDelButtonMultiRancClicked()
+
+void Widget::on_pushButton_duct_with_multi_ranc_del_clicked()
 {
-    deleteRowFromTable(ui->tableWidget_duct_with_multi_ranc, 1);
+    deleteRowFromTable(ui->tableWidget_duct_with_multi_ranc, 1,"风道多分支");
 }
 
 //修改按钮
@@ -3745,40 +3365,122 @@ void Widget::on_pushButton_duct_with_multi_ranc_revise_clicked()
 
 
 
+/**********三通衰减**********/
+#pragma region "stack_tee_atten"{
+void Widget::initTableWidegt_tee()
+{
+    int colCount = 13;
+    QStringList headerText;
+    headerText<< "" << "序号" << "品牌" << "型号" << "63Hz" << "125Hz" << "250Hz"
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
+
+    int columnWidths[] = {40, 50, 100, 120, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    initTableWidget(ui->tableWidget_tee, headerText, columnWidths, colCount);
+}
+
+void Widget::on_pushButton_tee_add_clicked()
+{
+    QTableWidget *tableWidget = ui->tableWidget_tee;
+    Dialog_tee *dialog = new Dialog_tee(this);
+    std::unique_ptr<Tee_atten> noi;
+
+    if (dialog->exec() == QDialog::Accepted) {
+        noi = std::make_unique<Tee_atten>(std::move(*static_cast<Tee_atten*>(dialog->getNoi())));
+        noi->table_id = QString::number(tableWidget->rowCount() + 1);
+        if (noi != nullptr) {
+            QStringList data = {
+               QString::number(tableWidget->rowCount() + 1),
+               noi->brand,
+               noi->model,
+               noi->noi_63,
+               noi->noi_125,
+               noi->noi_250,
+               noi->noi_500,
+               noi->noi_1k,
+               noi->noi_2k,
+               noi->noi_4k,
+               noi->noi_8k,
+               noi->getMode
+            };
+
+            // 使用通用函数添加行
+            addRowToTable(tableWidget, data);
+            componentManager.addTee(QSharedPointer<Tee_atten>(noi.release()));
+        }
+    }
+
+}
+
+
+void Widget::on_pushButton_tee_del_clicked()
+{
+    deleteRowFromTable(ui->tableWidget_tee, 1,"三通");
+}
+
+//修改按钮
+void Widget::on_pushButton_tee_revise_clicked()
+{
+    QTableWidget* tableWidget = ui->tableWidget_tee;
+    Tee_atten *noi = new Tee_atten();
+    QVector<QString*> items = {
+        &noi->brand,
+        &noi->model,
+        &noi->noi_63,
+        &noi->noi_125,
+        &noi->noi_250,
+        &noi->noi_500,
+        &noi->noi_1k,
+        &noi->noi_2k,
+        &noi->noi_4k,
+        &noi->noi_8k,
+        &noi->getMode
+    };
+    int cols[] = {2,3,4,5,6,7,8,9,10,11,12};
+
+    for (int row = 0; row < tableWidget->rowCount(); ++row)
+    {
+        noiseRevision<Tee_atten, Dialog_tee>(tableWidget, row, noi, items, cols);
+    }
+}
+
+
+#pragma endregion}
+/**********三通衰减**********/
+
+
+
+
+
+
+
 /**********直管衰减**********/
 #pragma region "stack_pipe_atten"{
 void Widget::initTableWidget_pipe()
 {
-    int colCount = 14;
+    int colCount = 13;
 
     QStringList headerText;
     headerText<< "" << "序号" << "型号" << "类型" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "";  //表头标题用QStringList来表示
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
 
-    int columnWidths[] = {40, 50, 160, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90, 70};
+    int columnWidths[] = {40, 50, 160, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_pipe, headerText, columnWidths, colCount);
-
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_pipe, ui->buttonWidget_pipe,
-                      SLOT(onAddButtonPipeClicked()), SLOT(onDelButtonPipeClicked()));
 }
 
-// 处理"+"按钮点击事件的逻辑
-void Widget::onAddButtonPipeClicked()
+void Widget::on_pushButton_pipe_add_clicked()
 {
     QTableWidget *tableWidget = ui->tableWidget_pipe;
     Dialog_pipe *dialog = new Dialog_pipe(this);
-    Pipe_atten* noi;
-    const char *addButtonSlot = SLOT(onAddButtonPipeClicked());
-    const char *delButtonSlot = SLOT(onDelButtonPipeClicked());
+    std::unique_ptr<Pipe_atten> noi;
 
     if (dialog->exec() == QDialog::Accepted) {
-       noi = static_cast<Pipe_atten*>(dialog->getNoi());
+        noi = std::make_unique<Pipe_atten>(std::move(*static_cast<Pipe_atten*>(dialog->getNoi())));
+        noi->table_id = QString::number(tableWidget->rowCount() + 1);
         if (noi != nullptr) {
             QStringList data = {
-               QString::number(tableWidget->rowCount() + 1),
+               noi->table_id,
                noi->model,
                noi->type,
                noi->noi_63,
@@ -3793,15 +3495,17 @@ void Widget::onAddButtonPipeClicked()
             };
 
             // 使用通用函数添加行
-            addRowToTable(tableWidget, data, addButtonSlot, delButtonSlot);
+            addRowToTable(tableWidget, data);
+            componentManager.addPipe(QSharedPointer<Pipe_atten>(noi.release()));
         }
     }
+
 }
 
-// 处理"-"按钮点击事件的逻辑
-void Widget::onDelButtonPipeClicked()
+
+void Widget::on_pushButton_pipe_del_clicked()
 {
-    deleteRowFromTable(ui->tableWidget_pipe, 1);
+    deleteRowFromTable(ui->tableWidget_pipe, 1, "直管");
 }
 
 //修改按钮
@@ -3842,33 +3546,27 @@ void Widget::on_pushButton_pipe_revise_clicked()
 #pragma region "stack_elbow"{
 void Widget::initTableWidget_elbow()
 {
-    int colCount = 14;
+    int colCount = 13;
     QStringList headerText;
     headerText<< "" << "序号" << "型号" << "类型" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 160, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90, 70};
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {40, 50, 160, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_elbow, headerText, columnWidths, colCount);
-
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_elbow, ui->buttonWidget_elbow,
-                      SLOT(onAddButtonElbowClicked()), SLOT(onDelButtonElbowClicked()));
 }
 
-// 处理"+"按钮点击事件的逻辑
-void Widget::onAddButtonElbowClicked()
+void Widget::on_pushButton_elbow_add_clicked()
 {
     QTableWidget *tableWidget = ui->tableWidget_elbow;
     Dialog_elbow *dialog = new Dialog_elbow(this);
-    Elbow_atten* noi;
-    const char *addButtonSlot = SLOT(onAddButtonElbowClicked());
-    const char *delButtonSlot = SLOT(onDelButtonElbowClicked());
+    std::unique_ptr<Elbow_atten> noi;
 
     if (dialog->exec() == QDialog::Accepted) {
-       noi = static_cast<Elbow_atten*>(dialog->getNoi());
+        noi = std::make_unique<Elbow_atten>(std::move(*static_cast<Elbow_atten*>(dialog->getNoi())));
+        noi->table_id = QString::number(tableWidget->rowCount() + 1);
         if (noi != nullptr) {
             QStringList data = {
-               QString::number(tableWidget->rowCount() + 1),
+               noi->table_id,
                noi->model,
                noi->type,
                noi->noi_63,
@@ -3883,15 +3581,16 @@ void Widget::onAddButtonElbowClicked()
             };
 
             // 使用通用函数添加行
-            addRowToTable(tableWidget, data, addButtonSlot, delButtonSlot);
+            addRowToTable(tableWidget, data);
+            componentManager.addElbow(QSharedPointer<Elbow_atten>(noi.release()));
         }
     }
 }
 
-// 处理"-"按钮点击事件的逻辑
-void Widget::onDelButtonElbowClicked()
+
+void Widget::on_pushButton_elbow_del_clicked()
 {
-    deleteRowFromTable(ui->tableWidget_elbow, 1);
+    deleteRowFromTable(ui->tableWidget_elbow, 1,"弯头");
 }
 
 //修改按钮
@@ -3929,34 +3628,28 @@ void Widget::on_pushButton_elbow_revise_clicked()
 #pragma region "stack_reducer_atten"{
 void Widget::initTableWidget_reducer()
 {
-    int colCount = 14;
+    int colCount = 13;
 
     QStringList headerText;
     headerText<< "" << "序号" << "型号" << "类型" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 160, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90, 70};
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {40, 50, 160, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_reducer, headerText, columnWidths, colCount);
-
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_reducer, ui->buttonWidget_reducer,
-                      SLOT(onAddButtonReducerClicked()), SLOT(onDelButtonReducerClicked()));
 }
 
-// 处理"+"按钮点击事件的逻辑
-void Widget::onAddButtonReducerClicked()
+void Widget::on_pushButton_reducer_add_clicked()
 {
     QTableWidget *tableWidget = ui->tableWidget_reducer;
     Dialog_reducer *dialog = new Dialog_reducer(this);
-    Reducer_atten* noi;
-    const char *addButtonSlot = SLOT(onAddButtonElbowClicked());
-    const char *delButtonSlot = SLOT(onDelButtonElbowClicked());
+    std::unique_ptr<Reducer_atten> noi;
 
     if (dialog->exec() == QDialog::Accepted) {
-       noi = static_cast<Reducer_atten*>(dialog->getNoi());
+        noi = std::make_unique<Reducer_atten>(std::move(*static_cast<Reducer_atten*>(dialog->getNoi())));
+        noi->table_id = QString::number(tableWidget->rowCount() + 1);
         if (noi != nullptr) {
             QStringList data = {
-               QString::number(tableWidget->rowCount() + 1),
+               noi->table_id,
                noi->model,
                noi->type,
                noi->noi_63,
@@ -3971,15 +3664,17 @@ void Widget::onAddButtonReducerClicked()
             };
 
             // 使用通用函数添加行
-            addRowToTable(tableWidget, data, addButtonSlot, delButtonSlot);
+            addRowToTable(tableWidget, data);
+            componentManager.addReducer(QSharedPointer<Reducer_atten>(noi.release()));
         }
     }
+
 }
 
-// 处理"-"按钮点击事件的逻辑
-void Widget::onDelButtonReducerClicked()
+
+void Widget::on_pushButton_reducer_del_clicked()
 {
-    deleteRowFromTable(ui->tableWidget_reducer, 1);
+    deleteRowFromTable(ui->tableWidget_reducer, 1,"变径");
 }
 
 //修改按钮
@@ -4028,78 +3723,84 @@ void Widget::initTableWidget_silencer()
 
 void Widget::initTableWidget_circular_silencer()
 {
-    int colCount = 14;
+    int colCount = 13;
     QStringList headerText;
     headerText<< "圆形" << "序号" << "品牌" << "型号" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 40, 120, 370, 82, 82, 82, 82, 82, 82, 82, 82, 90, 80};
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {40, 40, 120, 370, 82, 82, 82, 82, 82, 82, 82, 82, 90};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_circular_silencer, headerText, columnWidths, colCount);
-
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_circular_silencer, ui->buttonWidget_circular_silencer,
-                      SLOT(onAddButtonCSilencerClicked()), SLOT(onDelButtonCSilencerClicked()));
 }
 
 void Widget::initTableWidget_rect_silencer()
 {
-    int colCount = 14;
+    int colCount = 13;
     QStringList headerText;
     headerText<< "矩形" << "序号" << "品牌" << "型号" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 40, 120, 370, 82, 82, 82, 82, 82, 82, 82, 82, 90, 80};
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {40, 40, 120, 370, 82, 82, 82, 82, 82, 82, 82, 82, 90};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_rect_silencer, headerText, columnWidths, colCount);
-
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_rect_silencer, ui->buttonWidget_rect_silencer,
-                      SLOT(onAddButtonRSilencerClicked()), SLOT(onDelButtonRSilencerClicked()));
 }
 
 void Widget::initTableWidget_circular_silencerEb()
 {
-    int colCount = 14;
+    int colCount = 13;
     QStringList headerText;
     headerText<< "圆弯" << "序号" << "品牌" << "型号" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 40, 120, 370, 82, 82, 82, 82, 82, 82, 82, 82, 90, 80};
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {40, 40, 120, 370, 82, 82, 82, 82, 82, 82, 82, 82, 90};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_circular_silencerEb, headerText, columnWidths, colCount);
-
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_circular_silencerEb, ui->buttonWidget_circular_silencerEb,
-                      SLOT(onAddButtonCSilencerEbClicked()), SLOT(onDelButtonCSilencerEbClicked()));
 }
 
 void Widget::initTableWidget_rect_silencerEb()
 {
-    int colCount = 14;
+    int colCount = 13;
     QStringList headerText;
     headerText<< "矩弯" << "序号" << "品牌" << "型号" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 40, 120, 370, 82, 82, 82, 82, 82, 82, 82, 82, 90, 80};
+              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {40, 40, 120, 370, 82, 82, 82, 82, 82, 82, 82, 82, 90};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_rect_silencerEb, headerText, columnWidths, colCount);
-
-    // 使用通用添加按钮到表头函数
-    buttonToHeader(ui->tableWidget_rect_silencerEb, ui->buttonWidget_rect_silencerEb,
-                      SLOT(onAddButtonRSilencerEbClicked()), SLOT(onDelButtonRSilencerEbClicked()));
 }
 
 
-void Widget::onAddButtonCSilencerClicked()
+void Widget::on_pushButton_silencer_add_clicked()
 {
-    QTableWidget *tableWidget = ui->tableWidget_circular_silencer;
-    Dialog_silencer *dialog = new Dialog_silencer("圆形消音器",this);
-    Silencer_atten* noi;
-    const char *addButtonSlot = SLOT(onAddButtonCSilencerClicked());
-    const char *delButtonSlot = SLOT(onDelButtonCSilencerClicked());
+    QTableWidget *tableWidget = nullptr;
+    Dialog_silencer *dialog = nullptr;
+    std::unique_ptr<Silencer_atten> noi;
+    const char *addButtonSlot = SLOT(onAddButtonElbowClicked());
+    const char *delButtonSlot = SLOT(onDelButtonElbowClicked());
+
+    if(ui->stackedWidget_silencer_table->currentWidget() == ui->page_circular_silencer)
+    {
+        tableWidget = ui->tableWidget_circular_silencer;
+        dialog = new Dialog_silencer("圆形消音器",this);
+    }
+    else if(ui->stackedWidget_silencer_table->currentWidget() == ui->page_circular_silencerEb)
+    {
+        tableWidget = ui->tableWidget_circular_silencerEb;
+        dialog = new Dialog_silencer("圆形消音弯头",this);
+    }
+    else if(ui->stackedWidget_silencer_table->currentWidget() == ui->page_rect_silencer)
+    {
+        tableWidget = ui->tableWidget_rect_silencer;
+        dialog = new Dialog_silencer("矩形消音器",this);
+    }
+    else if(ui->stackedWidget_silencer_table->currentWidget() == ui->page_rect_silencerEb)
+    {
+        tableWidget = ui->tableWidget_rect_silencerEb;
+        dialog = new Dialog_silencer("矩形消音弯头",this);
+    }
 
     if (dialog->exec() == QDialog::Accepted) {
-       noi = static_cast<Silencer_atten*>(dialog->getNoi());
+        noi = std::make_unique<Silencer_atten>(std::move(*static_cast<Silencer_atten*>(dialog->getNoi())));
+        noi->table_id = QString::number(tableWidget->rowCount() + 1);
         if (noi != nullptr) {
             QStringList data = {
-               QString::number(tableWidget->rowCount() + 1),
+               noi->table_id,
                noi->brand,
                noi->model,
                noi->noi_63,
@@ -4114,131 +3815,61 @@ void Widget::onAddButtonCSilencerClicked()
             };
 
             // 使用通用函数添加行
-            addRowToTable(tableWidget, data, addButtonSlot, delButtonSlot);
+            addRowToTable(tableWidget, data);
+
+            componentManager.addSilencer(QSharedPointer<Silencer_atten>(noi.release()));
         }
     }
 }
 
-void Widget::onDelButtonCSilencerClicked()
+void Widget::on_pushButton_silencer_del_clicked()
 {
-    deleteRowFromTable(ui->tableWidget_circular_silencer, 1);
-}
-
-void Widget::onAddButtonRSilencerClicked()
-{
-    QTableWidget *tableWidget = ui->tableWidget_rect_silencer;
-    Dialog_silencer *dialog = new Dialog_silencer("矩形消音器",this);
-    Silencer_atten* noi;
-    const char *addButtonSlot = SLOT(onAddButtonRSilencerClicked());
-    const char *delButtonSlot = SLOT(onDelButtonRSilencerClicked());
-
-    if (dialog->exec() == QDialog::Accepted) {
-       noi = static_cast<Silencer_atten*>(dialog->getNoi());
-        if (noi != nullptr) {
-            QStringList data = {
-               QString::number(tableWidget->rowCount() + 1),
-               noi->brand,
-               noi->model,
-               noi->noi_63,
-               noi->noi_125,
-               noi->noi_250,
-               noi->noi_500,
-               noi->noi_1k,
-               noi->noi_2k,
-               noi->noi_4k,
-               noi->noi_8k,
-               "厂家"
-            };
-
-            // 使用通用函数添加行
-            addRowToTable(tableWidget, data, addButtonSlot, delButtonSlot);
-        }
+    QTableWidget *tableWidget = nullptr;
+    if(ui->stackedWidget_silencer_table->currentWidget() == ui->page_circular_silencer)
+    {
+        tableWidget = ui->tableWidget_circular_silencer;
     }
-}
-
-void Widget::onDelButtonRSilencerClicked()
-{
-    deleteRowFromTable(ui->tableWidget_rect_silencer, 1);
-}
-
-void Widget::onAddButtonCSilencerEbClicked()
-{
-    QTableWidget *tableWidget = ui->tableWidget_circular_silencerEb;
-    Dialog_silencer *dialog = new Dialog_silencer("圆形消音弯头",this);
-    Silencer_atten* noi;
-    const char *addButtonSlot = SLOT(onAddButtonCSilencerEbClicked());
-    const char *delButtonSlot = SLOT(onDelButtonCSilencerEbClicked());
-
-    if (dialog->exec() == QDialog::Accepted) {
-       noi = static_cast<Silencer_atten*>(dialog->getNoi());
-        if (noi != nullptr) {
-            QStringList data = {
-               QString::number(tableWidget->rowCount() + 1),
-               noi->brand,
-               noi->model,
-               noi->noi_63,
-               noi->noi_125,
-               noi->noi_250,
-               noi->noi_500,
-               noi->noi_1k,
-               noi->noi_2k,
-               noi->noi_4k,
-               noi->noi_8k,
-               "厂家"
-            };
-
-            // 使用通用函数添加行
-            addRowToTable(tableWidget, data, addButtonSlot, delButtonSlot);
-        }
+    else if(ui->stackedWidget_silencer_table->currentWidget() == ui->page_circular_silencerEb)
+    {
+        tableWidget = ui->tableWidget_circular_silencerEb;
     }
-}
-
-void Widget::onDelButtonCSilencerEbClicked()
-{
-    deleteRowFromTable(ui->tableWidget_circular_silencerEb, 1);
-}
-
-void Widget::onAddButtonRSilencerEbClicked()
-{
-    QTableWidget *tableWidget = ui->tableWidget_rect_silencerEb;
-    Dialog_silencer *dialog = new Dialog_silencer("矩形消音弯头",this);
-    Silencer_atten* noi;
-    const char *addButtonSlot = SLOT(onAddButtonRSilencerEbClicked());
-    const char *delButtonSlot = SLOT(onAddButtonRSilencerEbClicked());
-
-    if (dialog->exec() == QDialog::Accepted) {
-       noi = static_cast<Silencer_atten*>(dialog->getNoi());
-        if (noi != nullptr) {
-            QStringList data = {
-               QString::number(tableWidget->rowCount() + 1),
-               noi->brand,
-               noi->model,
-               noi->noi_63,
-               noi->noi_125,
-               noi->noi_250,
-               noi->noi_500,
-               noi->noi_1k,
-               noi->noi_2k,
-               noi->noi_4k,
-               noi->noi_8k,
-               "厂家"
-            };
-
-            // 使用通用函数添加行
-            addRowToTable(tableWidget, data, addButtonSlot, delButtonSlot);
-        }
+    else if(ui->stackedWidget_silencer_table->currentWidget() == ui->page_rect_silencer)
+    {
+        tableWidget = ui->tableWidget_rect_silencer;
     }
+    else if(ui->stackedWidget_silencer_table->currentWidget() == ui->page_rect_silencerEb)
+    {
+        tableWidget = ui->tableWidget_rect_silencerEb;
+    }
+
+    deleteRowFromTable(tableWidget, 1,"消声器");
 }
 
-void Widget::onDelButtonRSilencerEbClicked()
+void Widget::on_pushButton_silencer_revise_clicked()
 {
-    deleteRowFromTable(ui->tableWidget_rect_silencerEb, 1);
-}
+    QTableWidget* tableWidget = nullptr;
+    QString name = "";
+    if(ui->stackedWidget_silencer_table->currentWidget() == ui->page_circular_silencer)
+    {
+        tableWidget = ui->tableWidget_circular_silencer;
+        name = "圆形消音器";
+    }
+    else if(ui->stackedWidget_silencer_table->currentWidget() == ui->page_circular_silencerEb)
+    {
+        tableWidget = ui->tableWidget_circular_silencerEb;
+        name = "圆形消音弯头";
+    }
+    else if(ui->stackedWidget_silencer_table->currentWidget() == ui->page_rect_silencer)
+    {
+        tableWidget = ui->tableWidget_rect_silencer;
+        name = "矩形消音器";
+    }
+    else if(ui->stackedWidget_silencer_table->currentWidget() == ui->page_rect_silencerEb)
+    {
+        tableWidget = ui->tableWidget_rect_silencerEb;
+        name = "矩形消音弯头";
+    }
 
-
-void Widget::on_pushButton_circular_silencer_revise_clicked()
-{
-    QTableWidget* tableWidget = ui->tableWidget_circular_silencer;
     Silencer_atten *noi = new Silencer_atten();
     QVector<QString*> items = {
         &noi->brand,
@@ -4256,80 +3887,10 @@ void Widget::on_pushButton_circular_silencer_revise_clicked()
 
     for (int row = 0; row < tableWidget->rowCount(); ++row)
     {
-        noiseRevision<Silencer_atten, Dialog_silencer>(tableWidget, row, noi, items, cols, "圆形消音器");
+        noiseRevision<Silencer_atten, Dialog_silencer>(tableWidget, row, noi, items, cols, name);
     }
-}
 
-void Widget::on_pushButton_rect_silencer_revise_clicked()
-{
-    QTableWidget* tableWidget = ui->tableWidget_rect_silencer;
-    Silencer_atten *noi = new Silencer_atten();
-    QVector<QString*> items = {
-        &noi->brand,
-        &noi->model,
-        &noi->noi_63,
-        &noi->noi_125,
-        &noi->noi_250,
-        &noi->noi_500,
-        &noi->noi_1k,
-        &noi->noi_2k,
-        &noi->noi_4k,
-        &noi->noi_8k,
-    };
-    int cols[] = {2,3,4,5,6,7,8,9,10,11};
-
-    for (int row = 0; row < tableWidget->rowCount(); ++row)
-    {
-        noiseRevision<Silencer_atten, Dialog_silencer>(tableWidget, row, noi, items, cols, "矩形消音器");
-    }
-}
-
-void Widget::on_pushButton_circular_silencerEb_revise_clicked()
-{
-    QTableWidget* tableWidget = ui->tableWidget_circular_silencerEb;
-    Silencer_atten *noi = new Silencer_atten();
-    QVector<QString*> items = {
-        &noi->brand,
-        &noi->model,
-        &noi->noi_63,
-        &noi->noi_125,
-        &noi->noi_250,
-        &noi->noi_500,
-        &noi->noi_1k,
-        &noi->noi_2k,
-        &noi->noi_4k,
-        &noi->noi_8k,
-    };
-    int cols[] = {2,3,4,5,6,7,8,9,10,11};
-
-    for (int row = 0; row < tableWidget->rowCount(); ++row)
-    {
-        noiseRevision<Silencer_atten, Dialog_silencer>(tableWidget, row, noi, items, cols, "圆形消音弯头");
-    }
-}
-
-void Widget::on_pushButton_rect_silencerEb_revise_clicked()
-{
-    QTableWidget* tableWidget = ui->tableWidget_rect_silencerEb;
-    Silencer_atten *noi = new Silencer_atten();
-    QVector<QString*> items = {
-        &noi->brand,
-        &noi->model,
-        &noi->noi_63,
-        &noi->noi_125,
-        &noi->noi_250,
-        &noi->noi_500,
-        &noi->noi_1k,
-        &noi->noi_2k,
-        &noi->noi_4k,
-        &noi->noi_8k,
-    };
-    int cols[] = {2,3,4,5,6,7,8,9,10,11};
-
-    for (int row = 0; row < tableWidget->rowCount(); ++row)
-    {
-        noiseRevision<Silencer_atten, Dialog_silencer>(tableWidget, row, noi, items, cols, "矩形消音弯头");
-    }
+    delete noi;  // 在这里删除 noi 对象
 }
 
 void Widget::on_pushButton_circular_silencer_table_clicked()
@@ -4397,6 +3958,10 @@ void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
                     ui->treeWidget->addTopLevelItem(treeitemx);
                     zsqmap.insert(treeitem,treeitemx);  // 保存第6项和第7项主竖区对应关系
                     item_zhushuqu.append(treeitem);
+                    connect(ui->treeWidget,&QTreeWidget::itemClicked,this,[=](QTreeWidgetItem *item1,int n){
+                        if(item1 == treeitemx || item1 == treeitem)     //     点击甲板会显示添加的页面
+                            ui->stackedWidget->setCurrentWidget(ui->page_white);
+                    });
                     return;
                 }
             }
@@ -4661,7 +4226,7 @@ void Widget::on_close_clicked()//点击关闭按钮
 /**************树列表************/
 void Widget::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous)
 {
-    if(current == item_prj)     //工程信息
+    if(current == item_prj_info)     //工程信息
     {
         ui->stackedWidget->setCurrentWidget(ui->page_prj_info);
     }
@@ -4697,9 +4262,9 @@ void Widget::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWid
     {
         ui->stackedWidget->setCurrentWidget(ui->page_pump_send_tuyere);
     }
-    else if(current == item_return_air_box_grille)  //回风箱+格栅
+    else if(current == item_staticBox_grille)  //回风箱+格栅
     {
-        ui->stackedWidget->setCurrentWidget(ui->page_return_air_box_grille);
+        ui->stackedWidget->setCurrentWidget(ui->page_staticBox_grille);
     }
     else if(current == item_disp_vent_terminal)     //置换通风末端
     {
@@ -4745,9 +4310,9 @@ void Widget::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWid
     {
         ui->stackedWidget->setCurrentWidget(ui->page_pump_send_tuyere_terminal_atten);
     }
-    else if(current == item_return_air_box_grille_terminal_atten)     //抽送风头末端衰减
+    else if(current == item_staticBox_grille_terminal_atten)     //抽送风头末端衰减
     {
-        ui->stackedWidget->setCurrentWidget(ui->page_return_air_box_grille_terminal_atten);
+        ui->stackedWidget->setCurrentWidget(ui->page_staticBox_grille_terminal_atten);
     }
     else if(current == item_disp_vent_terminal_atten)     //置换通风末端衰减
     {
@@ -4765,9 +4330,9 @@ void Widget::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWid
     {
         ui->stackedWidget->setCurrentWidget(ui->page_pump_send_tuyere_terminal_refl);
     }
-    else if(current == item_return_air_box_grille_relf_atten)     //回风箱＋格栅末端反射衰减
+    else if(current == item_staticBox_grille_relf_atten)     //回风箱＋格栅末端反射衰减
     {
-        ui->stackedWidget->setCurrentWidget(ui->page_return_air_box_grille_terminal_refl);
+        ui->stackedWidget->setCurrentWidget(ui->page_staticBox_grille_terminal_refl);
     }
     else if(current == item_disp_vent_relf_atten)     //置换通风末端反射衰减
     {
@@ -4801,7 +4366,15 @@ void Widget::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWid
     {
         ui->stackedWidget->setCurrentWidget(ui->page_room_rain);
     }
+    else if(current == item_room_define)     //5.5 定义房间
+    {
+        ui->stackedWidget->setCurrentWidget(ui->page_white);
+    }
+    else if(current == item_room_calculate)     //计算房间
+    {
+        ui->stackedWidget->setCurrentWidget(ui->page_white);
+    }
+
 }
 /**************树列表************/
-
 

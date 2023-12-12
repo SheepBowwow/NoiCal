@@ -1,5 +1,5 @@
-#ifndef DIALOG_RETURNAIRBOX_GRILLE_H
-#define DIALOG_RETURNAIRBOX_GRILLE_H
+#ifndef DIALOG_STATICBOX_GRILLE_H
+#define DIALOG_STATICBOX_GRILLE_H
 
 #include "inputbasedialog.h"
 #include <QDialog>
@@ -9,17 +9,17 @@
 #include "Component/ComponentStructs.h"
 
 namespace Ui {
-class Dialog_returnAirBox_grille;
+class Dialog_staticBox_grille;
 }
 
-class Dialog_returnAirBox_grille : public InputBaseDialog
+class Dialog_staticBox_grille : public InputBaseDialog
 {
     Q_OBJECT
 
 public:
-    explicit Dialog_returnAirBox_grille(QWidget *parent = nullptr, int editRow = -1, const StaticBox_grille_noise& data = StaticBox_grille_noise());
-    Dialog_returnAirBox_grille(const QString& name, QWidget *parent = nullptr, int editRow = -1, const StaticBox_grille_noise& data = StaticBox_grille_noise()){}
-    ~Dialog_returnAirBox_grille();
+    explicit Dialog_staticBox_grille(QWidget *parent = nullptr, int editRow = -1, const StaticBox_grille_noise& data = StaticBox_grille_noise());
+    Dialog_staticBox_grille(const QString& name, QWidget *parent = nullptr, int editRow = -1, const StaticBox_grille_noise& data = StaticBox_grille_noise()){}
+    ~Dialog_staticBox_grille();
     void total_noi();
     void* getNoi() override;
 
@@ -45,11 +45,11 @@ private slots:
     void on_pushButton_clicked();
 
 private:
-    Ui::Dialog_returnAirBox_grille *ui;
+    Ui::Dialog_staticBox_grille *ui;
     QVector<QString> staticBoxGrilleModel;      //保存所有型号
     QMap<int,QString> eightNoi;     //八个分频的噪音,用于数据库获取数据
     int editRow;    //当前修改行，如果是新建就为-1
     StaticBox_grille_noise* noi;     //噪音结构体
 };
 
-#endif // DIALOG_RETURNAIRBOX_GRILLE_H
+#endif // DIALOG_STATICBOX_GRILLE_H
