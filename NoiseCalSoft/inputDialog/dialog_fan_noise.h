@@ -5,40 +5,11 @@
 #include <QDialog>
 #include <QObject>
 #include <QMouseEvent>
+#include "Component/ComponentStructs.h"
 
 namespace Ui {
 class Dialog_fan_noise;
 }
-
-typedef struct Fan_noise
-{
-    QString number;  //空调器编号
-    QString brand;      //品牌
-    QString model;      //型号
-    QString air_volume; //风量
-    QString static_pressure; //静压
-    /*进口*/
-    QString noi_in_63;     //63hz
-    QString noi_in_125;     //125hz
-    QString noi_in_250;     //250hz
-    QString noi_in_500;     //500hz
-    QString noi_in_1k;     //1khz
-    QString noi_in_2k;     //2khz
-    QString noi_in_4k;     //4khz
-    QString noi_in_8k;     //8khz
-    QString noi_in_total;  //总量
-    /*出口*/
-    QString noi_out_63;     //63hz
-    QString noi_out_125;     //125hz
-    QString noi_out_250;     //250hz
-    QString noi_out_500;     //500hz
-    QString noi_out_1k;     //1khz
-    QString noi_out_2k;     //2khz
-    QString noi_out_4k;     //4khz
-    QString noi_out_8k;     //8khz
-    QString noi_out_total;  //总量
-}Fan_noise;
-
 
 class Dialog_fan_noise : public InputBaseDialog
 {

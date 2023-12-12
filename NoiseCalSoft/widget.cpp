@@ -655,14 +655,14 @@ void Widget::on_pushButton_fanNoi_add_clicked()
 {
     QTableWidget *tableWidget = ui->tableWidget_fan_noi;
     int rowCount = tableWidget->rowCount(); //获取当前行数
-    Fan_noise* noi;
+    std::unique_ptr<Fan_noise> noi;
     Dialog_fan_noise *dialog = new Dialog_fan_noise(this);
     const char *addButtonSlot = SLOT(onAddButtonFanNoiClicked());
     const char *delButtonSlot = SLOT(onDelButtonFanNoiClicked());
 
     if (dialog->exec() == QDialog::Accepted) {
-
-        noi = static_cast<Fan_noise*>(dialog->getNoi());
+        // 使用 std::make_unique 创建 std::unique_ptr
+        noi = std::make_unique<Fan_noise>(std::move(*static_cast<Fan_noise*>(dialog->getNoi())));
         if (noi != nullptr) {
             QStringList data_in = {
                 QString::number(tableWidget->rowCount() / 2 + 1),
@@ -2553,12 +2553,12 @@ void Widget::onAddButtonReturnAirBoxGriClicked()
     QTableWidget *tableWidget_atten = ui->tableWidget_return_air_box_grille_terminal_atten;
     QTableWidget *tableWidget_refl = ui->tableWidget_return_air_box_grille_terminal_refl;
     Dialog_returnAirBox_grille *dialog = new Dialog_returnAirBox_grille(this);
-    ReturnAirBox_grille_noise* noi;
+    StaticBox_grille_noise* noi;
     const char *addButtonSlot = SLOT(onAddButtonReturnAirBoxGriClicked());
     const char *delButtonSlot = SLOT(onDelButtonReturnAirBoxGriClicked());
 
     if (dialog->exec() == QDialog::Accepted) {
-        noi = static_cast<ReturnAirBox_grille_noise*>(dialog->getNoi());
+        noi = static_cast<StaticBox_grille_noise*>(dialog->getNoi());
         if (noi != nullptr) {
             QStringList data_noise = {
                 QString::number(tableWidget_noise->rowCount() + 1),
@@ -2633,7 +2633,7 @@ void Widget::on_pushButton_return_air_box_grille_terminal_atten_revise_clicked()
     QTableWidget* tableWidget_noise = ui->tableWidget_return_air_box_grille;
     QTableWidget* tableWidget_atten = ui->tableWidget_return_air_box_grille_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_return_air_box_grille_terminal_refl;
-    ReturnAirBox_grille_noise *noi = new ReturnAirBox_grille_noise();
+    StaticBox_grille_noise *noi = new StaticBox_grille_noise();
     QVector<QString*> items_noise = {
         &noi->brand,
         &noi->model,
@@ -2687,7 +2687,7 @@ void Widget::on_pushButton_return_air_box_grille_terminal_atten_revise_clicked()
 
     for (int row = 0; row < currentTableWidget->rowCount(); ++row)
     {
-        noiseRevision<ReturnAirBox_grille_noise, Dialog_returnAirBox_grille>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl);
+        noiseRevision<StaticBox_grille_noise, Dialog_returnAirBox_grille>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl);
     }
 }
 
@@ -2697,7 +2697,7 @@ void Widget::on_pushButton_return_air_box_grille_terminal_refl_revise_clicked()
     QTableWidget* tableWidget_noise = ui->tableWidget_return_air_box_grille;
     QTableWidget* tableWidget_atten = ui->tableWidget_return_air_box_grille_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_return_air_box_grille_terminal_refl;
-    ReturnAirBox_grille_noise *noi = new ReturnAirBox_grille_noise();
+    StaticBox_grille_noise *noi = new StaticBox_grille_noise();
     QVector<QString*> items_noise = {
         &noi->brand,
         &noi->model,
@@ -2751,7 +2751,7 @@ void Widget::on_pushButton_return_air_box_grille_terminal_refl_revise_clicked()
 
     for (int row = 0; row < currentTableWidget->rowCount(); ++row)
     {
-        noiseRevision<ReturnAirBox_grille_noise, Dialog_returnAirBox_grille>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl);
+        noiseRevision<StaticBox_grille_noise, Dialog_returnAirBox_grille>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl);
     }
 }
 
@@ -2761,7 +2761,7 @@ void Widget::on_pushButton_return_air_box_grille_revise_clicked()
     QTableWidget* tableWidget_noise = ui->tableWidget_return_air_box_grille;
     QTableWidget* tableWidget_atten = ui->tableWidget_return_air_box_grille_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_return_air_box_grille_terminal_refl;
-    ReturnAirBox_grille_noise *noi = new ReturnAirBox_grille_noise();
+    StaticBox_grille_noise *noi = new StaticBox_grille_noise();
     QVector<QString*> items_noise = {
         &noi->brand,
         &noi->model,
@@ -2815,7 +2815,7 @@ void Widget::on_pushButton_return_air_box_grille_revise_clicked()
 
     for (int row = 0; row < currentTableWidget->rowCount(); ++row)
     {
-        noiseRevision<ReturnAirBox_grille_noise, Dialog_returnAirBox_grille>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl);
+        noiseRevision<StaticBox_grille_noise, Dialog_returnAirBox_grille>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl);
     }
 }
 

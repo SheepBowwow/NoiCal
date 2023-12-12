@@ -6,28 +6,7 @@
 #include <QMap>
 #include <QObject>
 #include <QMouseEvent>
-
-typedef struct Reducer_atten
-{
-    QString number;  //编号
-    QString model;  //型号
-    QString type;  //类型 圆还是方
-    QString getMode;  //得到噪声的方式
-    QString diameter_before;  //变径前直径
-    QString diameter_after;  //变径后直径
-    QString length_before;  //变径前长
-    QString length_after;  //变径后长
-    QString width_before;  //变径前宽
-    QString width_after;  //变径后宽
-    QString noi_63;     //63hz
-    QString noi_125;     //125hz
-    QString noi_250;     //250hz
-    QString noi_500;     //500hz
-    QString noi_1k;     //1khz
-    QString noi_2k;     //2khz
-    QString noi_4k;     //4khz
-    QString noi_8k;     //8khz
-}Reducer_atten;
+#include "Component/ComponentStructs.h"
 
 namespace Ui {
 class Dialog_reducer;

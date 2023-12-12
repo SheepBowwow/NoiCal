@@ -6,25 +6,7 @@
 #include <QMap>
 #include <QObject>
 #include <QMouseEvent>
-
-typedef struct Pipe_atten
-{
-    QString number;  //编号
-    QString model;  //型号
-    QString diameter;   //直径
-    QString length;   //长
-    QString width;   //宽
-    QString type;   //类型
-    QString getMode;  //得到噪声的方式
-    QString noi_63;     //63hz
-    QString noi_125;     //125hz
-    QString noi_250;     //250hz
-    QString noi_500;     //500hz
-    QString noi_1k;     //1khz
-    QString noi_2k;     //2khz
-    QString noi_4k;     //4khz
-    QString noi_8k;     //8khz
-}Pipe_atten;
+#include "Component/ComponentStructs.h"
 
 namespace Ui {
 class Dialog_pipe;

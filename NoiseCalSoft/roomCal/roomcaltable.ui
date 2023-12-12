@@ -38,7 +38,7 @@
 }</string>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>4</number>
    </property>
    <widget class="QWidget" name="page_noi_src_info">
     <widget class="QComboBox" name="comboBox_noi_src_num">
@@ -910,7 +910,7 @@ border-bottom:1px solid black;</string>
       <rect>
        <x>610</x>
        <y>1</y>
-       <width>91</width>
+       <width>51</width>
        <height>31</height>
       </rect>
      </property>
@@ -924,6 +924,16 @@ border-bottom:1px solid black;</string>
       <string notr="true">border:none;
 border-bottom:1px solid black;</string>
      </property>
+     <item>
+      <property name="text">
+       <string>圆形</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>方形</string>
+      </property>
+     </item>
     </widget>
     <widget class="QStackedWidget" name="stackedWidget_atten_noi_model">
      <property name="geometry">
@@ -1379,7 +1389,7 @@ border-bottom:1px solid black;</string>
     <widget class="QStackedWidget" name="stackedWidget_terminal_size">
      <property name="geometry">
       <rect>
-       <x>710</x>
+       <x>670</x>
        <y>0</y>
        <width>291</width>
        <height>36</height>
@@ -2894,7 +2904,7 @@ border-bottom:1px solid black;
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="page_unit">
      <widget class="QLabel" name="label_9">
@@ -3212,7 +3222,7 @@ border-bottom:1px solid black;</string>
     <string notr="true"/>
    </property>
    <property name="currentIndex">
-    <number>8</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="page_noi_src_table">
     <widget class="QWidget" name="widget_4" native="true">

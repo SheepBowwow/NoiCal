@@ -14,6 +14,7 @@ QMAKE_CXXFLAGS += -Wno-unknown-pragmas
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Component/ComponentManager.cpp \
     create_prj.cpp \
     databasemanager.cpp \
     globle_var.cpp \
@@ -45,6 +46,8 @@ SOURCES += \
     widget.cpp
 
 HEADERS += \
+    Component/ComponentManager.h \
+    Component/ComponentStructs.h \
     create_prj.h \
     databasemanager.h \
     global_constant.h \

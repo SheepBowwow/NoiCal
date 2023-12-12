@@ -276,6 +276,12 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
         ui->stackedWidget_info->setCurrentWidget(ui->page_rect_damper_info);
         ui->stackedWidget_table->setCurrentWidget(ui->page_damper_table);
     }
+    else if(arg1 == "末端/其他通风末端")
+    {
+        ui->stackedWidget_info->setCurrentWidget(ui->page_atten_info);
+
+        ui->stackedWidget_table->setCurrentWidget(ui->page_atten_noi_table);
+    }
     else if(arg1 == "分支/静压箱" || arg1 == "分支/静压箱" || arg1 == "分支/静压箱")
     {
         ui->stackedWidget_info->setCurrentWidget(ui->page_branch_info);

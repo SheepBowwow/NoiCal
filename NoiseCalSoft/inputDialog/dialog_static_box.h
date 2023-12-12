@@ -5,24 +5,7 @@
 #include <QDialog>
 #include <QObject>
 #include <QMouseEvent>
-
-typedef struct Static_box
-{
-    QString number;  //编号
-    QString brand;  //品牌
-    QString model;  //型号
-    QString getMode;  //得到噪声的方式
-    QString q1;       //总风量
-    QString q;   //支管风量
-    QString noi_63;     //63hz
-    QString noi_125;     //125hz
-    QString noi_250;     //250hz
-    QString noi_500;     //500hz
-    QString noi_1k;     //1khz
-    QString noi_2k;     //2khz
-    QString noi_4k;     //4khz
-    QString noi_8k;     //8khz
-}Static_box;
+#include "Component/ComponentStructs.h"
 
 namespace Ui {
 class Dialog_static_box;

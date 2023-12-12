@@ -8,7 +8,7 @@
 #include <QSet>
 #define Pi 3.14159265358979323846
 
-Dialog_returnAirBox_grille::Dialog_returnAirBox_grille(QWidget *parent, int editRow,  const ReturnAirBox_grille_noise& data) :
+Dialog_returnAirBox_grille::Dialog_returnAirBox_grille(QWidget *parent, int editRow,  const StaticBox_grille_noise& data) :
     InputBaseDialog(parent),
     editRow(editRow), // 初始化editRow
     ui(new Ui::Dialog_returnAirBox_grille)
@@ -16,17 +16,15 @@ Dialog_returnAirBox_grille::Dialog_returnAirBox_grille(QWidget *parent, int edit
     ui->setupUi(this);
     setTopWidget(ui->widget_top);  // 设置顶部部件
 
-
-    QSet<QString> addedPrefixes;
-    DBManager->queryKnownData(returnAirBoxGrilleModel, RETURN_AIR_BOX_GRILLE_MODEL, RETURN_AIR_BOX_GRILLE_TABLE);
+    DBManager->queryKnownData(staticBoxGrilleModel, RETURN_AIR_BOX_GRILLE_MODEL, RETURN_AIR_BOX_GRILLE_TABLE);
     ui->radioButton_circle->setChecked(true);
     ui->stackedWidget_input->setCurrentWidget(ui->page_circle);
     ui->radioButton_formula->setChecked(true);
 
     /******设置combobox******/
-    for(int i = 0; i < returnAirBoxGrilleModel.size(); i++)
+    for(int i = 0; i < staticBoxGrilleModel.size(); i++)
     {
-        QString s = returnAirBoxGrilleModel[i];
+        QString s = staticBoxGrilleModel[i];
         // 检查是否已经添加过该前缀
         ui->comboBox_model->addItem(s);
     }
@@ -181,7 +179,7 @@ void Dialog_returnAirBox_grille::calReflNoi()
 //点击确认键
 void Dialog_returnAirBox_grille::on_pushButton_confirm_clicked()
 {
-    this->noi = new ReturnAirBox_grille_noise;
+    this->noi = new StaticBox_grille_noise;
 
     if(ui->radioButton_formula->isChecked())
     {

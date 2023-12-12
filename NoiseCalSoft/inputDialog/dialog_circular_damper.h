@@ -6,26 +6,7 @@
 #include <QMap>
 #include <QObject>
 #include <QMouseEvent>
-
-typedef struct Circular_damper_noi
-{
-    QString number;  //编号
-    QString brand;  //编号
-    QString model;  //型号
-    QString diameter;   //直径
-    QString angle;   //阀门开度
-    QString air_volume;   //风量
-    QString getMode;   //得到噪声的方式
-    QString noi_63;     //63hz
-    QString noi_125;     //125hz
-    QString noi_250;     //250hz
-    QString noi_500;     //500hz
-    QString noi_1k;     //1khz
-    QString noi_2k;     //2khz
-    QString noi_4k;     //4khz
-    QString noi_8k;     //8khz
-    QString noi_total;     //总值
-}Circular_damper_noi;
+#include "Component/ComponentStructs.h"
 
 namespace Ui {
 class Dialog_circular_damper;
