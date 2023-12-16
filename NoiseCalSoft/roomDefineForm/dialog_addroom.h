@@ -18,6 +18,7 @@ public:
 
     QString getroomid();
     QString getroomname();
+    QString getjiaban();
     int getmainpipe();
     QString getroomclass();
     QString getlimit();
