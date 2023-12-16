@@ -2,6 +2,7 @@
 #include "ui_form_room_define.h"
 
 #include <QCheckBox>
+#include <QMessageBox>
 
 
 Form_room_define::Form_room_define(QWidget *parent) :
@@ -32,6 +33,19 @@ void Form_room_define::jieshou(QString name,int num)
 
 void Form_room_define::on_buttonadd_clicked()
 {
+    // 获取选中的行索引
+    int insertRow=-1;
+    for (int row = 0; row < ui->tableWidget_room_define->rowCount(); ++row)
+    {
+        QWidget* widget = ui->tableWidget_room_define->cellWidget(row, 0); // Assuming the checkbox is in the first column (index 0)
+        QCheckBox* checkBox = widget->findChild<QCheckBox*>(); // Find the checkbox within the widget
+        if (checkBox && checkBox->isChecked())
+        {
+            insertRow=row+1;
+            break;
+        }
+    }
+
     dialog = new Dialog_addroom;
 
     //弹窗点击确定，接收信号并发送提醒主界面改变
@@ -39,7 +53,8 @@ void Form_room_define::on_buttonadd_clicked()
 
     if(dialog->exec()==QDialog::Accepted)
     {
-        int RowCount = ui->tableWidget_room_define->rowCount();
+        //设置插入行
+        int RowCount=(insertRow!=-1)? insertRow : ui->tableWidget_room_define->rowCount();
         ui->tableWidget_room_define->insertRow(RowCount);
 
         // 添加复选框
@@ -56,11 +71,10 @@ void Form_room_define::on_buttonadd_clicked()
         QTableWidgetItem *tbitem1=new QTableWidgetItem(QString(dialog->getroomid()));
         QTableWidgetItem *tbitem2=new QTableWidgetItem(QString(dialog->getroomname()));
         QTableWidgetItem *tbitem3=new QTableWidgetItem(QString(dialog->getroomclass()));
-        QTableWidgetItem *tbitem4=new QTableWidgetItem(_jiabanitem->parent()->text(0));
-        QTableWidgetItem *tbitem5=new QTableWidgetItem(_jiabanitem->text(0));
-        QTableWidgetItem *tbitem6=new QTableWidgetItem(QString::number(dialog->getmainpipe()));
-        QTableWidgetItem *tbitem7=new QTableWidgetItem(QString(dialog->getlimit()));
-        QTableWidgetItem *tbitem8=new QTableWidgetItem(QString(dialog->getroomcalclass()));
+        QTableWidgetItem *tbitem4=new QTableWidgetItem(dialog->getjiaban());
+        QTableWidgetItem *tbitem5=new QTableWidgetItem(QString::number(dialog->getmainpipe()));
+        QTableWidgetItem *tbitem6=new QTableWidgetItem(QString(dialog->getlimit()));
+        QTableWidgetItem *tbitem7=new QTableWidgetItem(QString(dialog->getroomcalclass()));
         tbitem1->setFlags(Qt::ItemIsEditable); // 设置为只读
         tbitem1->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
         tbitem2->setFlags(Qt::ItemIsEditable); // 设置为只读
@@ -75,8 +89,6 @@ void Form_room_define::on_buttonadd_clicked()
         tbitem6->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
         tbitem7->setFlags(Qt::ItemIsEditable); // 设置为只读
         tbitem7->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
-        tbitem8->setFlags(Qt::ItemIsEditable); // 设置为只读
-        tbitem8->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
 
         ui->tableWidget_room_define->setItem(RowCount,1,tbitem1);
         ui->tableWidget_room_define->setItem(RowCount,2,tbitem2);
@@ -85,20 +97,56 @@ void Form_room_define::on_buttonadd_clicked()
         ui->tableWidget_room_define->setItem(RowCount,5,tbitem5);
         ui->tableWidget_room_define->setItem(RowCount,6,tbitem6);
         ui->tableWidget_room_define->setItem(RowCount,7,tbitem7);
-        ui->tableWidget_room_define->setItem(RowCount,8,tbitem8);
 
     }
 }
 void Form_room_define::on_buttondel_clicked()
 {
-    for (int row = ui->tableWidget_room_define->rowCount() - 1; row >= 0; --row)
+    // 获取选中的行索引
+    QList<int> selectedRows;
+    for (int row = 0; row < ui->tableWidget_room_define->rowCount(); ++row)
     {
-        QWidget *widget = ui->tableWidget_room_define->cellWidget(row, 0); // 提取出第一列的widget
-        QCheckBox* checkBoxItem = widget->findChild<QCheckBox*>();          // widget转成checkbox
-        if (checkBoxItem && checkBoxItem->checkState() == Qt::Checked)
+        QWidget* widget = ui->tableWidget_room_define->cellWidget(row, 0); // Assuming the checkbox is in the first column (index 0)
+        QCheckBox* checkBox = widget->findChild<QCheckBox*>(); // Find the checkbox within the widget
+
+        if (checkBox && checkBox->isChecked())
         {
-            emit roomdel(_jiabanitem,ui->tableWidget_room_define->item(row,1)->text());
-            ui->tableWidget_room_define->removeRow(row);
+            selectedRows.append(row);
         }
     }
+
+    // 弹窗确认
+    QString confirmationMessage = "确认删除以下行吗？\n";
+    for (int i = 0; i < selectedRows.size(); ++i)
+    {
+        int row = selectedRows[i];
+        confirmationMessage += QString::number(row+1) + "\n"; // 从1开始计数
+    }
+
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("确认删除");
+    msgBox.setText(confirmationMessage);
+    msgBox.setIcon(QMessageBox::Warning);
+    QPushButton *yesButton = msgBox.addButton("确认", QMessageBox::YesRole);
+    QPushButton *noButton = msgBox.addButton("取消", QMessageBox::NoRole);
+    msgBox.exec();
+
+    if (msgBox.clickedButton() == yesButton)
+    {
+        for (int row = ui->tableWidget_room_define->rowCount() - 1; row >= 0; --row)
+        {
+            QWidget *widget = ui->tableWidget_room_define->cellWidget(row, 0); // 提取出第一列的widget
+            QCheckBox* checkBoxItem = widget->findChild<QCheckBox*>();          // widget转成checkbox
+            if (checkBoxItem && checkBoxItem->checkState() == Qt::Checked)
+            {
+                emit roomdel(_jiabanitem,ui->tableWidget_room_define->item(row,1)->text());
+                ui->tableWidget_room_define->removeRow(row);
+            }
+        }
+    }
+}
+
+void Form_room_define::on_buttonchange_clicked()
+{
+
 }

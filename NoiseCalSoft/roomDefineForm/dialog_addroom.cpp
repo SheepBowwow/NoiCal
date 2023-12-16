@@ -26,6 +26,11 @@ QString Dialog_addroom::getroomname()
     return ui->lineEdit_roomname->text();
 }
 
+QString Dialog_addroom::getjiaban()
+{
+    return ui->lineEdit_jiaban->text();
+}
+
 int Dialog_addroom::getmainpipe()
 {
     return ui->lineEdit_pipe->text().toInt();

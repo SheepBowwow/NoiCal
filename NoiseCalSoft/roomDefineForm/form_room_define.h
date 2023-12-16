@@ -34,6 +34,8 @@ private slots:
 
     void on_buttondel_clicked();
 
+    void on_buttonchange_clicked();
+
 private:
     Ui::Form_room_define *ui;
     QTreeWidgetItem *_jiabanitem;

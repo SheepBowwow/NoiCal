@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>room_cal_total</class>
+ <widget class="QWidget" name="room_cal_total">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1201</width>
+    <height>691</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">#room_cal_total
+{
+	background-color: rgb(255, 255, 255);
+	border:1px solid black;
+}</string>
+  </property>
+  <widget class="QWidget" name="widget_info" native="true">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>1185</width>
+     <height>161</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">#widget_info
+{
+	background-color: rgb(255, 255, 255);
+	border:1px solid black;
+}</string>
+   </property>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>40</y>
+      <width>61</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>主竖区 : </string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>40</y>
+      <width>61</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>甲板 : </string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>40</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>房间编号 : </string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>750</x>
+      <y>40</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>噪声限值 : </string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>970</x>
+      <y>40</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>主风管数量 : </string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>90</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>主风管编号 : </string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>90</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_2">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>40</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_3">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>40</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_4">
+    <property name="geometry">
+     <rect>
+      <x>610</x>
+      <y>40</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_5">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>40</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_6">
+    <property name="geometry">
+     <rect>
+      <x>1070</x>
+      <y>40</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_7">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>90</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>90</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>风量(m³/h) : </string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QTableWidget" name="tableWidget">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>190</y>
+     <width>661</width>
+     <height>371</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">/*设置标题(包括垂直+水平的)*/
+QHeaderView
+{							
+	
+	font-size: 13px;				/*字大小*/
+	/*border: 1px solid #B4B4B4;*/
+	border:none;
+    /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
+    /*background: #9DC6E6;*/				/*背景浅蓝色*/ 
+	min-height:30px;
+	text-align: center;	       
+}
+
+
+/*设置标题(水平的)*/
+QHeaderView::section:horizontal { 					
+        border: 1px solid #AFAFAF; 			/*间隔颜色*/
+	    border-bottom: 2px solid #999999; 							
+        color: black;
+        background: #9DC6E6;
+}
+
+/*设置鼠标停留状态*/
+QHeaderView::section:horizontal:hover 
+{			
+        color: black;							/*字体白色*/
+        background: #82AFC9;				/*背景深蓝色*/
+}
+
+/*设置鼠标按下状态*/
+QHeaderView::section:horizontal:pressed 
+{			
+        color: black;
+        background: #82AFC9;
+		border-bottom: 3px solid #037BFC;				
+}
+
+
+QTableWidget 
+{
+		font-size: 13px;				/*10榜*/				
+		color : black;				
+        border: 1px solid #000000;		
+        background: white;
+        gridline-color: #E0E0E0;	
+        text-align: center;	
+        outline:0px;			/*禁止焦点*/
+}
+
+/*设置选中的视图项*/
+QTableWidget::item:selected
+{				    
+		border: 2px solid #0398FC;	
+        color : black;				
+}</string>
+   </property>
+   <column>
+    <property name="text">
+     <string>噪音源</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>测试点距离(m)</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>A级计权噪音dB(A)</string>
+    </property>
+   </column>
+  </widget>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>580</y>
+     <width>651</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Box</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QLineEdit" name="lineEdit_8">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>0</y>
+      <width>401</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QFrame" name="frame_2">
+    <property name="geometry">
+     <rect>
+      <x>-1</x>
+      <y>-1</y>
+      <width>251</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="label_8">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>5</y>
+       <width>191</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>房间噪音总值dB(A):</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -86,7 +86,7 @@ private:
 
 public slots:
     void TreeWidgetItemPressed_Slot(QTreeWidgetItem* item, int n);
-    void upDateTreeItem7(QTreeWidgetItem *item,QString,int num);
+    void upDateTreeItem8(QTreeWidgetItem *item,QString,int num);
     void delroom(QTreeWidgetItem*,QString roomid);
 private slots:
     void on_pushButto_prj_manage_clicked();
@@ -316,14 +316,16 @@ private:
     QTreeWidgetItem *item_cal;          //计算模块
     QTreeWidgetItem *item_output;       //输出模块
     QTreeWidgetItem *item_auth_manage;   //权限管理
-    QMenu *mAddMenu1;        // 右键点击treeitem弹窗
-    QMenu *mAddMenu2;
+    QMenu *mAddMenu1;        // 添加主竖区菜单
+    QMenu *mAddMenu2;        // 添加系统菜单
     QAction *mAddAct1;      // 主竖区
-    QAction *mAddAct2;      // 甲板
-    QMenu *mzfgMenu;
+    QAction *mAddAct2;      // 系统
+    QMenu *mzfgMenu;        //主竖区添加删除菜单
     QAction *addzfgAct;
     QAction *delzfgAct;
     QAction *modnameAct;
+    QMenu *mAddroom;      //添加典型住舱菜单
+    QAction *addroom;
 
     QVector<Room> rooms;
 
@@ -381,12 +383,16 @@ private:
     QTreeWidgetItem *item_room_gap_tuyere;                                   //5.5 条缝风口房间（线噪声源）
     QTreeWidgetItem *item_room_rain;                                   //5.6 雨降风口房间（面噪声源）
 
-    QTreeWidgetItem *item_room_define;                                 //6.1定义计算房间
+    QTreeWidgetItem *item_system_list;                                 //6.系统清单
+
+    QTreeWidgetItem *item_room_define;                                 //7.定义计算房间
     QVector<QTreeWidgetItem *> item_zhushuqu;
     QVector<QTreeWidgetItem *> item_jiaban;
-    QMap<QTreeWidgetItem *,QTreeWidgetItem *> zsqmap;       // 第六项的主竖区和第七项的主竖区对应关系
+    QMap<QTreeWidgetItem *,QTreeWidgetItem *> zsqmap67;       // 第六项的主竖区和第七项的主竖区对应关系
+    QMap<QTreeWidgetItem *,QTreeWidgetItem *> zsqmap68;       // 第六项的主竖区和第七项的主竖区对应关系
     QVector<QTreeWidgetItem *> item_zhufenguan;         // 保存主风管item,方便右键点击
     QMap<QTreeWidgetItem *,QWidget *> map_zsg_pag;    // 主风管与page对应关系
-    QTreeWidgetItem *item_room_calculate;
+    QTreeWidgetItem *item_room_calculate;                             // 8.噪音计算
+    QTreeWidgetItem *item_room_classic;        // 8.1典型住舱
 };
 #endif // WIDGET_H

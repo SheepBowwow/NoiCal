@@ -39,10 +39,12 @@ SOURCES += \
     inputbasedialog.cpp \
     main.cpp \
     roomCal/room_cal_basewidget.cpp \
+    roomCal/room_cal_total.cpp \
     roomCal/roomcaltable.cpp \
     roomDefineForm/dialog_add_zhushuqu.cpp \
     roomDefineForm/dialog_addroom.cpp \
     roomDefineForm/form_room_define.cpp \
+    roomDefineForm/form_system_list.cpp \
     widget.cpp
 
 HEADERS += \
@@ -72,10 +74,12 @@ HEADERS += \
     inputDialog/dialog_vav_terminal.h \
     inputbasedialog.h \
     roomCal/room_cal_basewidget.h \
+    roomCal/room_cal_total.h \
     roomCal/roomcaltable.h \
     roomDefineForm/dialog_add_zhushuqu.h \
     roomDefineForm/dialog_addroom.h \
     roomDefineForm/form_room_define.h \
+    roomDefineForm/form_system_list.h \
     widget.h
 
 FORMS += \
@@ -99,10 +103,12 @@ FORMS += \
     inputDialog/dialog_tee.ui \
     inputDialog/dialog_vav_terminal.ui \
     roomCal/room_cal_basewidget.ui \
+    roomCal/room_cal_total.ui \
     roomCal/roomcaltable.ui \
     roomDefineForm/dialog_add_zhushuqu.ui \
     roomDefineForm/dialog_addroom.ui \
     roomDefineForm/form_room_define.ui \
+    roomDefineForm/form_system_list.ui \
     widget.ui
 
 # Default rules for deployment.
