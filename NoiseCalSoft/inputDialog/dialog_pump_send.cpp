@@ -219,7 +219,7 @@ void Dialog_pump_send::on_pushButton_confirm_clicked()
     noi->noi_4k = ui->lineEdit_4k->text();
     noi->noi_8k = ui->lineEdit_8k->text();
     noi->noi_total = ui->lineEdit_total->text();
-    noi->number = noi->model;
+    noi->identifier = noi->model;
 
     noi->atten_63 = ui->lineEdit_63_atten->text();
     noi->atten_125 = ui->lineEdit_125_atten->text();

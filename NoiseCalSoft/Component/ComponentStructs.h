@@ -6,11 +6,11 @@
 class ComponentBase {
 public:
     QString table_id;
+    QString identifier; //识别码
 };
 
 typedef struct AirDiff_noise : ComponentBase
 {
-    QString number;  //编号
     QString brand;  //品牌
     QString model;   //型号
     QString type;  //类型 圆还是方
@@ -49,35 +49,55 @@ typedef struct AirDiff_noise : ComponentBase
 typedef struct Aircondition_noise : ComponentBase
 {
     QString number;  //空调器编号
+    QString type;  //类型
     QString brand;      //品牌
     QString model;      //型号
     QString air_volume; //风量
     QString static_pressure; //静压
     /*进口*/
-    QString noi_in_63;     //63hz
-    QString noi_in_125;     //125hz
-    QString noi_in_250;     //250hz
-    QString noi_in_500;     //500hz
-    QString noi_in_1k;     //1khz
-    QString noi_in_2k;     //2khz
-    QString noi_in_4k;     //4khz
-    QString noi_in_8k;     //8khz
-    QString noi_in_total;  //总量
+    QString noi_send_in_63;     //63hz
+    QString noi_send_in_125;     //125hz
+    QString noi_send_in_250;     //250hz
+    QString noi_send_in_500;     //500hz
+    QString noi_send_in_1k;     //1khz
+    QString noi_send_in_2k;     //2khz
+    QString noi_send_in_4k;     //4khz
+    QString noi_send_in_8k;     //8khz
+    QString noi_send_in_total;  //总量
     /*出口*/
-    QString noi_out_63;     //63hz
-    QString noi_out_125;     //125hz
-    QString noi_out_250;     //250hz
-    QString noi_out_500;     //500hz
-    QString noi_out_1k;     //1khz
-    QString noi_out_2k;     //2khz
-    QString noi_out_4k;     //4khz
-    QString noi_out_8k;     //8khz
-    QString noi_out_total;  //总量
+    QString noi_send_out_63;     //63hz
+    QString noi_send_out_125;     //125hz
+    QString noi_send_out_250;     //250hz
+    QString noi_send_out_500;     //500hz
+    QString noi_send_out_1k;     //1khz
+    QString noi_send_out_2k;     //2khz
+    QString noi_send_out_4k;     //4khz
+    QString noi_send_out_8k;     //8khz
+    QString noi_send_out_total;  //总量
+    /*进口*/
+    QString noi_exhaust_in_63;     //63hz
+    QString noi_exhaust_in_125;     //125hz
+    QString noi_exhaust_in_250;     //250hz
+    QString noi_exhaust_in_500;     //500hz
+    QString noi_exhaust_in_1k;     //1khz
+    QString noi_exhaust_in_2k;     //2khz
+    QString noi_exhaust_in_4k;     //4khz
+    QString noi_exhaust_in_8k;     //8khz
+    QString noi_exhaust_in_total;  //总量
+    /*出口*/
+    QString noi_exhaust_out_63;     //63hz
+    QString noi_exhaust_out_125;     //125hz
+    QString noi_exhaust_out_250;     //250hz
+    QString noi_exhaust_out_500;     //500hz
+    QString noi_exhaust_out_1k;     //1khz
+    QString noi_exhaust_out_2k;     //2khz
+    QString noi_exhaust_out_4k;     //4khz
+    QString noi_exhaust_out_8k;     //8khz
+    QString noi_exhaust_out_total;  //总量
 }Aircondition_noise;
 
 typedef struct Circular_damper_noi : ComponentBase
 {
-    QString number;  //编号
     QString brand;  //编号
     QString model;  //型号
     QString diameter;   //直径
@@ -97,7 +117,6 @@ typedef struct Circular_damper_noi : ComponentBase
 
 typedef struct Disp_vent_terminal_noise : ComponentBase
 {
-    QString number;  //型号
     QString brand;  //型号
     QString model;  //型号
     QString type;  //类型 圆还是方
@@ -135,7 +154,6 @@ typedef struct Disp_vent_terminal_noise : ComponentBase
 
 typedef struct Multi_ranc_atten : ComponentBase
 {
-    QString number;  //编号
     QString brand;  //品牌
     QString model;  //型号
     QString getMode;  //得到噪声的方式
@@ -153,7 +171,6 @@ typedef struct Multi_ranc_atten : ComponentBase
 
 typedef struct Elbow_atten : ComponentBase
 {
-    QString number;  //编号
     QString model;  //型号
     QString type;  //类型 圆还是方
     QString getMode;  //得到噪声的方式
@@ -201,7 +218,6 @@ typedef struct Fan_noise : ComponentBase
 
 typedef struct FanCoil_noise : ComponentBase
 {
-    QString number;  //编号
     QString brand;      //品牌
     QString model;      //型号
     QString air_volume; //风量
@@ -231,7 +247,6 @@ typedef struct FanCoil_noise : ComponentBase
 
 typedef struct Other_send_terminal_noise : ComponentBase
 {
-    QString number;  //编号
     QString brand;  //品牌
     QString model;  //型号
     QString remark; //备注
@@ -270,7 +285,6 @@ typedef struct Other_send_terminal_noise : ComponentBase
 
 typedef struct Pipe_atten : ComponentBase
 {
-    QString number;  //编号
     QString model;  //型号
     QString diameter;   //直径
     QString length;   //长
@@ -289,7 +303,6 @@ typedef struct Pipe_atten : ComponentBase
 
 typedef struct PumpSend_noise : ComponentBase
 {
-    QString number;  //编号
     QString brand;  //品牌
     QString model;   //型号
     QString type;  //类型 圆还是方
@@ -328,7 +341,6 @@ typedef struct PumpSend_noise : ComponentBase
 
 typedef struct Rect_damper_noi : ComponentBase
 {
-    QString number;  //编号
     QString brand;  //编号
     QString model;  //型号
     QString length;  //长
@@ -349,7 +361,6 @@ typedef struct Rect_damper_noi : ComponentBase
 
 typedef struct Reducer_atten : ComponentBase
 {
-    QString number;  //编号
     QString model;  //型号
     QString type;  //类型 圆还是方
     QString getMode;  //得到噪声的方式
@@ -371,7 +382,6 @@ typedef struct Reducer_atten : ComponentBase
 
 typedef struct StaticBox_grille_noise : ComponentBase
 {
-    QString number;  //编号
     QString brand;  //品牌
     QString model;   //型号
     QString type;  //类型 圆还是方
@@ -409,7 +419,6 @@ typedef struct StaticBox_grille_noise : ComponentBase
 
 typedef struct Silencer_atten : ComponentBase
 {
-    QString number;  //编号
     QString brand;  //品牌
     QString type;       //类型
     QString model_prefix;   //前缀
@@ -427,7 +436,6 @@ typedef struct Silencer_atten : ComponentBase
 
 typedef struct Static_box : ComponentBase
 {
-    QString number;  //编号
     QString brand;  //品牌
     QString model;  //型号
     QString getMode;  //得到噪声的方式
@@ -445,7 +453,6 @@ typedef struct Static_box : ComponentBase
 
 typedef struct Tee_atten : ComponentBase
 {
-    QString number;  //编号
     QString brand;  //品牌
     QString model;  //型号
     QString getMode;  //得到噪声的方式

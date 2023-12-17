@@ -222,7 +222,7 @@ void Dialog_disp_vent_terminal::on_pushButton_confirm_clicked()
     noi->refl_4k = ui->lineEdit_4k_refl->text();
     noi->refl_8k = ui->lineEdit_8k_refl->text();
 
-    noi->number = noi->model;
+    noi->identifier = noi->model;
 
     this->accept(); // 关闭对话框
 }

@@ -103,7 +103,7 @@ void Dialog_silencer::on_pushButton_confirm_clicked()
     noi->noi_4k = ui->lineEdit_4k->text();
     noi->noi_8k = ui->lineEdit_8k->text();
     noi->model = noi->model_prefix + noi->model_suffix;
-    noi->number = noi->model;
+    noi->identifier = noi->model;
 
     if(ui->stackedWidget_title->currentWidget() == ui->page_cs)
     {

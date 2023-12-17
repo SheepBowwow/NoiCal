@@ -118,7 +118,7 @@ void Dialog_tee::on_pushButton_confirm_clicked()
         noi->model = ui->lineEdit_model->text();
     }
 
-    noi->number = noi->model;
+    noi->identifier = noi->model;
     this->accept(); // 关闭对话框
 }
 

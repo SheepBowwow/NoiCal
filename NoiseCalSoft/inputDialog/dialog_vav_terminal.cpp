@@ -110,5 +110,7 @@ void Dialog_VAV_terminal::on_pushButton_confirm_clicked()
     noi->noi_4k = ui->lineEdit_4k->text();
     noi->noi_8k = ui->lineEdit_8k->text();
     noi->noi_total = ui->lineEdit_total->text();
+
+    noi->identifier = noi->number;
     this->accept(); // 关闭对话框
 }

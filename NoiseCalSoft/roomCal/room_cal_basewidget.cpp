@@ -4,17 +4,35 @@
 #include <QVBoxLayout>
 #include <QMenu>
 
+// 定义静态成员
+QMenu *room_cal_baseWidget::menu = nullptr;
+
 room_cal_baseWidget::room_cal_baseWidget(QWidget *parent) :
     QWidget(parent),
     isAllCollapsed(false),
     ui(new Ui::room_cal_baseWidget)
-{
+{   
     ui->setupUi(this);
     QWidget *scrollWidget = new QWidget;
     QVBoxLayout *scrollLayout = new QVBoxLayout(ui->scrollArea);
     scrollLayout->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
+    if (!menu)
+    {
+        // 创建 QMenu 实例，如果已经创建过，就不再重复创建
+        menu = new QMenu();
+        // 添加初始的菜单项
+        addActionToMenu("声源噪音", [=]() { addTable(-1, "声源噪音"); });
+        addActionToMenu("气流噪音", [=]() { addTable(-1, "气流噪音"); });
+        addActionToMenu("噪音衰减+气流噪音", [=]() { addTable(-1, "噪音衰减+气流噪音"); });
+        addActionToMenu("噪音衰减", [=]() { addTable(-1, "噪音衰减"); });
+        addActionToMenu("声压级计算", [=]() { addTable(-1, "声压级计算"); });
 
-//    // 设置垂直方向上的间距为10像素
+        // 设置菜单的水平对齐方式为居中
+        menu->setStyleSheet("QMenu::item {padding:5px 32px; color:rgba(51,51,51,1); font-size:12px;margin:0px 8px;}"
+                           "QMenu::item:hover {background-color:#409CE1;}"
+                           "QMenu::item:selected {background-color:#409CE1;}");
+    }
+    // 设置垂直方向上的间距为10像素
     scrollLayout->setSpacing(2);
     scrollLayout->setContentsMargins(0, 15, 0, 15);
 
@@ -136,28 +154,6 @@ void room_cal_baseWidget::handleDelete(int index)
 
 void room_cal_baseWidget::on_pushButton_add_clicked()
 {
-    // 创建下拉菜单
-    QMenu *menu = new QMenu(this);
-
-    QAction *actionNoiSrc = menu->addAction("声源噪音");
-    QAction *actionAirflowNoi = menu->addAction("气流噪音");
-    QAction *actionAttenAirflowNoi = menu->addAction("噪音衰减+气流噪音");
-    QAction *actionAtten = menu->addAction("噪音衰减");
-    QAction *actionSoundPressure = menu->addAction("声压级计算");
-
-    // Connect each action to a corresponding slot
-    connect(actionNoiSrc, &QAction::triggered, this, &room_cal_baseWidget::onNoiSrcClicked);
-    connect(actionAirflowNoi, &QAction::triggered, this, &room_cal_baseWidget::onAirflowNoiClicked);
-    connect(actionAttenAirflowNoi, &QAction::triggered, this, &room_cal_baseWidget::onAttenAirflowNoiClicked);
-    connect(actionAtten, &QAction::triggered, this, &room_cal_baseWidget::onAttenClicked);
-    connect(actionSoundPressure, &QAction::triggered, this, &room_cal_baseWidget::onSoundPressureClicked);
-
-    // 设置菜单的水平对齐方式为居中
-    menu->setStyleSheet("QMenu::item {padding:5px 32px; color:rgba(51,51,51,1); font-size:12px;margin:0px 8px;}"
-                       "QMenu::item:hover {background-color:#409CE1;}"
-                       "QMenu::item:selected {background-color:#409CE1;}");
-
-    // 获取按钮的下方中心位置，使菜单相对于按钮弹出
     QPoint buttonPos = ui->pushButton_add->mapToGlobal(ui->pushButton_add->rect().bottomLeft());
 
     // 将下拉菜单居中在按钮的下方
@@ -167,34 +163,15 @@ void room_cal_baseWidget::on_pushButton_add_clicked()
     menu->exec(menuPos);
 }
 
-// Define slots for each action
-void room_cal_baseWidget::onNoiSrcClicked()
+void room_cal_baseWidget::addActionToMenu(const QString& itemName, const std::function<void()>& slotFunction)
 {
-    addTable(-1,"声源噪音");
-}
+    QAction* action = menu->addAction(itemName);
 
-void room_cal_baseWidget::onAirflowNoiClicked()
-{
-    // Your code for "气流噪音" action
-    addTable(-1,"气流噪音");
-}
+    // 使用 lambda 表达式关联槽函数
+    connect(action, &QAction::triggered, this, slotFunction);
 
-void room_cal_baseWidget::onAttenAirflowNoiClicked()
-{
-    // Your code for "噪音衰减+气流噪音" action
-    addTable(-1,"噪音衰减+气流噪音");
-}
-
-void room_cal_baseWidget::onAttenClicked()
-{
-    // Your code for "噪音衰减" action
-    addTable(-1,"噪音衰减");
-}
-
-void room_cal_baseWidget::onSoundPressureClicked()
-{
-    // Your code for "声压级计算" action
-    addTable(-1,"声压级计算");
+    // 将 QAction 添加到菜单中
+    menu->addAction(action);
 }
 
 void room_cal_baseWidget::on_pushButton_fold_clicked()

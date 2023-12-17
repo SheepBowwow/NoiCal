@@ -95,6 +95,8 @@ void Dialog_fan_noise::on_pushButton_confirm_clicked()
     noi->noi_out_4k = ui->lineEdit_out_4k->text();
     noi->noi_out_8k = ui->lineEdit_out_8k->text();
     noi->noi_out_total = ui->lineEdit_out_total->text();
+
+    noi->identifier = noi->number;
     this->accept(); // 关闭对话框
 }
 

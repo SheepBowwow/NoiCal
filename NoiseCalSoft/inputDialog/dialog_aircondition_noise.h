@@ -26,6 +26,9 @@ private slots:
     void calTotalNoise();
     void on_close_clicked();
 
+    void on_radioButton_single_clicked();
+
+    void on_radioButton_double_clicked();
 private:
     int editRow;    //当前修改行，如果是新建就为-1
     Ui::Dialog_aircondition_noise *ui;

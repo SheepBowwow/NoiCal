@@ -6,15 +6,9 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>671</width>
-    <height>519</height>
+    <width>651</width>
+    <height>734</height>
    </rect>
-  </property>
-  <property name="minimumSize">
-   <size>
-    <width>671</width>
-    <height>519</height>
-   </size>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
@@ -37,47 +31,13 @@ font-family: 'Microsoft YaHei';
 font-size: 13px;
 }</string>
   </property>
-  <widget class="QWidget" name="widget_top" native="true">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>671</width>
-     <height>61</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">#widget_top
-{
-border: 1px solid #000000;
-background-color: rgb(157, 196, 229);
-	background-color: rgb(157, 196, 229);
-}</string>
-   </property>
-   <widget class="QPushButton" name="close">
-    <property name="geometry">
-     <rect>
-      <x>620</x>
-      <y>10</y>
-      <width>31</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border-image: url(:/images/image/closeWindow.jpg);</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-  </widget>
   <widget class="QWidget" name="widget_add_fan_noise" native="true">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>70</y>
+     <x>0</x>
+     <y>31</y>
      <width>651</width>
-     <height>441</height>
+     <height>701</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -92,7 +52,7 @@ border: 1px solid #000000;
       <x>20</x>
       <y>60</y>
       <width>611</width>
-      <height>321</height>
+      <height>591</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -165,7 +125,7 @@ font-size: 16px;
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>230</y>
+       <y>260</y>
        <width>561</width>
        <height>72</height>
       </rect>
@@ -202,7 +162,7 @@ font-size: 16px;
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_out_63">
+         <widget class="QLineEdit" name="lineEdit_send_out_63">
           <property name="minimumSize">
            <size>
             <width>51</width>
@@ -259,7 +219,7 @@ font-size: 16px;
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_out_125">
+         <widget class="QLineEdit" name="lineEdit_send_out_125">
           <property name="minimumSize">
            <size>
             <width>51</width>
@@ -316,7 +276,7 @@ font-size: 16px;
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_out_250">
+         <widget class="QLineEdit" name="lineEdit_send_out_250">
           <property name="minimumSize">
            <size>
             <width>51</width>
@@ -373,7 +333,7 @@ font-size: 16px;
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_out_500">
+         <widget class="QLineEdit" name="lineEdit_send_out_500">
           <property name="minimumSize">
            <size>
             <width>51</width>
@@ -430,7 +390,7 @@ font-size: 16px;
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_out_1k">
+         <widget class="QLineEdit" name="lineEdit_send_out_1k">
           <property name="minimumSize">
            <size>
             <width>51</width>
@@ -490,7 +450,7 @@ font-size: 16px;
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_out_2k">
+         <widget class="QLineEdit" name="lineEdit_send_out_2k">
           <property name="minimumSize">
            <size>
             <width>51</width>
@@ -547,7 +507,7 @@ font-size: 16px;
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_out_4k">
+         <widget class="QLineEdit" name="lineEdit_send_out_4k">
           <property name="minimumSize">
            <size>
             <width>51</width>
@@ -604,7 +564,7 @@ font-size: 16px;
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_out_8k">
+         <widget class="QLineEdit" name="lineEdit_send_out_8k">
           <property name="minimumSize">
            <size>
             <width>51</width>
@@ -661,7 +621,7 @@ font-size: 16px;
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_out_total">
+         <widget class="QLineEdit" name="lineEdit_send_out_total">
           <property name="minimumSize">
            <size>
             <width>77</width>
@@ -817,7 +777,7 @@ font-size: 16px;
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>90</y>
+       <y>120</y>
        <width>41</width>
        <height>31</height>
       </rect>
@@ -836,7 +796,7 @@ font-size: 16px;
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>200</y>
+       <y>230</y>
        <width>41</width>
        <height>31</height>
       </rect>
@@ -855,7 +815,7 @@ font-size: 16px;
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>120</y>
+       <y>150</y>
        <width>561</width>
        <height>72</height>
       </rect>
@@ -892,7 +852,7 @@ font-size: 16px;
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_in_63">
+         <widget class="QLineEdit" name="lineEdit_send_in_63">
           <property name="minimumSize">
            <size>
             <width>51</width>
@@ -949,7 +909,7 @@ font-size: 16px;
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_in_125">
+         <widget class="QLineEdit" name="lineEdit_send_in_125">
           <property name="minimumSize">
            <size>
             <width>51</width>
@@ -1006,7 +966,7 @@ font-size: 16px;
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_in_250">
+         <widget class="QLineEdit" name="lineEdit_send_in_250">
           <property name="minimumSize">
            <size>
             <width>51</width>
@@ -1063,7 +1023,7 @@ font-size: 16px;
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_in_500">
+         <widget class="QLineEdit" name="lineEdit_send_in_500">
           <property name="minimumSize">
            <size>
             <width>51</width>
@@ -1120,7 +1080,7 @@ font-size: 16px;
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_in_1k">
+         <widget class="QLineEdit" name="lineEdit_send_in_1k">
           <property name="minimumSize">
            <size>
             <width>51</width>
@@ -1180,7 +1140,7 @@ font-size: 16px;
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_in_2k">
+         <widget class="QLineEdit" name="lineEdit_send_in_2k">
           <property name="minimumSize">
            <size>
             <width>51</width>
@@ -1237,7 +1197,7 @@ font-size: 16px;
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_in_4k">
+         <widget class="QLineEdit" name="lineEdit_send_in_4k">
           <property name="minimumSize">
            <size>
             <width>51</width>
@@ -1294,7 +1254,7 @@ font-size: 16px;
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_in_8k">
+         <widget class="QLineEdit" name="lineEdit_send_in_8k">
           <property name="minimumSize">
            <size>
             <width>51</width>
@@ -1351,7 +1311,7 @@ font-size: 16px;
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_in_total">
+         <widget class="QLineEdit" name="lineEdit_send_in_total">
           <property name="minimumSize">
            <size>
             <width>77</width>
@@ -1382,12 +1342,1270 @@ font-size: 16px;
       </item>
      </layout>
     </widget>
+    <widget class="QLabel" name="label_31">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>90</y>
+       <width>61</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>送风机:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_32">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>340</y>
+       <width>61</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>排风机:</string>
+     </property>
+    </widget>
+    <widget class="QWidget" name="layoutWidget_5">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>400</y>
+       <width>561</width>
+       <height>72</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_19">
+        <item>
+         <widget class="QLabel" name="label_30">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>63Hz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_exhaust_in_63">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(240, 240, 240);
+border: 1px solid #9C9C9C;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_20">
+        <item>
+         <widget class="QLabel" name="label_33">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>125Hz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_exhaust_in_125">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(240, 240, 240);
+border: 1px solid #9C9C9C;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_21">
+        <item>
+         <widget class="QLabel" name="label_34">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>250Hz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_exhaust_in_250">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(240, 240, 240);
+border: 1px solid #9C9C9C;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_22">
+        <item>
+         <widget class="QLabel" name="label_35">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>500Hz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_exhaust_in_500">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(240, 240, 240);
+border: 1px solid #9C9C9C;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_23">
+        <item>
+         <widget class="QLabel" name="label_36">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>1kHz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_exhaust_in_1k">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(240, 240, 240);
+border: 1px solid #9C9C9C;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_24">
+        <property name="spacing">
+         <number>6</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="label_37">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>2kHz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_exhaust_in_2k">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(240, 240, 240);
+border: 1px solid #9C9C9C;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_25">
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>4kHz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_exhaust_in_4k">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(240, 240, 240);
+border: 1px solid #9C9C9C;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_26">
+        <item>
+         <widget class="QLabel" name="label_38">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>8kHz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_exhaust_in_8k">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(240, 240, 240);
+border: 1px solid #9C9C9C;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_27">
+        <item>
+         <widget class="QLabel" name="label_39">
+          <property name="minimumSize">
+           <size>
+            <width>77</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>总值dB(A)</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_exhaust_in_total">
+          <property name="minimumSize">
+           <size>
+            <width>77</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(240, 240, 240);
+border: 1px solid #9C9C9C;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QLabel" name="label_40">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>370</y>
+       <width>41</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>进口</string>
+     </property>
+    </widget>
+    <widget class="QWidget" name="layoutWidget_2">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>510</y>
+       <width>561</width>
+       <height>72</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_28">
+        <item>
+         <widget class="QLabel" name="label_13">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>63Hz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_exhaust_out_63">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(240, 240, 240);
+border: 1px solid #9C9C9C;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_29">
+        <item>
+         <widget class="QLabel" name="label_41">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>125Hz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_exhaust_out_125">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(240, 240, 240);
+border: 1px solid #9C9C9C;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_30">
+        <item>
+         <widget class="QLabel" name="label_42">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>250Hz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_exhaust_out_250">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(240, 240, 240);
+border: 1px solid #9C9C9C;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_31">
+        <item>
+         <widget class="QLabel" name="label_43">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>500Hz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_exhaust_out_500">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(240, 240, 240);
+border: 1px solid #9C9C9C;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_32">
+        <item>
+         <widget class="QLabel" name="label_44">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>1kHz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_exhaust_out_1k">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(240, 240, 240);
+border: 1px solid #9C9C9C;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_33">
+        <property name="spacing">
+         <number>6</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="label_45">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>2kHz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_exhaust_out_2k">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(240, 240, 240);
+border: 1px solid #9C9C9C;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_34">
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>4kHz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_exhaust_out_4k">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(240, 240, 240);
+border: 1px solid #9C9C9C;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_35">
+        <item>
+         <widget class="QLabel" name="label_46">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>8kHz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_exhaust_out_8k">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(240, 240, 240);
+border: 1px solid #9C9C9C;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_36">
+        <item>
+         <widget class="QLabel" name="label_47">
+          <property name="minimumSize">
+           <size>
+            <width>77</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>总值dB(A)</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_exhaust_out_total">
+          <property name="minimumSize">
+           <size>
+            <width>77</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(240, 240, 240);
+border: 1px solid #9C9C9C;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QLabel" name="label_48">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>480</y>
+       <width>41</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>出口</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QPushButton" name="pushButton_confirm">
     <property name="geometry">
      <rect>
       <x>560</x>
-      <y>400</y>
+      <y>660</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -1477,6 +2695,78 @@ color : rgb(105, 105, 105);
       </widget>
      </item>
     </layout>
+   </widget>
+   <widget class="QRadioButton" name="radioButton_single">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>30</y>
+      <width>71</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Microsoft YaHei</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>单风机</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioButton_double">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>30</y>
+      <width>71</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Microsoft YaHei</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>双风机</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QWidget" name="widget_top" native="true">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>651</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">#widget_top
+{
+border: 1px solid #000000;
+background-color: rgb(157, 196, 229);
+	background-color: rgb(157, 196, 229);
+}</string>
+   </property>
+   <widget class="QPushButton" name="close">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>5</y>
+      <width>21</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(:/images/image/closeWindow.jpg);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
    </widget>
   </widget>
  </widget>

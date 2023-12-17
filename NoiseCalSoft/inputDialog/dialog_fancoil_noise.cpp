@@ -11,7 +11,6 @@ Dialog_fanCoil_noise::Dialog_fanCoil_noise(QWidget *parent, int editRow,  const 
     setTopWidget(ui->widget_top);  // 设置顶部部件
     if(editRow != -1)
     {
-        ui->lineEdit_number->setText(data.number);
         ui->lineEdit_brand->setText(data.brand);
         ui->lineEdit_model->setText(data.model);
         ui->lineEdit_air_volume->setText(data.air_volume);
@@ -126,7 +125,6 @@ void Dialog_fanCoil_noise::on_pushButton_confirm_clicked()
     this->noi = new FanCoil_noise;
 
     // 获取对应行的数据，将界面上的数据保存到对应行中
-    noi->number = ui->lineEdit_number->text();
     noi->brand = ui->lineEdit_brand->text();
     noi->model = ui->lineEdit_model->text();
     noi->air_volume = ui->lineEdit_air_volume->text();
@@ -151,5 +149,7 @@ void Dialog_fanCoil_noise::on_pushButton_confirm_clicked()
     noi->noi_out_4k = ui->lineEdit_out_4k->text();
     noi->noi_out_8k = ui->lineEdit_out_8k->text();
     noi->noi_out_total = ui->lineEdit_out_total->text();
+
+    noi->identifier = noi->model;
     this->accept(); // 关闭对话框
 }
