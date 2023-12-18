@@ -3,9 +3,9 @@
 #include "roomCal/roomcaltable.h"
 #include <QVBoxLayout>
 #include <QMenu>
+#include <QDebug>
 
 // 定义静态成员
-QMenu *room_cal_baseWidget::menu = nullptr;
 
 room_cal_baseWidget::room_cal_baseWidget(QWidget *parent) :
     QWidget(parent),
@@ -16,22 +16,19 @@ room_cal_baseWidget::room_cal_baseWidget(QWidget *parent) :
     QWidget *scrollWidget = new QWidget;
     QVBoxLayout *scrollLayout = new QVBoxLayout(ui->scrollArea);
     scrollLayout->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
-    if (!menu)
-    {
-        // 创建 QMenu 实例，如果已经创建过，就不再重复创建
-        menu = new QMenu();
-        // 添加初始的菜单项
-        addActionToMenu("声源噪音", [=]() { addTable(-1, "声源噪音"); });
-        addActionToMenu("气流噪音", [=]() { addTable(-1, "气流噪音"); });
-        addActionToMenu("噪音衰减+气流噪音", [=]() { addTable(-1, "噪音衰减+气流噪音"); });
-        addActionToMenu("噪音衰减", [=]() { addTable(-1, "噪音衰减"); });
-        addActionToMenu("声压级计算", [=]() { addTable(-1, "声压级计算"); });
+    // 创建 QMenu 实例，如果已经创建过，就不再重复创建
+    menu = new QMenu();
+    // 添加初始的菜单项
+    addActionToMenu("声源噪音", [=]() { addTable(-1, "声源噪音"); });
+    addActionToMenu("气流噪音", [=]() { addTable(-1, "气流噪音"); });
+    addActionToMenu("噪音衰减+气流噪音", [=]() { addTable(-1, "噪音衰减+气流噪音"); });
+    addActionToMenu("噪音衰减", [=]() { addTable(-1, "噪音衰减"); });
+    addActionToMenu("声压级计算", [=]() { addTable(-1, "声压级计算"); });
 
-        // 设置菜单的水平对齐方式为居中
-        menu->setStyleSheet("QMenu::item {padding:5px 32px; color:rgba(51,51,51,1); font-size:12px;margin:0px 8px;}"
-                           "QMenu::item:hover {background-color:#409CE1;}"
-                           "QMenu::item:selected {background-color:#409CE1;}");
-    }
+    // 设置菜单的水平对齐方式为居中
+    menu->setStyleSheet("QMenu::item {padding:5px 32px; color:rgba(51,51,51,1); font-size:12px;margin:0px 8px;}"
+                       "QMenu::item:hover {background-color:#409CE1;}"
+                       "QMenu::item:selected {background-color:#409CE1;}");
     // 设置垂直方向上的间距为10像素
     scrollLayout->setSpacing(2);
     scrollLayout->setContentsMargins(0, 15, 0, 15);
@@ -150,6 +147,15 @@ void room_cal_baseWidget::handleDelete(int index)
 
         ui->scrollArea->widget()->update();  // 或者使用 repaint()
     }, Qt::QueuedConnection);
+}
+
+void room_cal_baseWidget::handleAddMenuItemToRoomCal(QString itemName)
+{
+    QAction *newAction = new QAction(itemName, this);
+    connect(newAction, &QAction::triggered, this, [=]() {
+        qDebug() << itemName << "被点击了";
+    });
+    menu->addAction(newAction);
 }
 
 void room_cal_baseWidget::on_pushButton_add_clicked()

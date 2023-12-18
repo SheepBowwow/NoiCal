@@ -4120,6 +4120,39 @@ void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
     if (qApp->mouseButtons() == Qt::RightButton) // 1、首先判断是否为右键点击
     {
         // 右击系统清单
+        if(item==item_room_classic)
+        {
+            //典型房间
+            if(addroom==mAddroom->exec(QCursor::pos()))
+            {
+                Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
+                box->setlabeltext("典型房间类型");
+                if(box->exec()==QDialog::Accepted)
+                {
+                    QTreeWidgetItem *treeitem=new QTreeWidgetItem(item_room_classic,QStringList(box->getname()));
+                    room_cal_baseWidget *page = new room_cal_baseWidget;
+                    ui->stackedWidget->addWidget(page);
+
+                    // 连接 Widget 发送的信号到 room_cal_baseWidget 的槽函数
+                    connect(this, &Widget::addMenuItemToRoomCal, page, &room_cal_baseWidget::handleAddMenuItemToRoomCal);
+
+                    // 发送信号通知 room_cal_baseWidget 添加菜单项
+                    emit addMenuItemToRoomCal(box->getname());
+
+                    connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
+                        if (itemClicked == treeitem)
+                        {
+                            ui->stackedWidget->setCurrentWidget(page);
+                        }
+                    });
+                }
+            }
+        }
+
+        if(item_zhufenguan.contains(item)) // 2、判断右击了哪个项目
+        {
+            mzfgMenu->exec(QCursor::pos());
+        }
         if(item==item_system_list) //  点击了6.系统清单
         {
             if(actAddzsq==menusystemlist->exec(QCursor::pos()))   // 弹出添加主竖区菜单
@@ -4295,6 +4328,8 @@ void Widget::upDateTreeItem8(QTreeWidgetItem *item,QString name,int num) //
 
         // 将页面添加到堆栈窗口部件
         ui->stackedWidget->addWidget(page);
+        // 连接 Widget 发送的信号到 room_cal_baseWidget 的槽函数
+        connect(this, &Widget::addMenuItemToRoomCal, page, &room_cal_baseWidget::handleAddMenuItemToRoomCal);
 
         // 这里的主风管还要插入对应page页面
         QTreeWidgetItem *treeitemfg=new QTreeWidgetItem(treeitemfj,QStringList("主风管"+QString::number(i+1)));
@@ -4322,7 +4357,10 @@ void Widget::upDateTreeItem8(QTreeWidgetItem *item,QString name,int num) //
     }
     //主风管汇总
     QTreeWidgetItem *treeitemtotals=new QTreeWidgetItem(treeitemfj,QStringList("房间噪音"));
-    room_cal_total *page=new room_cal_total;
+
+    //在这里写关联界面
+    room_cal_total *page = new room_cal_total;
+
     ui->stackedWidget->addWidget(page);
     connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
         if (itemClicked == treeitemtotals)
