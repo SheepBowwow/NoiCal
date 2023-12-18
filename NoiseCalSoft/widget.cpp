@@ -469,7 +469,7 @@ void Widget::initializeTreeWidget()
     item_system_list = new QTreeWidgetItem(QStringList("6.系统清单"));                                    //6.系统清单
     item_room_define = new QTreeWidgetItem(QStringList("7.计算房间"));                                    //7.计算房间
     item_room_calculate = new QTreeWidgetItem(QStringList("8.噪音计算"));                                 //8.噪音计算
-    item_room_classic = new QTreeWidgetItem(item_room_calculate,QStringList("典型住舱"));                                     //8.1典型住舱
+    item_cabin_classic = new QTreeWidgetItem(item_room_calculate,QStringList("典型住舱"));                                     //8.1典型住舱
 
     ui->treeWidget->addTopLevelItem(item_prj_info);     //工程信息
     ui->treeWidget->addTopLevelItem(item_sound_sorce_noise);    //音源噪音
@@ -4114,21 +4114,130 @@ void Widget::on_pushButton_rect_silencerEb_table_clicked()
 #pragma endregion}
 /**********消声器**********/
 
-// 右键点击添加主竖区甲板
+// 右键点击响应
 void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
 {
     if (qApp->mouseButtons() == Qt::RightButton) // 1、首先判断是否为右键点击
     {
-        if(item==item_room_classic)
+        // 右击系统清单
+        if(item==item_system_list) //  点击了6.系统清单
         {
-            //典型房间
-            if(addroom==mAddroom->exec(QCursor::pos()))
+            if(actAddzsq==menusystemlist->exec(QCursor::pos()))   // 弹出添加主竖区菜单
+            {     
+                Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
+                box->setlabeltext("主竖区");
+                if(box->exec()==QDialog::Accepted)
+                {
+                    QTreeWidgetItem *treeitem=new QTreeWidgetItem(item_system_list,QStringList(box->getname()));
+                    QTreeWidgetItem *treeitemcp1=new QTreeWidgetItem(item_room_define,QStringList(box->getname()));
+                    QTreeWidgetItem *treeitemcp2=new QTreeWidgetItem(QStringList(box->getname()));
+
+                    int n=item_room_calculate->childCount();    //  保证典型房间一直在最后一行
+                    int insertIndex = qMax(0, n - 1);
+                    item_room_calculate->insertChild(insertIndex, treeitemcp2);
+
+                    map_zsq67.insert(treeitem,treeitemcp1);  // 保存第6项和第7项主竖区对应关系
+                    map_zsq68.insert(treeitem,treeitemcp2);  // 保存第6项和第8项主竖区对应关系
+                    vec_zsq.append(treeitem);
+
+                    connect(ui->treeWidget,&QTreeWidget::itemClicked,this,[=](QTreeWidgetItem *item1,int n){
+                        if(item1 == treeitemcp1 || item1 == treeitem || item1 == treeitemcp1)     //     点击甲板会显示空白
+                            ui->stackedWidget->setCurrentWidget(ui->page_white);
+                    });
+
+                    return;
+                }
+            }
+        }
+        // 右击主竖区
+        if(vec_zsq.contains(item))
+        {
+            QAction *act=menuzsq->exec(QCursor::pos());
+            Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
+            if(actAddsystem==act)
+            {
+                box->setlabeltext("系统编号");
+                if(box->exec()==QDialog::Accepted)
+                {
+                    QTreeWidgetItem *treeitemsystem=new QTreeWidgetItem(item,QStringList(box->getname()));
+                    vec_system.append(treeitemsystem);
+                    QTreeWidgetItem *treeitemcp1=new QTreeWidgetItem(map_zsq67.value(item),QStringList(box->getname()));
+                    QTreeWidgetItem *treeitemcp2=new QTreeWidgetItem(map_zsq68.value(item),QStringList(box->getname()));
+                    map_system67.insert(treeitemsystem,treeitemcp1);
+                    map_system68.insert(treeitemsystem,treeitemcp2);
+                    //  添加系统同时在6、7项的系统编号下添加界面
+                    //6
+                    Form_system_list *form_sl=new Form_system_list;
+                    ui->stackedWidget->addWidget(form_sl);
+                    connect(ui->treeWidget,&QTreeWidget::itemClicked,this,[=](QTreeWidgetItem *item1,int n){
+                        if(item1 == treeitemsystem)     //     点击系统会显示系统清单界面
+                            ui->stackedWidget->setCurrentWidget(form_sl);
+                    });
+                    vec_system.append(treeitemsystem);
+
+                    //7
+                    Form_room_define *form=new Form_room_define;
+                    form->setjiabanItem(treeitemcp2);   // 房间位于这一treeitem下
+                    ui->stackedWidget->addWidget(form);
+                    // 关联form发出的添加房间、删除房间信号
+                    connect(form,SIGNAL(roomadd(QTreeWidgetItem*,QString,int)),
+                            this,SLOT(upDateTreeItem8(QTreeWidgetItem*,QString,int)));
+                    connect(form,SIGNAL(roomdel(QTreeWidgetItem*,QString)),
+                            this,SLOT(delroom(QTreeWidgetItem*,QString)));
+
+                    connect(ui->treeWidget,&QTreeWidget::itemClicked,this,[=](QTreeWidgetItem *item1,int n){
+                        if(item1==treeitemcp1)     //     点击甲板会显示添加的页面
+                            ui->stackedWidget->setCurrentWidget(form);
+                    });
+                }
+            }
+            if(actModzsqname==act)
+            {
+                box->setlabeltext("修改名称");
+                if(box->exec()==QDialog::Accepted)
+                {
+                    item->setText(0,box->getname());
+                    map_zsq67.value(item)->setText(0,box->getname());
+                    map_zsq68.value(item)->setText(0,box->getname());
+                }
+            }
+            if(actDelzsq==act)
+            {
+
+            }
+        }
+        // 右击系统
+        if(vec_system.contains(item))
+        {
+            QAction *act=menusystem->exec(QCursor::pos());
+            if(actModsystemname==act)
+            {
+                Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
+                box->setlabeltext("修改系统名称");
+                if(box->exec()==QDialog::Accepted)
+                {
+                    item->setText(0,box->getname());
+                    map_system67.value(item)->setText(0,box->getname());
+                    map_system68.value(item)->setText(0,box->getname());
+
+                }
+            }
+            if(actDelsystem==act)
+            {
+
+            }
+        }
+        // 右击典型舱室
+        if(item==item_cabin_classic)
+        {
+            if(actAddclassicroom==menuclassiccabin->exec(QCursor::pos()))
             {
                 Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
                 box->setlabeltext("典型房间类型");
                 if(box->exec()==QDialog::Accepted)
                 {
-                    QTreeWidgetItem *treeitem=new QTreeWidgetItem(item_room_classic,QStringList(box->getname()));
+                    QTreeWidgetItem *treeitem=new QTreeWidgetItem(item_cabin_classic,QStringList(box->getname()));
+                    vec_classicroom.append(treeitem);
                     room_cal_baseWidget *page = new room_cal_baseWidget;
                     ui->stackedWidget->addWidget(page);
                     page->addActionToMenu(box->getname(),[=]() {
@@ -4143,78 +4252,31 @@ void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
                 }
             }
         }
-
-        if(item_zhufenguan.contains(item)) // 2、判断右击了哪个项目
+        // 右击典型房间
+        if(vec_classicroom.contains(item))
         {
-            mzfgMenu->exec(QCursor::pos());
-        }
-        if(item==item_system_list) //  点击了6.系统清单
-        {
-            if(mAddAct1==mAddMenu1->exec(QCursor::pos()))   // 弹出添加主竖区菜单
-            {     
+            //典型房间
+            if(actModclassicroomname==menuclassicroom->exec(QCursor::pos()))
+            {
                 Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
-                box->setlabeltext("主竖区");
+                box->setlabeltext("修改房间名称");
                 if(box->exec()==QDialog::Accepted)
                 {
-                    QTreeWidgetItem *treeitem=new QTreeWidgetItem(item_system_list,QStringList(box->getname()));
-                    QTreeWidgetItem *treeitemcp1=new QTreeWidgetItem(item_room_define,QStringList(box->getname()));
-                    QTreeWidgetItem *treeitemcp2=new QTreeWidgetItem(QStringList(box->getname()));
-
-                    int n=item_room_calculate->childCount();    //  保证典型房间一直在最后一行
-                    int insertIndex = qMax(0, n - 1);
-                    item_room_calculate->insertChild(insertIndex, treeitemcp2);
-
-                    zsqmap67.insert(treeitem,treeitemcp1);  // 保存第6项和第7项主竖区对应关系
-                    zsqmap68.insert(treeitem,treeitemcp2);  // 保存第6项和第8项主竖区对应关系
-                    item_zhushuqu.append(treeitem);
-
-                    connect(ui->treeWidget,&QTreeWidget::itemClicked,this,[=](QTreeWidgetItem *item1,int n){
-                        if(item1 == treeitemcp1 || item1 == treeitem || item1 == treeitemcp1)     //     点击甲板会显示空白
-                            ui->stackedWidget->setCurrentWidget(ui->page_white);
-                    });
-
-                    return;
+                    item->setText(0,box->getname());
                 }
             }
         }
-        if(item_zhushuqu.contains(item))            // 点击了主竖区的item
+        // 右击主风管
+        if(vec_zfg.contains(item))
         {
-            if(mAddAct2==mAddMenu2->exec(QCursor::pos()))
+            QAction *act=menuzfg->exec(QCursor::pos());
+            if(actModzfgname==act)
             {
                 Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
-                box->setlabeltext("系统编号");
+                box->setlabeltext("修改主风管名称");
                 if(box->exec()==QDialog::Accepted)
                 {
-                    QTreeWidgetItem *treeitemjb=new QTreeWidgetItem(item,QStringList(box->getname()));
-                    item_jiaban.append(treeitemjb);
-                    QTreeWidgetItem *treeitemcp1=new QTreeWidgetItem(zsqmap67.value(item),QStringList(box->getname()));
-                    QTreeWidgetItem *treeitemcp2=new QTreeWidgetItem(zsqmap68.value(item),QStringList(box->getname()));
-
-                    //  添加系统同时在6、7项的系统编号下添加界面
-                    //6
-                    Form_system_list *form_sl=new Form_system_list;
-                    ui->stackedWidget->addWidget(form_sl);
-                    connect(ui->treeWidget,&QTreeWidget::itemClicked,this,[=](QTreeWidgetItem *item1,int n){
-                        if(item1 == treeitemjb)     //     点击甲板会显示空白
-                            ui->stackedWidget->setCurrentWidget(form_sl);
-                    });
-
-
-                    //7
-                    Form_room_define *form=new Form_room_define;
-                    form->setjiabanItem(treeitemcp2);   // 向这一项发出修改信号
-                    ui->stackedWidget->addWidget(form);
-                    // 关联form发出的添加房间、删除房间信号
-                    connect(form,SIGNAL(roomadd(QTreeWidgetItem*,QString,int)),
-                            this,SLOT(upDateTreeItem8(QTreeWidgetItem*,QString,int)));
-                    connect(form,SIGNAL(roomdel(QTreeWidgetItem*,QString)),
-                            this,SLOT(delroom(QTreeWidgetItem*,QString)));
-
-                    connect(ui->treeWidget,&QTreeWidget::itemClicked,this,[=](QTreeWidgetItem *item1,int n){
-                        if(item1==treeitemcp1)     //     点击甲板会显示添加的页面
-                            ui->stackedWidget->setCurrentWidget(form);
-                    });
-                    return;
+                    item->setText(0,box->getname());
                 }
             }
         }
@@ -4236,8 +4298,8 @@ void Widget::upDateTreeItem8(QTreeWidgetItem *item,QString name,int num) //
 
         // 这里的主风管还要插入对应page页面
         QTreeWidgetItem *treeitemfg=new QTreeWidgetItem(treeitemfj,QStringList("主风管"+QString::number(i+1)));
-        item_zhufenguan.append(treeitemfg);     // 保存主风管ID
-        map_zsg_pag.insert(treeitemfg,page);
+        vec_zfg.append(treeitemfg);     // 保存主风管ID
+        map_zfg_pag.insert(treeitemfg,page);
 
         // 关联页面和子项
         connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
@@ -4258,8 +4320,8 @@ void Widget::upDateTreeItem8(QTreeWidgetItem *item,QString name,int num) //
             }
         });
     }
+    //主风管汇总
     QTreeWidgetItem *treeitemtotals=new QTreeWidgetItem(treeitemfj,QStringList("房间噪音"));
-    //在这里写关联界面
     room_cal_total *page=new room_cal_total;
     ui->stackedWidget->addWidget(page);
     connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
@@ -4282,35 +4344,53 @@ void Widget::delroom(QTreeWidgetItem* itemjb,QString roomid)
             QTreeWidgetItem* itemfj=itemjb->child(i);
             for(int j=0;j<itemfj->childCount();j++) // 首先删除房间下的主风管以及页面
             {
-                ui->stackedWidget->removeWidget(map_zsg_pag.value(itemfj->child(j)));
-                map_zsg_pag.remove(itemfj->child(j));      // 删除记录
-                item_zhufenguan.removeOne(itemfj->child(j));
+                delete map_zfg_pag.value(itemfj->child(j)); //释放主风管关联的page
+                map_zfg_pag.remove(itemfj->child(j));      // 删除记录
+                vec_zfg.removeOne(itemfj->child(j));
             }
-            itemjb->removeChild(itemjb->child(i));
+            delete itemjb->child(i);            // 系统下的房间子项全部移走
+
         }
     }
 }
 
 void Widget::initRightButtonMenu()
 {
-    mAddMenu1 = new QMenu(this);
-    mAddMenu2 = new QMenu(this);
-    mAddAct1 = new QAction("添加主竖区");
-    mAddAct2 = new QAction("添加系统");
-    mAddMenu1->addAction(mAddAct1);
-    mAddMenu2->addAction(mAddAct2);
+    menusystemlist = new QMenu(this);
+    menuzsq = new QMenu(this);
+    menusystem = new QMenu(this);
+    menuclassiccabin = new QMenu(this);
+    menuclassicroom = new QMenu(this);
+    menucalroom = new QMenu(this);
+    menuzfg = new QMenu(this);
 
-    mzfgMenu = new QMenu(this);
-    addzfgAct = new QAction("添加主风管");
-    delzfgAct = new QAction("删除主风管");
-    modnameAct = new QAction("修改名称");
-    mzfgMenu->addAction(modnameAct);
-    mzfgMenu->addAction(addzfgAct);
-    mzfgMenu->addAction(delzfgAct);
+    actAddzsq = new QAction("添加主竖区");
+    actAddsystem = new QAction("添加系统");
+    actModzsqname = new QAction("修改主竖区名称");
+    actDelzsq = new QAction("删除主竖区");
+    actModsystemname = new QAction("修改系统名称");
+    actDelsystem = new QAction("删除系统");
 
-    mAddroom = new QMenu(this);
-    addroom = new QAction("添加典型房间");
-    mAddroom->addAction(addroom);
+    actAddzfg = new QAction("添加主风管");
+    actModzfgname = new QAction("修改主风管名称");
+    actDelzfg = new QAction("删除主风管");
+
+    actAddclassicroom = new QAction("添加典型房间");
+    actModclassicroomname = new QAction("修改房间名称");
+    actDelclassicroom = new QAction("删除房间");
+
+    menusystemlist->addAction(actAddzsq);
+    menuzsq->addAction(actAddsystem);
+    menuzsq->addAction(actModzsqname);
+    menuzsq->addAction(actDelzsq);
+    menusystem->addAction(actModsystemname);
+    menusystem->addAction(actDelsystem);
+    menuclassiccabin->addAction(actAddclassicroom);
+    menuclassicroom->addAction(actModclassicroomname);
+    menuclassicroom->addAction(actDelclassicroom);
+    menucalroom->addAction(actAddzfg);
+    menuzfg->addAction(actModzfgname);
+    menuzfg->addAction(actDelzfg);
 
     // 关联树Item的点击信号，但是在槽中判断是不是右键
     connect(ui->treeWidget, SIGNAL(itemPressed(QTreeWidgetItem*, int)),
