@@ -116,12 +116,7 @@ void Form_room_define::on_buttondel_clicked()
     }
 
     // 弹窗确认
-    QString confirmationMessage = "确认删除以下行吗？\n";
-    for (int i = 0; i < selectedRows.size(); ++i)
-    {
-        int row = selectedRows[i];
-        confirmationMessage += QString::number(row+1) + "\n"; // 从1开始计数
-    }
+    QString confirmationMessage = "确认删除所选房间吗？\n";
 
     QMessageBox msgBox;
     msgBox.setWindowTitle("确认删除");

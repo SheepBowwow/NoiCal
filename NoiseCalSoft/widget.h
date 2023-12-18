@@ -320,16 +320,26 @@ private:
     QTreeWidgetItem *item_cal;          //计算模块
     QTreeWidgetItem *item_output;       //输出模块
     QTreeWidgetItem *item_auth_manage;   //权限管理
-    QMenu *mAddMenu1;        // 添加主竖区菜单
-    QMenu *mAddMenu2;        // 添加系统菜单
-    QAction *mAddAct1;      // 主竖区
-    QAction *mAddAct2;      // 系统
-    QMenu *mzfgMenu;        //主竖区添加删除菜单
-    QAction *addzfgAct;
-    QAction *delzfgAct;
-    QAction *modnameAct;
-    QMenu *mAddroom;      //添加典型住舱菜单
-    QAction *addroom;
+
+    QMenu *menusystemlist;        // 系统清单的菜单 1.添加主竖区
+    QAction *actAddzsq;
+    QMenu *menuzsq;        // 主竖区的菜单 1.添加系统 2.修改主竖区名称 3.删除主竖区
+    QAction *actAddsystem;
+    QAction *actModzsqname;
+    QAction *actDelzsq;
+    QMenu *menusystem;      // 系统的菜单 1.修改系统名称 2.删除系统
+    QAction *actModsystemname;
+    QAction *actDelsystem;
+    QMenu *menuzfg;        // 主风管的菜单 1.修改主风管名称 2..删除主风管
+    QAction *actDelzfg;
+    QAction *actModzfgname;
+    QMenu *menucalroom;         // 房间的菜单 1.添加主竖区
+    QAction *actAddzfg;
+    QMenu *menuclassiccabin;      //典型住舱的菜单 1.添加典型房间
+    QAction *actAddclassicroom;
+    QMenu *menuclassicroom;       //典型房间的菜单 1.修改典型房间名称 2.删除典型房间
+    QAction *actModclassicroomname;
+    QAction *actDelclassicroom;
 
     QVector<Room> rooms;
 
@@ -388,15 +398,19 @@ private:
     QTreeWidgetItem *item_room_rain;                                   //5.6 雨降风口房间（面噪声源）
 
     QTreeWidgetItem *item_system_list;                                 //6.系统清单
-
     QTreeWidgetItem *item_room_define;                                 //7.定义计算房间
-    QVector<QTreeWidgetItem *> item_zhushuqu;
-    QVector<QTreeWidgetItem *> item_jiaban;
-    QMap<QTreeWidgetItem *,QTreeWidgetItem *> zsqmap67;       // 第六项的主竖区和第七项的主竖区对应关系
-    QMap<QTreeWidgetItem *,QTreeWidgetItem *> zsqmap68;       // 第六项的主竖区和第七项的主竖区对应关系
-    QVector<QTreeWidgetItem *> item_zhufenguan;         // 保存主风管item,方便右键点击
-    QMap<QTreeWidgetItem *,QWidget *> map_zsg_pag;    // 主风管与page对应关系
+
+    QVector<QTreeWidgetItem *> vec_zsq;                        //保存主竖区item
+    QVector<QTreeWidgetItem *> vec_system;                     //保存系统item
+    QMap<QTreeWidgetItem *,QTreeWidgetItem *> map_zsq67;       // 第六项的主竖区和第七项的主竖区对应关系
+    QMap<QTreeWidgetItem *,QTreeWidgetItem *> map_zsq68;       // 第六项的主竖区和第八项的主竖区对应关系
+    QMap<QTreeWidgetItem *,QTreeWidgetItem *> map_system67;       // 第六项的系统和第七项的系统对应关系
+    QMap<QTreeWidgetItem *,QTreeWidgetItem *> map_system68;       // 第六项的系统和第八项的系统对应关系
+    QVector<QTreeWidgetItem *> vec_zfg;         // 保存主风管item,方便右键点击
+    QMap<QTreeWidgetItem *,QWidget *> map_zfg_pag;    // 主风管与page对应关系
+    QVector<QTreeWidgetItem *> vec_classicroom;                     //保存典型房间item
+
     QTreeWidgetItem *item_room_calculate;                             // 8.噪音计算
-    QTreeWidgetItem *item_room_classic;        // 8.1典型住舱
+    QTreeWidgetItem *item_cabin_classic;        // 8.1典型住舱
 };
 #endif // WIDGET_H
