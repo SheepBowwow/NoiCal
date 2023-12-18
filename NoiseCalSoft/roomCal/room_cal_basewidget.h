@@ -17,8 +17,11 @@ class room_cal_baseWidget : public QWidget
 public:
     explicit room_cal_baseWidget(QWidget *parent = nullptr);
     ~room_cal_baseWidget();
-    int flag_firstopen=1;
+    int flag_firstopen = 1;
     void addActionToMenu(const QString &itemName, const std::function<void()> &slotFunction);
+
+public slots:
+    void handleAddMenuItemToRoomCal(QString itemName);
 
 private slots:
     void handleAddBefore(int index);
@@ -35,7 +38,7 @@ private:
     Ui::room_cal_baseWidget *ui;
     QPointer<RoomCalTable> selectedTable;
     bool isAllCollapsed;
-    static QMenu *menu;
+    QMenu *menu;
 };
 
 #endif // ROOM_CAL_BASEWIDGET_H

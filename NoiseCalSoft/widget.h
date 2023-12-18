@@ -88,6 +88,10 @@ public slots:
     void TreeWidgetItemPressed_Slot(QTreeWidgetItem* item, int n);
     void upDateTreeItem8(QTreeWidgetItem *item,QString,int num);
     void delroom(QTreeWidgetItem*,QString roomid);
+
+signals:
+    void addMenuItemToRoomCal(QString name);
+
 private slots:
     void on_pushButto_prj_manage_clicked();
 

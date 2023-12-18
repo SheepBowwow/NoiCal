@@ -4131,9 +4131,13 @@ void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
                     QTreeWidgetItem *treeitem=new QTreeWidgetItem(item_room_classic,QStringList(box->getname()));
                     room_cal_baseWidget *page = new room_cal_baseWidget;
                     ui->stackedWidget->addWidget(page);
-                    page->addActionToMenu(box->getname(),[=]() {
-                        qDebug() << box->getname() << "被点击了";
-                    });
+
+                    // 连接 Widget 发送的信号到 room_cal_baseWidget 的槽函数
+                    connect(this, &Widget::addMenuItemToRoomCal, page, &room_cal_baseWidget::handleAddMenuItemToRoomCal);
+
+                    // 发送信号通知 room_cal_baseWidget 添加菜单项
+                    emit addMenuItemToRoomCal(box->getname());
+
                     connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
                         if (itemClicked == treeitem)
                         {
@@ -4233,6 +4237,8 @@ void Widget::upDateTreeItem8(QTreeWidgetItem *item,QString name,int num) //
 
         // 将页面添加到堆栈窗口部件
         ui->stackedWidget->addWidget(page);
+        // 连接 Widget 发送的信号到 room_cal_baseWidget 的槽函数
+        connect(this, &Widget::addMenuItemToRoomCal, page, &room_cal_baseWidget::handleAddMenuItemToRoomCal);
 
         // 这里的主风管还要插入对应page页面
         QTreeWidgetItem *treeitemfg=new QTreeWidgetItem(treeitemfj,QStringList("主风管"+QString::number(i+1)));
@@ -4260,7 +4266,7 @@ void Widget::upDateTreeItem8(QTreeWidgetItem *item,QString name,int num) //
     }
     QTreeWidgetItem *treeitemtotals=new QTreeWidgetItem(treeitemfj,QStringList("房间噪音"));
     //在这里写关联界面
-    room_cal_total *page=new room_cal_total;
+    room_cal_total *page = new room_cal_total;
     ui->stackedWidget->addWidget(page);
     connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
         if (itemClicked == treeitemtotals)

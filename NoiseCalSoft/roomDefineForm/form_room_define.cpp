@@ -34,7 +34,7 @@ void Form_room_define::jieshou(QString name,int num)
 void Form_room_define::on_buttonadd_clicked()
 {
     // 获取选中的行索引
-    int insertRow=-1;
+    int insertRow = -1;
     for (int row = 0; row < ui->tableWidget_room_define->rowCount(); ++row)
     {
         QWidget* widget = ui->tableWidget_room_define->cellWidget(row, 0); // Assuming the checkbox is in the first column (index 0)
