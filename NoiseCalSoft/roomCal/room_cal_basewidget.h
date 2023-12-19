@@ -15,13 +15,10 @@ class room_cal_baseWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit room_cal_baseWidget(QWidget *parent = nullptr);
+    explicit room_cal_baseWidget(QWidget *parent = nullptr,QString m_roomName = "");
     ~room_cal_baseWidget();
     int flag_firstopen = 1;
-    void addActionToMenu(const QString &itemName, const std::function<void()> &slotFunction);
-
-public slots:
-    void handleAddMenuItemToRoomCal(QString itemName);
+    void addMenuAction(QString itemName);
 
 private slots:
     void handleAddBefore(int index);
@@ -34,11 +31,14 @@ private slots:
 
     void on_pushButton_fold_clicked();
 
+    void on_pushButton_confirm_clicked();
+
 private:
     Ui::room_cal_baseWidget *ui;
     QPointer<RoomCalTable> selectedTable;
+    QString roomName;
     bool isAllCollapsed;
-    QMenu *menu;
+    void handleMenuAction(QString actionName);
 };
 
 #endif // ROOM_CAL_BASEWIDGET_H

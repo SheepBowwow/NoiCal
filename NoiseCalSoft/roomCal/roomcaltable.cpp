@@ -7,13 +7,14 @@
 #include <QVBoxLayout> // 添加此行
 #include <QDebug>
 
-RoomCalTable::RoomCalTable(QWidget *parent,QString type) :
+RoomCalTable::RoomCalTable(QWidget *parent,QString m_type) :
     QWidget(parent),
     isCollapsed(false),
     ui(new Ui::RoomCalTable)
 {
     ui->setupUi(this);
-
+    this->isValid = true;
+    this->type = m_type;
     if(type == "")
     {
         ui->stackedWidget_title->setCurrentWidget(ui->page_unit);
@@ -21,6 +22,7 @@ RoomCalTable::RoomCalTable(QWidget *parent,QString type) :
         ui->comboBox_unit_name->setCurrentIndex(-1);
         ui->stackedWidget_info->setCurrentWidget(ui->page_noi_src_info);
         ui->stackedWidget_table->setCurrentWidget(ui->page_noi_src_table);
+        this->type = "声源噪音";
     }
     else if(type == "声压级计算")
     {
@@ -30,7 +32,7 @@ RoomCalTable::RoomCalTable(QWidget *parent,QString type) :
         ui->stackedWidget_info->setCurrentWidget(ui->page_room_info);
         ui->stackedWidget_table->setCurrentWidget(ui->page_room_table);
     }
-    else
+    else if (type == "声源噪音" || type == "气流噪音" || type == "噪音衰减+气流噪音" || type == "噪音衰减")
     {
         ui->stackedWidget_title->setCurrentWidget(ui->page_unit);
         ui->comboBox_sound_type->setCurrentText(type);
@@ -59,6 +61,10 @@ RoomCalTable::RoomCalTable(QWidget *parent,QString type) :
             ui->stackedWidget_info->setCurrentWidget(ui->page_branch_info);
             ui->stackedWidget_table->setCurrentWidget(ui->page_branch_table);
         }
+    }
+    else
+    {
+        this->isValid = false;
     }
 
     // 清除最小和最大大小限制

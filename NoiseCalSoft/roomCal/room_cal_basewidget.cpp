@@ -4,31 +4,42 @@
 #include <QVBoxLayout>
 #include <QMenu>
 #include <QDebug>
+#include "globle_var.h"
 
-// 定义静态成员
 
-room_cal_baseWidget::room_cal_baseWidget(QWidget *parent) :
+room_cal_baseWidget::room_cal_baseWidget(QWidget *parent, QString m_roomName) :
     QWidget(parent),
     isAllCollapsed(false),
+    roomName(m_roomName),
     ui(new Ui::room_cal_baseWidget)
 {   
     ui->setupUi(this);
+
+    if(m_roomName == "")
+    {
+        ui->pushButton_confirm->hide();
+    }
+
     QWidget *scrollWidget = new QWidget;
     QVBoxLayout *scrollLayout = new QVBoxLayout(ui->scrollArea);
     scrollLayout->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
-    // 创建 QMenu 实例，如果已经创建过，就不再重复创建
-    menu = new QMenu();
-    // 添加初始的菜单项
-    addActionToMenu("声源噪音", [=]() { addTable(-1, "声源噪音"); });
-    addActionToMenu("气流噪音", [=]() { addTable(-1, "气流噪音"); });
-    addActionToMenu("噪音衰减+气流噪音", [=]() { addTable(-1, "噪音衰减+气流噪音"); });
-    addActionToMenu("噪音衰减", [=]() { addTable(-1, "噪音衰减"); });
-    addActionToMenu("声压级计算", [=]() { addTable(-1, "声压级计算"); });
+    // 全局菜单只初始化一次
+    if (!globalMenu) {
+        globalMenu = new QMenu();
+        // 添加初始的菜单项
+        globalMenu->addAction("声源噪音");
+        globalMenu->addAction("气流噪音");
+        globalMenu->addAction("噪音衰减+气流噪音");
+        globalMenu->addAction("噪音衰减");
+        globalMenu->addAction("声压级计算");
 
-    // 设置菜单的水平对齐方式为居中
-    menu->setStyleSheet("QMenu::item {padding:5px 32px; color:rgba(51,51,51,1); font-size:12px;margin:0px 8px;}"
-                       "QMenu::item:hover {background-color:#409CE1;}"
-                       "QMenu::item:selected {background-color:#409CE1;}");
+        // 设置菜单的水平对齐方式为居中
+        globalMenu->setStyleSheet("QMenu::item {padding:5px 32px; color:rgba(51,51,51,1); font-size:12px;margin:0px 8px;}"
+                           "QMenu::item:hover {background-color:#409CE1;}"
+                           "QMenu::item:selected {background-color:#409CE1;}");
+    }
+
+
     // 设置垂直方向上的间距为10像素
     scrollLayout->setSpacing(2);
     scrollLayout->setContentsMargins(0, 15, 0, 15);
@@ -43,6 +54,26 @@ room_cal_baseWidget::~room_cal_baseWidget()
     delete ui;
 }
 
+void room_cal_baseWidget::handleMenuAction(QString actionName)
+{
+    if(actionName == "声源噪音" || actionName == "气流噪音" || actionName == "噪音衰减+气流噪音" || actionName == "噪音衰减" || actionName == "声压级计算")
+    {
+        this->addTable(-1,actionName);
+    }
+    else
+    {
+        if(classicRoomMap.find(actionName) != classicRoomMap.end())
+        {
+            QVector<QWidget*> v = classicRoomMap[actionName];
+            for(int i = 0; i < v.size(); i++)
+            {
+                RoomCalTable * table = qobject_cast<RoomCalTable *>(v[i]);
+                this->addTable(-1,table->type);
+            }
+        }
+    }
+}
+
 void room_cal_baseWidget::addTable(int index, QString type)
 {
     QVBoxLayout *layout = qobject_cast<QVBoxLayout *>(ui->scrollArea->widget()->layout());
@@ -51,6 +82,10 @@ void room_cal_baseWidget::addTable(int index, QString type)
     }
 
     RoomCalTable *newRoomCalTable = new RoomCalTable(nullptr,type);
+    if (!newRoomCalTable->isValid) {
+        delete newRoomCalTable;
+        return;
+    }
     if(index == -1)
     {
         layout->addWidget(newRoomCalTable);
@@ -149,13 +184,10 @@ void room_cal_baseWidget::handleDelete(int index)
     }, Qt::QueuedConnection);
 }
 
-void room_cal_baseWidget::handleAddMenuItemToRoomCal(QString itemName)
+void room_cal_baseWidget::addMenuAction(QString itemName)
 {
     QAction *newAction = new QAction(itemName, this);
-    connect(newAction, &QAction::triggered, this, [=]() {
-        qDebug() << itemName << "被点击了";
-    });
-    menu->addAction(newAction);
+    globalMenu->addAction(newAction);
 }
 
 void room_cal_baseWidget::on_pushButton_add_clicked()
@@ -163,21 +195,14 @@ void room_cal_baseWidget::on_pushButton_add_clicked()
     QPoint buttonPos = ui->pushButton_add->mapToGlobal(ui->pushButton_add->rect().bottomLeft());
 
     // 将下拉菜单居中在按钮的下方
-    QPoint menuPos = QPoint(buttonPos.x() - menu->width() / 2, buttonPos.y());
+    QPoint menuPos = QPoint(buttonPos.x() - globalMenu->width() / 2, buttonPos.y());
 
-    // 显示下拉菜单
-    menu->exec(menuPos);
-}
-
-void room_cal_baseWidget::addActionToMenu(const QString& itemName, const std::function<void()>& slotFunction)
-{
-    QAction* action = menu->addAction(itemName);
-
-    // 使用 lambda 表达式关联槽函数
-    connect(action, &QAction::triggered, this, slotFunction);
-
-    // 将 QAction 添加到菜单中
-    menu->addAction(action);
+    QAction* action = globalMenu->exec(menuPos);
+    if(action)
+    {
+        // 显示下拉菜单
+        this->handleMenuAction(action->text());
+    }
 }
 
 void room_cal_baseWidget::on_pushButton_fold_clicked()
@@ -201,5 +226,22 @@ void room_cal_baseWidget::on_pushButton_fold_clicked()
         }
     }
     isAllCollapsed = !isAllCollapsed;
+}
+
+
+void room_cal_baseWidget::on_pushButton_confirm_clicked()
+{
+    QVBoxLayout *layout = qobject_cast<QVBoxLayout *>(ui->scrollArea->widget()->layout());
+    QVector<QWidget*> widgets;
+    if (layout) {
+        // 遍历垂直布局中的所有widget
+        for (int i = 0; i < layout->count(); ++i) {
+            widgets.push_back(layout->itemAt(i)->widget());
+        }
+    }
+    if(roomName != "")
+    {
+        classicRoomMap[roomName] = widgets;
+    }
 }
 

@@ -351,6 +351,19 @@ border:1px solid black;
      <string>全部折叠/展开</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButton_confirm">
+    <property name="geometry">
+     <rect>
+      <x>1100</x>
+      <y>4</y>
+      <width>51</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>确认</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

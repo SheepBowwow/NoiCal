@@ -18,6 +18,8 @@ public:
     void setCollapsed();
     void setIsCollapsed(bool isCollapsed);
     void setSerialNum(int num);
+    bool isValid;
+    QString type;       //表格类型，如生源噪音
 
 signals:
     void addBeforeClicked(int index);
@@ -42,7 +44,6 @@ private slots:
 
 private:
     Ui::RoomCalTable *ui;
-
     void clearPage(QWidget *widget);
     bool isCollapsed;
 };
