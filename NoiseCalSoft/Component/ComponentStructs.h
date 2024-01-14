@@ -2,6 +2,7 @@
 #define COMPONENTSTRUCTS_H
 
 #include <QString>
+#include <QObject>
 
 class ComponentBase {
 public:
@@ -9,40 +10,39 @@ public:
     QString identifier; //识别码
 };
 
-typedef struct AirDiff_noise : ComponentBase
-{
-    QString brand;  //品牌
-    QString model;   //型号
-    QString type;  //类型 圆还是方
-    QString diameter;  //直径
-    QString length;  //长
-    QString width;  //宽
-    QString size;  //尺寸
-    QString noi_63;     //63hz
-    QString noi_125;     //125hz
-    QString noi_250;     //250hz
-    QString noi_500;     //500hz
-    QString noi_1k;     //1khz
-    QString noi_2k;     //2khz
-    QString noi_4k;     //4khz
-    QString noi_8k;     //8khz
-    QString noi_total;  //总量
-    QString atten_63;     //63hz
-    QString atten_125;     //125hz
-    QString atten_250;     //250hz
-    QString atten_500;     //500hz
-    QString atten_1k;     //1khz
-    QString atten_2k;     //2khz
-    QString atten_4k;     //4khz
-    QString atten_8k;     //8khz
-    QString refl_63;     //63hz
-    QString refl_125;     //125hz
-    QString refl_250;     //250hz
-    QString refl_500;     //500hz
-    QString refl_1k;     //1khz
-    QString refl_2k;     //2khz
-    QString refl_4k;     //4khz
-    QString refl_8k;     //8khz
+typedef struct AirDiff_noise : ComponentBase {
+    QString brand;  // 品牌
+    QString model;  // 型号
+    QString type;   // 类型 圆还是方
+    QString diameter;  // 直径
+    QString length;  // 长
+    QString width;  // 宽
+    QString size;  // 尺寸
+    QString noi_63;     // 63hz
+    QString noi_125;     // 125hz
+    QString noi_250;     // 250hz
+    QString noi_500;     // 500hz
+    QString noi_1k;     // 1khz
+    QString noi_2k;     // 2khz
+    QString noi_4k;     // 4khz
+    QString noi_8k;     // 8khz
+    QString noi_total;  // 总量
+    QString atten_63;     // 63hz
+    QString atten_125;     // 125hz
+    QString atten_250;     // 250hz
+    QString atten_500;     // 500hz
+    QString atten_1k;     // 1khz
+    QString atten_2k;     // 2khz
+    QString atten_4k;     // 4khz
+    QString atten_8k;     // 8khz
+    QString refl_63;     // 63hz
+    QString refl_125;     // 125hz
+    QString refl_250;     // 250hz
+    QString refl_500;     // 500hz
+    QString refl_1k;     // 1khz
+    QString refl_2k;     // 2khz
+    QString refl_4k;     // 4khz
+    QString refl_8k;     // 8khz
     QString getMode;    //
 }AirDiff_noise;
 

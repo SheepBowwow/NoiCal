@@ -1,300 +1,126 @@
 #include "ComponentManager.h"
 #include <QtGlobal>
+#include <QSharedPointer>
+
 
 ComponentManager::ComponentManager()
 {
 
 }
 
+void ComponentManager::addComponent(QSharedPointer<ComponentBase> component)
+{
+    //使用基类指针进行处理
+    if (qSharedPointerCast<AirDiff_noise>(component)) airDiffs.append(qSharedPointerCast<AirDiff_noise>(component));
+    else if(qSharedPointerCast<Aircondition_noise>(component)) airConditions.append(qSharedPointerCast<Aircondition_noise>(component));
+    else if(qSharedPointerCast<Circular_damper_noi>(component)) circularDampers.append(qSharedPointerCast<Circular_damper_noi>(component));
+    else if(qSharedPointerCast<Disp_vent_terminal_noise>(component)) dispVentTerminals.append(qSharedPointerCast<Disp_vent_terminal_noise>(component));
+    else if(qSharedPointerCast<Multi_ranc_atten>(component)) multiRancs.append(qSharedPointerCast<Multi_ranc_atten>(component));
+    else if(qSharedPointerCast<Elbow_atten>(component)) elbows.append(qSharedPointerCast<Elbow_atten>(component));
+    else if(qSharedPointerCast<Fan_noise>(component)) fans.append(qSharedPointerCast<Fan_noise>(component));
+    else if(qSharedPointerCast<FanCoil_noise>(component)) fanCoils.append(qSharedPointerCast<FanCoil_noise>(component));
+    else if(qSharedPointerCast<Other_send_terminal_noise>(component)) otherSendTerminals.append(qSharedPointerCast<Other_send_terminal_noise>(component));
+    else if(qSharedPointerCast<Pipe_atten>(component)) pipes.append(qSharedPointerCast<Pipe_atten>(component));
+    else if(qSharedPointerCast<PumpSend_noise>(component)) pumpSends.append(qSharedPointerCast<PumpSend_noise>(component));
+    else if(qSharedPointerCast<Rect_damper_noi>(component)) rectDampers.append(qSharedPointerCast<Rect_damper_noi>(component));
+    else if(qSharedPointerCast<Reducer_atten>(component)) reducers.append(qSharedPointerCast<Reducer_atten>(component));
+    else if(qSharedPointerCast<StaticBox_grille_noise>(component)) staticBoxGrilles.append(qSharedPointerCast<StaticBox_grille_noise>(component));
+    else if(qSharedPointerCast<Silencer_atten>(component)) silencers.append(qSharedPointerCast<Silencer_atten>(component));
+    else if(qSharedPointerCast<Static_box>(component)) staticboxs.append(qSharedPointerCast<Static_box>(component));
+    else if(qSharedPointerCast<Tee_atten>(component)) tees.append(qSharedPointerCast<Tee_atten>(component));
+    else if(qSharedPointerCast<VAV_terminal_noise>(component)) VAVTerminals.append(qSharedPointerCast<VAV_terminal_noise>(component));
+}
+
+template<typename T>
+void ComponentManager::del_and_updateTableIDBase(QList<QSharedPointer<T>> list, int deleteID, QString containerName)
+{
+    // 删除 table_id 等于 deleteID 的元素
+    auto it = std::remove_if(list.begin(), list.end(),
+        [deleteID](const auto& component) {
+            return component->table_id.toInt() == deleteID;
+    });
+
+    list.erase(it, list.end());
+
+    for (auto& component : list) {
+        if (component->table_id.toInt() > deleteID) {
+            component->table_id = QString::number(component->table_id.toInt() - 1);
+        }
+    }
+}
+
 void ComponentManager::del_and_updateTableID(int deleteID, QString containerName)
 {
     if(containerName == "布风器+散流器")
     {
-        // 删除 table_id 等于 deleteID 的元素
-        auto it = std::remove_if(airDiffs.begin(), airDiffs.end(),
-            [deleteID](const auto& component) {
-                return component->table_id.toInt() == deleteID;
-        });
-
-        airDiffs.erase(it, airDiffs.end());
-
-        for (auto& component : airDiffs) {
-            if (component->table_id.toInt() > deleteID) {
-                component->table_id = QString::number(component->table_id.toInt() - 1);
-            }
-        }
+        del_and_updateTableIDBase(airDiffs, deleteID, containerName);
     }
     else if(containerName == "空调器")
     {
-        // 删除 table_id 等于 deleteID 的元素
-        auto it = std::remove_if(airConditions.begin(), airConditions.end(),
-            [deleteID](const auto& component) {
-                return component->table_id.toInt() == deleteID;
-        });
-
-        airConditions.erase(it, airConditions.end());
-
-        for (auto& component : airConditions) {
-            if (component->table_id.toInt() > deleteID) {
-                component->table_id = QString::number(component->table_id.toInt() - 1);
-            }
-        }
+        del_and_updateTableIDBase(airConditions, deleteID, containerName);
     }
     else if(containerName == "圆形调风门")
     {
-        // 删除 table_id 等于 deleteID 的元素
-        auto it = std::remove_if(circularDampers.begin(), circularDampers.end(),
-            [deleteID](const auto& component) {
-                return component->table_id.toInt() == deleteID;
-        });
-
-        circularDampers.erase(it, circularDampers.end());
-
-        for (auto& component : circularDampers) {
-            if (component->table_id.toInt() > deleteID) {
-                component->table_id = QString::number(component->table_id.toInt() - 1);
-            }
-        }
+        del_and_updateTableIDBase(circularDampers, deleteID, containerName);
     }
     else if(containerName == "置换通风末端")
     {
-        // 删除 table_id 等于 deleteID 的元素
-        auto it = std::remove_if(dispVentTerminals.begin(), dispVentTerminals.end(),
-            [deleteID](const auto& component) {
-                return component->table_id.toInt() == deleteID;
-        });
-
-        dispVentTerminals.erase(it, dispVentTerminals.end());
-
-        for (auto& component : dispVentTerminals) {
-            if (component->table_id.toInt() > deleteID) {
-                component->table_id = QString::number(component->table_id.toInt() - 1);
-            }
-        }
+        del_and_updateTableIDBase(dispVentTerminals, deleteID, containerName);
     }
     else if(containerName == "风道多分支")
     {
-        // 删除 table_id 等于 deleteID 的元素
-        auto it = std::remove_if(multiRancs.begin(), multiRancs.end(),
-            [deleteID](const auto& component) {
-                return component->table_id.toInt() == deleteID;
-        });
-
-        multiRancs.erase(it, multiRancs.end());
-
-        for (auto& component : multiRancs) {
-            if (component->table_id.toInt() > deleteID) {
-                component->table_id = QString::number(component->table_id.toInt() - 1);
-            }
-        }
+        del_and_updateTableIDBase(multiRancs, deleteID, containerName);
     }
     else if(containerName == "弯头")
     {
-        // 删除 table_id 等于 deleteID 的元素
-        auto it = std::remove_if(elbows.begin(), elbows.end(),
-            [deleteID](const auto& component) {
-                return component->table_id.toInt() == deleteID;
-        });
-
-        elbows.erase(it, elbows.end());
-
-        for (auto& component : elbows) {
-            if (component->table_id.toInt() > deleteID) {
-                component->table_id = QString::number(component->table_id.toInt() - 1);
-            }
-        }
+        del_and_updateTableIDBase(elbows, deleteID, containerName);
     }
     else if(containerName == "风机")
     {
-        // 删除 table_id 等于 deleteID 的元素
-        auto it = std::remove_if(fans.begin(), fans.end(),
-            [deleteID](const auto& component) {
-                return component->table_id.toInt() == deleteID;
-        });
-
-        fans.erase(it, fans.end());
-
-
-        for (auto& component : fans) {
-            if (component->table_id.toInt() > deleteID) {
-                component->table_id = QString::number(component->table_id.toInt() - 1);
-            }
-        }
+        del_and_updateTableIDBase(fans, deleteID, containerName);
     }
     else if(containerName == "风机盘管")
     {
-        // 删除 table_id 等于 deleteID 的元素
-        auto it = std::remove_if(fanCoils.begin(), fanCoils.end(),
-            [deleteID](const auto& component) {
-                return component->table_id.toInt() == deleteID;
-        });
-
-        fanCoils.erase(it, fanCoils.end());
-
-        for (auto& component : fanCoils) {
-            if (component->table_id.toInt() > deleteID) {
-                component->table_id = QString::number(component->table_id.toInt() - 1);
-            }
-        }
+        del_and_updateTableIDBase(fanCoils, deleteID, containerName);
     }
     else if(containerName == "其他送风末端")
     {
-        // 删除 table_id 等于 deleteID 的元素
-        auto it = std::remove_if(otherSendTerminals.begin(), otherSendTerminals.end(),
-            [deleteID](const auto& component) {
-                return component->table_id.toInt() == deleteID;
-        });
-
-        otherSendTerminals.erase(it, otherSendTerminals.end());
-
-        for (auto& component : otherSendTerminals) {
-            if (component->table_id.toInt() > deleteID) {
-                component->table_id = QString::number(component->table_id.toInt() - 1);
-            }
-        }
+        del_and_updateTableIDBase(otherSendTerminals, deleteID, containerName);
     }
     else if(containerName == "直管")
     {
-        // 删除 table_id 等于 deleteID 的元素
-        auto it = std::remove_if(pipes.begin(), pipes.end(),
-            [deleteID](const auto& component) {
-                return component->table_id.toInt() == deleteID;
-        });
-
-        pipes.erase(it, pipes.end());
-
-        for (auto& component : pipes) {
-            if (component->table_id.toInt() > deleteID) {
-                component->table_id = QString::number(component->table_id.toInt() - 1);
-            }
-        }
+        del_and_updateTableIDBase(pipes, deleteID, containerName);
     }
     else if(containerName == "抽/送风头")
     {
-        // 删除 table_id 等于 deleteID 的元素
-        auto it = std::remove_if(pumpSends.begin(), pumpSends.end(),
-            [deleteID](const auto& component) {
-                return component->table_id.toInt() == deleteID;
-        });
-
-        pumpSends.erase(it, pumpSends.end());
-
-        for (auto& component : pumpSends) {
-            if (component->table_id.toInt() > deleteID) {
-                component->table_id = QString::number(component->table_id.toInt() - 1);
-            }
-        }
+        del_and_updateTableIDBase(pumpSends, deleteID, containerName);
     }
     else if(containerName == "方形调风门")
     {
-        // 删除 table_id 等于 deleteID 的元素
-        auto it = std::remove_if(rectDampers.begin(), rectDampers.end(),
-            [deleteID](const auto& component) {
-                return component->table_id.toInt() == deleteID;
-        });
-
-        rectDampers.erase(it, rectDampers.end());
-
-        for (auto& component : rectDampers) {
-            if (component->table_id.toInt() > deleteID) {
-                component->table_id = QString::number(component->table_id.toInt() - 1);
-            }
-        }
+        del_and_updateTableIDBase(rectDampers, deleteID, containerName);
     }
     else if(containerName == "变径")
     {
-        // 删除 table_id 等于 deleteID 的元素
-        auto it = std::remove_if(reducers.begin(), reducers.end(),
-            [deleteID](const auto& component) {
-                return component->table_id.toInt() == deleteID;
-        });
-
-        reducers.erase(it, reducers.end());
-
-        for (auto& component : reducers) {
-            if (component->table_id.toInt() > deleteID) {
-                component->table_id = QString::number(component->table_id.toInt() - 1);
-            }
-        }
+        del_and_updateTableIDBase(reducers, deleteID, containerName);
     }
     else if(containerName == "静压箱+格栅")
     {
-        // 删除 table_id 等于 deleteID 的元素
-        auto it = std::remove_if(staticBoxGrilles.begin(), staticBoxGrilles.end(),
-            [deleteID](const auto& component) {
-                return component->table_id.toInt() == deleteID;
-        });
-
-        staticBoxGrilles.erase(it, staticBoxGrilles.end());
-
-        for (auto& component : staticBoxGrilles) {
-            if (component->table_id.toInt() > deleteID) {
-                component->table_id = QString::number(component->table_id.toInt() - 1);
-            }
-        }
+        del_and_updateTableIDBase(staticBoxGrilles, deleteID, containerName);
     }
     else if(containerName == "消声器")
     {
-        // 删除 table_id 等于 deleteID 的元素
-        auto it = std::remove_if(silencers.begin(), silencers.end(),
-            [deleteID](const auto& component) {
-                return component->table_id.toInt() == deleteID;
-        });
-
-        silencers.erase(it, silencers.end());
-
-        for (auto& component : silencers) {
-            if (component->table_id.toInt() > deleteID) {
-                component->table_id = QString::number(component->table_id.toInt() - 1);
-            }
-        }
+        del_and_updateTableIDBase(silencers, deleteID, containerName);
     }
     else if(containerName == "静压箱")
     {
-        // 删除 table_id 等于 deleteID 的元素
-        auto it = std::remove_if(staticboxs.begin(), staticboxs.end(),
-            [deleteID](const auto& component) {
-                return component->table_id.toInt() == deleteID;
-        });
-
-        staticboxs.erase(it, staticboxs.end());
-
-        for (auto& component : staticboxs) {
-            if (component->table_id.toInt() > deleteID) {
-                component->table_id = QString::number(component->table_id.toInt() - 1);
-            }
-        }
+        del_and_updateTableIDBase(staticboxs, deleteID, containerName);
     }
     else if(containerName == "三通")
     {
-        // 删除 table_id 等于 deleteID 的元素
-        auto it = std::remove_if(tees.begin(), tees.end(),
-            [deleteID](const auto& component) {
-                return component->table_id.toInt() == deleteID;
-        });
-
-        tees.erase(it, tees.end());
-
-        for (auto& component : tees) {
-            if (component->table_id.toInt() > deleteID) {
-                component->table_id = QString::number(component->table_id.toInt() - 1);
-            }
-        }
+        del_and_updateTableIDBase(tees, deleteID, containerName);
     }
     else if(containerName == "变风量末端")
     {
-        // 删除 table_id 等于 deleteID 的元素
-        auto it = std::remove_if(VAVTerminals.begin(), VAVTerminals.end(),
-            [deleteID](const auto& component) {
-                return component->table_id.toInt() == deleteID;
-        });
-
-        VAVTerminals.erase(it, VAVTerminals.end());
-
-        for (auto& component : VAVTerminals) {
-            if (component->table_id.toInt() > deleteID) {
-                component->table_id = QString::number(component->table_id.toInt() - 1);
-            }
-        }
+        del_and_updateTableIDBase(VAVTerminals, deleteID, containerName);
     }
 }

@@ -33,7 +33,12 @@
 #include <QTimer>
 #include <QStandardItemModel>
 #include <QCheckBox>
+#include <QSharedPointer>
 #include "Component/ComponentManager.h"
+
+#include <iostream>
+#include <string>
+#include <regex>
 
 ComponentManager& componentManager = ComponentManager::getInstance();
 
@@ -750,7 +755,7 @@ void Widget::on_pushButton_fanNoi_add_clicked()
             addRowToTable(tableWidget, data_in);
             addRowToTable(tableWidget, data_out);
 
-            componentManager.addFan(QSharedPointer<Fan_noise>(noi.release()));
+            componentManager.addComponent(QSharedPointer<Fan_noise>(noi.release()));
             for(int i = 0; i < tableWidget->columnCount(); i++)
             {
                 if(tableWidget == ui->tableWidget_fanCoil_noi)
@@ -928,7 +933,7 @@ void Widget::on_pushButton_fanCoil_noi_add_clicked()
             addRowToTable(tableWidget, data_in);
             addRowToTable(tableWidget, data_out);
 
-            componentManager.addFanCoil(QSharedPointer<FanCoil_noise>(noi.release()));
+            componentManager.addComponent(QSharedPointer<FanCoil_noise>(noi.release()));
             for(int i = 0; i < tableWidget->columnCount(); i++)
             {
                 if(i < 7 || i > 16)
@@ -1148,8 +1153,7 @@ void Widget::on_pushButton_air_noi_add_clicked()
                 addRowToTable(tableWidget, data_exhaust_out);
             }
 
-            componentManager.addAirCondition(QSharedPointer<Aircondition_noise>(noi.release()));
-
+            componentManager.addComponent(QSharedPointer<Aircondition_noise>(noi.release()));
             if(noi->type == "单风机")
             {
                 for(int i = 0; i < tableWidget->columnCount(); i++)
@@ -1422,7 +1426,7 @@ void Widget::on_pushButton_VAV_terminal_add_clicked()
             // 使用通用函数添加行
             addRowToTable(tableWidget, data);
 
-            componentManager.addVAVTerminal(QSharedPointer<VAV_terminal_noise>(noi.release()));
+            componentManager.addComponent(QSharedPointer<VAV_terminal_noise>(noi.release()));
         }
     }
 
@@ -1513,7 +1517,7 @@ void Widget::on_pushButton_circular_damper_add_clicked()
             // 使用通用函数添加行
             addRowToTable(tableWidget, data);
 
-            componentManager.addCircularDamper(QSharedPointer<Circular_damper_noi>(noi.release()));
+            componentManager.addComponent(QSharedPointer<Circular_damper_noi>(noi.release()));
         }
     }
 }
@@ -1603,7 +1607,7 @@ void Widget::on_pushButton_rect_damper_add_clicked()
             // 使用通用函数添加行
             addRowToTable(tableWidget, data);
 
-            componentManager.addRectDamper(QSharedPointer<Rect_damper_noi>(noi.release()));
+            componentManager.addComponent(QSharedPointer<Rect_damper_noi>(noi.release()));
         }
     }
 
@@ -1689,10 +1693,10 @@ void Widget::on_pushButton_air_diff_add_clicked()
     QTableWidget *tableWidget_atten = ui->tableWidget_air_diff_terminal_atten;
     QTableWidget *tableWidget_refl = ui->tableWidget_air_diff_terminal_refl;
     Dialog_air_diff *dialog = new Dialog_air_diff("布风器+散流器",this);
-    std::unique_ptr<AirDiff_noise> noi;
+    AirDiff_noise* noi = nullptr;
 
     if (dialog->exec() == QDialog::Accepted) {
-        noi = std::make_unique<AirDiff_noise>(std::move(*static_cast<AirDiff_noise*>(dialog->getNoi())));
+        noi = static_cast<AirDiff_noise*>(dialog->getNoi());
         noi->table_id = QString::number(tableWidget_noise->rowCount() + 1);
         if (noi != nullptr) {
             QStringList data_noise = {
@@ -1752,7 +1756,7 @@ void Widget::on_pushButton_air_diff_add_clicked()
             addRowToTable(tableWidget_atten, data_atten);
             addRowToTable(tableWidget_refl, data_refl);
 
-            componentManager.addAirDiff(QSharedPointer<AirDiff_noise>(noi.release()));
+            componentManager.addComponent(QSharedPointer<AirDiff_noise>(noi));
         }
     }
 }
@@ -2136,7 +2140,7 @@ void Widget::on_pushButton_pump_send_add_clicked()
             addRowToTable(tableWidget_atten, data_atten);
             addRowToTable(tableWidget_refl, data_refl);
 
-            componentManager.addPumpSend(QSharedPointer<PumpSend_noise>(noi.release()));
+            componentManager.addComponent(QSharedPointer<PumpSend_noise>(noi.release()));
         }
     }
 }
@@ -2460,7 +2464,7 @@ void Widget::on_pushButton_staticBox_grille_add_clicked()
             addRowToTable(tableWidget_atten, data_atten);
             addRowToTable(tableWidget_refl, data_refl);
 
-            componentManager.addStaticBoxGrille(QSharedPointer<StaticBox_grille_noise>(noi.release()));
+            componentManager.addComponent(QSharedPointer<StaticBox_grille_noise>(noi.release()));
         }
     }
 }
@@ -2792,7 +2796,7 @@ void Widget::on_pushButton_disp_vent_terminal_add_clicked()
             addRowToTable(tableWidget_atten, data_atten);
             addRowToTable(tableWidget_refl, data_refl);
 
-            componentManager.addDispVentTerminal(QSharedPointer<Disp_vent_terminal_noise>(noi.release()));
+            componentManager.addComponent(QSharedPointer<Disp_vent_terminal_noise>(noi.release()));
         }
     }
 }
@@ -3132,7 +3136,7 @@ void Widget::on_pushButton_other_send_terminal_add_clicked()
             addRowToTable(tableWidget_atten, data_atten);
             addRowToTable(tableWidget_refl, data_refl);
 
-            componentManager.addOtherSendTerminal(QSharedPointer<Other_send_terminal_noise>(noi.release()));
+            componentManager.addComponent(QSharedPointer<Other_send_terminal_noise>(noi.release()));
         }
     }
 
@@ -3418,7 +3422,7 @@ void Widget::on_pushButton_static_box_add_clicked()
             // 使用通用函数添加行
             addRowToTable(tableWidget, data);
 
-            componentManager.addStaticBox(QSharedPointer<Static_box>(noi.release()));
+            componentManager.addComponent(QSharedPointer<Static_box>(noi.release()));
         }
     }
 }
@@ -3500,7 +3504,7 @@ void Widget::on_pushButton_duct_with_multi_ranc_add_clicked()
             // 使用通用函数添加行
             addRowToTable(tableWidget, data);
 
-            componentManager.addMultiRanc(QSharedPointer<Multi_ranc_atten>(noi.release()));
+            componentManager.addComponent(QSharedPointer<Multi_ranc_atten>(noi.release()));
         }
     }
 
@@ -3584,7 +3588,7 @@ void Widget::on_pushButton_tee_add_clicked()
 
             // 使用通用函数添加行
             addRowToTable(tableWidget, data);
-            componentManager.addTee(QSharedPointer<Tee_atten>(noi.release()));
+            componentManager.addComponent(QSharedPointer<Tee_atten>(noi.release()));
         }
     }
 
@@ -3761,7 +3765,7 @@ void Widget::on_pushButton_elbow_add_clicked()
 
             // 使用通用函数添加行
             addRowToTable(tableWidget, data);
-            componentManager.addElbow(QSharedPointer<Elbow_atten>(noi.release()));
+            componentManager.addComponent(QSharedPointer<Elbow_atten>(noi.release()));
         }
     }
 }
@@ -3844,7 +3848,7 @@ void Widget::on_pushButton_reducer_add_clicked()
 
             // 使用通用函数添加行
             addRowToTable(tableWidget, data);
-            componentManager.addReducer(QSharedPointer<Reducer_atten>(noi.release()));
+            componentManager.addComponent(QSharedPointer<Reducer_atten>(noi.release()));
         }
     }
 
@@ -3996,7 +4000,7 @@ void Widget::on_pushButton_silencer_add_clicked()
             // 使用通用函数添加行
             addRowToTable(tableWidget, data);
 
-            componentManager.addSilencer(QSharedPointer<Silencer_atten>(noi.release()));
+            componentManager.addComponent(QSharedPointer<Silencer_atten>(noi.release()));
         }
     }
 }
