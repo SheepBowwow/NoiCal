@@ -476,6 +476,16 @@ void Widget::initializeTreeWidget()
     item_room_calculate = new QTreeWidgetItem(QStringList("8.噪音计算"));                                 //8.噪音计算
     item_cabin_classic = new QTreeWidgetItem(item_room_calculate,QStringList("典型住舱"));                                     //8.1典型住舱
 
+    item_report = new QTreeWidgetItem(QStringList("9.报表"));        // 9.报表
+    item_report_cover = new QTreeWidgetItem(item_report,QStringList("封面"));        // 9.1封面
+    item_report_dictionary = new QTreeWidgetItem(item_report,QStringList("目录"));        // 9.2目录
+    item_report_overview = new QTreeWidgetItem(item_report,QStringList("项目概述"));        // 9.3项目概述
+    item_report_noise_require = new QTreeWidgetItem(item_report,QStringList("噪音要求"));        // 9.4噪音要求
+    item_report_system_list = new QTreeWidgetItem(item_report,QStringList("系统清单"));        // 9.5系统清单
+    item_report_cal_room = new QTreeWidgetItem(item_report,QStringList("计算房间"));        // 9.6计算房间
+    item_report_cal_summarize = new QTreeWidgetItem(item_report,QStringList("计算结果汇总"));        // 9.7计算结果汇总
+    item_report_cal_detaile = new QTreeWidgetItem(item_report,QStringList("舱室噪音详细计算"));        // 9.8舱室噪音详细计算
+
     ui->treeWidget->addTopLevelItem(item_prj_info);     //工程信息
     ui->treeWidget->addTopLevelItem(item_sound_sorce_noise);    //音源噪音
     ui->treeWidget->addTopLevelItem(item_pipe_and_acce_airflow_noise);    //管路及附件气流噪音
@@ -485,6 +495,7 @@ void Widget::initializeTreeWidget()
     ui->treeWidget->addTopLevelItem(item_system_list);    //系统清单
     ui->treeWidget->addTopLevelItem(item_room_define);   //计算房间
     ui->treeWidget->addTopLevelItem(item_room_calculate);   //噪音计算
+    ui->treeWidget->addTopLevelItem(item_report);   //报表
 
     // 设置子项为展开状态
     item_prj->setExpanded(true); // 这一行将子项设置为展开状态
@@ -4425,6 +4436,219 @@ void Widget::  initRightButtonMenu()
             this, SLOT(TreeWidgetItemPressed_Slot(QTreeWidgetItem*, int)));
 }
 
+
+
+
+/**********报表**********/
+#pragma region "report"{
+//封面录入
+void Widget::on_pushButton_cover_entry_clicked()
+{
+    ui->lineEdit_image_boat_name->setText(ui->lineEdit_boat_name->text());
+    ui->lineEdit_image_drawing_name->setText(ui->lineEdit_drawing_name->text());
+    ui->lineEdit_image_drawing_number->setText(ui->lineEdit_drawing_number->text());
+}
+//封面清空
+void Widget::on_pushButton_cover_clear_clicked()
+{
+    ui->lineEdit_image_boat_name->setText("船名");
+    ui->lineEdit_image_drawing_name->setText("图名");
+    ui->lineEdit_image_drawing_number->setText("图编");
+    ui->lineEdit_boat_name->clear();
+    ui->lineEdit_drawing_name->clear();
+    ui->lineEdit_drawing_number->clear();
+}
+//目录(页眉)录入
+void Widget::on_pushButton_dictionary_entry_clicked()
+{
+    ui->lineEdit_image_header_project_name->setText(ui->lineEdit_header_project_name->text());
+    ui->lineEdit_image_header_drawing_name->setText(ui->lineEdit_header_drawing_name->text());
+    ui->lineEdit_image_header_designer_name->setText(ui->lineEdit_header_designer_name->text());
+}
+//目录(页眉)清空
+void Widget::on_pushButton_dictionary_clear_clicked()
+{
+    ui->lineEdit_image_header_project_name->setText("项目名称");
+    ui->lineEdit_image_header_drawing_name->setText("计算书名");
+    ui->lineEdit_image_header_designer_name->setText("设计方名称");
+    ui->lineEdit_header_project_name->clear();
+    ui->lineEdit_header_drawing_name->clear();
+    ui->lineEdit_header_designer_name->clear();
+}
+#pragma endregion}
+
+void Widget::on_pushButton_project_overview_entry_clicked()
+{
+    QTextCursor cursor = ui->plainTextEdit_project_overview_image->textCursor();
+    cursor.movePosition(QTextCursor::Start);
+
+    // 查找第一部分标题
+    int firstSectionIndex = ui->plainTextEdit_project_overview_image->toPlainText().indexOf("1.1 项目概述：");
+    if (firstSectionIndex != -1) {
+        // 将光标移动到第一部分标题的下一行行首
+        cursor.setPosition(firstSectionIndex + QString("1.1 项目概述：").length(), QTextCursor::MoveAnchor);
+        cursor.movePosition(QTextCursor::Down);
+        cursor.movePosition(QTextCursor::StartOfLine);
+    }
+
+    // 查找第二部分标题
+    int secondSectionIndex = ui->plainTextEdit_project_overview_image->toPlainText().indexOf("1.2 参考图纸清单：");
+    if (secondSectionIndex != -1) {
+        // 将光标移动到第二部分标题的上一行行末
+        cursor.setPosition(secondSectionIndex - 1, QTextCursor::MoveAnchor);
+        cursor.movePosition(QTextCursor::EndOfLine);
+    }
+
+    // 删除两个标题之间的内容
+    cursor.setPosition(firstSectionIndex + QString("1.1 项目概述：").length(), QTextCursor::KeepAnchor);
+    cursor.removeSelectedText();
+
+    // 插入一行空行
+    cursor.insertText("\n");
+
+    /****上面是删除****/
+
+    cursor = ui->plainTextEdit_project_overview_image->textCursor();
+    cursor.movePosition(QTextCursor::End);
+
+    // 查找小节标题
+    int subsectionIndex = ui->plainTextEdit_project_overview_image->toPlainText().indexOf("1.1 项目概述：");
+    if (subsectionIndex != -1) {
+        // 将光标移动到小节标题的下一行行尾
+        cursor.setPosition(subsectionIndex + QString("1.1 项目概述：").length());
+        cursor.movePosition(QTextCursor::EndOfLine);
+        cursor.movePosition(QTextCursor::Down);
+    }
+
+    // 获取要插入的文本
+    QString originalText = ui->plainTextEdit_project_overview->toPlainText();
+
+    // 在每一段的开头插入两个空格
+    QString indentedText = originalText.replace("\n", "\n    ");
+
+    // 在首行额外缩进两个字
+    indentedText.prepend("    ");
+
+    // 插入内容
+    cursor.insertText(indentedText);
+}
+
+//项目概述1.1清空
+void Widget::on_pushButton_project_overview_clear_clicked()
+{
+    ui->plainTextEdit_project_overview->clear();
+
+    QTextCursor cursor = ui->plainTextEdit_project_overview_image->textCursor();
+    cursor.movePosition(QTextCursor::Start);
+
+    // 查找第一部分标题
+    int firstSectionIndex = ui->plainTextEdit_project_overview_image->toPlainText().indexOf("1.1 项目概述：");
+    if (firstSectionIndex != -1) {
+        // 将光标移动到第一部分标题的下一行行首
+        cursor.setPosition(firstSectionIndex + QString("1.1 项目概述：").length(), QTextCursor::MoveAnchor);
+        cursor.movePosition(QTextCursor::Down);
+        cursor.movePosition(QTextCursor::StartOfLine);
+    }
+
+    // 查找第二部分标题
+    int secondSectionIndex = ui->plainTextEdit_project_overview_image->toPlainText().indexOf("1.2 参考图纸清单：");
+    if (secondSectionIndex != -1) {
+        // 将光标移动到第二部分标题的上一行行末
+        cursor.setPosition(secondSectionIndex - 1, QTextCursor::MoveAnchor);
+        cursor.movePosition(QTextCursor::EndOfLine);
+    }
+
+    // 删除两个标题之间的内容
+    cursor.setPosition(firstSectionIndex + QString("1.1 项目概述：").length(), QTextCursor::KeepAnchor);
+    cursor.removeSelectedText();
+
+    // 插入一行空行
+    cursor.insertText("\n");
+}
+
+//项目概述1.2插入
+void Widget::on_pushButton_reference_drawing_entry_clicked()
+{
+    QTextCursor cursor = ui->plainTextEdit_project_overview_image->textCursor();
+    cursor.movePosition(QTextCursor::Start);
+
+    // 查找第二部分标题
+    int secondSectionIndex = ui->plainTextEdit_project_overview_image->toPlainText().indexOf("1.2 参考图纸清单：");
+    if (secondSectionIndex != -1) {
+        // 将光标移动到第二部分标题的下一行行尾
+        cursor.setPosition(secondSectionIndex + QString("1.2 参考图纸清单：").length(), QTextCursor::MoveAnchor);
+        cursor.movePosition(QTextCursor::Down);
+        cursor.movePosition(QTextCursor::StartOfLine);
+    }
+
+    // 删除第二部分标题下一行行尾到文本末尾的内容
+    cursor.movePosition(QTextCursor::End);
+
+    // 删除两个标题之间的内容
+    cursor.setPosition(secondSectionIndex + QString("1.2 参考图纸清单：").length(), QTextCursor::KeepAnchor);
+    cursor.removeSelectedText();
+
+    // 插入一行空行
+    cursor.insertText("\n");
+
+    cursor = ui->plainTextEdit_project_overview_image->textCursor();
+    cursor.movePosition(QTextCursor::Start);
+
+    // 查找小节标题
+    int subsectionIndex = ui->plainTextEdit_project_overview_image->toPlainText().indexOf("1.2 参考图纸清单：");
+    if (subsectionIndex != -1) {
+        // 将光标移动到小节标题的下一行行尾
+        cursor.setPosition(subsectionIndex + QString("1.2 参考图纸清单：").length());
+        cursor.movePosition(QTextCursor::EndOfLine);
+        cursor.movePosition(QTextCursor::Down);
+    }
+
+    // 获取要插入的文本
+    QString originalText = ui->plainTextEdit_reference_drawing->toPlainText();
+
+    // 在每一段的开头插入两个空格
+    QString indentedText = originalText.replace("\n", "\n    ");
+
+    // 在首行额外缩进两个字
+    indentedText.prepend("    ");
+
+    // 插入内容
+    cursor.insertText(indentedText);
+}
+
+//项目概述1.2清空
+void Widget::on_pushButton_reference_drawing_clear_clicked()
+{
+    ui->plainTextEdit_reference_drawing->clear();
+
+    QTextCursor cursor = ui->plainTextEdit_project_overview_image->textCursor();
+    cursor.movePosition(QTextCursor::Start);
+
+    // 查找第二部分标题
+    int secondSectionIndex = ui->plainTextEdit_project_overview_image->toPlainText().indexOf("1.2 参考图纸清单：");
+    if (secondSectionIndex != -1) {
+        // 将光标移动到第二部分标题的下一行行尾
+        cursor.setPosition(secondSectionIndex + QString("1.2 参考图纸清单：").length(), QTextCursor::MoveAnchor);
+        cursor.movePosition(QTextCursor::Down);
+        cursor.movePosition(QTextCursor::StartOfLine);
+    }
+
+    // 删除第二部分标题下一行行尾到文本末尾的内容
+    cursor.movePosition(QTextCursor::End);
+
+    // 删除两个标题之间的内容
+    cursor.setPosition(secondSectionIndex + QString("1.2 参考图纸清单：").length(), QTextCursor::KeepAnchor);
+    cursor.removeSelectedText();
+
+    // 插入一行空行
+    cursor.insertText("\n");
+}
+
+/**********报表**********/
+
+
+
+
 /**************事件处理************/
 #pragma region "event" {
 //可以在构造函数中初始一下last变量用其成员函数setX,setY就是了
@@ -4705,6 +4929,18 @@ void Widget::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWid
     else if(current == item_room_rain)     //抽送风头末端反射衰减
     {
         ui->stackedWidget->setCurrentWidget(ui->page_room_rain);
+    }
+    else if(current == item_report_cover)     //报表封面
+    {
+        ui->stackedWidget->setCurrentWidget(ui->page_report_cover);
+    }
+    else if(current == item_report_dictionary)     //报表目录
+    {
+        ui->stackedWidget->setCurrentWidget(ui->page_report_dictionary);
+    }
+    else if(current == item_report_overview)     //报表封面
+    {
+        ui->stackedWidget->setCurrentWidget(ui->page_report_overview);
     }
     else if(current == item_room_define || current == item_room_calculate || current == item_system_list)     //设置成空白
     {

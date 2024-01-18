@@ -309,6 +309,22 @@ private slots:
 
     void on_pushButton_noi_limit_del_clicked();
 
+    void on_pushButton_cover_entry_clicked();
+
+    void on_pushButton_cover_clear_clicked();
+
+    void on_pushButton_dictionary_entry_clicked();
+
+    void on_pushButton_dictionary_clear_clicked();
+
+    void on_pushButton_project_overview_entry_clicked();
+
+    void on_pushButton_project_overview_clear_clicked();
+
+    void on_pushButton_reference_drawing_clear_clicked();
+
+    void on_pushButton_reference_drawing_entry_clicked();
+
 private:
     Ui::Widget *ui;
     QTreeWidgetItem *item_prj;   //工程
@@ -409,5 +425,15 @@ private:
 
     QTreeWidgetItem *item_room_calculate;                             // 8.噪音计算
     QTreeWidgetItem *item_cabin_classic;        // 8.1典型住舱
+
+    QTreeWidgetItem *item_report;        // 9.报表
+    QTreeWidgetItem *item_report_cover;        // 9.1封面
+    QTreeWidgetItem *item_report_dictionary;        // 9.2目录
+    QTreeWidgetItem *item_report_overview;        // 9.3项目概述
+    QTreeWidgetItem *item_report_noise_require;        // 9.4噪音要求
+    QTreeWidgetItem *item_report_system_list;        // 9.5系统清单
+    QTreeWidgetItem *item_report_cal_room;        // 9.6计算房间
+    QTreeWidgetItem *item_report_cal_summarize;        // 9.7计算结果汇总
+    QTreeWidgetItem *item_report_cal_detaile;        // 9.8舱室噪音详细计算
 };
 #endif // WIDGET_H
