@@ -15,6 +15,15 @@ Dialog_addroom::~Dialog_addroom()
     delete ui;
 }
 
+void Dialog_addroom::setvalues(QString s1, QString s2, QString s3, QString num, QString s4, QString s5)
+{
+    ui->lineEdit_roomid->setText(s1);
+    ui->lineEdit_roomname->setText(s2);
+    ui->lineEdit_jiaban->setText(s3);
+    ui->lineEdit_pipe->setText(num);
+    ui->lineEdit_limit->setText(s4);
+    ui->lineEdit_roomcalclass->setText(s5);
+}
 
 QString Dialog_addroom::getroomid()
 {

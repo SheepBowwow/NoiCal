@@ -143,5 +143,65 @@ void Form_room_define::on_buttondel_clicked()
 
 void Form_room_define::on_buttonchange_clicked()
 {
+    // 获取选中的行索引
+    int insertRow = -1;
+    for (int row = 0; row < ui->tableWidget_room_define->rowCount(); ++row)
+    {
+        QWidget* widget = ui->tableWidget_room_define->cellWidget(row, 0); // Assuming the checkbox is in the first column (index 0)
+        QCheckBox* checkBox = widget->findChild<QCheckBox*>(); // Find the checkbox within the widget
+        if (checkBox && checkBox->isChecked())
+        {
+            insertRow=row;
+            break;
+        }
+    }
 
+    if(insertRow==-1)return;
+
+    dialog = new Dialog_addroom;
+
+    QString s1 = ui->tableWidget_room_define->item(insertRow,1)->text();
+    QString s2 = ui->tableWidget_room_define->item(insertRow,2)->text();
+    QString s3 = ui->tableWidget_room_define->item(insertRow,4)->text();
+    QString num = ui->tableWidget_room_define->item(insertRow,5)->text();
+    QString s4 = ui->tableWidget_room_define->item(insertRow,6)->text();
+    QString s5 = ui->tableWidget_room_define->item(insertRow,7)->text();
+
+
+    dialog->setvalues(s1,s2,s3,num,s4,s5);
+
+    if(dialog->exec()==QDialog::Accepted)
+    {
+        //添加内容
+        QTableWidgetItem *tbitem1=new QTableWidgetItem(QString(dialog->getroomid()));
+        QTableWidgetItem *tbitem2=new QTableWidgetItem(QString(dialog->getroomname()));
+        QTableWidgetItem *tbitem3=new QTableWidgetItem(QString(dialog->getroomclass()));
+        QTableWidgetItem *tbitem4=new QTableWidgetItem(dialog->getjiaban());
+        QTableWidgetItem *tbitem5=new QTableWidgetItem(QString::number(dialog->getmainpipe()));
+        QTableWidgetItem *tbitem6=new QTableWidgetItem(QString(dialog->getlimit()));
+        QTableWidgetItem *tbitem7=new QTableWidgetItem(QString(dialog->getroomcalclass()));
+        tbitem1->setFlags(Qt::ItemIsEditable); // 设置为只读
+        tbitem1->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
+        tbitem2->setFlags(Qt::ItemIsEditable); // 设置为只读
+        tbitem2->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
+        tbitem3->setFlags(Qt::ItemIsEditable); // 设置为只读
+        tbitem3->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
+        tbitem4->setFlags(Qt::ItemIsEditable); // 设置为只读
+        tbitem4->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
+        tbitem5->setFlags(Qt::ItemIsEditable); // 设置为只读
+        tbitem5->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
+        tbitem6->setFlags(Qt::ItemIsEditable); // 设置为只读
+        tbitem6->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
+        tbitem7->setFlags(Qt::ItemIsEditable); // 设置为只读
+        tbitem7->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
+
+        ui->tableWidget_room_define->setItem(insertRow,1,tbitem1);
+        ui->tableWidget_room_define->setItem(insertRow,2,tbitem2);
+        ui->tableWidget_room_define->setItem(insertRow,3,tbitem3);
+        ui->tableWidget_room_define->setItem(insertRow,4,tbitem4);
+        ui->tableWidget_room_define->setItem(insertRow,5,tbitem5);
+        ui->tableWidget_room_define->setItem(insertRow,6,tbitem6);
+        ui->tableWidget_room_define->setItem(insertRow,7,tbitem7);
+
+    }
 }

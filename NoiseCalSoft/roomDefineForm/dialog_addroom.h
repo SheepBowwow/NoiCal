@@ -16,6 +16,8 @@ public:
     explicit Dialog_addroom(QWidget *parent = nullptr);
     ~Dialog_addroom();
 
+    void setvalues(QString,QString,QString,QString,QString,QString);
+
     QString getroomid();
     QString getroomname();
     QString getjiaban();

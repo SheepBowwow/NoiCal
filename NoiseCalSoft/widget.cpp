@@ -4217,7 +4217,12 @@ void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
             }
             if(actDelzsq==act)
             {
-
+                delete(item);
+                delete(map_zsq67.value(item));
+                delete(map_zsq68.value(item));
+                map_zsq67.remove(item);
+                map_zsq68.remove(item);
+                vec_zsq.removeOne(item);
             }
         }
         // 右击系统
@@ -4238,7 +4243,12 @@ void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
             }
             if(actDelsystem==act)
             {
-
+                delete(item);
+                delete(map_system67.value(item));
+                delete(map_system68.value(item));
+                map_system67.remove(item);
+                map_system68.remove(item);
+                vec_system.removeOne(item);
             }
         }
         // 右击典型舱室
@@ -4270,7 +4280,8 @@ void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
         if(vec_classicroom.contains(item))
         {
             //典型房间
-            if(actModclassicroomname==menuclassicroom->exec(QCursor::pos()))
+            QAction *act = menuclassicroom->exec(QCursor::pos());
+            if(actModclassicroomname==act)
             {
                 Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
                 box->setlabeltext("修改房间名称");
@@ -4278,6 +4289,12 @@ void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
                 {
                     item->setText(0,box->getname());
                 }
+            }
+            if(actDelclassicroom==act)
+            {
+                delete(item);
+                vec_classicroom.removeOne(item);
+
             }
         }
         // 右击主风管
@@ -4292,6 +4309,11 @@ void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
                 {
                     item->setText(0,box->getname());
                 }
+            }
+            if(actDelzfg==act)
+            {
+                delete(item);
+                vec_zfg.removeOne(item);
             }
         }
 
@@ -4371,7 +4393,7 @@ void Widget::delroom(QTreeWidgetItem* itemjb,QString roomid)
     }
 }
 
-void Widget::initRightButtonMenu()
+void Widget::  initRightButtonMenu()
 {
     menusystemlist = new QMenu(this);
     menuzsq = new QMenu(this);
