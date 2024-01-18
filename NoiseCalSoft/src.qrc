@@ -35,5 +35,8 @@
         <file>image/slotFan.png</file>
         <file>image/refl.jpg</file>
         <file>image/logo.png</file>
+        <file>image/cover.png</file>
+        <file>image/dictionary.png</file>
+        <file>image/overview.png</file>
     </qresource>
 </RCC>
