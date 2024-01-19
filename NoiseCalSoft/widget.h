@@ -325,6 +325,16 @@ private slots:
 
     void on_pushButton_reference_drawing_entry_clicked();
 
+    void on_pushButton_noise_require_entry_clicked();
+
+    void on_pushButton_noise_require_clear_clicked();
+
+    void on_pushButton_choose_basis_entry_clicked();
+
+    void on_pushButton_choose_basis_clear_clicked();
+
+    void on_pushButton_choose_report_filePath_clicked();
+
 private:
     Ui::Widget *ui;
     QTreeWidgetItem *item_prj;   //工程

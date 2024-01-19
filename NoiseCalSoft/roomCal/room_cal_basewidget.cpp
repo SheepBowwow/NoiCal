@@ -194,6 +194,9 @@ void room_cal_baseWidget::on_pushButton_add_clicked()
 {
     QPoint buttonPos = ui->pushButton_add->mapToGlobal(ui->pushButton_add->rect().bottomLeft());
 
+    globalMenu->show();
+    globalMenu->close();
+
     // 将下拉菜单居中在按钮的下方
     QPoint menuPos = QPoint(buttonPos.x() - globalMenu->width() / 2, buttonPos.y());
 

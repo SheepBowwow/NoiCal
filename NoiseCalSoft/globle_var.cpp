@@ -9,3 +9,5 @@ QMenu *globalMenu = nullptr;
 QMap<QString,QVector<QWidget*>> classicRoomMap;
 
 Project project;
+
+QString reportPath = "";

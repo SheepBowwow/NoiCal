@@ -38,5 +38,7 @@
         <file>image/cover.png</file>
         <file>image/dictionary.png</file>
         <file>image/overview.png</file>
+        <file>image/noise_require.png</file>
+        <file>image/cal_room.png</file>
     </qresource>
 </RCC>

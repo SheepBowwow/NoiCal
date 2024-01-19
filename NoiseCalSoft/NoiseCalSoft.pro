@@ -1,4 +1,5 @@
 QT       += core gui sql
+QT       += axcontainer
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -45,7 +46,8 @@ SOURCES += \
     roomDefineForm/dialog_addroom.cpp \
     roomDefineForm/form_room_define.cpp \
     roomDefineForm/form_system_list.cpp \
-    widget.cpp
+    widget.cpp \
+    wordEngine/wordengine.cpp
 
 HEADERS += \
     Component/ComponentManager.h \
@@ -80,7 +82,8 @@ HEADERS += \
     roomDefineForm/dialog_addroom.h \
     roomDefineForm/form_room_define.h \
     roomDefineForm/form_system_list.h \
-    widget.h
+    widget.h \
+    wordEngine/wordengine.h
 
 FORMS += \
     inputDialog/dialog_air_diff.ui \
@@ -117,4 +120,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
+    document.qrc \
     src.qrc

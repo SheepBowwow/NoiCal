@@ -34,6 +34,17 @@
 {
 	background-color: rgb(255, 255, 255);
 	border:1px solid black;
+}
+
+QLabel
+{
+font-family: '黑体';
+font-size: 16px;
+}
+
+QLineEdit
+{
+font-family: '黑体';
 }</string>
    </property>
    <widget class="QLabel" name="label">
@@ -47,7 +58,8 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>12</pointsize>
+      <family>黑体</family>
+      <pointsize>-1</pointsize>
      </font>
     </property>
     <property name="text">
@@ -65,7 +77,8 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>12</pointsize>
+      <family>黑体</family>
+      <pointsize>-1</pointsize>
      </font>
     </property>
     <property name="text">
@@ -83,7 +96,8 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>12</pointsize>
+      <family>黑体</family>
+      <pointsize>-1</pointsize>
      </font>
     </property>
     <property name="text">
@@ -101,7 +115,8 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>12</pointsize>
+      <family>黑体</family>
+      <pointsize>-1</pointsize>
      </font>
     </property>
     <property name="text">
@@ -119,7 +134,8 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>12</pointsize>
+      <family>黑体</family>
+      <pointsize>-1</pointsize>
      </font>
     </property>
     <property name="text">
@@ -137,7 +153,8 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>12</pointsize>
+      <family>黑体</family>
+      <pointsize>-1</pointsize>
      </font>
     </property>
     <property name="text">
@@ -228,7 +245,8 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>12</pointsize>
+      <family>黑体</family>
+      <pointsize>-1</pointsize>
      </font>
     </property>
     <property name="text">
@@ -250,7 +268,8 @@
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -286,7 +305,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -366,6 +386,12 @@ QTableWidget::item:selected
        <width>191</width>
        <height>31</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>11</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>房间噪音总值dB(A):</string>

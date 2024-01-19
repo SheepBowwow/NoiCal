@@ -48,7 +48,8 @@ border: 1px solid #000000;
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -84,7 +85,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -185,7 +187,6 @@ background-color : rgb(105, 105, 105);
         <font>
          <family>Microsoft YaHei</family>
          <pointsize>24</pointsize>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -219,6 +220,12 @@ color : rgb(105, 105, 105);
       <width>21</width>
       <height>21</height>
      </size>
+    </property>
+    <property name="font">
+     <font>
+      <family>黑体</family>
+      <pointsize>12</pointsize>
+     </font>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton
@@ -255,6 +262,12 @@ color: white;
       <height>21</height>
      </size>
     </property>
+    <property name="font">
+     <font>
+      <family>黑体</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
     <property name="styleSheet">
      <string notr="true">QPushButton
 {
@@ -289,6 +302,12 @@ color: white;
       <width>21</width>
       <height>21</height>
      </size>
+    </property>
+    <property name="font">
+     <font>
+      <family>黑体</family>
+      <pointsize>12</pointsize>
+     </font>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton

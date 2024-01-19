@@ -17,4 +17,6 @@
 #define TERMINAL_MODEL "terminal_model"
 #define TERMINAL_TABLE "terminal_atten"
 
+#define REPORT_TEMPLATE_FILEPATH "document\\template.docx"
+
 #endif // GLOBAL_CONSTANT_H

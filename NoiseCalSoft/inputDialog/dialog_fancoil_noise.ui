@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>671</width>
-    <height>479</height>
+    <width>651</width>
+    <height>461</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,7 +36,7 @@ font-size: 13px;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>671</width>
+     <width>651</width>
      <height>31</height>
     </rect>
    </property>
@@ -51,7 +51,7 @@ background-color: rgb(157, 196, 229);
    <widget class="QPushButton" name="close">
     <property name="geometry">
      <rect>
-      <x>645</x>
+      <x>620</x>
       <y>5</y>
       <width>21</width>
       <height>21</height>
@@ -68,8 +68,8 @@ background-color: rgb(157, 196, 229);
   <widget class="QWidget" name="widget_add_fan_noise" native="true">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>40</y>
+     <x>0</x>
+     <y>30</y>
      <width>651</width>
      <height>431</height>
     </rect>
@@ -97,8 +97,13 @@ border: 1px solid #DCDCDC;
 
 QLabel
 {
-font-family: 'Microsoft YaHei';
+font-family: '黑体';
 font-size: 16px;
+}
+
+QLineEdit
+{
+font-family: '黑体';
 }</string>
     </property>
     <widget class="QWidget" name="layoutWidget">
@@ -129,7 +134,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -157,7 +162,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -186,7 +191,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -214,7 +219,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -243,7 +248,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -271,7 +276,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -300,7 +305,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -328,7 +333,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -357,7 +362,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -385,7 +390,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -417,7 +422,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -445,7 +450,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -474,7 +479,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -502,7 +507,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -531,7 +536,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -559,7 +564,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -588,7 +593,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -616,7 +621,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -660,7 +665,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -688,7 +693,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -717,7 +722,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -745,7 +750,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -774,7 +779,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -802,7 +807,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -831,7 +836,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -859,7 +864,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -888,7 +893,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -916,7 +921,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -948,7 +953,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -976,7 +981,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -1005,7 +1010,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -1033,7 +1038,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -1062,7 +1067,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -1090,7 +1095,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -1119,7 +1124,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -1147,7 +1152,7 @@ font-size: 16px;
           </property>
           <property name="font">
            <font>
-            <family>Microsoft YaHei</family>
+            <family>黑体</family>
             <pointsize>-1</pointsize>
            </font>
           </property>
@@ -1174,7 +1179,7 @@ font-size: 16px;
      </property>
      <property name="font">
       <font>
-       <family>Microsoft YaHei</family>
+       <family>黑体</family>
        <pointsize>-1</pointsize>
       </font>
      </property>
@@ -1190,7 +1195,7 @@ font-size: 16px;
      </property>
      <property name="font">
       <font>
-       <family>Microsoft YaHei</family>
+       <family>黑体</family>
        <pointsize>-1</pointsize>
       </font>
      </property>
@@ -1209,7 +1214,7 @@ font-size: 16px;
      </property>
      <property name="font">
       <font>
-       <family>Microsoft YaHei</family>
+       <family>黑体</family>
        <pointsize>-1</pointsize>
       </font>
      </property>
@@ -1228,7 +1233,7 @@ font-size: 16px;
      </property>
      <property name="font">
       <font>
-       <family>Microsoft YaHei</family>
+       <family>黑体</family>
        <pointsize>-1</pointsize>
       </font>
      </property>
@@ -1244,7 +1249,7 @@ font-size: 16px;
      </property>
      <property name="font">
       <font>
-       <family>Microsoft YaHei</family>
+       <family>黑体</family>
        <pointsize>-1</pointsize>
       </font>
      </property>
@@ -1263,7 +1268,7 @@ font-size: 16px;
      </property>
      <property name="font">
       <font>
-       <family>Microsoft YaHei</family>
+       <family>黑体</family>
        <pointsize>-1</pointsize>
       </font>
      </property>
@@ -1282,7 +1287,7 @@ font-size: 16px;
      </property>
      <property name="font">
       <font>
-       <family>Microsoft YaHei</family>
+       <family>黑体</family>
        <pointsize>-1</pointsize>
       </font>
      </property>
@@ -1298,7 +1303,7 @@ font-size: 16px;
      </property>
      <property name="font">
       <font>
-       <family>Microsoft YaHei</family>
+       <family>黑体</family>
        <pointsize>-1</pointsize>
       </font>
      </property>
@@ -1317,7 +1322,7 @@ font-size: 16px;
      </property>
      <property name="font">
       <font>
-       <family>Microsoft YaHei</family>
+       <family>黑体</family>
        <pointsize>-1</pointsize>
       </font>
      </property>
@@ -1336,7 +1341,7 @@ font-size: 16px;
      </property>
      <property name="font">
       <font>
-       <family>Microsoft YaHei</family>
+       <family>黑体</family>
        <pointsize>-1</pointsize>
       </font>
      </property>
@@ -1352,7 +1357,7 @@ font-size: 16px;
      </property>
      <property name="font">
       <font>
-       <family>Microsoft YaHei</family>
+       <family>黑体</family>
        <pointsize>-1</pointsize>
       </font>
      </property>
@@ -1368,7 +1373,7 @@ font-size: 16px;
      </property>
      <property name="font">
       <font>
-       <family>Microsoft YaHei</family>
+       <family>黑体</family>
        <pointsize>-1</pointsize>
       </font>
      </property>
@@ -1388,7 +1393,7 @@ font-size: 16px;
     </property>
     <property name="font">
      <font>
-      <family>Microsoft YaHei</family>
+      <family>黑体</family>
       <pointsize>12</pointsize>
      </font>
     </property>

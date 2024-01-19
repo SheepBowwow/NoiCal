@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/documents">
+        <file>document/template.dotx</file>
+    </qresource>
+</RCC>

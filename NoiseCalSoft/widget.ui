@@ -34,6 +34,12 @@
      <height>145</height>
     </size>
    </property>
+   <property name="font">
+    <font>
+     <family>黑体</family>
+     <bold>true</bold>
+    </font>
+   </property>
    <property name="styleSheet">
     <string notr="true">background-color: #9DC6E6;</string>
    </property>
@@ -62,7 +68,6 @@
      <font>
       <family>Microsoft YaHei</family>
       <pointsize>10</pointsize>
-      <weight>75</weight>
       <italic>false</italic>
       <bold>true</bold>
       <underline>true</underline>
@@ -78,7 +83,7 @@
    <widget class="QPushButton" name="min">
     <property name="geometry">
      <rect>
-      <x>1270</x>
+      <x>1280</x>
       <y>3</y>
       <width>31</width>
       <height>31</height>
@@ -107,7 +112,7 @@
    <widget class="QPushButton" name="max">
     <property name="geometry">
      <rect>
-      <x>1307</x>
+      <x>1320</x>
       <y>3</y>
       <width>31</width>
       <height>31</height>
@@ -135,7 +140,7 @@
    <widget class="QPushButton" name="close">
     <property name="geometry">
      <rect>
-      <x>1344</x>
+      <x>1360</x>
       <y>3</y>
       <width>31</width>
       <height>31</height>
@@ -183,9 +188,8 @@
     </property>
     <property name="font">
      <font>
-      <family>Microsoft YaHei</family>
+      <family>黑体</family>
       <pointsize>12</pointsize>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -216,7 +220,7 @@
     </property>
     <property name="font">
      <font>
-      <family>Microsoft YaHei</family>
+      <family>黑体</family>
       <pointsize>12</pointsize>
      </font>
     </property>
@@ -264,7 +268,6 @@
      <font>
       <family>Microsoft YaHei</family>
       <pointsize>11</pointsize>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -504,7 +507,6 @@
      <font>
       <family>Microsoft YaHei</family>
       <pointsize>20</pointsize>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -567,7 +569,7 @@
    </property>
    <property name="font">
     <font>
-     <family>Microsoft YaHei</family>
+     <family>黑体</family>
     </font>
    </property>
    <property name="styleSheet">
@@ -587,7 +589,7 @@ font-size: 13px;
 }</string>
    </property>
    <property name="currentIndex">
-    <number>38</number>
+    <number>18</number>
    </property>
    <widget class="QWidget" name="page_login">
     <layout class="QGridLayout" name="gridLayout" rowstretch="2,5,4">
@@ -655,7 +657,6 @@ font-size: 13px;
             <font>
              <family>Microsoft YaHei</family>
              <pointsize>14</pointsize>
-             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -720,7 +721,6 @@ font-size: 13px;
               <font>
                <family>Microsoft YaHei</family>
                <pointsize>16</pointsize>
-               <weight>75</weight>
                <bold>true</bold>
               </font>
              </property>
@@ -757,7 +757,6 @@ font-size: 13px;
               <font>
                <family>Microsoft YaHei</family>
                <pointsize>16</pointsize>
-               <weight>75</weight>
                <bold>true</bold>
               </font>
              </property>
@@ -835,7 +834,6 @@ font-size: 13px;
             <font>
              <family>Microsoft YaHei</family>
              <pointsize>10</pointsize>
-             <weight>75</weight>
              <bold>true</bold>
              <underline>true</underline>
             </font>
@@ -890,7 +888,6 @@ font-size: 13px;
             <font>
              <family>Microsoft YaHei</family>
              <pointsize>-1</pointsize>
-             <weight>75</weight>
              <italic>false</italic>
              <bold>true</bold>
             </font>
@@ -965,8 +962,8 @@ font-size: 13px;
       <rect>
        <x>20</x>
        <y>19</y>
-       <width>1121</width>
-       <height>241</height>
+       <width>481</width>
+       <height>331</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -978,7 +975,7 @@ border: 1px solid #000000;
      <widget class="QLabel" name="label_4">
       <property name="geometry">
        <rect>
-        <x>70</x>
+        <x>50</x>
         <y>60</y>
         <width>71</width>
         <height>31</height>
@@ -986,7 +983,7 @@ border: 1px solid #000000;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -1000,7 +997,7 @@ border: 1px solid #000000;
      <widget class="QLabel" name="label_5">
       <property name="geometry">
        <rect>
-        <x>70</x>
+        <x>50</x>
         <y>100</y>
         <width>71</width>
         <height>31</height>
@@ -1008,7 +1005,7 @@ border: 1px solid #000000;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -1022,7 +1019,7 @@ border: 1px solid #000000;
      <widget class="QLabel" name="label_6">
       <property name="geometry">
        <rect>
-        <x>70</x>
+        <x>50</x>
         <y>140</y>
         <width>71</width>
         <height>31</height>
@@ -1030,7 +1027,7 @@ border: 1px solid #000000;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -1044,15 +1041,15 @@ border: 1px solid #000000;
      <widget class="QLabel" name="label_7">
       <property name="geometry">
        <rect>
-        <x>600</x>
-        <y>100</y>
+        <x>50</x>
+        <y>220</y>
         <width>71</width>
         <height>31</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -1066,7 +1063,7 @@ border: 1px solid #000000;
      <widget class="QLineEdit" name="lineEdit_boat_num">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>140</x>
         <y>60</y>
         <width>251</width>
         <height>31</height>
@@ -1089,7 +1086,7 @@ border: 1px solid #9C9C9C;</string>
      <widget class="QLineEdit" name="lineEdit_shipyard">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>140</x>
         <y>100</y>
         <width>251</width>
         <height>31</height>
@@ -1112,7 +1109,7 @@ border: 1px solid #9C9C9C;</string>
      <widget class="QLineEdit" name="lineEdit_principal">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>140</x>
         <y>140</y>
         <width>251</width>
         <height>31</height>
@@ -1135,8 +1132,8 @@ border: 1px solid #9C9C9C;</string>
      <widget class="QLineEdit" name="lineEdit_prj_name">
       <property name="geometry">
        <rect>
-        <x>710</x>
-        <y>100</y>
+        <x>140</x>
+        <y>220</y>
         <width>251</width>
         <height>31</height>
        </rect>
@@ -1158,15 +1155,15 @@ border: 1px solid #9C9C9C;</string>
      <widget class="QLabel" name="label_8">
       <property name="geometry">
        <rect>
-        <x>600</x>
-        <y>60</y>
+        <x>50</x>
+        <y>180</y>
         <width>71</width>
         <height>31</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -1180,8 +1177,8 @@ border: 1px solid #9C9C9C;</string>
      <widget class="QLineEdit" name="lineEdit_prj_num">
       <property name="geometry">
        <rect>
-        <x>710</x>
-        <y>60</y>
+        <x>140</x>
+        <y>180</y>
         <width>251</width>
         <height>31</height>
        </rect>
@@ -1203,15 +1200,15 @@ border: 1px solid #9C9C9C;</string>
      <widget class="QLabel" name="label_9">
       <property name="geometry">
        <rect>
-        <x>600</x>
-        <y>140</y>
+        <x>50</x>
+        <y>260</y>
         <width>71</width>
         <height>31</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -1225,8 +1222,8 @@ border: 1px solid #9C9C9C;</string>
      <widget class="QLineEdit" name="lineEdit_6">
       <property name="geometry">
        <rect>
-        <x>710</x>
-        <y>140</y>
+        <x>140</x>
+        <y>260</y>
         <width>251</width>
         <height>51</height>
        </rect>
@@ -1248,15 +1245,15 @@ border: 1px solid #9C9C9C;</string>
      <widget class="QPushButton" name="pushButton_4">
       <property name="geometry">
        <rect>
-        <x>980</x>
-        <y>140</y>
-        <width>71</width>
+        <x>410</x>
+        <y>260</y>
+        <width>51</width>
         <height>31</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -1283,15 +1280,15 @@ color: white;
      <widget class="QPushButton" name="pushButton_prj_revise">
       <property name="geometry">
        <rect>
-        <x>980</x>
-        <y>200</y>
-        <width>71</width>
+        <x>340</x>
+        <y>20</y>
+        <width>51</width>
         <height>31</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -1368,7 +1365,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -1391,15 +1387,15 @@ color : rgb(105, 105, 105);
      <widget class="QPushButton" name="pushButton_prj_save">
       <property name="geometry">
        <rect>
-        <x>890</x>
-        <y>200</y>
-        <width>71</width>
+        <x>280</x>
+        <y>20</y>
+        <width>51</width>
         <height>31</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -1428,9 +1424,9 @@ color: white;
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>270</y>
-       <width>1121</width>
-       <height>401</height>
+       <y>360</y>
+       <width>1151</width>
+       <height>311</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -1452,7 +1448,6 @@ border: 1px solid #000000;
        <font>
         <family>Microsoft YaHei</family>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -1471,7 +1466,7 @@ border: 1px solid #000000;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -1500,13 +1495,13 @@ border: 1px solid #000000;
        <rect>
         <x>400</x>
         <y>10</y>
-        <width>71</width>
+        <width>41</width>
         <height>31</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -1535,8 +1530,188 @@ border: 1px solid #000000;
        <rect>
         <x>100</x>
         <y>50</y>
-        <width>911</width>
-        <height>331</height>
+        <width>971</width>
+        <height>251</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>-1</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">/*设置标题(包括垂直+水平的)*/
+QHeaderView
+{							
+	
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
+	/*border: 1px solid #B4B4B4;*/
+	border:none;
+    /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
+    /*background: #9DC6E6;*/				/*背景浅蓝色*/ 
+	min-height:30px;
+	text-align: center;	       
+}
+
+
+/*设置标题(水平的)*/
+QHeaderView::section:horizontal { 					
+        border: 1px solid #AFAFAF; 			/*间隔颜色*/
+	    border-bottom: 2px solid #999999; 							
+        color: black;
+        background: #9DC6E6;
+}
+
+/*设置鼠标停留状态*/
+QHeaderView::section:horizontal:hover 
+{			
+        color: black;							/*字体白色*/
+        background: #82AFC9;				/*背景深蓝色*/
+}
+
+/*设置鼠标按下状态*/
+QHeaderView::section:horizontal:pressed 
+{			
+        color: black;
+        background: #82AFC9;
+		border-bottom: 3px solid #037BFC;				
+}
+
+
+QTableWidget 
+{
+		font-size: 14px;				/*10榜*/				
+		color : black;				
+        border: 1px solid #000000;		
+        background: white;
+        gridline-color: #E0E0E0;	
+        text-align: center;	
+        outline:0px;			/*禁止焦点*/
+}
+
+/*设置选中的视图项*/
+QTableWidget::item:selected
+{				    
+		border: 2px solid #0398FC;	
+        color : black;				
+}</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_noi_limit_del">
+      <property name="geometry">
+       <rect>
+        <x>960</x>
+        <y>10</y>
+        <width>51</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+      </property>
+      <property name="text">
+       <string>删除</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_noi_limit_add">
+      <property name="geometry">
+       <rect>
+        <x>1020</x>
+        <y>10</y>
+        <width>51</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+      </property>
+      <property name="text">
+       <string>新增</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="widget_noi_limit_2" native="true">
+     <property name="geometry">
+      <rect>
+       <x>520</x>
+       <y>20</y>
+       <width>651</width>
+       <height>331</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">#widget_noi_limit
+{
+border: 1px solid #000000;
+}</string>
+     </property>
+     <widget class="QLabel" name="label_91">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>131</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft YaHei</family>
+        <pointsize>14</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>参考图纸清单</string>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="tableWidget_noi_limit_2">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>50</y>
+        <width>581</width>
+        <height>251</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -1597,10 +1772,10 @@ QTableWidget::item:selected
 }</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_noi_limit_del">
+     <widget class="QPushButton" name="pushButton_noi_limit_del_2">
       <property name="geometry">
        <rect>
-        <x>900</x>
+        <x>500</x>
         <y>10</y>
         <width>51</width>
         <height>31</height>
@@ -1608,7 +1783,7 @@ QTableWidget::item:selected
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -1632,10 +1807,10 @@ color: white;
        <string>删除</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_noi_limit_add">
+     <widget class="QPushButton" name="pushButton_noi_limit_add_2">
       <property name="geometry">
        <rect>
-        <x>960</x>
+        <x>570</x>
         <y>10</y>
         <width>51</width>
         <height>31</height>
@@ -1643,7 +1818,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -1726,7 +1901,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -1766,7 +1940,8 @@ color : rgb(105, 105, 105);
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -1802,7 +1977,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -1833,7 +2009,7 @@ QTableWidget::item:selected
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -1868,7 +2044,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -1903,7 +2079,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -1938,7 +2114,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -2027,7 +2203,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -2067,7 +2242,8 @@ color : rgb(105, 105, 105);
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -2103,7 +2279,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -2134,7 +2311,7 @@ QTableWidget::item:selected
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -2169,7 +2346,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -2204,7 +2381,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -2239,7 +2416,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -2322,7 +2499,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -2351,6 +2527,12 @@ color : rgb(105, 105, 105);
         <height>611</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>-1</pointsize>
+       </font>
+      </property>
       <property name="focusPolicy">
        <enum>Qt::NoFocus</enum>
       </property>
@@ -2362,7 +2544,8 @@ color : rgb(105, 105, 105);
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -2398,7 +2581,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -2429,7 +2613,7 @@ QTableWidget::item:selected
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -2464,7 +2648,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -2499,7 +2683,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -2534,7 +2718,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -2617,7 +2801,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -2657,7 +2840,8 @@ color : rgb(105, 105, 105);
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -2693,7 +2877,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -2724,7 +2909,7 @@ QTableWidget::item:selected
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -2759,7 +2944,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -2794,7 +2979,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -2829,7 +3014,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -2924,7 +3109,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -2964,7 +3148,8 @@ color : rgb(105, 105, 105);
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -3000,7 +3185,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -3031,7 +3217,7 @@ QTableWidget::item:selected
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -3066,7 +3252,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -3101,7 +3287,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -3136,7 +3322,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -3219,7 +3405,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -3259,7 +3444,8 @@ color : rgb(105, 105, 105);
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -3295,7 +3481,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -3326,7 +3513,7 @@ QTableWidget::item:selected
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -3361,7 +3548,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -3396,7 +3583,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -3431,7 +3618,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -3514,7 +3701,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -3554,7 +3740,8 @@ color : rgb(105, 105, 105);
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -3590,7 +3777,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -3621,7 +3809,7 @@ QTableWidget::item:selected
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -3656,7 +3844,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -3691,7 +3879,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -3726,7 +3914,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -3809,7 +3997,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -3834,14 +4021,13 @@ color : rgb(105, 105, 105);
        <rect>
         <x>210</x>
         <y>15</y>
-        <width>111</width>
+        <width>81</width>
         <height>41</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>20</pointsize>
-        <weight>75</weight>
+        <pointsize>16</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -3855,16 +4041,15 @@ color : rgb(105, 105, 105);
      <widget class="QPushButton" name="pushButton_send_table">
       <property name="geometry">
        <rect>
-        <x>330</x>
+        <x>300</x>
         <y>15</y>
-        <width>111</width>
+        <width>81</width>
         <height>41</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>20</pointsize>
-        <weight>75</weight>
+        <pointsize>16</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -3908,7 +4093,8 @@ color : rgb(105, 105, 105);
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -3944,7 +4130,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -4055,7 +4242,7 @@ QTableWidget::item:selected
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -4090,7 +4277,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -4125,7 +4312,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -4160,7 +4347,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -4243,7 +4430,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -4283,7 +4469,8 @@ color : rgb(105, 105, 105);
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -4319,7 +4506,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -4350,7 +4538,7 @@ QTableWidget::item:selected
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -4385,7 +4573,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -4420,7 +4608,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -4455,7 +4643,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -4517,7 +4705,8 @@ border: 1px solid #000000;
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -4553,7 +4742,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -4614,7 +4804,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -4645,7 +4834,7 @@ color : rgb(105, 105, 105);
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -4680,7 +4869,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -4715,7 +4904,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -4750,7 +4939,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -4812,7 +5001,8 @@ border: 1px solid #000000;
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -4848,7 +5038,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -4909,7 +5100,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -4940,7 +5130,7 @@ color : rgb(105, 105, 105);
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -4975,7 +5165,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -5010,7 +5200,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -5045,7 +5235,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -5107,7 +5297,8 @@ border: 1px solid #000000;
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -5143,7 +5334,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -5204,7 +5396,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -5235,7 +5426,7 @@ color : rgb(105, 105, 105);
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -5270,7 +5461,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -5305,7 +5496,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -5340,7 +5531,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -5402,7 +5593,8 @@ border: 1px solid #000000;
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -5438,7 +5630,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -5499,7 +5692,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -5530,7 +5722,7 @@ color : rgb(105, 105, 105);
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -5565,7 +5757,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -5600,7 +5792,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -5635,7 +5827,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -5697,7 +5889,8 @@ border: 1px solid #000000;
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -5733,7 +5926,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -5794,7 +5988,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -5825,7 +6018,7 @@ color : rgb(105, 105, 105);
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -5860,7 +6053,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -5895,7 +6088,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -5930,7 +6123,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -5992,7 +6185,8 @@ border: 1px solid #000000;
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -6028,7 +6222,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -6089,7 +6284,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -6120,7 +6314,7 @@ color : rgb(105, 105, 105);
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -6155,7 +6349,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -6190,7 +6384,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -6225,7 +6419,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -6287,7 +6481,8 @@ border: 1px solid #000000;
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -6323,7 +6518,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -6384,7 +6580,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -6415,7 +6610,7 @@ color : rgb(105, 105, 105);
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -6450,7 +6645,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -6485,7 +6680,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -6520,7 +6715,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -6582,7 +6777,8 @@ border: 1px solid #000000;
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -6618,7 +6814,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -6679,7 +6876,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -6710,7 +6906,7 @@ color : rgb(105, 105, 105);
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -6745,7 +6941,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -6780,7 +6976,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -6815,7 +7011,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -6898,7 +7094,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -6930,7 +7125,6 @@ color : rgb(105, 105, 105);
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -7052,7 +7246,8 @@ QTableWidget::item:selected
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -7088,7 +7283,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -7278,7 +7474,6 @@ QTableWidget::item:selected
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -7301,7 +7496,6 @@ QTableWidget::item:selected
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -7324,7 +7518,6 @@ QTableWidget::item:selected
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -7346,7 +7539,7 @@ QTableWidget::item:selected
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -7381,7 +7574,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -7416,7 +7609,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -7451,7 +7644,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -7513,7 +7706,8 @@ border: 1px solid #000000;
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -7549,7 +7743,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -7610,7 +7805,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -7641,7 +7835,7 @@ color : rgb(105, 105, 105);
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -7676,7 +7870,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -7711,7 +7905,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -7746,7 +7940,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -7829,7 +8023,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -7861,7 +8054,6 @@ color : rgb(105, 105, 105);
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -7884,7 +8076,6 @@ color : rgb(105, 105, 105);
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -8006,7 +8197,8 @@ QTableWidget::item:selected
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -8042,7 +8234,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -8075,7 +8268,7 @@ QTableWidget::item:selected
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -8110,7 +8303,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -8145,7 +8338,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -8180,7 +8373,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -8263,7 +8456,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -8303,7 +8495,8 @@ color : rgb(105, 105, 105);
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -8339,7 +8532,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -8370,7 +8564,7 @@ QTableWidget::item:selected
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -8405,7 +8599,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -8440,7 +8634,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -8475,7 +8669,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -8537,7 +8731,8 @@ border: 1px solid #000000;
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -8573,7 +8768,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -8634,7 +8830,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -8665,7 +8860,7 @@ color : rgb(105, 105, 105);
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -8700,7 +8895,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -8735,7 +8930,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -8770,7 +8965,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -8832,7 +9027,8 @@ border: 1px solid #000000;
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -8868,7 +9064,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -8929,7 +9126,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -8960,7 +9156,7 @@ color : rgb(105, 105, 105);
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -8995,7 +9191,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -9030,7 +9226,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -9065,7 +9261,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -9127,7 +9323,8 @@ border: 1px solid #000000;
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -9163,7 +9360,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -9224,7 +9422,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -9255,7 +9452,7 @@ color : rgb(105, 105, 105);
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -9290,7 +9487,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -9325,7 +9522,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -9360,7 +9557,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -9443,7 +9640,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -9475,7 +9671,6 @@ color : rgb(105, 105, 105);
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -9498,7 +9693,6 @@ color : rgb(105, 105, 105);
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -9620,7 +9814,8 @@ QTableWidget::item:selected
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -9656,7 +9851,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -9689,7 +9885,7 @@ QTableWidget::item:selected
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -9724,7 +9920,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -9759,7 +9955,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -9794,7 +9990,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -9877,7 +10073,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -9917,7 +10112,8 @@ color : rgb(105, 105, 105);
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -9953,7 +10149,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -9984,7 +10181,7 @@ QTableWidget::item:selected
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -10019,7 +10216,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -10054,7 +10251,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -10089,7 +10286,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -10151,7 +10348,8 @@ border: 1px solid #000000;
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -10187,7 +10385,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -10248,7 +10447,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -10279,7 +10477,7 @@ color : rgb(105, 105, 105);
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -10314,7 +10512,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -10349,7 +10547,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -10384,7 +10582,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -10446,7 +10644,8 @@ border: 1px solid #000000;
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -10482,7 +10681,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -10543,7 +10743,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -10574,7 +10773,7 @@ color : rgb(105, 105, 105);
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -10609,7 +10808,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -10644,7 +10843,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -10679,7 +10878,7 @@ color: white;
       </property>
       <property name="font">
        <font>
-        <family>Microsoft YaHei</family>
+        <family>黑体</family>
         <pointsize>12</pointsize>
        </font>
       </property>
@@ -10762,7 +10961,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -10857,7 +11055,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -10952,7 +11149,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -11060,7 +11256,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -11155,7 +11350,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -11250,7 +11444,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -11316,6 +11509,12 @@ border: 1px solid #000000;
        <height>679</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
      <property name="styleSheet">
       <string notr="true">#widget_report_cover
 {
@@ -11325,9 +11524,9 @@ border: 1px solid #000000;
      <widget class="QGroupBox" name="groupBox">
       <property name="geometry">
        <rect>
-        <x>80</x>
-        <y>60</y>
-        <width>411</width>
+        <x>40</x>
+        <y>170</y>
+        <width>431</width>
         <height>271</height>
        </rect>
       </property>
@@ -11352,6 +11551,7 @@ border: 1px solid #000000;
        </property>
        <property name="font">
         <font>
+         <family>黑体</family>
          <pointsize>12</pointsize>
         </font>
        </property>
@@ -11380,6 +11580,7 @@ border: 1px solid #000000;
        </property>
        <property name="font">
         <font>
+         <family>黑体</family>
          <pointsize>12</pointsize>
         </font>
        </property>
@@ -11408,6 +11609,7 @@ border: 1px solid #000000;
        </property>
        <property name="font">
         <font>
+         <family>黑体</family>
          <pointsize>12</pointsize>
         </font>
        </property>
@@ -11436,7 +11638,7 @@ border: 1px solid #000000;
        </property>
        <property name="font">
         <font>
-         <family>Microsoft YaHei</family>
+         <family>黑体</family>
          <pointsize>12</pointsize>
         </font>
        </property>
@@ -11471,7 +11673,7 @@ color: white;
        </property>
        <property name="font">
         <font>
-         <family>Microsoft YaHei</family>
+         <family>黑体</family>
          <pointsize>12</pointsize>
         </font>
        </property>
@@ -11519,8 +11721,8 @@ color: white;
        </property>
        <property name="font">
         <font>
-         <family>Microsoft YaHei</family>
-         <pointsize>10</pointsize>
+         <family>黑体</family>
+         <pointsize>11</pointsize>
         </font>
        </property>
        <property name="styleSheet">
@@ -11547,8 +11749,8 @@ color: white;
        </property>
        <property name="font">
         <font>
-         <family>Microsoft YaHei</family>
-         <pointsize>10</pointsize>
+         <family>黑体</family>
+         <pointsize>11</pointsize>
         </font>
        </property>
        <property name="styleSheet">
@@ -11575,8 +11777,8 @@ color: white;
        </property>
        <property name="font">
         <font>
-         <family>Microsoft YaHei</family>
-         <pointsize>10</pointsize>
+         <family>黑体</family>
+         <pointsize>11</pointsize>
         </font>
        </property>
        <property name="styleSheet">
@@ -11653,6 +11855,73 @@ color : rgb(105, 105, 105);
        </item>
       </layout>
      </widget>
+     <widget class="QPlainTextEdit" name="plainTextEdit_report_filePath">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>95</y>
+        <width>341</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border: 1px solid #000000;</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_choose_report_filePath">
+      <property name="geometry">
+       <rect>
+        <x>400</x>
+        <y>95</y>
+        <width>71</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+      </property>
+      <property name="text">
+       <string>浏览</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_90">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>60</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>文件保存路径</string>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_report_dictionary">
@@ -11701,6 +11970,7 @@ border: 1px solid #000000;
        </property>
        <property name="font">
         <font>
+         <family>黑体</family>
          <pointsize>12</pointsize>
         </font>
        </property>
@@ -11729,6 +11999,7 @@ border: 1px solid #000000;
        </property>
        <property name="font">
         <font>
+         <family>黑体</family>
          <pointsize>12</pointsize>
         </font>
        </property>
@@ -11757,6 +12028,7 @@ border: 1px solid #000000;
        </property>
        <property name="font">
         <font>
+         <family>黑体</family>
          <pointsize>12</pointsize>
         </font>
        </property>
@@ -11785,7 +12057,7 @@ border: 1px solid #000000;
        </property>
        <property name="font">
         <font>
-         <family>Microsoft YaHei</family>
+         <family>黑体</family>
          <pointsize>12</pointsize>
         </font>
        </property>
@@ -11820,7 +12092,7 @@ color: white;
        </property>
        <property name="font">
         <font>
-         <family>Microsoft YaHei</family>
+         <family>黑体</family>
          <pointsize>12</pointsize>
         </font>
        </property>
@@ -11931,8 +12203,8 @@ border: 1px solid #000000;
        </property>
        <property name="font">
         <font>
-         <family>Microsoft YaHei</family>
-         <pointsize>10</pointsize>
+         <family>黑体</family>
+         <pointsize>11</pointsize>
         </font>
        </property>
        <property name="styleSheet">
@@ -11960,8 +12232,8 @@ border:none;</string>
        </property>
        <property name="font">
         <font>
-         <family>Microsoft YaHei</family>
-         <pointsize>10</pointsize>
+         <family>黑体</family>
+         <pointsize>11</pointsize>
         </font>
        </property>
        <property name="styleSheet">
@@ -11989,8 +12261,8 @@ border:none;</string>
        </property>
        <property name="font">
         <font>
-         <family>Microsoft YaHei</family>
-         <pointsize>10</pointsize>
+         <family>黑体</family>
+         <pointsize>11</pointsize>
         </font>
        </property>
        <property name="styleSheet">
@@ -12056,7 +12328,7 @@ border: 1px solid #000000;
        </property>
        <property name="font">
         <font>
-         <family>Microsoft YaHei</family>
+         <family>黑体</family>
          <pointsize>12</pointsize>
         </font>
        </property>
@@ -12091,7 +12363,7 @@ color: white;
        </property>
        <property name="font">
         <font>
-         <family>Microsoft YaHei</family>
+         <family>黑体</family>
          <pointsize>12</pointsize>
         </font>
        </property>
@@ -12218,6 +12490,7 @@ border: 1px solid #000000;
        </property>
        <property name="font">
         <font>
+         <family>黑体</family>
          <pointsize>10</pointsize>
         </font>
        </property>
@@ -12338,6 +12611,456 @@ color: white;
        </property>
        <property name="plainText">
         <string/>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="page_report_noise_require">
+    <widget class="QWidget" name="widget_noise_require" native="true">
+     <property name="geometry">
+      <rect>
+       <x>6</x>
+       <y>6</y>
+       <width>1183</width>
+       <height>679</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">#widget_noise_require
+{
+border: 1px solid #000000;
+}</string>
+     </property>
+     <widget class="QGroupBox" name="groupBox_5">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>60</y>
+        <width>461</width>
+        <height>581</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft YaHei</family>
+        <pointsize>15</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="title">
+       <string>噪音要求</string>
+      </property>
+      <widget class="QPushButton" name="pushButton_noise_require_entry">
+       <property name="geometry">
+        <rect>
+         <x>230</x>
+         <y>540</y>
+         <width>101</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>黑体</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+       </property>
+       <property name="text">
+        <string>录入</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_noise_require_clear">
+       <property name="geometry">
+        <rect>
+         <x>350</x>
+         <y>540</y>
+         <width>101</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>黑体</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #CE5C5D;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: #AB4850;
+color: white;
+}</string>
+       </property>
+       <property name="text">
+        <string>清空</string>
+       </property>
+      </widget>
+      <widget class="QPlainTextEdit" name="plainTextEdit_noise_require">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>441</width>
+         <height>501</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border: 1px solid #778899;</string>
+       </property>
+       <property name="plainText">
+        <string/>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="layoutWidget_40">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>171</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_53">
+       <item>
+        <widget class="QLabel" name="label_95">
+         <property name="minimumSize">
+          <size>
+           <width>20</width>
+           <height>41</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>20</width>
+           <height>41</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLabel { 
+border: none; 
+background-color : rgb(105, 105, 105);
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_96">
+         <property name="font">
+          <font>
+           <family>Microsoft YaHei</family>
+           <pointsize>24</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLabel { 
+border: none; 
+color : rgb(105, 105, 105);
+}</string>
+         </property>
+         <property name="text">
+          <string>噪音要求</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="widget_noise_require_image" native="true">
+      <property name="geometry">
+       <rect>
+        <x>490</x>
+        <y>20</y>
+        <width>681</width>
+        <height>621</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">#widget_noise_require_image{
+	image: url(:/images/image/noise_require.png);
+border: 1px solid #000000;
+}</string>
+      </property>
+      <widget class="QPlainTextEdit" name="plainTextEdit_noise_require_image">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>160</y>
+         <width>621</width>
+         <height>431</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>黑体</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border: 1px solid #000000;</string>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+       <property name="plainText">
+        <string>要求来源依据：规格书，规范等</string>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="page_report_cal_room">
+    <widget class="QWidget" name="widget_report_cal_room" native="true">
+     <property name="geometry">
+      <rect>
+       <x>6</x>
+       <y>6</y>
+       <width>1183</width>
+       <height>679</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">#widget_noise_require
+{
+border: 1px solid #000000;
+}</string>
+     </property>
+     <widget class="QGroupBox" name="groupBox_6">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>60</y>
+        <width>461</width>
+        <height>581</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft YaHei</family>
+        <pointsize>15</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="title">
+       <string>房间选择依据</string>
+      </property>
+      <widget class="QPushButton" name="pushButton_choose_basis_entry">
+       <property name="geometry">
+        <rect>
+         <x>230</x>
+         <y>540</y>
+         <width>101</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>黑体</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+       </property>
+       <property name="text">
+        <string>录入</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_choose_basis_clear">
+       <property name="geometry">
+        <rect>
+         <x>350</x>
+         <y>540</y>
+         <width>101</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>黑体</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #CE5C5D;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: #AB4850;
+color: white;
+}</string>
+       </property>
+       <property name="text">
+        <string>清空</string>
+       </property>
+      </widget>
+      <widget class="QPlainTextEdit" name="plainTextEdit_report_choose_basis">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>441</width>
+         <height>501</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border: 1px solid #778899;</string>
+       </property>
+       <property name="plainText">
+        <string/>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="layoutWidget_41">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>220</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_54">
+       <item>
+        <widget class="QLabel" name="label_97">
+         <property name="minimumSize">
+          <size>
+           <width>20</width>
+           <height>41</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>20</width>
+           <height>41</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLabel { 
+border: none; 
+background-color : rgb(105, 105, 105);
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_98">
+         <property name="font">
+          <font>
+           <family>Microsoft YaHei</family>
+           <pointsize>24</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLabel { 
+border: none; 
+color : rgb(105, 105, 105);
+}</string>
+         </property>
+         <property name="text">
+          <string>计算房间清单</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="widget_report_cal_room_image" native="true">
+      <property name="geometry">
+       <rect>
+        <x>490</x>
+        <y>20</y>
+        <width>681</width>
+        <height>621</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">#widget_report_cal_room_image{
+	image: url(:/images/image/cal_room.png);
+border: 1px solid #000000;
+}</string>
+      </property>
+      <widget class="QPlainTextEdit" name="plainTextEdit_report_choose_basis_image">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>160</y>
+         <width>621</width>
+         <height>401</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>黑体</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border: 1px solid #000000;</string>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+       <property name="plainText">
+        <string>房间选择依据说明</string>
        </property>
       </widget>
      </widget>

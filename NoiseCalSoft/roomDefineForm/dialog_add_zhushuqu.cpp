@@ -18,7 +18,7 @@ Dialog_add_zhushuqu::~Dialog_add_zhushuqu()
 void Dialog_add_zhushuqu::setlabeltext(QString text)
 {
     ui->label_title->setText(text);
-    ui->label->setText(text+":");
+    ui->label->setText(text+": ");
 }
 
 

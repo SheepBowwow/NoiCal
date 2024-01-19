@@ -385,7 +385,7 @@ void RoomCalTable::setCollapsed()
         ui->stackedWidget_table->setVisible(false);
         this->setMinimumSize(QSize(this->width(), ui->widget_title->height()));
         this->setMaximumSize(QSize(this->width(), ui->widget_title->height()));
-        ui->widget_title->setStyleSheet(QString("#widget_title{ border:2px solid black;}"));
+        ui->widget_title->setStyleSheet(QString("#widget_title{ border:2px solid black;}QLabel{font-family: '黑体';font-size: 15px;}QLineEdit,QComboBox{font-family: '黑体';font-size: 14px;}QComboBox QAbstractItemView::item { height: 30px; }"));
     }
     else
     {
@@ -419,7 +419,7 @@ void RoomCalTable::setCollapsed()
                 }
             }
         }
-        ui->widget_title->setStyleSheet(QString("#widget_title{ border:2px solid black;border-bottom:1px solid black;}"));
+        ui->widget_title->setStyleSheet(QString("#widget_title{ border:2px solid black;border-bottom:1px solid black;}QLabel{font-family: '黑体';font-size: 15px;}QLineEdit,QComboBox{font-family: '黑体';font-size: 14px;}QComboBox QAbstractItemView::item { height: 30px; }"));
     }
     isCollapsed = !isCollapsed;
 }

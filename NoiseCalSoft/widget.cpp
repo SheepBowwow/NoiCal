@@ -34,13 +34,18 @@
 #include <QStandardItemModel>
 #include <QCheckBox>
 #include <QSharedPointer>
+#include <QFileDialog>
 #include "Component/ComponentManager.h"
+#include "wordEngine/wordengine.h"
+#include <QResource>
+#include "global_constant.h"
 
 #include <iostream>
 #include <string>
 #include <regex>
 
 ComponentManager& componentManager = ComponentManager::getInstance();
+WordEngine* wordEngine = new WordEngine();
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
@@ -73,6 +78,8 @@ Widget::Widget(QWidget *parent)
 
 Widget::~Widget()
 {
+    wordEngine->close();
+    delete wordEngine;
     delete ui;
 }
 
@@ -4441,12 +4448,61 @@ void Widget::  initRightButtonMenu()
 
 /**********报表**********/
 #pragma region "report"{
+
+void Widget::on_pushButton_choose_report_filePath_clicked()
+{
+    QString filename = QFileDialog::getSaveFileName(this,
+        tr("Save Word Document"),
+        "",
+        tr("Word Documents (*.docx);;All Files (*)"));
+
+    if (filename.isEmpty()) {
+        return;
+    } else {
+        // 将文件路径显示在ui->plainTextEdit中
+        ui->plainTextEdit_report_filePath->setPlainText(filename);
+
+
+        // 构建资源路径
+        QString templatePath = "./document/template.docx";
+        templatePath.replace("/", "\\");  // 如果你需要将正斜杠替换为反斜杠
+        QFile file(templatePath);
+        templatePath = QDir(file.fileName()).absolutePath();
+
+        // 打开 Word 模板文件
+        wordEngine->openAndCopy(templatePath);
+        wordEngine->saveAs(filename);
+        wordEngine->close();
+
+        reportPath = filename;
+    }
+}
+
 //封面录入
 void Widget::on_pushButton_cover_entry_clicked()
 {
     ui->lineEdit_image_boat_name->setText(ui->lineEdit_boat_name->text());
     ui->lineEdit_image_drawing_name->setText(ui->lineEdit_drawing_name->text());
     ui->lineEdit_image_drawing_number->setText(ui->lineEdit_drawing_number->text());
+
+    QStringList marks{
+        "project_name",
+        "drawing_name",
+        "drawing_number"
+    };
+
+    QStringList inputData{
+        ui->lineEdit_boat_name->text(),
+        ui->lineEdit_drawing_name->text(),
+        ui->lineEdit_drawing_number->text()
+    };
+
+    // 检查是否已经打开 Word 文档，如果没有则打开
+    if (!wordEngine->isOpen()) {
+        wordEngine->open(reportPath);
+    }
+    wordEngine->setBatchMarks(marks,inputData);
+    wordEngine->save();
 }
 //封面清空
 void Widget::on_pushButton_cover_clear_clicked()
@@ -4475,8 +4531,7 @@ void Widget::on_pushButton_dictionary_clear_clicked()
     ui->lineEdit_header_drawing_name->clear();
     ui->lineEdit_header_designer_name->clear();
 }
-#pragma endregion}
-
+//项目概述1.1插入
 void Widget::on_pushButton_project_overview_entry_clicked()
 {
     QTextCursor cursor = ui->plainTextEdit_project_overview_image->textCursor();
@@ -4644,6 +4699,63 @@ void Widget::on_pushButton_reference_drawing_clear_clicked()
     cursor.insertText("\n");
 }
 
+//噪音要求录入
+void Widget::on_pushButton_noise_require_entry_clicked()
+{
+    ui->plainTextEdit_noise_require_image->clear();
+
+    QTextCursor cursor = ui->plainTextEdit_noise_require_image->textCursor();
+    cursor.movePosition(QTextCursor::End);
+
+    // 获取要插入的文本
+    QString originalText = ui->plainTextEdit_noise_require->toPlainText();
+
+    // 在每一段的开头插入两个空格
+    QString indentedText = originalText.replace("\n", "\n    ");
+
+    // 在首行额外缩进两个字
+    indentedText.prepend("    ");
+
+    // 插入内容
+    cursor.insertText(indentedText);
+}
+
+//噪音要求清空
+void Widget::on_pushButton_noise_require_clear_clicked()
+{
+    ui->plainTextEdit_noise_require_image->clear();
+    ui->plainTextEdit_noise_require->clear();
+    ui->plainTextEdit_noise_require_image->insertPlainText("要求来源依据：规格书，规范等");
+}
+
+void Widget::on_pushButton_choose_basis_entry_clicked()
+{
+    ui->plainTextEdit_report_choose_basis_image->clear();
+
+    QTextCursor cursor = ui->plainTextEdit_report_choose_basis_image->textCursor();
+    cursor.movePosition(QTextCursor::End);
+
+    // 获取要插入的文本
+    QString originalText = ui->plainTextEdit_report_choose_basis->toPlainText();
+
+    // 在每一段的开头插入两个空格
+    QString indentedText = originalText.replace("\n", "\n    ");
+
+    // 在首行额外缩进两个字
+    indentedText.prepend("    ");
+
+    // 插入内容
+    cursor.insertText(indentedText);
+}
+
+
+void Widget::on_pushButton_choose_basis_clear_clicked()
+{
+    ui->plainTextEdit_report_choose_basis_image->clear();
+    ui->plainTextEdit_report_choose_basis->clear();
+    ui->plainTextEdit_report_choose_basis_image->insertPlainText("房间选择依据说明");
+}
+#pragma endregion}
 /**********报表**********/
 
 
@@ -4938,9 +5050,13 @@ void Widget::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWid
     {
         ui->stackedWidget->setCurrentWidget(ui->page_report_dictionary);
     }
-    else if(current == item_report_overview)     //报表封面
+    else if(current == item_report_overview)     //报表项目概述
     {
         ui->stackedWidget->setCurrentWidget(ui->page_report_overview);
+    }
+    else if(current == item_report_noise_require)     //报表噪音要求
+    {
+        ui->stackedWidget->setCurrentWidget(ui->page_report_noise_require);
     }
     else if(current == item_room_define || current == item_room_calculate || current == item_system_list)     //设置成空白
     {

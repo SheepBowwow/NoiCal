@@ -22,4 +22,6 @@ extern DatabaseManager* DBManager;  //数据库
 
 extern QMap<QString,QVector<QWidget*>> classicRoomMap;
 
+extern QString reportPath;
+
 #endif // GLOBLE_VAR_H
