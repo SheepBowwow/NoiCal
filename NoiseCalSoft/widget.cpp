@@ -4327,14 +4327,16 @@ void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
     }
 }
 
-//  更新第八项房间底下的主风管信息 房间名，主风管数量
-void Widget::upDateTreeItem8(QTreeWidgetItem *item,QString name,int num) //
+//  更新第八项房间底下的主风管信息 房间编号，主风管数量
+void Widget::upDateTreeItem8(QTreeWidgetItem *item,QString roomid,int num) //
 {
-    QTreeWidgetItem *treeitemfj=new QTreeWidgetItem(item,QStringList(name));
+    QTreeWidgetItem *treeitemfj=new QTreeWidgetItem(item,QStringList(roomid));
     for(int i=0;i<num;i++)
     {
-        // 创建页面对象
+        // 创建 房间主风管 页面对象
         room_cal_baseWidget *page = new room_cal_baseWidget;
+        // 保存 房间编号下的主风管page
+        map_roomid_zfgpage[roomid].push_back(page);
 
         // 将页面添加到堆栈窗口部件
         ui->stackedWidget->addWidget(page);
@@ -4380,21 +4382,22 @@ void Widget::upDateTreeItem8(QTreeWidgetItem *item,QString name,int num) //
 
 }
 
-void Widget::delroom(QTreeWidgetItem* itemjb,QString roomid)
+void Widget::delroom(QTreeWidgetItem* item_system,QString roomid)
 {
+    map_roomid_zfgpage.remove(roomid);      //删除 房间编号下对应的主风管page页面 容器记录
 
-    for(int i=0;i<itemjb->childCount();i++)         // 遍历房间
+    for(int i=0;i<item_system->childCount();i++)         // 遍历房间
     {
-        if(itemjb->child(i)->text(0)==roomid) // 删除房间
+        if(item_system->child(i)->text(0)==roomid) // 删除房间
         {
-            QTreeWidgetItem* itemfj=itemjb->child(i);
+            QTreeWidgetItem* itemfj=item_system->child(i);
             for(int j=0;j<itemfj->childCount();j++) // 首先删除房间下的主风管以及页面
             {
                 delete map_zfg_pag.value(itemfj->child(j)); //释放主风管关联的page
                 map_zfg_pag.remove(itemfj->child(j));      // 删除记录
                 vec_zfg.removeOne(itemfj->child(j));
             }
-            delete itemjb->child(i);            // 系统下的房间子项全部移走
+            delete item_system->child(i);            // 系统下的房间子项全部移走
 
         }
     }
