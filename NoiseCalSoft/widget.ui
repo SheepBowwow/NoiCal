@@ -222,6 +222,7 @@
      <font>
       <family>黑体</family>
       <pointsize>12</pointsize>
+      <bold>false</bold>
      </font>
     </property>
     <property name="cursor">
@@ -338,6 +339,7 @@
      <font>
       <family>Microsoft YaHei</family>
       <pointsize>11</pointsize>
+      <bold>false</bold>
      </font>
     </property>
     <property name="text">
@@ -388,6 +390,7 @@
      <font>
       <family>Microsoft YaHei</family>
       <pointsize>11</pointsize>
+      <bold>false</bold>
      </font>
     </property>
     <property name="text">
@@ -438,6 +441,7 @@
      <font>
       <family>Microsoft YaHei</family>
       <pointsize>11</pointsize>
+      <bold>false</bold>
      </font>
     </property>
     <property name="text">
@@ -488,6 +492,7 @@
      <font>
       <family>Microsoft YaHei</family>
       <pointsize>11</pointsize>
+      <bold>false</bold>
      </font>
     </property>
     <property name="text">
@@ -589,7 +594,7 @@ font-size: 13px;
 }</string>
    </property>
    <property name="currentIndex">
-    <number>18</number>
+    <number>41</number>
    </property>
    <widget class="QWidget" name="page_login">
     <layout class="QGridLayout" name="gridLayout" rowstretch="2,5,4">
@@ -4027,7 +4032,7 @@ color : rgb(105, 105, 105);
       </property>
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>14</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -4049,7 +4054,7 @@ color : rgb(105, 105, 105);
       </property>
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>14</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -7116,15 +7121,15 @@ color : rgb(105, 105, 105);
      <widget class="QPushButton" name="pushButton_circular_silencer_table">
       <property name="geometry">
        <rect>
-        <x>170</x>
+        <x>160</x>
         <y>13</y>
-        <width>151</width>
+        <width>121</width>
         <height>41</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>20</pointsize>
+        <pointsize>14</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -7465,15 +7470,15 @@ QTableWidget::item:selected
      <widget class="QPushButton" name="pushButton_rect_silencer_table">
       <property name="geometry">
        <rect>
-        <x>330</x>
+        <x>290</x>
         <y>13</y>
-        <width>151</width>
+        <width>121</width>
         <height>41</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>20</pointsize>
+        <pointsize>14</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -7487,15 +7492,15 @@ QTableWidget::item:selected
      <widget class="QPushButton" name="pushButton_circular_silencerEb_table">
       <property name="geometry">
        <rect>
-        <x>490</x>
+        <x>420</x>
         <y>13</y>
-        <width>171</width>
+        <width>141</width>
         <height>41</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>20</pointsize>
+        <pointsize>14</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -7509,15 +7514,15 @@ QTableWidget::item:selected
      <widget class="QPushButton" name="pushButton_rect_silencerEb_table">
       <property name="geometry">
        <rect>
-        <x>670</x>
+        <x>570</x>
         <y>13</y>
-        <width>171</width>
+        <width>141</width>
         <height>41</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>20</pointsize>
+        <pointsize>14</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -8047,13 +8052,19 @@ color : rgb(105, 105, 105);
        <rect>
         <x>210</x>
         <y>15</y>
-        <width>111</width>
+        <width>81</width>
         <height>41</height>
        </rect>
       </property>
+      <property name="baseSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
       <property name="font">
        <font>
-        <pointsize>20</pointsize>
+        <pointsize>14</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -8067,15 +8078,15 @@ color : rgb(105, 105, 105);
      <widget class="QPushButton" name="pushButton_send_terminal_atten_table">
       <property name="geometry">
        <rect>
-        <x>330</x>
+        <x>300</x>
         <y>15</y>
-        <width>111</width>
+        <width>81</width>
         <height>41</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>20</pointsize>
+        <pointsize>14</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -9664,13 +9675,13 @@ color : rgb(105, 105, 105);
        <rect>
         <x>200</x>
         <y>14</y>
-        <width>111</width>
+        <width>81</width>
         <height>41</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>20</pointsize>
+        <pointsize>14</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -9684,15 +9695,15 @@ color : rgb(105, 105, 105);
      <widget class="QPushButton" name="pushButton_send_terminal_refl_table">
       <property name="geometry">
        <rect>
-        <x>320</x>
+        <x>290</x>
         <y>14</y>
-        <width>111</width>
+        <width>81</width>
         <height>41</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>20</pointsize>
+        <pointsize>14</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -12616,8 +12627,8 @@ color: white;
      </widget>
     </widget>
    </widget>
-   <widget class="QWidget" name="page_report_noise_require">
-    <widget class="QWidget" name="widget_noise_require" native="true">
+   <widget class="QWidget" name="page_report_noise_require_basis">
+    <widget class="QWidget" name="widget_noise_require_basis" native="true">
      <property name="geometry">
       <rect>
        <x>6</x>
@@ -12627,7 +12638,7 @@ color: white;
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">#widget_noise_require
+      <string notr="true">#widget_noise_require_basis
 {
 border: 1px solid #000000;
 }</string>
@@ -12649,7 +12660,7 @@ border: 1px solid #000000;
        </font>
       </property>
       <property name="title">
-       <string>噪音要求</string>
+       <string>要求来源依据</string>
       </property>
       <widget class="QPushButton" name="pushButton_noise_require_entry">
        <property name="geometry">
@@ -12841,6 +12852,228 @@ border: 1px solid #000000;
      </widget>
     </widget>
    </widget>
+   <widget class="QWidget" name="page_report_noise_require_table">
+    <widget class="QWidget" name="widget_noise_require_table" native="true">
+     <property name="geometry">
+      <rect>
+       <x>6</x>
+       <y>6</y>
+       <width>1183</width>
+       <height>679</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">#widget_noise_require_table
+{
+border: 1px solid #000000;
+}</string>
+     </property>
+     <widget class="QWidget" name="layoutWidget_42">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>171</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_55">
+       <item>
+        <widget class="QLabel" name="label_99">
+         <property name="minimumSize">
+          <size>
+           <width>20</width>
+           <height>41</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>20</width>
+           <height>41</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLabel { 
+border: none; 
+background-color : rgb(105, 105, 105);
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_100">
+         <property name="font">
+          <font>
+           <family>Microsoft YaHei</family>
+           <pointsize>24</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLabel { 
+border: none; 
+color : rgb(105, 105, 105);
+}</string>
+         </property>
+         <property name="text">
+          <string>噪音要求</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QTableWidget" name="tableWidget_noise_require">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>1161</width>
+        <height>611</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>-1</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">/*设置标题(包括垂直+水平的)*/
+QHeaderView
+{							
+	
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
+	/*border: 1px solid #B4B4B4;*/
+	border:none;
+    /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
+    /*background: #9DC6E6;*/				/*背景浅蓝色*/ 
+	min-height:30px;
+	text-align: center;	       
+}
+
+
+/*设置标题(水平的)*/
+QHeaderView::section:horizontal { 					
+        border: 1px solid #AFAFAF; 			/*间隔颜色*/
+	    border-bottom: 2px solid #999999; 							
+        color: black;
+        background: #9DC6E6;
+}
+
+/*设置鼠标停留状态*/
+QHeaderView::section:horizontal:hover 
+{			
+        color: black;							/*字体白色*/
+        background: #82AFC9;				/*背景深蓝色*/
+}
+
+/*设置鼠标按下状态*/
+QHeaderView::section:horizontal:pressed 
+{			
+        color: black;
+        background: #82AFC9;
+		border-bottom: 3px solid #037BFC;				
+}
+
+
+QTableWidget 
+{
+		font-size: 14px;				/*10榜*/				
+		color : black;				
+        border: 1px solid #000000;		
+        background: white;
+        gridline-color: #E0E0E0;	
+        text-align: center;	
+        outline:0px;			/*禁止焦点*/
+}
+
+/*设置选中的视图项*/
+QTableWidget::item:selected
+{				    
+		border: 2px solid #0398FC;	
+        color : black;				
+}</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_noise_require_table_entry">
+      <property name="geometry">
+       <rect>
+        <x>1060</x>
+        <y>20</y>
+        <width>51</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+      </property>
+      <property name="text">
+       <string>录入</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_noise_require_print">
+      <property name="geometry">
+       <rect>
+        <x>1120</x>
+        <y>20</y>
+        <width>51</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+      </property>
+      <property name="text">
+       <string>打印</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
    <widget class="QWidget" name="page_report_cal_room">
     <widget class="QWidget" name="widget_report_cal_room" native="true">
      <property name="geometry">
@@ -12852,7 +13085,7 @@ border: 1px solid #000000;
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">#widget_noise_require
+      <string notr="true">#widget_report_cal_room
 {
 border: 1px solid #000000;
 }</string>

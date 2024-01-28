@@ -335,6 +335,8 @@ private slots:
 
     void on_pushButton_choose_report_filePath_clicked();
 
+    void on_pushButton_noise_require_table_entry_clicked();
+
 private:
     Ui::Widget *ui;
     QTreeWidgetItem *item_prj;   //工程
@@ -441,6 +443,8 @@ private:
     QTreeWidgetItem *item_report_dictionary;        // 9.2目录
     QTreeWidgetItem *item_report_overview;        // 9.3项目概述
     QTreeWidgetItem *item_report_noise_require;        // 9.4噪音要求
+    QTreeWidgetItem *item_report_noise_require_basis;        // 9.4噪音要求
+    QTreeWidgetItem *item_report_noise_require_table;        // 9.4噪音要求
     QTreeWidgetItem *item_report_system_list;        // 9.5系统清单
     QTreeWidgetItem *item_report_cal_room;        // 9.6计算房间
     QTreeWidgetItem *item_report_cal_summarize;        // 9.7计算结果汇总

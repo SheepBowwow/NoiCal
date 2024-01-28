@@ -488,6 +488,8 @@ void Widget::initializeTreeWidget()
     item_report_dictionary = new QTreeWidgetItem(item_report,QStringList("目录"));        // 9.2目录
     item_report_overview = new QTreeWidgetItem(item_report,QStringList("项目概述"));        // 9.3项目概述
     item_report_noise_require = new QTreeWidgetItem(item_report,QStringList("噪音要求"));        // 9.4噪音要求
+    item_report_noise_require_basis = new QTreeWidgetItem(item_report_noise_require,QStringList("要求来源依据"));        // 9.4噪音要求
+    item_report_noise_require_table = new QTreeWidgetItem(item_report_noise_require,QStringList("噪音要求表格"));        // 9.4噪音要求
     item_report_system_list = new QTreeWidgetItem(item_report,QStringList("系统清单"));        // 9.5系统清单
     item_report_cal_room = new QTreeWidgetItem(item_report,QStringList("计算房间"));        // 9.6计算房间
     item_report_cal_summarize = new QTreeWidgetItem(item_report,QStringList("计算结果汇总"));        // 9.7计算结果汇总
@@ -641,6 +643,11 @@ void Widget::initTableWidget_noi_limit()
     int columnWidths[] = {30, 38, 130, 190, 125};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_noi_limit, headerText, columnWidths, colCount);
+    colCount = 4;
+    QStringList headerText1;
+    headerText1 << "序号" << "房间类型" << "噪声限值dB(A)" << "处所类型";
+    int columnWidths1[] = {38, 130, 190, 125};
+    initTableWidget(ui->tableWidget_noise_require, headerText1, columnWidths1, colCount);
 }
 
 //当表格item改变，rooms跟着改变
@@ -4728,6 +4735,29 @@ void Widget::on_pushButton_noise_require_clear_clicked()
     ui->plainTextEdit_noise_require_image->insertPlainText("要求来源依据：规格书，规范等");
 }
 
+void Widget::on_pushButton_noise_require_table_entry_clicked()
+{
+    ui->tableWidget_noise_require->setRowCount(0);
+    ui->tableWidget_noise_require->setRowCount(ui->tableWidget_noi_limit->rowCount());
+
+    for (int row = 0; row < ui->tableWidget_noi_limit->rowCount(); ++row) {
+        for (int column = 1; column < ui->tableWidget_noi_limit->columnCount(); ++column) {
+            QTableWidgetItem *sourceItem = ui->tableWidget_noi_limit->item(row, column);
+
+            QTableWidgetItem* newItem;
+            if (sourceItem) {
+                // 创建一个新项目并将其文本设置为源项目的文本
+                newItem = new QTableWidgetItem(sourceItem->text());
+            } else {
+                // 创建一个没有源项目文本的新项目
+                newItem = new QTableWidgetItem();
+            }
+
+            ui->tableWidget_noise_require->setItem(row, column - 1, newItem);
+        }
+    }
+}
+
 void Widget::on_pushButton_choose_basis_entry_clicked()
 {
     ui->plainTextEdit_report_choose_basis_image->clear();
@@ -4747,7 +4777,6 @@ void Widget::on_pushButton_choose_basis_entry_clicked()
     // 插入内容
     cursor.insertText(indentedText);
 }
-
 
 void Widget::on_pushButton_choose_basis_clear_clicked()
 {
@@ -5054,9 +5083,13 @@ void Widget::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWid
     {
         ui->stackedWidget->setCurrentWidget(ui->page_report_overview);
     }
-    else if(current == item_report_noise_require)     //报表噪音要求
+    else if(current == item_report_noise_require_basis)     //报表要求来源依据
     {
-        ui->stackedWidget->setCurrentWidget(ui->page_report_noise_require);
+        ui->stackedWidget->setCurrentWidget(ui->page_report_noise_require_basis);
+    }
+    else if(current == item_report_noise_require_table)     //报表噪音要求表格
+    {
+        ui->stackedWidget->setCurrentWidget(ui->page_report_noise_require_table);
     }
     else if(current == item_room_define || current == item_room_calculate || current == item_system_list)     //设置成空白
     {
