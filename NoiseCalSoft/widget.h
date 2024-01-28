@@ -87,7 +87,7 @@ private:
 public slots:
     void TreeWidgetItemPressed_Slot(QTreeWidgetItem* item, int n);
     void upDateTreeItem8(QTreeWidgetItem *item,QString,int num);
-    void delroom(QTreeWidgetItem*,QString roomid);
+    void delroom(QTreeWidgetItem*,QString);
 
 private slots:
     void on_pushButto_prj_manage_clicked();
@@ -425,6 +425,7 @@ private:
     QTreeWidgetItem *item_system_list;                                 //6.系统清单
     QTreeWidgetItem *item_room_define;                                 //7.定义计算房间
 
+    /**************容器*********************/
     QVector<QTreeWidgetItem *> vec_zsq;                        //保存主竖区item
     QVector<QTreeWidgetItem *> vec_system;                     //保存系统item
     QMap<QTreeWidgetItem *,QTreeWidgetItem *> map_zsq67;       // 第六项的主竖区和第七项的主竖区对应关系
@@ -432,8 +433,13 @@ private:
     QMap<QTreeWidgetItem *,QTreeWidgetItem *> map_system67;       // 第六项的系统和第七项的系统对应关系
     QMap<QTreeWidgetItem *,QTreeWidgetItem *> map_system68;       // 第六项的系统和第八项的系统对应关系
     QVector<QTreeWidgetItem *> vec_zfg;         // 保存主风管item,方便右键点击
-    QMap<QTreeWidgetItem *,QWidget *> map_zfg_pag;    // 主风管与page对应关系
+    QMap<QTreeWidgetItem *,QWidget *> map_zfg_pag;    // *************主风管与page对应关系
+
+    QMap<QString,QVector<QWidget *>> map_roomid_zfgpage;           //房间编号对应的主风管page 一对多关系
+
+    QVector<QWidget *> vec_roomzfg;
     QVector<QTreeWidgetItem *> vec_classicroom;                     //保存典型房间item
+    /**************容器*********************/
 
     QTreeWidgetItem *item_room_calculate;                             // 8.噪音计算
     QTreeWidgetItem *item_cabin_classic;        // 8.1典型住舱
