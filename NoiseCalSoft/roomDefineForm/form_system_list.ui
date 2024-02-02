@@ -33,7 +33,7 @@ border: 1px solid #000000;
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>151</width>
+      <width>156</width>
       <height>45</height>
      </rect>
     </property>
@@ -69,6 +69,7 @@ background-color : rgb(105, 105, 105);
         <font>
          <family>Microsoft YaHei</family>
          <pointsize>24</pointsize>
+         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -167,6 +168,11 @@ QTableWidget::item:selected
     </property>
     <column>
      <property name="text">
+      <string/>
+     </property>
+    </column>
+    <column>
+     <property name="text">
       <string>设备类型</string>
      </property>
     </column>
@@ -184,7 +190,7 @@ QTableWidget::item:selected
    <widget class="QPushButton" name="buttondel">
     <property name="geometry">
      <rect>
-      <x>970</x>
+      <x>900</x>
       <y>30</y>
       <width>71</width>
       <height>31</height>
@@ -261,6 +267,47 @@ color: white;
     </property>
     <property name="text">
      <string>新增</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="buttonchange">
+    <property name="geometry">
+     <rect>
+      <x>980</x>
+      <y>30</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>21</width>
+      <height>21</height>
+     </size>
+    </property>
+    <property name="font">
+     <font>
+      <family>黑体</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+    </property>
+    <property name="text">
+     <string>修改</string>
     </property>
    </widget>
   </widget>

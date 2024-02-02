@@ -42,6 +42,7 @@ SOURCES += \
     roomCal/room_cal_basewidget.cpp \
     roomCal/room_cal_total.cpp \
     roomCal/roomcaltable.cpp \
+    roomDefineForm/dialog_add_system.cpp \
     roomDefineForm/dialog_add_zhushuqu.cpp \
     roomDefineForm/dialog_addroom.cpp \
     roomDefineForm/form_room_define.cpp \
@@ -78,6 +79,7 @@ HEADERS += \
     roomCal/room_cal_basewidget.h \
     roomCal/room_cal_total.h \
     roomCal/roomcaltable.h \
+    roomDefineForm/dialog_add_system.h \
     roomDefineForm/dialog_add_zhushuqu.h \
     roomDefineForm/dialog_addroom.h \
     roomDefineForm/form_room_define.h \
@@ -108,6 +110,7 @@ FORMS += \
     roomCal/room_cal_basewidget.ui \
     roomCal/room_cal_total.ui \
     roomCal/roomcaltable.ui \
+    roomDefineForm/dialog_add_system.ui \
     roomDefineForm/dialog_add_zhushuqu.ui \
     roomDefineForm/dialog_addroom.ui \
     roomDefineForm/form_room_define.ui \
