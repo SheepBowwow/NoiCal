@@ -45,9 +45,11 @@ public:
                        int row,NoiType *noi, QVector<QString*>& items_noise, QVector<QString*>& items_atten, QVector<QString*>& items_refl,
                        int* cols_noise, int* cols_atten, int* cols_refl, QString name = "");
     double getNoiseLimitByName(const QString& name);
+    void mergeSimilarCells(QTableWidget* tableWidget, int startRow, int numRows);
     void prj_TreeWidget();
     void input_TreeWidget();
     void initTableWidget_noi_limit();
+    void initTableWidget_drawing_list();
     void initTableWidget_fan_noi();
     void initTableWidget_fanCoil_noi();
     void initTableWidget_air_diff();
@@ -72,6 +74,8 @@ public:
     void initTableWidget_air_noi();
     void initTableWidget_reducer();
     void initTableWidget_elbow();
+    void initTableWidget_system_list();
+    void initTableWidget_report_cal_room();
     void initRightButtonMenu();
     void mousePressEvent(QMouseEvent *event);
     void keyPressEvent(QKeyEvent* e);
@@ -337,6 +341,14 @@ private slots:
 
     void on_pushButton_noise_require_table_entry_clicked();
 
+    void on_pushButton_drawing_list_add_clicked();
+
+    void on_pushButton_drawing_list_del_clicked();
+
+    void on_pushButton_air_single_fan_table_clicked();
+
+    void on_pushButton_air_double_fan_table_clicked();
+
 private:
     Ui::Widget *ui;
     QTreeWidgetItem *item_prj;   //工程
@@ -453,6 +465,8 @@ private:
     QTreeWidgetItem *item_report_noise_require_table;        // 9.4噪音要求
     QTreeWidgetItem *item_report_system_list;        // 9.5系统清单
     QTreeWidgetItem *item_report_cal_room;        // 9.6计算房间
+    QTreeWidgetItem *item_report_room_choose_basis;        // 9.6房间选择依据
+    QTreeWidgetItem *item_report_cal_room_table;        // 9.6计算房间表格
     QTreeWidgetItem *item_report_cal_summarize;        // 9.7计算结果汇总
     QTreeWidgetItem *item_report_cal_detaile;        // 9.8舱室噪音详细计算
 };

@@ -33,7 +33,7 @@ border: 1px solid #000000;
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>191</width>
+      <width>151</width>
       <height>45</height>
      </rect>
     </property>
@@ -167,7 +167,7 @@ QTableWidget::item:selected
     </property>
     <column>
      <property name="text">
-      <string>设备名称</string>
+      <string>设备类型</string>
      </property>
     </column>
     <column>

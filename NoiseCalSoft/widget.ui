@@ -83,7 +83,7 @@
    <widget class="QPushButton" name="min">
     <property name="geometry">
      <rect>
-      <x>1280</x>
+      <x>1270</x>
       <y>3</y>
       <width>31</width>
       <height>31</height>
@@ -112,7 +112,7 @@
    <widget class="QPushButton" name="max">
     <property name="geometry">
      <rect>
-      <x>1320</x>
+      <x>1310</x>
       <y>3</y>
       <width>31</width>
       <height>31</height>
@@ -140,7 +140,7 @@
    <widget class="QPushButton" name="close">
     <property name="geometry">
      <rect>
-      <x>1360</x>
+      <x>1350</x>
       <y>3</y>
       <width>31</width>
       <height>31</height>
@@ -594,7 +594,7 @@ font-size: 13px;
 }</string>
    </property>
    <property name="currentIndex">
-    <number>41</number>
+    <number>4</number>
    </property>
    <widget class="QWidget" name="page_login">
     <layout class="QGridLayout" name="gridLayout" rowstretch="2,5,4">
@@ -966,9 +966,9 @@ font-size: 13px;
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>19</y>
-       <width>481</width>
-       <height>331</height>
+       <y>20</y>
+       <width>491</width>
+       <height>651</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -1003,7 +1003,7 @@ border: 1px solid #000000;
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>100</y>
+        <y>120</y>
         <width>71</width>
         <height>31</height>
        </rect>
@@ -1025,7 +1025,7 @@ border: 1px solid #000000;
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>140</y>
+        <y>180</y>
         <width>71</width>
         <height>31</height>
        </rect>
@@ -1047,7 +1047,7 @@ border: 1px solid #000000;
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>220</y>
+        <y>300</y>
         <width>71</width>
         <height>31</height>
        </rect>
@@ -1092,7 +1092,7 @@ border: 1px solid #9C9C9C;</string>
       <property name="geometry">
        <rect>
         <x>140</x>
-        <y>100</y>
+        <y>120</y>
         <width>251</width>
         <height>31</height>
        </rect>
@@ -1115,7 +1115,7 @@ border: 1px solid #9C9C9C;</string>
       <property name="geometry">
        <rect>
         <x>140</x>
-        <y>140</y>
+        <y>180</y>
         <width>251</width>
         <height>31</height>
        </rect>
@@ -1138,7 +1138,7 @@ border: 1px solid #9C9C9C;</string>
       <property name="geometry">
        <rect>
         <x>140</x>
-        <y>220</y>
+        <y>300</y>
         <width>251</width>
         <height>31</height>
        </rect>
@@ -1161,7 +1161,7 @@ border: 1px solid #9C9C9C;</string>
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>180</y>
+        <y>240</y>
         <width>71</width>
         <height>31</height>
        </rect>
@@ -1183,7 +1183,7 @@ border: 1px solid #9C9C9C;</string>
       <property name="geometry">
        <rect>
         <x>140</x>
-        <y>180</y>
+        <y>240</y>
         <width>251</width>
         <height>31</height>
        </rect>
@@ -1206,7 +1206,7 @@ border: 1px solid #9C9C9C;</string>
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>260</y>
+        <y>360</y>
         <width>71</width>
         <height>31</height>
        </rect>
@@ -1228,7 +1228,7 @@ border: 1px solid #9C9C9C;</string>
       <property name="geometry">
        <rect>
         <x>140</x>
-        <y>260</y>
+        <y>360</y>
         <width>251</width>
         <height>51</height>
        </rect>
@@ -1251,7 +1251,7 @@ border: 1px solid #9C9C9C;</string>
       <property name="geometry">
        <rect>
         <x>410</x>
-        <y>260</y>
+        <y>360</y>
         <width>51</width>
         <height>31</height>
        </rect>
@@ -1285,8 +1285,8 @@ color: white;
      <widget class="QPushButton" name="pushButton_prj_revise">
       <property name="geometry">
        <rect>
-        <x>340</x>
-        <y>20</y>
+        <x>410</x>
+        <y>600</y>
         <width>51</width>
         <height>31</height>
        </rect>
@@ -1392,8 +1392,8 @@ color : rgb(105, 105, 105);
      <widget class="QPushButton" name="pushButton_prj_save">
       <property name="geometry">
        <rect>
-        <x>280</x>
-        <y>20</y>
+        <x>340</x>
+        <y>600</y>
         <width>51</width>
         <height>31</height>
        </rect>
@@ -1428,9 +1428,9 @@ color: white;
     <widget class="QWidget" name="widget_noi_limit" native="true">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>520</x>
        <y>360</y>
-       <width>1151</width>
+       <width>651</width>
        <height>311</height>
       </rect>
      </property>
@@ -1443,7 +1443,7 @@ border: 1px solid #000000;
      <widget class="QLabel" name="label_24">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>20</x>
         <y>10</y>
         <width>81</width>
         <height>31</height>
@@ -1463,7 +1463,7 @@ border: 1px solid #000000;
      <widget class="QLabel" name="label_25">
       <property name="geometry">
        <rect>
-        <x>140</x>
+        <x>130</x>
         <y>10</y>
         <width>51</width>
         <height>31</height>
@@ -1482,9 +1482,9 @@ border: 1px solid #000000;
      <widget class="QLineEdit" name="lineEdit">
       <property name="geometry">
        <rect>
-        <x>200</x>
+        <x>190</x>
         <y>10</y>
-        <width>181</width>
+        <width>111</width>
         <height>31</height>
        </rect>
       </property>
@@ -1498,7 +1498,7 @@ border: 1px solid #000000;
      <widget class="QLabel" name="label_28">
       <property name="geometry">
        <rect>
-        <x>400</x>
+        <x>320</x>
         <y>10</y>
         <width>41</width>
         <height>31</height>
@@ -1517,9 +1517,9 @@ border: 1px solid #000000;
      <widget class="QLineEdit" name="lineEdit_2">
       <property name="geometry">
        <rect>
-        <x>440</x>
+        <x>360</x>
         <y>10</y>
-        <width>181</width>
+        <width>101</width>
         <height>31</height>
        </rect>
       </property>
@@ -1533,9 +1533,9 @@ border: 1px solid #000000;
      <widget class="QTableWidget" name="tableWidget_noi_limit">
       <property name="geometry">
        <rect>
-        <x>100</x>
+        <x>20</x>
         <y>50</y>
-        <width>971</width>
+        <width>601</width>
         <height>251</height>
        </rect>
       </property>
@@ -1607,7 +1607,7 @@ QTableWidget::item:selected
      <widget class="QPushButton" name="pushButton_noi_limit_del">
       <property name="geometry">
        <rect>
-        <x>960</x>
+        <x>500</x>
         <y>10</y>
         <width>51</width>
         <height>31</height>
@@ -1642,7 +1642,7 @@ color: white;
      <widget class="QPushButton" name="pushButton_noi_limit_add">
       <property name="geometry">
        <rect>
-        <x>1020</x>
+        <x>570</x>
         <y>10</y>
         <width>51</width>
         <height>31</height>
@@ -1675,7 +1675,7 @@ color: white;
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="widget_noi_limit_2" native="true">
+    <widget class="QWidget" name="widget_drawing_list_table" native="true">
      <property name="geometry">
       <rect>
        <x>520</x>
@@ -1685,7 +1685,7 @@ color: white;
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">#widget_noi_limit
+      <string notr="true">#widget_drawing_list_table
 {
 border: 1px solid #000000;
 }</string>
@@ -1693,7 +1693,7 @@ border: 1px solid #000000;
      <widget class="QLabel" name="label_91">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>20</x>
         <y>10</y>
         <width>131</width>
         <height>31</height>
@@ -1710,13 +1710,13 @@ border: 1px solid #000000;
        <string>参考图纸清单</string>
       </property>
      </widget>
-     <widget class="QTableWidget" name="tableWidget_noi_limit_2">
+     <widget class="QTableWidget" name="tableWidget_drawing_list">
       <property name="geometry">
        <rect>
-        <x>40</x>
+        <x>20</x>
         <y>50</y>
-        <width>581</width>
-        <height>251</height>
+        <width>601</width>
+        <height>271</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -1724,7 +1724,8 @@ border: 1px solid #000000;
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -1760,7 +1761,7 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -1777,7 +1778,7 @@ QTableWidget::item:selected
 }</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_noi_limit_del_2">
+     <widget class="QPushButton" name="pushButton_drawing_list_del">
       <property name="geometry">
        <rect>
         <x>500</x>
@@ -1812,7 +1813,7 @@ color: white;
        <string>删除</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_noi_limit_add_2">
+     <widget class="QPushButton" name="pushButton_drawing_list_add">
       <property name="geometry">
        <rect>
         <x>570</x>
@@ -1924,84 +1925,6 @@ color : rgb(105, 105, 105);
         </widget>
        </item>
       </layout>
-     </widget>
-     <widget class="QTableWidget" name="tableWidget_fan_noi">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>60</y>
-        <width>1161</width>
-        <height>611</height>
-       </rect>
-      </property>
-      <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
-      </property>
-      <property name="layoutDirection">
-       <enum>Qt::LeftToRight</enum>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">/*设置标题(包括垂直+水平的)*/
-QHeaderView
-{							
-	
-	font-size: 15px;				/*字大小*/
-	font-family: '黑体';
-	/*border: 1px solid #B4B4B4;*/
-	border:none;
-    /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
-    /*background: #9DC6E6;*/				/*背景浅蓝色*/ 
-	min-height:30px;
-	text-align: center;	       
-}
-
-
-/*设置标题(水平的)*/
-QHeaderView::section:horizontal { 					
-        border: 1px solid #AFAFAF; 			/*间隔颜色*/
-	    border-bottom: 2px solid #999999; 							
-        color: black;
-        background: #9DC6E6;
-}
-
-/*设置鼠标停留状态*/
-QHeaderView::section:horizontal:hover 
-{			
-        color: black;							/*字体白色*/
-        background: #82AFC9;				/*背景深蓝色*/
-}
-
-/*设置鼠标按下状态*/
-QHeaderView::section:horizontal:pressed 
-{			
-        color: black;
-        background: #82AFC9;
-		border-bottom: 3px solid #037BFC;				
-}
-
-
-QTableWidget 
-{
-		font-size: 14px;				/*10榜*/
-		font-family: '黑体';				
-		color : black;				
-        border: 1px solid #000000;		
-        background: white;
-        gridline-color: #E0E0E0;	
-        text-align: center;	
-        outline:0px;			/*禁止焦点*/
-}
-
-/*设置选中的视图项*/
-QTableWidget::item:selected
-{				    
-		border: 2px solid #0398FC;	
-        color : black;				
-}</string>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
      </widget>
      <widget class="QPushButton" name="pushButton_fanNoi_add">
       <property name="geometry">
@@ -2143,12 +2066,90 @@ color: white;
        <string>导入</string>
       </property>
      </widget>
-     <zorder>tableWidget_fan_noi</zorder>
-     <zorder>layoutWidget_2</zorder>
-     <zorder>pushButton_fanNoi_add</zorder>
-     <zorder>pushButton_fanNoi_del</zorder>
-     <zorder>pushButton_fanNoi_revise</zorder>
-     <zorder>pushButton_fanNoi_input</zorder>
+     <widget class="QTableWidget" name="tableWidget_fan_noi">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>1161</width>
+        <height>611</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>-1</pointsize>
+       </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">/*设置标题(包括垂直+水平的)*/
+QHeaderView
+{							
+	
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
+	/*border: 1px solid #B4B4B4;*/
+	border:none;
+    /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
+    /*background: #9DC6E6;*/				/*背景浅蓝色*/ 
+	min-height:30px;
+	text-align: center;	       
+}
+
+
+/*设置标题(水平的)*/
+QHeaderView::section:horizontal { 					
+        border: 1px solid #AFAFAF; 			/*间隔颜色*/
+	    border-bottom: 2px solid #999999; 							
+        color: black;
+        background: #9DC6E6;
+}
+
+/*设置鼠标停留状态*/
+QHeaderView::section:horizontal:hover 
+{			
+        color: black;							/*字体白色*/
+        background: #82AFC9;				/*背景深蓝色*/
+}
+
+/*设置鼠标按下状态*/
+QHeaderView::section:horizontal:pressed 
+{			
+        color: black;
+        background: #82AFC9;
+		border-bottom: 3px solid #037BFC;				
+}
+
+
+QTableWidget 
+{
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
+		color : black;				
+        border: 1px solid #000000;		
+        background: white;
+        gridline-color: #E0E0E0;	
+        text-align: center;	
+        outline:0px;			/*禁止焦点*/
+}
+
+/*设置选中的视图项*/
+QTableWidget::item:selected
+{				    
+		border: 2px solid #0398FC;	
+        color : black;				
+}</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_fanCoil_noi">
@@ -2523,90 +2524,6 @@ color : rgb(105, 105, 105);
        </item>
       </layout>
      </widget>
-     <widget class="QTableWidget" name="tableWidget_air_noi">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>60</y>
-        <width>1161</width>
-        <height>611</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>-1</pointsize>
-       </font>
-      </property>
-      <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
-      </property>
-      <property name="layoutDirection">
-       <enum>Qt::LeftToRight</enum>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">/*设置标题(包括垂直+水平的)*/
-QHeaderView
-{							
-	
-	font-size: 15px;				/*字大小*/
-	font-family: '黑体';
-	/*border: 1px solid #B4B4B4;*/
-	border:none;
-    /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
-    /*background: #9DC6E6;*/				/*背景浅蓝色*/ 
-	min-height:30px;
-	text-align: center;	       
-}
-
-
-/*设置标题(水平的)*/
-QHeaderView::section:horizontal { 					
-        border: 1px solid #AFAFAF; 			/*间隔颜色*/
-	    border-bottom: 2px solid #999999; 							
-        color: black;
-        background: #9DC6E6;
-}
-
-/*设置鼠标停留状态*/
-QHeaderView::section:horizontal:hover 
-{			
-        color: black;							/*字体白色*/
-        background: #82AFC9;				/*背景深蓝色*/
-}
-
-/*设置鼠标按下状态*/
-QHeaderView::section:horizontal:pressed 
-{			
-        color: black;
-        background: #82AFC9;
-		border-bottom: 3px solid #037BFC;				
-}
-
-
-QTableWidget 
-{
-		font-size: 14px;				/*10榜*/
-		font-family: '黑体';				
-		color : black;				
-        border: 1px solid #000000;		
-        background: white;
-        gridline-color: #E0E0E0;	
-        text-align: center;	
-        outline:0px;			/*禁止焦点*/
-}
-
-/*设置选中的视图项*/
-QTableWidget::item:selected
-{				    
-		border: 2px solid #0398FC;	
-        color : black;				
-}</string>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-     </widget>
      <widget class="QPushButton" name="pushButton_air_noi_del">
       <property name="geometry">
        <rect>
@@ -2745,6 +2662,225 @@ color: white;
       </property>
       <property name="text">
        <string>新增</string>
+      </property>
+     </widget>
+     <widget class="QStackedWidget" name="stackedWidget_air_table">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>1161</width>
+        <height>611</height>
+       </rect>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="page_single_fan">
+       <widget class="QTableWidget" name="tableWidget_air_single_fan_noi">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>1161</width>
+          <height>611</height>
+         </rect>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">/*设置标题(包括垂直+水平的)*/
+QHeaderView
+{							
+	
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
+	/*border: 1px solid #B4B4B4;*/
+	border:none;
+    /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
+    /*background: #9DC6E6;*/				/*背景浅蓝色*/ 
+	min-height:30px;
+	text-align: center;	       
+}
+
+
+/*设置标题(水平的)*/
+QHeaderView::section:horizontal { 					
+        border: 1px solid #AFAFAF; 			/*间隔颜色*/
+	    border-bottom: 2px solid #999999; 							
+        color: black;
+        background: #9DC6E6;
+}
+
+/*设置鼠标停留状态*/
+QHeaderView::section:horizontal:hover 
+{			
+        color: black;							/*字体白色*/
+        background: #82AFC9;				/*背景深蓝色*/
+}
+
+/*设置鼠标按下状态*/
+QHeaderView::section:horizontal:pressed 
+{			
+        color: black;
+        background: #82AFC9;
+		border-bottom: 3px solid #037BFC;				
+}
+
+
+QTableWidget 
+{
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
+		color : black;				
+        border: 1px solid #000000;		
+        background: white;
+        gridline-color: #E0E0E0;	
+        text-align: center;	
+        outline:0px;			/*禁止焦点*/
+}
+
+/*设置选中的视图项*/
+QTableWidget::item:selected
+{				    
+		border: 2px solid #0398FC;	
+        color : black;				
+}</string>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="page_double_fan">
+       <widget class="QTableWidget" name="tableWidget_air_double_fan_noi">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>1161</width>
+          <height>611</height>
+         </rect>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">/*设置标题(包括垂直+水平的)*/
+QHeaderView
+{							
+	
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
+	/*border: 1px solid #B4B4B4;*/
+	border:none;
+    /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
+    /*background: #9DC6E6;*/				/*背景浅蓝色*/ 
+	min-height:30px;
+	text-align: center;	       
+}
+
+
+/*设置标题(水平的)*/
+QHeaderView::section:horizontal { 					
+        border: 1px solid #AFAFAF; 			/*间隔颜色*/
+	    border-bottom: 2px solid #999999; 							
+        color: black;
+        background: #9DC6E6;
+}
+
+/*设置鼠标停留状态*/
+QHeaderView::section:horizontal:hover 
+{			
+        color: black;							/*字体白色*/
+        background: #82AFC9;				/*背景深蓝色*/
+}
+
+/*设置鼠标按下状态*/
+QHeaderView::section:horizontal:pressed 
+{			
+        color: black;
+        background: #82AFC9;
+		border-bottom: 3px solid #037BFC;				
+}
+
+
+QTableWidget 
+{
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
+		color : black;				
+        border: 1px solid #000000;		
+        background: white;
+        gridline-color: #E0E0E0;	
+        text-align: center;	
+        outline:0px;			/*禁止焦点*/
+}
+
+/*设置选中的视图项*/
+QTableWidget::item:selected
+{				    
+		border: 2px solid #0398FC;	
+        color : black;				
+}</string>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QPushButton" name="pushButton_air_double_fan_table">
+      <property name="geometry">
+       <rect>
+        <x>240</x>
+        <y>15</y>
+        <width>81</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>14</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>双风机</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_air_single_fan_table">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>15</y>
+        <width>81</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>14</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton { background-color: #E0EEF9; }</string>
+      </property>
+      <property name="text">
+       <string>单风机</string>
       </property>
      </widget>
     </widget>
@@ -4070,7 +4206,7 @@ color : rgb(105, 105, 105);
        <rect>
         <x>10</x>
         <y>60</y>
-        <width>1171</width>
+        <width>1161</width>
         <height>611</height>
        </rect>
       </property>
@@ -12754,7 +12890,7 @@ color: white;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>171</width>
+        <width>161</width>
         <height>45</height>
        </rect>
       </property>
@@ -12873,7 +13009,7 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>171</width>
+        <width>161</width>
         <height>45</height>
        </rect>
       </property>
@@ -13038,6 +13174,228 @@ color: white;
       </property>
      </widget>
      <widget class="QPushButton" name="pushButton_noise_require_print">
+      <property name="geometry">
+       <rect>
+        <x>1120</x>
+        <y>20</y>
+        <width>51</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+      </property>
+      <property name="text">
+       <string>打印</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="page_system_list">
+    <widget class="QWidget" name="widget_system_list" native="true">
+     <property name="geometry">
+      <rect>
+       <x>6</x>
+       <y>6</y>
+       <width>1183</width>
+       <height>679</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">#widget_system_list
+{
+border: 1px solid #000000;
+}</string>
+     </property>
+     <widget class="QWidget" name="layoutWidget_43">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>161</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_56">
+       <item>
+        <widget class="QLabel" name="label_101">
+         <property name="minimumSize">
+          <size>
+           <width>20</width>
+           <height>41</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>20</width>
+           <height>41</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLabel { 
+border: none; 
+background-color : rgb(105, 105, 105);
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_102">
+         <property name="font">
+          <font>
+           <family>Microsoft YaHei</family>
+           <pointsize>24</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLabel { 
+border: none; 
+color : rgb(105, 105, 105);
+}</string>
+         </property>
+         <property name="text">
+          <string>系统清单</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QTableWidget" name="tableWidget_system_list">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>1161</width>
+        <height>611</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>-1</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">/*设置标题(包括垂直+水平的)*/
+QHeaderView
+{							
+	
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
+	/*border: 1px solid #B4B4B4;*/
+	border:none;
+    /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
+    /*background: #9DC6E6;*/				/*背景浅蓝色*/ 
+	min-height:30px;
+	text-align: center;	       
+}
+
+
+/*设置标题(水平的)*/
+QHeaderView::section:horizontal { 					
+        border: 1px solid #AFAFAF; 			/*间隔颜色*/
+	    border-bottom: 2px solid #999999; 							
+        color: black;
+        background: #9DC6E6;
+}
+
+/*设置鼠标停留状态*/
+QHeaderView::section:horizontal:hover 
+{			
+        color: black;							/*字体白色*/
+        background: #82AFC9;				/*背景深蓝色*/
+}
+
+/*设置鼠标按下状态*/
+QHeaderView::section:horizontal:pressed 
+{			
+        color: black;
+        background: #82AFC9;
+		border-bottom: 3px solid #037BFC;				
+}
+
+
+QTableWidget 
+{
+		font-size: 14px;				/*10榜*/				
+		color : black;				
+        border: 1px solid #000000;		
+        background: white;
+        gridline-color: #E0E0E0;	
+        text-align: center;	
+        outline:0px;			/*禁止焦点*/
+}
+
+/*设置选中的视图项*/
+QTableWidget::item:selected
+{				    
+		border: 2px solid #0398FC;	
+        color : black;				
+}</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_system_list_entry">
+      <property name="geometry">
+       <rect>
+        <x>1060</x>
+        <y>20</y>
+        <width>51</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+      </property>
+      <property name="text">
+       <string>录入</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_system_list_print">
       <property name="geometry">
        <rect>
         <x>1120</x>
@@ -13296,6 +13654,228 @@ border: 1px solid #000000;
         <string>房间选择依据说明</string>
        </property>
       </widget>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="page_report_cal_room_table">
+    <widget class="QWidget" name="widget_report_cal_room_table" native="true">
+     <property name="geometry">
+      <rect>
+       <x>6</x>
+       <y>6</y>
+       <width>1183</width>
+       <height>679</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">#widget_report_cal_room_table
+{
+border: 1px solid #000000;
+}</string>
+     </property>
+     <widget class="QWidget" name="layoutWidget_44">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>220</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_57">
+       <item>
+        <widget class="QLabel" name="label_103">
+         <property name="minimumSize">
+          <size>
+           <width>20</width>
+           <height>41</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>20</width>
+           <height>41</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLabel { 
+border: none; 
+background-color : rgb(105, 105, 105);
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_104">
+         <property name="font">
+          <font>
+           <family>Microsoft YaHei</family>
+           <pointsize>24</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLabel { 
+border: none; 
+color : rgb(105, 105, 105);
+}</string>
+         </property>
+         <property name="text">
+          <string>计算房间清单</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QTableWidget" name="tableWidget_report_cal_room">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>1161</width>
+        <height>611</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>-1</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">/*设置标题(包括垂直+水平的)*/
+QHeaderView
+{							
+	
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
+	/*border: 1px solid #B4B4B4;*/
+	border:none;
+    /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
+    /*background: #9DC6E6;*/				/*背景浅蓝色*/ 
+	min-height:30px;
+	text-align: center;	       
+}
+
+
+/*设置标题(水平的)*/
+QHeaderView::section:horizontal { 					
+        border: 1px solid #AFAFAF; 			/*间隔颜色*/
+	    border-bottom: 2px solid #999999; 							
+        color: black;
+        background: #9DC6E6;
+}
+
+/*设置鼠标停留状态*/
+QHeaderView::section:horizontal:hover 
+{			
+        color: black;							/*字体白色*/
+        background: #82AFC9;				/*背景深蓝色*/
+}
+
+/*设置鼠标按下状态*/
+QHeaderView::section:horizontal:pressed 
+{			
+        color: black;
+        background: #82AFC9;
+		border-bottom: 3px solid #037BFC;				
+}
+
+
+QTableWidget 
+{
+		font-size: 14px;				/*10榜*/				
+		color : black;				
+        border: 1px solid #000000;		
+        background: white;
+        gridline-color: #E0E0E0;	
+        text-align: center;	
+        outline:0px;			/*禁止焦点*/
+}
+
+/*设置选中的视图项*/
+QTableWidget::item:selected
+{				    
+		border: 2px solid #0398FC;	
+        color : black;				
+}</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_report_cal_room_table_entry">
+      <property name="geometry">
+       <rect>
+        <x>1060</x>
+        <y>20</y>
+        <width>51</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+      </property>
+      <property name="text">
+       <string>录入</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_report_cal_room_table_print">
+      <property name="geometry">
+       <rect>
+        <x>1120</x>
+        <y>20</y>
+        <width>51</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+      </property>
+      <property name="text">
+       <string>打印</string>
+      </property>
      </widget>
     </widget>
    </widget>
