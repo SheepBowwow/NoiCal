@@ -45,7 +45,7 @@ public:
                        int row,NoiType *noi, QVector<QString*>& items_noise, QVector<QString*>& items_atten, QVector<QString*>& items_refl,
                        int* cols_noise, int* cols_atten, int* cols_refl, QString name = "");
     double getNoiseLimitByName(const QString& name);
-    void mergeSimilarCells(QTableWidget* tableWidget, int startRow, int numRows);
+    void mergeSimilarCellsInColumn(QTableWidget* tableWidget, int column, int startRow, int numRows, int rowsPerGroup = -1);
     void prj_TreeWidget();
     void input_TreeWidget();
     void initTableWidget_noi_limit();

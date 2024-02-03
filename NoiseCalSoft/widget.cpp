@@ -238,24 +238,11 @@ void Widget::deleteRowFromTable(QTableWidget *tableWidget, int deleteRowNum, QSt
         }
         if(deleteRowNum == 2)
         {
-            for(int row = 0; row < tableWidget->rowCount(); row += 2)
+            for(int i = 0; i < tableWidget->columnCount(); i++)
             {
-                for(int i = 0; i < tableWidget->columnCount(); i++)
+                if(i < 7 || i > 16)
                 {
-                    if(tableWidget == ui->tableWidget_fanCoil_noi)
-                    {
-                        if(i < 8 || i > 17)
-                        {
-                            tableWidget->setSpan(row, i, 2, 1);
-                        }
-                    }
-                    else
-                    {
-                        if(i < 7 || i > 16)
-                        {
-                            tableWidget->setSpan(row, i, 2, 1);
-                        }
-                    }
+                    mergeSimilarCellsInColumn(tableWidget, i, 0, tableWidget->rowCount(), 2);
                 }
             }
         }
@@ -413,43 +400,50 @@ void Widget::noiseRevision(QTableWidget *currentTableWidget, QTableWidget *table
     delete dialog;  // 只在这里删除对话框，而不是 noi
 }
 
-void Widget::mergeSimilarCells(QTableWidget* tableWidget, int startRow, int numRows) {
-    if (!tableWidget) return;
+void Widget::mergeSimilarCellsInColumn(QTableWidget* tableWidget, int column, int startRow, int numRows, int rowsPerGroup) {
+    if (!tableWidget || column < 0 || column >= tableWidget->columnCount()) return;
 
     int rowCount = tableWidget->rowCount();
-    int columnCount = tableWidget->columnCount();
 
     // 确保不超过表格的总行数
     int endRow = std::min(startRow + numRows, rowCount);
 
-    for (int column = 0; column < columnCount; ++column) {
-        QString lastValue;
-        int spanStartRow = startRow;
+    // 当不使用分组（rowsPerGroup <= 0）时，将整个范围作为一个大组处理
+    if (rowsPerGroup <= 0) {
+        rowsPerGroup = endRow - startRow;
+    }
 
-        for (int row = startRow; row < endRow; ++row) {
+    for (int groupStartRow = startRow; groupStartRow < endRow; groupStartRow += rowsPerGroup) {
+        // 计算当前组的结束行，确保不会超出范围
+        int groupEndRow = std::min(groupStartRow + rowsPerGroup, endRow);
+
+        QString lastValue;
+        int spanStartRow = groupStartRow;
+
+        for (int row = groupStartRow; row < groupEndRow; ++row) {
             QTableWidgetItem* item = tableWidget->item(row, column);
             QString currentValue = item ? item->text() : QString();
 
-            if (row == startRow) {
+            if (row == groupStartRow) {
                 lastValue = currentValue;
                 continue;
             }
 
             if (currentValue == lastValue) {
-                // 如果是范围内的最后一行，合并
-                if (row == endRow - 1) {
+                // 如果是组内的最后一行，合并
+                if (row == groupEndRow - 1) {
                     tableWidget->setSpan(spanStartRow, column, row - spanStartRow + 1, 1);
                 }
                 continue;
             }
 
-            // 当前行和上一行不同
+            // 当前行和上一行不同，且有超过一行相同
             if (row - spanStartRow > 1) {
-                // 如果存在连续相同的行，合并这些行
+                // 合并这些行
                 tableWidget->setSpan(spanStartRow, column, row - spanStartRow, 1);
             }
 
-            // 更新上一行的值和起始行位置
+            // 更新上一行的值和起始行位置，为下一组做准备
             lastValue = currentValue;
             spanStartRow = row;
         }
@@ -767,10 +761,10 @@ void Widget::initTableWidget_noi_limit()
 
 void Widget::initTableWidget_drawing_list()
 {
-    int colCount = 3;
+    int colCount = 4;
     // 设置表头标题
     QStringList headerText;
-    headerText << "" << "序号" << "图纸清单";
+    headerText << "" << "序号" << "图号" << "图名";
     // 设置每列的宽度
     int columnWidths[] = {4, 5, 50};
     // 调用封装好的初始化表格函数
@@ -902,10 +896,16 @@ void Widget::on_pushButton_fanNoi_add_clicked()
             // 使用通用函数添加行
             addRowToTable(tableWidget, data_in);
             addRowToTable(tableWidget, data_out);
-            int numRows = tableWidget->rowCount(); //获取当前行数
+            int numRows = tableWidget->rowCount() - startRow; //获取当前行数
 
             componentManager.addComponent(QSharedPointer<Fan_noise>(noi.release()));
-            mergeSimilarCells(tableWidget,startRow,numRows - startRow);
+            for(int i = 0; i < tableWidget->columnCount(); i++)
+            {
+                if(i < 7 || i > 16)
+                {
+                    mergeSimilarCellsInColumn(tableWidget, i, startRow, numRows, 2);
+                }
+            }
         }
     }
 }
@@ -1043,12 +1043,12 @@ void Widget::on_pushButton_fanCoil_noi_add_clicked()
                 "厂家"
             };
             QStringList data_out = {
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
+                noi->table_id,
+                noi->brand,
+                noi->type,
+                noi->model,
+                noi->air_volume,
+                noi->static_pressure,
                 "出口",
                 noi->noi_out_63,
                 noi->noi_out_125,

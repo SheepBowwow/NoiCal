@@ -15,6 +15,36 @@ Dialog_aircondition_noise::Dialog_aircondition_noise(QWidget *parent, int editRo
 
     if(editRow != -1)
     {
+        if(data.type == "单风机")
+        {
+            ui->radioButton_single->setChecked(true);
+            on_radioButton_single_clicked();
+        }
+        else if(data.type == "双风机")
+        {
+            ui->radioButton_double->setChecked(true);
+            on_radioButton_double_clicked();
+            ui->lineEdit_exhaust_in_63->setText(data.noi_exhaust_in_63);
+            ui->lineEdit_exhaust_in_125->setText(data.noi_exhaust_in_125);
+            ui->lineEdit_exhaust_in_250->setText(data.noi_exhaust_in_250);
+            ui->lineEdit_exhaust_in_500->setText(data.noi_exhaust_in_500);
+            ui->lineEdit_exhaust_in_1k->setText(data.noi_exhaust_in_1k);
+            ui->lineEdit_exhaust_in_2k->setText(data.noi_exhaust_in_2k);
+            ui->lineEdit_exhaust_in_4k->setText(data.noi_exhaust_in_4k);
+            ui->lineEdit_exhaust_in_8k->setText(data.noi_exhaust_in_8k);
+            ui->lineEdit_exhaust_in_total->setText(data.noi_exhaust_in_total);
+
+            ui->lineEdit_exhaust_out_63->setText(data.noi_exhaust_out_63);
+            ui->lineEdit_exhaust_out_125->setText(data.noi_exhaust_out_125);
+            ui->lineEdit_exhaust_out_250->setText(data.noi_exhaust_out_250);
+            ui->lineEdit_exhaust_out_500->setText(data.noi_exhaust_out_500);
+            ui->lineEdit_exhaust_out_1k->setText(data.noi_exhaust_out_1k);
+            ui->lineEdit_exhaust_out_2k->setText(data.noi_exhaust_out_2k);
+            ui->lineEdit_exhaust_out_4k->setText(data.noi_exhaust_out_4k);
+            ui->lineEdit_exhaust_out_8k->setText(data.noi_exhaust_out_8k);
+            ui->lineEdit_exhaust_out_total->setText(data.noi_exhaust_out_total);
+        }
+
         ui->lineEdit_number->setText(data.number);
         ui->lineEdit_brand->setText(data.brand);
         ui->lineEdit_model->setText(data.model);
@@ -40,6 +70,7 @@ Dialog_aircondition_noise::Dialog_aircondition_noise(QWidget *parent, int editRo
         ui->lineEdit_send_out_4k->setText(data.noi_send_out_4k);
         ui->lineEdit_send_out_8k->setText(data.noi_send_out_8k);
         ui->lineEdit_send_out_total->setText(data.noi_send_out_total);
+
     }
 
     //连接lineEdit信号与槽
@@ -96,9 +127,10 @@ void Dialog_aircondition_noise::on_pushButton_confirm_clicked()
     // 获取对应行的数据，将界面上的数据保存到对应行中
     noi->number = ui->lineEdit_number->text();
     if(ui->radioButton_single->isChecked())
-            noi->type = "单风机";
+        noi->type = "单风机";
     else if(ui->radioButton_double->isChecked())
-            noi->type = "双风机";
+        noi->type = "双风机";
+
     noi->brand = ui->lineEdit_brand->text();
     noi->model = ui->lineEdit_model->text();
     noi->air_volume = ui->lineEdit_air_volume->text();
@@ -122,6 +154,26 @@ void Dialog_aircondition_noise::on_pushButton_confirm_clicked()
     noi->noi_send_out_4k = ui->lineEdit_send_out_4k->text();
     noi->noi_send_out_8k = ui->lineEdit_send_out_8k->text();
     noi->noi_send_out_total = ui->lineEdit_send_out_total->text();
+
+    noi->noi_exhaust_in_63 = ui->lineEdit_exhaust_in_63->text();
+    noi->noi_exhaust_in_125 = ui->lineEdit_exhaust_in_125->text();
+    noi->noi_exhaust_in_250 = ui->lineEdit_exhaust_in_250->text();
+    noi->noi_exhaust_in_500 = ui->lineEdit_exhaust_in_500->text();
+    noi->noi_exhaust_in_1k = ui->lineEdit_exhaust_in_1k->text();
+    noi->noi_exhaust_in_2k = ui->lineEdit_exhaust_in_2k->text();
+    noi->noi_exhaust_in_4k = ui->lineEdit_exhaust_in_4k->text();
+    noi->noi_exhaust_in_8k = ui->lineEdit_exhaust_in_8k->text();
+    noi->noi_exhaust_in_total = ui->lineEdit_exhaust_in_total->text();
+
+    noi->noi_exhaust_out_63 = ui->lineEdit_exhaust_out_63->text();
+    noi->noi_exhaust_out_125 = ui->lineEdit_exhaust_out_125->text();
+    noi->noi_exhaust_out_250 = ui->lineEdit_exhaust_out_250->text();
+    noi->noi_exhaust_out_500 = ui->lineEdit_exhaust_out_500->text();
+    noi->noi_exhaust_out_1k = ui->lineEdit_exhaust_out_1k->text();
+    noi->noi_exhaust_out_2k = ui->lineEdit_exhaust_out_2k->text();
+    noi->noi_exhaust_out_4k = ui->lineEdit_exhaust_out_4k->text();
+    noi->noi_exhaust_out_8k = ui->lineEdit_exhaust_out_8k->text();
+    noi->noi_exhaust_out_total = ui->lineEdit_exhaust_out_total->text();
 
     noi->identifier = noi->number;
     this->accept(); // 关闭对话框

@@ -220,13 +220,6 @@ void RoomCalTable::on_comboBox_sound_type_currentTextChanged(const QString &arg1
         ui->comboBox_unit_name->addItem("末端/布风器+散流器");
         ui->comboBox_unit_name->addItem("末端/抽风头");
         ui->comboBox_unit_name->addItem("末端/送风头");
-    }
-    else if(arg1 == "噪音衰减+气流噪音")
-    {
-        ui->comboBox_unit_name->clear();
-        ui->comboBox_unit_name->addItem("末端/布风器+散流器");
-        ui->comboBox_unit_name->addItem("末端/抽风头");
-        ui->comboBox_unit_name->addItem("末端/送风头");
         ui->comboBox_unit_name->addItem("末端/静压+格栅");
         ui->comboBox_unit_name->addItem("末端/置换通风末端");
         ui->comboBox_unit_name->addItem("末端/其他通风末端");
@@ -282,13 +275,14 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
         ui->stackedWidget_info->setCurrentWidget(ui->page_rect_damper_info);
         ui->stackedWidget_table->setCurrentWidget(ui->page_damper_table);
     }
-    else if(arg1 == "末端/其他通风末端")
+    else if(arg1 == "末端/其他通风末端" || arg1 == "末端/抽风头" || arg1 == "末端/静压+格栅" || arg1 == "末端/送风头"
+             || arg1 == "末端/置换通风末端" || arg1 == "末端/布风器+散流器")
     {
         ui->stackedWidget_info->setCurrentWidget(ui->page_atten_info);
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_atten_noi_table);
     }
-    else if(arg1 == "分支/静压箱" || arg1 == "分支/静压箱" || arg1 == "分支/静压箱")
+    else if(arg1 == "分支/静压箱" || arg1 == "分支/三通" || arg1 == "分支/风道多分支")
     {
         ui->stackedWidget_info->setCurrentWidget(ui->page_branch_info);
         ui->stackedWidget_table->setCurrentWidget(ui->page_branch_table);

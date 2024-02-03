@@ -28,8 +28,7 @@
    <property name="styleSheet">
     <string notr="true">#page_noi_src_info, #page_vav_terminal_info,
 #page_circle_damper_info,#page_rect_damper_info,
-#page_atten_info,#page_branch_info,#page_pipe_info,
-#page_elbow_info,#page_silencer_info,#page_room_info,
+#page_atten_info,#page_branch_info,#page_pipe_elbow_info,#page_silencer_info,#page_room_info,
 #page_reducer_info
 {
     border: 1px solid black;
@@ -51,7 +50,7 @@ font-size: 14px;
 }</string>
    </property>
    <property name="currentIndex">
-    <number>3</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="page_noi_src_info">
     <widget class="QComboBox" name="comboBox_noi_src_num">
@@ -937,6 +936,9 @@ border-bottom:1px solid black;</string>
       <string notr="true">border:none;
 border-bottom:1px solid black;</string>
      </property>
+     <property name="currentIndex">
+      <number>-1</number>
+     </property>
      <item>
       <property name="text">
        <string>圆形</string>
@@ -958,7 +960,7 @@ border-bottom:1px solid black;</string>
       </rect>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="page_air_diff_model">
       <widget class="QLabel" name="label_102">
@@ -1063,9 +1065,9 @@ border-bottom:1px solid black;</string>
       <widget class="QComboBox" name="comboBox_21">
        <property name="geometry">
         <rect>
-         <x>160</x>
+         <x>110</x>
          <y>1</y>
-         <width>91</width>
+         <width>271</width>
          <height>31</height>
         </rect>
        </property>
@@ -1083,9 +1085,9 @@ border-bottom:1px solid black;</string>
       <widget class="QLabel" name="label_108">
        <property name="geometry">
         <rect>
-         <x>80</x>
+         <x>10</x>
          <y>3</y>
-         <width>71</width>
+         <width>91</width>
          <height>31</height>
         </rect>
        </property>
@@ -1102,9 +1104,9 @@ border-bottom:1px solid black;</string>
       <widget class="QLabel" name="label_109">
        <property name="geometry">
         <rect>
-         <x>350</x>
+         <x>390</x>
          <y>3</y>
-         <width>101</width>
+         <width>121</width>
          <height>31</height>
         </rect>
        </property>
@@ -1123,9 +1125,9 @@ border-bottom:1px solid black;</string>
       <widget class="QLabel" name="label_110">
        <property name="geometry">
         <rect>
-         <x>80</x>
+         <x>10</x>
          <y>3</y>
-         <width>71</width>
+         <width>91</width>
          <height>31</height>
         </rect>
        </property>
@@ -1142,9 +1144,9 @@ border-bottom:1px solid black;</string>
       <widget class="QLabel" name="label_111">
        <property name="geometry">
         <rect>
-         <x>350</x>
+         <x>390</x>
          <y>3</y>
-         <width>101</width>
+         <width>121</width>
          <height>31</height>
         </rect>
        </property>
@@ -1155,15 +1157,15 @@ border-bottom:1px solid black;</string>
         </font>
        </property>
        <property name="text">
-        <string>抽风头末端尺寸:</string>
+        <string>送风头末端尺寸:</string>
        </property>
       </widget>
       <widget class="QComboBox" name="comboBox_22">
        <property name="geometry">
         <rect>
-         <x>160</x>
+         <x>110</x>
          <y>1</y>
-         <width>91</width>
+         <width>271</width>
          <height>31</height>
         </rect>
        </property>
@@ -1456,9 +1458,9 @@ border-bottom:1px solid black;</string>
       <widget class="QComboBox" name="comboBox_19">
        <property name="geometry">
         <rect>
-         <x>50</x>
+         <x>60</x>
          <y>1</y>
-         <width>81</width>
+         <width>71</width>
          <height>31</height>
         </rect>
        </property>
@@ -1478,7 +1480,7 @@ border-bottom:1px solid black;</string>
         <rect>
          <x>0</x>
          <y>3</y>
-         <width>51</width>
+         <width>61</width>
          <height>31</height>
         </rect>
        </property>
@@ -1495,9 +1497,9 @@ border-bottom:1px solid black;</string>
       <widget class="QComboBox" name="comboBox_20">
        <property name="geometry">
         <rect>
-         <x>190</x>
+         <x>200</x>
          <y>1</y>
-         <width>81</width>
+         <width>71</width>
          <height>31</height>
         </rect>
        </property>
@@ -1517,7 +1519,7 @@ border-bottom:1px solid black;</string>
         <rect>
          <x>140</x>
          <y>3</y>
-         <width>51</width>
+         <width>61</width>
          <height>31</height>
         </rect>
        </property>
@@ -2059,6 +2061,12 @@ border-bottom:1px solid black;</string>
       <string notr="true">border:none;
 border-bottom:1px solid black;</string>
      </property>
+     <property name="currentIndex">
+      <number>-1</number>
+     </property>
+     <property name="minimumContentsLength">
+      <number>0</number>
+     </property>
      <item>
       <property name="text">
        <string>圆-圆</string>
@@ -2197,6 +2205,9 @@ border-bottom:1px solid black;</string>
      <property name="styleSheet">
       <string notr="true">border:none;
 border-bottom:1px solid black;</string>
+     </property>
+     <property name="currentIndex">
+      <number>-1</number>
      </property>
      <item>
       <property name="text">
@@ -3158,7 +3169,7 @@ border-bottom:1px solid black;</string>
       </item>
       <item>
        <property name="text">
-        <string>体积小于425m³房间（点噪音源）</string>
+        <string>体积大于425m³房间（点噪音源）</string>
        </property>
       </item>
       <item>
@@ -3271,7 +3282,7 @@ font-family: '黑体';
 }</string>
    </property>
    <property name="currentIndex">
-    <number>8</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="page_noi_src_table">
     <widget class="QWidget" name="widget_4" native="true">
