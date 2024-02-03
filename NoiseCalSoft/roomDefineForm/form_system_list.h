@@ -15,6 +15,13 @@ public:
     explicit Form_system_list(QWidget *parent = nullptr);
     ~Form_system_list();
 
+private slots:
+    void on_buttonadd_clicked();
+
+    void on_buttondel_clicked();
+
+    void on_buttonchange_clicked();
+
 private:
     Ui::Form_system_list *ui;
 };
