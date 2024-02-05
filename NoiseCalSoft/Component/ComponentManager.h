@@ -23,6 +23,8 @@ public:
 
     void del_and_updateTableID(int deleteID, QString containerName);
 
+    QString getModelByNumber(QString number);
+
 private:
     // 禁止通过构造函数和复制构造函数创建实例
     ComponentManager();

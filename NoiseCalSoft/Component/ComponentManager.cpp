@@ -31,6 +31,26 @@ void ComponentManager::addComponent(QSharedPointer<ComponentBase> component)
     else if(qSharedPointerCast<VAV_terminal_noise>(component)) VAVTerminals.append(qSharedPointerCast<VAV_terminal_noise>(component));
 }
 
+QString ComponentManager::getModelByNumber(QString number)
+{
+    // 遍历airConditions容器
+    for (const QSharedPointer<Aircondition_noise>& airCondition : airConditions) {
+        // 检查空调编号是否匹配
+        if (airCondition->number == number) {
+            return airCondition->model; // 返回匹配的型号
+        }
+    }
+
+    // 遍历fans容器
+    for (const QSharedPointer<Fan_noise>& fan : fans) {
+        // 检查空调编号是否匹配
+        if (fan->number == number) {
+            return fan->model; // 返回匹配的型号
+        }
+    }
+    return QString(); // 如果未找到匹配项，返回空字符串
+}
+
 template<typename T>
 void ComponentManager::del_and_updateTableIDBase(QList<QSharedPointer<T>> list, int deleteID, QString containerName)
 {
