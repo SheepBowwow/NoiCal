@@ -1,12 +1,14 @@
 #include "form_system_list.h"
 #include "ui_form_system_list.h"
 #include "dialog_add_system.h"
+#include "globle_var.h"
 
 #include <QCheckBox>
 #include <QMessageBox>
 
-Form_system_list::Form_system_list(QWidget *parent) :
+Form_system_list::Form_system_list(QString system_name, QWidget *parent) :
     QWidget(parent),
+    system_name(system_name),
     ui(new Ui::Form_system_list)
 {
     ui->setupUi(this);
@@ -54,9 +56,9 @@ void Form_system_list::on_buttonadd_clicked()
         ui->tableWidget->setCellWidget(RowCount, 0, widget);
 
         //添加内容
-        QTableWidgetItem *tbitem1=new QTableWidgetItem(QString(dialog->getsyslx()));
-        QTableWidgetItem *tbitem2=new QTableWidgetItem(QString(dialog->getsysbh()));
-        QTableWidgetItem *tbitem3=new QTableWidgetItem(QString(dialog->getsysxh()));
+        QTableWidgetItem *tbitem1=new QTableWidgetItem(QString(dialog->getType()));
+        QTableWidgetItem *tbitem2=new QTableWidgetItem(QString(dialog->getNumber()));
+        QTableWidgetItem *tbitem3=new QTableWidgetItem(QString(dialog->getModel()));
         tbitem1->setFlags(Qt::ItemIsEditable); // 设置为只读
         tbitem1->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
         tbitem2->setFlags(Qt::ItemIsEditable); // 设置为只读
@@ -68,6 +70,12 @@ void Form_system_list::on_buttonadd_clicked()
         ui->tableWidget->setItem(RowCount,2,tbitem2);
         ui->tableWidget->setItem(RowCount,3,tbitem3);
 
+        if(dialog->getType() == "空调器")
+            systemListMap[system_name]["空调器"].push_back(QString(dialog->getNumber()));
+        else if(dialog->getType() == "独立排风机")
+            systemListMap[system_name]["风机"].push_back(QString(dialog->getNumber()));
+        else if(dialog->getType() == "公共区域风机盘管")
+            systemListMap[system_name]["风机盘管"].push_back(QString(dialog->getNumber()));
     }
 }
 
@@ -141,9 +149,9 @@ void Form_system_list::on_buttonchange_clicked()
     if(dialog->exec()==QDialog::Accepted)
     {
         //添加内容
-        QTableWidgetItem *tbitem1=new QTableWidgetItem(QString(dialog->getsyslx()));
-        QTableWidgetItem *tbitem2=new QTableWidgetItem(QString(dialog->getsysbh()));
-        QTableWidgetItem *tbitem3=new QTableWidgetItem(QString(dialog->getsysxh()));
+        QTableWidgetItem *tbitem1=new QTableWidgetItem(QString(dialog->getType()));
+        QTableWidgetItem *tbitem2=new QTableWidgetItem(QString(dialog->getNumber()));
+        QTableWidgetItem *tbitem3=new QTableWidgetItem(QString(dialog->getModel()));
         tbitem1->setFlags(Qt::ItemIsEditable); // 设置为只读
         tbitem1->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
         tbitem2->setFlags(Qt::ItemIsEditable); // 设置为只读

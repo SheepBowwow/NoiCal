@@ -15,11 +15,7 @@
 #include <QMouseEvent>
 #include <QMessageBox>
 
-struct Room{
-    QString name;
-    QString noise;
-    QString type;
-};
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
@@ -48,6 +44,7 @@ public:
     void mergeSimilarCellsInColumn(QTableWidget* tableWidget, int column, int startRow, int numRows, int rowsPerGroup = -1);
     void prj_TreeWidget();
     void input_TreeWidget();
+    void initTableWidget_project_attachment();
     void initTableWidget_noi_limit();
     void initTableWidget_drawing_list();
     void initTableWidget_fan_noi();
@@ -90,7 +87,7 @@ private:
 
 public slots:
     void TreeWidgetItemPressed_Slot(QTreeWidgetItem* item, int n);
-    void upDateTreeItem8(QTreeWidgetItem *item,QString,int num);
+    void upDateTreeItem8(QTreeWidgetItem *item,QString,int num, QString jiaban, QString limit);
     void delroom(QTreeWidgetItem*,QString);
 
 private slots:
@@ -349,6 +346,8 @@ private slots:
 
     void on_pushButton_air_double_fan_table_clicked();
 
+    void on_pushButton_project_attachment_add_clicked();
+
 private:
     Ui::Widget *ui;
     QTreeWidgetItem *item_prj;   //工程
@@ -377,8 +376,6 @@ private:
     QMenu *menuclassicroom;       //典型房间的菜单 1.修改典型房间名称 2.删除典型房间
     QAction *actModclassicroomname;
     QAction *actDelclassicroom;
-
-    QVector<Room> rooms;
 
     //输入模块
     QTreeWidgetItem *item_sound_sorce_noise;   //1音源噪音

@@ -29,12 +29,14 @@ public:
     virtual void * getNoi() override;
 
 signals:
-    void dialogsent(QString name,int num);
+    void dialogsent(QString name,int num, QString jiaban, QString limit);
 
 private slots:
     void on_pushButton_clicked();
 
     void on_close_clicked();
+
+    void on_comboBox_currentTextChanged(const QString &arg1);
 
 private:
     Ui::Dialog_addroom *ui;

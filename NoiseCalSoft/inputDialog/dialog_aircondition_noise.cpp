@@ -2,7 +2,7 @@
 #include "ui_dialog_aircondition_noise.h"
 #include <cmath>
 
-Dialog_aircondition_noise::Dialog_aircondition_noise(QWidget *parent, int editRow,  const Aircondition_noise& data) :
+Dialog_aircondition_noise::Dialog_aircondition_noise(QWidget *parent, int editRow, int fan,  const Aircondition_noise& data) :
     InputBaseDialog(parent),
     editRow(editRow), // 初始化editRow
     ui(new Ui::Dialog_aircondition_noise)
@@ -11,7 +11,16 @@ Dialog_aircondition_noise::Dialog_aircondition_noise(QWidget *parent, int editRo
     setTopWidget(ui->widget_top);  // 设置顶部部件
     ui->radioButton_single->setChecked(true);
 
-
+    if(fan == 0)
+    {
+        ui->radioButton_single->setChecked(true);
+        on_radioButton_single_clicked();
+    }
+    else if(fan == 1)
+    {
+        ui->radioButton_double->setChecked(true);
+        on_radioButton_double_clicked();
+    }
 
     if(editRow != -1)
     {

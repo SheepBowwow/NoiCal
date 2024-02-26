@@ -985,89 +985,20 @@ border: 1px solid #DCDCDC;
 border: 1px solid #DCDCDC;
 }</string>
      </property>
-     <widget class="QLabel" name="label_6">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>41</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>说明</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="label">
       <property name="geometry">
        <rect>
-        <x>60</x>
-        <y>10</y>
-        <width>571</width>
-        <height>41</height>
+        <x>10</x>
+        <y>20</y>
+        <width>521</width>
+        <height>161</height>
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">border-image: url(:/images/image/damper_formula.jpg);</string>
+       <string notr="true">border-image: url(:/images/image/damper_desci.png);</string>
       </property>
       <property name="text">
        <string/>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_2">
-      <property name="geometry">
-       <rect>
-        <x>60</x>
-        <y>70</y>
-        <width>291</width>
-        <height>151</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">border-image: url(:/images/image/damper_descri1.jpg);</string>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_3">
-      <property name="geometry">
-       <rect>
-        <x>360</x>
-        <y>80</y>
-        <width>261</width>
-        <height>61</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">border-image: url(:/images/image/damper_desci2.jpg);</string>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_22">
-      <property name="geometry">
-       <rect>
-        <x>370</x>
-        <y>150</y>
-        <width>161</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>16</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>U = 风量 / S</string>
       </property>
      </widget>
     </widget>

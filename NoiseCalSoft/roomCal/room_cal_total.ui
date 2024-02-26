@@ -324,7 +324,7 @@ QTableWidget::item:selected
    </property>
    <column>
     <property name="text">
-     <string>噪音源</string>
+     <string>主风管编号</string>
     </property>
    </column>
    <column>

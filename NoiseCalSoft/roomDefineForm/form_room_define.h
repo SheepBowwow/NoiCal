@@ -25,10 +25,10 @@ public:
     void buttonToHeader(QTableWidget *tableWidget, QWidget *buttonWidget, const char *addButtonSlot, const char *delButtonSlot);
 
 signals:
-    void roomadd(QTreeWidgetItem *item,QString name,int num);
+    void roomadd(QTreeWidgetItem *item,QString name,int num, QString jiaban, QString limit);
     void roomdel(QTreeWidgetItem*,QString roomid);
 private slots:
-    void jieshou(QString name,int num);
+    void jieshou(QString name,int num, QString jiaban, QString limit);
 
     void on_buttonadd_clicked();
 

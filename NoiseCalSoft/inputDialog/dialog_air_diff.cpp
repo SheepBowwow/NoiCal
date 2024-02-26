@@ -364,9 +364,10 @@ void Dialog_air_diff::on_radioButton_formula_clicked()
 void Dialog_air_diff::on_pushButton_clicked()
 {
     // 使用资源路径
-    QString imagePath = ":/images/image/refl.jpg"; // 替换为你的资源路径
+    QString imagePath = ":/images/image/refl.png"; // 替换为你的资源路径
     // 获取或创建 ImageDialog 的实例
     ImageDialog* imageDialog = ImageDialog::getInstance(imagePath, this);
+    imageDialog->updateImage(imagePath);
     imageDialog->exec();
 }
 

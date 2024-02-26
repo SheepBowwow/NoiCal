@@ -38,13 +38,13 @@
 #include "Component/ComponentManager.h"
 #include "wordEngine/wordengine.h"
 #include <QResource>
+#include <QDesktopServices>
 #include "global_constant.h"
 
 #include <iostream>
 #include <string>
 #include <regex>
 
-ComponentManager& componentManager = ComponentManager::getInstance();
 WordEngine* wordEngine = new WordEngine();
 
 Widget::Widget(QWidget *parent)
@@ -77,6 +77,7 @@ Widget::Widget(QWidget *parent)
     this->initRightButtonMenu();
     this->initTableWidget_system_list();
     this->initTableWidget_report_cal_room();
+    this->initTableWidget_project_attachment();
 }
 
 Widget::~Widget()
@@ -216,12 +217,15 @@ void Widget::deleteRowFromTable(QTableWidget *tableWidget, int deleteRowNum, QSt
         {
             int row = selectedRows[i];
             tableWidget->removeRow(row);
-            if(deleteRowNum == 2)
+            if(deleteRowNum != 1)
             {
-                tableWidget->removeRow(row - 1);
+                for(int i = 1; i <= deleteRowNum - 1; i++)
+                {
+                    tableWidget->removeRow(row - i);
+                }
             }
-            if(deleteRowNum == 2)
-                componentManager.del_and_updateTableID((row + 1) / 2, componentName);
+            if(deleteRowNum != 1)
+                componentManager.del_and_updateTableID((row + 1) / deleteRowNum, componentName);
             else
                 componentManager.del_and_updateTableID(row + 1, componentName);
         }
@@ -229,7 +233,7 @@ void Widget::deleteRowFromTable(QTableWidget *tableWidget, int deleteRowNum, QSt
 
         // 重新编号
         for (int row = 0; row < tableWidget->rowCount(); ++row) {
-            QTableWidgetItem* item = new QTableWidgetItem(QString::number(deleteRowNum == 1 ? (row + 1) : (row / 2 + 1)));
+            QTableWidgetItem* item = new QTableWidgetItem(QString::number(deleteRowNum == 1 ? (row + 1) : (row / deleteRowNum + 1)));
             tableWidget->setItem(row, 1, item); // Assuming the sequence numbers are in the second column (index 1)
             item->setTextAlignment(Qt::AlignCenter);
             item->setFlags(Qt::ItemIsEditable);
@@ -238,11 +242,65 @@ void Widget::deleteRowFromTable(QTableWidget *tableWidget, int deleteRowNum, QSt
         }
         if(deleteRowNum == 2)
         {
-            for(int i = 0; i < tableWidget->columnCount(); i++)
+            QString columnName_1 = "63Hz"; // 这是你想合并单元格的列的名称
+            QString columnName_2 = "来源"; // 这是你想合并单元格的列的名称
+            int targetColumnIndex_1 = -1;
+            int targetColumnIndex_2 = -1;
+            // 找到该列名称对应的列索引
+            for(int j = 0; j < tableWidget->columnCount(); ++j) {
+                if(tableWidget->horizontalHeaderItem(j)->text() == columnName_1) {
+                    targetColumnIndex_1 = j;
+                }
+                else if(tableWidget->horizontalHeaderItem(j)->text() == columnName_2) {
+                    targetColumnIndex_2 = j;
+                }
+
+                if(targetColumnIndex_1 != -1 && targetColumnIndex_2 != -1)  break;
+            }
+
+            for(int i = 0; i < tableWidget->rowCount(); i += 2)
             {
-                if(i < 7 || i > 16)
+                for(int j = 0; j < tableWidget->columnCount(); j++)
                 {
-                    mergeSimilarCellsInColumn(tableWidget, i, 0, tableWidget->rowCount(), 2);
+                    if(j < targetColumnIndex_1 || j == targetColumnIndex_2)
+                    {
+                        tableWidget->setSpan(i, j, 2, 1);
+                    }
+                }
+            }
+        }
+        else if(deleteRowNum == 4)
+        {
+            QString columnName_1 = "类型"; // 这是你想合并单元格的列的名称
+            QString columnName_2 = "来源"; // 这是你想合并单元格的列的名称
+            int targetColumnIndex_1 = -1;
+            int targetColumnIndex_2 = -1;
+
+            for(int j = 0; j < tableWidget->columnCount(); ++j) {
+                if(tableWidget->horizontalHeaderItem(j)->text() == columnName_1) {
+                    targetColumnIndex_1 = j;
+                }
+                else if(tableWidget->horizontalHeaderItem(j)->text() == columnName_2) {
+                    targetColumnIndex_2 = j;
+                }
+
+                if(targetColumnIndex_1 != -1 && targetColumnIndex_2 != -1)  break;
+            }
+
+            // 找到该列名称对应的列索引
+            for(int i = 0; i < tableWidget->rowCount(); i += 4)
+            {
+                for(int j = 0; j < tableWidget->columnCount(); j++)
+                {
+                    if(j < targetColumnIndex_1)
+                    {
+                        tableWidget->setSpan(i, j, 4, 1);
+                    }
+                    else if(j == targetColumnIndex_1 || j == targetColumnIndex_2)
+                    {
+                        tableWidget->setSpan(i, j, 2, 1);
+                        tableWidget->setSpan(i + 2, j, 2, 1);
+                    }
                 }
             }
         }
@@ -598,12 +656,18 @@ void Widget::on_pushButton_noi_limit_del_clicked()
 {
     // 获取选中的行索引
     QList<int> selectedRows;
+    QList<QString> selectedNames;
     for (int row = 0; row < ui->tableWidget_noi_limit->rowCount(); ++row) {
         QWidget* widget = ui->tableWidget_noi_limit->cellWidget(row, 0); // Assuming the checkbox is in the first column (index 0)
         QCheckBox* checkBox = widget->findChild<QCheckBox*>(); // Find the checkbox within the widget
 
         if (checkBox && checkBox->isChecked()) {
             selectedRows.append(row);
+            QTableWidgetItem* item = ui->tableWidget_noi_limit->item(row, 2);
+            if (item != nullptr)
+            { // 确保item不为nullptr
+                selectedNames.append(item->text());
+            }
         }
     }
 
@@ -629,6 +693,15 @@ void Widget::on_pushButton_noi_limit_del_clicked()
         {
             int row = selectedRows[i];
             ui->tableWidget_noi_limit->removeRow(row);
+        }
+
+        for (const QString& name : selectedNames)
+        {
+            auto it = std::remove_if(rooms.begin(), rooms.end(),
+                                     [&name](const Room& room) {
+                                         return room.name == name;
+                                     });
+            rooms.erase(it, rooms.end()); // 实际删除 those elements
         }
 
 
@@ -741,6 +814,80 @@ void Widget::on_pushButton_prj_save_clicked()
 }
 
 //初始化表格
+void Widget::initTableWidget_project_attachment()
+{
+    int colCount = 3;
+    // 设置表头标题
+    QStringList headerText;
+    headerText << "" << "序号" << "附件名";
+    // 设置每列的宽度
+    int columnWidths[] = {1, 1, 5};
+    // 调用封装好的初始化表格函数
+    initTableWidget(ui->tableWidget_project_attachment, headerText, columnWidths, colCount);
+}
+
+//项目附件添加
+void Widget::on_pushButton_project_attachment_add_clicked()
+{
+    // 打开文件选择对话框，让用户选择文件
+    QString filePath = QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("All Files (*)"));
+    QString fileName = "";
+    if (!filePath.isEmpty()) {
+        QFileInfo fileInfo(filePath);
+
+        // 保存文件名（包括后缀）
+        fileName = fileInfo.fileName();
+
+        projectAttachmentMap[fileName] = filePath;
+    }
+
+    QTableWidget *tableWidget = ui->tableWidget_project_attachment;
+
+    QStringList data = {
+        QString::number(tableWidget->rowCount() + 1),
+        fileName
+    };
+
+    int rowCount = tableWidget->rowCount();
+    tableWidget->setRowCount(rowCount + 1);
+
+    for (int i = 0; i < data.size() + 1; ++i) {
+        if (i == 0) {
+            // 处理复选框
+            QCheckBox* checkBox = new QCheckBox();
+            QWidget* widget = new QWidget();
+            QHBoxLayout* layout = new QHBoxLayout(widget);
+            layout->addWidget(checkBox);
+            layout->setAlignment(Qt::AlignCenter);
+            layout->setContentsMargins(0, 0, 0, 0);
+            tableWidget->setCellWidget(rowCount, i, widget);
+        }
+        else if (i == 1)
+        {
+            QTableWidgetItem *item = new QTableWidgetItem(data[i - 1]);
+            tableWidget->setItem(rowCount, i, item);
+            item->setTextAlignment(Qt::AlignCenter); // 将内容居中对齐
+            item->setFlags(Qt::ItemIsEditable); // 设置为只读
+        }
+        else if (i == 2)
+        {
+            QLabel *label = new QLabel("<a href='#'>" + fileName + "</a>");
+            label->setTextFormat(Qt::RichText);
+            label->setCursor(Qt::PointingHandCursor); // 设置鼠标悬停时为手形光标
+            label->setAlignment(Qt::AlignCenter);
+            tableWidget->setCellWidget(rowCount, 2, label);
+
+            connect(label, &QLabel::linkActivated, [=](const QString &link){
+                // 处理点击事件，例如打开链接
+                QString localFilePath = projectAttachmentMap[fileName]; // 假设这是你的本地文件路径
+                QUrl fileUrl = QUrl::fromLocalFile(localFilePath);
+                QDesktopServices::openUrl(fileUrl);
+            });
+        }
+    }
+
+}
+
 void Widget::initTableWidget_noi_limit()
 {
     int colCount = 5;
@@ -766,7 +913,7 @@ void Widget::initTableWidget_drawing_list()
     QStringList headerText;
     headerText << "" << "序号" << "图号" << "图名";
     // 设置每列的宽度
-    int columnWidths[] = {4, 5, 50};
+    int columnWidths[] = {1, 2, 9, 9};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_drawing_list, headerText, columnWidths, colCount);
 }
@@ -774,22 +921,27 @@ void Widget::initTableWidget_drawing_list()
 //当表格item改变，rooms跟着改变
 void Widget::on_tableWidget_noi_limit_itemChanged(QTableWidgetItem *item)
 {
-    if(!item || item->text().isEmpty())
+    if (!item || item->text().isEmpty())
         return;
+
     int rowCount = ui->tableWidget_noi_limit->rowCount();
+    QVector<Room> tempRooms; // 使用临时列表来收集数据
 
-    rooms.clear();
-
-    for(int i = 0; i < rowCount; i++)
-    {
+    for (int i = 0; i < rowCount; i++) {
+        if (!ui->tableWidget_noi_limit->item(i, 2) || ui->tableWidget_noi_limit->item(i, 2)->text().isEmpty() ||
+            !ui->tableWidget_noi_limit->item(i, 3) || ui->tableWidget_noi_limit->item(i, 3)->text().isEmpty() ||
+            !ui->tableWidget_noi_limit->item(i, 4) || ui->tableWidget_noi_limit->item(i, 4)->text().isEmpty()) {
+            // 如果任一必需的单元格为空，则跳过这一行
+            continue;
+        }
         Room room;
-        if(!ui->tableWidget_noi_limit->item(i,2) || !ui->tableWidget_noi_limit->item(i,3) ||!ui->tableWidget_noi_limit->item(i,4) || !ui->tableWidget_noi_limit->item(i,5))
-            return;
-        room.name = ui->tableWidget_noi_limit->item(i,2)->text();
-        room.noise = ui->tableWidget_noi_limit->item(i,3)->text();
-        room.type = ui->tableWidget_noi_limit->item(i,4)->text();
-        rooms.push_back(room);
+        room.name = ui->tableWidget_noi_limit->item(i, 2)->text();
+        room.noise = ui->tableWidget_noi_limit->item(i, 3)->text();
+        room.type = ui->tableWidget_noi_limit->item(i, 4)->text();
+        tempRooms.push_back(room); // 将这个房间添加到临时列表中
     }
+
+    rooms = tempRooms; // 使用收集到的数据更新rooms列表
 }
 
 //通过名字获取噪声限制
@@ -835,10 +987,10 @@ void Widget::initTableWidget_fan_noi()
     int colCount = 18;
     // 设置表头标题
     QStringList headerText;
-    headerText << "" << "序号" << "编号" << "品牌" << "型号" << "风量" << "静压" << "噪音位置" << "63Hz" << "125Hz" << "250Hz"
+    headerText << "" << "序号" << "编号" << "品牌" << "型号" << "风量(m³/h)" << "静压(Pa)" << "噪音位置" << "63Hz" << "125Hz" << "250Hz"
                << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";
     // 设置每列的宽度
-    int columnWidths[] = {30, 38, 120, 100, 100, 90, 90, 80, 55, 55, 55, 55, 55, 55, 55, 55, 90, 60};
+    int columnWidths[] = {30, 38, 120, 100, 100, 95, 95, 80, 55, 55, 55, 55, 55, 55, 55, 55, 90, 60};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_fan_noi, headerText, columnWidths, colCount);
 }
@@ -846,7 +998,7 @@ void Widget::initTableWidget_fan_noi()
 void Widget::on_pushButton_fanNoi_add_clicked()
 {
     QTableWidget *tableWidget = ui->tableWidget_fan_noi;
-    int startRow = tableWidget->rowCount(); //获取当前行数
+    int rowCount = tableWidget->rowCount(); //获取当前行数
     std::unique_ptr<Fan_noise> noi;
     Dialog_fan_noise *dialog = new Dialog_fan_noise(this);
 
@@ -862,7 +1014,7 @@ void Widget::on_pushButton_fanNoi_add_clicked()
                 noi->model,
                 noi->air_volume,
                 noi->static_pressure,
-                "进口",
+                "进口(dB)",
                 noi->noi_in_63,
                 noi->noi_in_125,
                 noi->noi_in_250,
@@ -881,7 +1033,7 @@ void Widget::on_pushButton_fanNoi_add_clicked()
                 noi->model,
                 noi->air_volume,
                 noi->static_pressure,
-                "出口",
+                "出口(dB)",
                 noi->noi_out_63,
                 noi->noi_out_125,
                 noi->noi_out_250,
@@ -896,14 +1048,14 @@ void Widget::on_pushButton_fanNoi_add_clicked()
             // 使用通用函数添加行
             addRowToTable(tableWidget, data_in);
             addRowToTable(tableWidget, data_out);
-            int numRows = tableWidget->rowCount() - startRow; //获取当前行数
+            //int numRows = tableWidget->rowCount() - startRow; //获取当前行数
 
-            componentManager.addComponent(QSharedPointer<Fan_noise>(noi.release()));
+            componentManager.addComponent(QSharedPointer<Fan_noise>(noi.release()),"风机");
             for(int i = 0; i < tableWidget->columnCount(); i++)
             {
                 if(i < 7 || i > 16)
                 {
-                    mergeSimilarCellsInColumn(tableWidget, i, startRow, numRows, 2);
+                    tableWidget->setSpan(rowCount, i, 2, 1);
                 }
             }
         }
@@ -1004,9 +1156,9 @@ void Widget::initTableWidget_fanCoil_noi()
 {
     int colCount = 18;
     QStringList headerText;
-    headerText << "" << "序号" << "品牌" << "类型" << "型号" << "风量" << "静压" << "噪音位置" << "63Hz" << "125Hz" << "250Hz"
+    headerText << "" << "序号" << "品牌" << "类型" << "型号" << "风量(m³/h)" << "静压(Pa)" << "噪音位置" << "63Hz" << "125Hz" << "250Hz"
                << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";
-    int columnWidths[] = {30, 120, 90, 90, 90, 90, 90, 80, 55, 55, 55, 55, 55, 55, 55, 55, 80, 55};
+    int columnWidths[] = {30, 120, 90, 90, 90, 95, 95, 80, 55, 55, 55, 55, 55, 55, 55, 55, 80, 55};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_fanCoil_noi, headerText, columnWidths, colCount);
 }
@@ -1030,7 +1182,7 @@ void Widget::on_pushButton_fanCoil_noi_add_clicked()
                 noi->model,
                 noi->air_volume,
                 noi->static_pressure,
-                "进口",
+                "进口(dB)",
                 noi->noi_in_63,
                 noi->noi_in_125,
                 noi->noi_in_250,
@@ -1049,7 +1201,7 @@ void Widget::on_pushButton_fanCoil_noi_add_clicked()
                 noi->model,
                 noi->air_volume,
                 noi->static_pressure,
-                "出口",
+                "出口(dB)",
                 noi->noi_out_63,
                 noi->noi_out_125,
                 noi->noi_out_250,
@@ -1065,7 +1217,7 @@ void Widget::on_pushButton_fanCoil_noi_add_clicked()
             addRowToTable(tableWidget, data_in);
             addRowToTable(tableWidget, data_out);
 
-            componentManager.addComponent(QSharedPointer<FanCoil_noise>(noi.release()));
+            componentManager.addComponent(QSharedPointer<FanCoil_noise>(noi.release()),"风机盘管");
             for(int i = 0; i < tableWidget->columnCount(); i++)
             {
                 if(i < 7 || i > 16)
@@ -1174,10 +1326,10 @@ void Widget::initTableWidget_air_noi()
     int colCount = 19;
 
     QStringList headerText;
-    headerText << "" << "序号" << "编号" << "品牌" << "型号" << "风量" << "静压" << "类型" << "噪音位置" << "63Hz" << "125Hz" << "250Hz"
+    headerText << "" << "序号" << "编号" << "品牌" << "型号" << "风量(m³/h)" << "静压(Pa)" << "类型" << "噪音位置" << "63Hz" << "125Hz" << "250Hz"
                << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";
 
-    int columnWidths[] = {30, 38, 120, 100, 100, 90, 90, 80, 80, 55, 55, 55, 55, 55, 55, 55, 55, 90, 60};
+    int columnWidths[] = {30, 38, 120, 100, 100, 95, 95, 80, 80, 55, 55, 55, 55, 55, 55, 55, 55, 90, 60};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_air_single_fan_noi, headerText, columnWidths, colCount);
@@ -1186,14 +1338,26 @@ void Widget::initTableWidget_air_noi()
 
 void Widget::on_pushButton_air_noi_add_clicked()
 {
-    QTableWidget *tableWidget = ui->tableWidget_air_single_fan_noi;
-    Dialog_aircondition_noise *dialog = new Dialog_aircondition_noise(this);
+    QTableWidget *tableWidget = nullptr;
+    Dialog_aircondition_noise *dialog = nullptr;
     std::unique_ptr<Aircondition_noise> noi;
+
+    if(ui->stackedWidget_air_table->currentWidget() == ui->page_single_fan)
+    {
+        tableWidget = ui->tableWidget_air_single_fan_noi;
+        dialog = new Dialog_aircondition_noise(this,-1,0);
+    }
+    else if(ui->stackedWidget_air_table->currentWidget() == ui->page_double_fan)
+    {
+        tableWidget = ui->tableWidget_air_double_fan_noi;
+        dialog = new Dialog_aircondition_noise(this,-1,1);
+    }
 
     int rowCount = tableWidget->rowCount(); //获取当前行数
     if (dialog->exec() == QDialog::Accepted) {
         noi = std::make_unique<Aircondition_noise>(std::move(*static_cast<Aircondition_noise*>(dialog->getNoi())));
-        noi->table_id = QString::number(tableWidget->rowCount() / 2 + 1);
+        if(tableWidget == ui->tableWidget_air_single_fan_noi) noi->table_id = QString::number(tableWidget->rowCount() / 2 + 1);
+        else if(tableWidget == ui->tableWidget_air_double_fan_noi) noi->table_id = QString::number(tableWidget->rowCount() / 4 + 1);
         if (noi != nullptr) {
             QStringList data_send_in = {
                 noi->table_id,
@@ -1202,8 +1366,8 @@ void Widget::on_pushButton_air_noi_add_clicked()
                 noi->model,
                 noi->air_volume,
                 noi->static_pressure,
-                noi->type,
-                "进口",
+                "送风机",
+                "进口(dB)",
                 noi->noi_send_in_63,
                 noi->noi_send_in_125,
                 noi->noi_send_in_250,
@@ -1216,14 +1380,14 @@ void Widget::on_pushButton_air_noi_add_clicked()
                 "厂家"
             };
             QStringList data_send_out = {
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "出口",
+                noi->table_id,
+                noi->number,
+                noi->brand,
+                noi->model,
+                noi->air_volume,
+                noi->static_pressure,
+                "送风机",
+                "出口(dB)",
                 noi->noi_send_out_63,
                 noi->noi_send_out_125,
                 noi->noi_send_out_250,
@@ -1248,8 +1412,8 @@ void Widget::on_pushButton_air_noi_add_clicked()
                     noi->model,
                     noi->air_volume,
                     noi->static_pressure,
-                    noi->type,
-                    "进口",
+                    "排风机",
+                    "进口(dB)",
                     noi->noi_exhaust_in_63,
                     noi->noi_exhaust_in_125,
                     noi->noi_exhaust_in_250,
@@ -1262,14 +1426,14 @@ void Widget::on_pushButton_air_noi_add_clicked()
                     "厂家"
                 };
                 QStringList data_exhaust_out = {
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "出口",
+                    noi->table_id,
+                    noi->number,
+                    noi->brand,
+                    noi->model,
+                    noi->air_volume,
+                    noi->static_pressure,
+                    "排风机",
+                    "出口(dB)",
                     noi->noi_exhaust_out_63,
                     noi->noi_exhaust_out_125,
                     noi->noi_exhaust_out_250,
@@ -1286,8 +1450,8 @@ void Widget::on_pushButton_air_noi_add_clicked()
                 addRowToTable(tableWidget, data_exhaust_out);
             }
 
-            componentManager.addComponent(QSharedPointer<Aircondition_noise>(noi.release()));
-            if(noi->type == "单风机")
+            componentManager.addComponent(QSharedPointer<Aircondition_noise>(noi.release()),"空调器");
+            if(tableWidget == ui->tableWidget_air_single_fan_noi)
             {
                 for(int i = 0; i < tableWidget->columnCount(); i++)
                 {
@@ -1297,7 +1461,7 @@ void Widget::on_pushButton_air_noi_add_clicked()
                     }
                 }
             }
-            else if(noi->type == "双风机")
+            else if(tableWidget == ui->tableWidget_air_double_fan_noi)
             {
                 for(int i = 0; i < tableWidget->columnCount(); i++)
                 {
@@ -1319,7 +1483,15 @@ void Widget::on_pushButton_air_noi_add_clicked()
 
 void Widget::on_pushButton_air_noi_del_clicked()
 {
-    deleteRowFromTable(ui->tableWidget_air_single_fan_noi, 2, "空调器");
+    if(ui->stackedWidget_air_table->currentWidget() == ui->page_single_fan)
+    {
+        deleteRowFromTable(ui->tableWidget_air_single_fan_noi, 2, "空调器");
+    }
+    else if(ui->stackedWidget_air_table->currentWidget() == ui->page_double_fan)
+    {
+        deleteRowFromTable(ui->tableWidget_air_double_fan_noi, 4, "空调器");
+    }
+
 }
 
 //修改按钮
@@ -1412,7 +1584,7 @@ void Widget::on_pushButton_air_noi_revise_clicked()
             }
             origin_type = noi->type;
             // 创建模态对话框，并设置为模态
-            Dialog_aircondition_noise *airNoiseDialog = new Dialog_aircondition_noise(this,row,*noi);
+            Dialog_aircondition_noise *airNoiseDialog = new Dialog_aircondition_noise(this,row, 0,*noi);
             airNoiseDialog->setWindowModality(Qt::ApplicationModal);
             airNoiseDialog->setModal(true);
 
@@ -1537,9 +1709,9 @@ void Widget::initTableWidget_VAV_terminal()
 {
     int colCount = 17;
     QStringList headerText;
-    headerText<< "" << "序号" << "编号" << "品牌" << "型号" << "阀门开度" << "风量" << "63Hz" << "125Hz" << "250Hz"
+    headerText<< "" << "序号" << "编号" << "品牌" << "型号" << "阀门开度" << "风量(m³/h)" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 140, 110, 140, 100, 100, 80, 80, 80, 80, 80, 80, 80, 80, 95 ,90};
+    int columnWidths[] = {40, 50, 140, 110, 140, 100, 110, 80, 80, 80, 80, 80, 80, 80, 80, 95 ,90};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_VAV_terminal, headerText, columnWidths, colCount);
 }
@@ -1576,7 +1748,7 @@ void Widget::on_pushButton_VAV_terminal_add_clicked()
             // 使用通用函数添加行
             addRowToTable(tableWidget, data);
 
-            componentManager.addComponent(QSharedPointer<VAV_terminal_noise>(noi.release()));
+            componentManager.addComponent(QSharedPointer<VAV_terminal_noise>(noi.release()),"变风量末端");
         }
     }
 
@@ -1629,9 +1801,9 @@ void Widget::initTableWidget_circular_damper()
 {
     int colCount = 16;
     QStringList headerText;
-    headerText<< "" << "序号" << "品牌" << "型号" << "阀门开度" << "风量" << "63Hz" << "125Hz" << "250Hz"
+    headerText<< "" << "序号" << "品牌" << "型号" << "阀门开度" << "风量(m³/h)" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 100, 120, 100, 100, 65, 65, 65, 65, 65, 65, 65, 65, 90, 70};
+    int columnWidths[] = {40, 50, 100, 120, 100, 110, 65, 65, 65, 65, 65, 65, 65, 65, 90, 70};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_circular_damper, headerText, columnWidths, colCount);
 }
@@ -1667,7 +1839,7 @@ void Widget::on_pushButton_circular_damper_add_clicked()
             // 使用通用函数添加行
             addRowToTable(tableWidget, data);
 
-            componentManager.addComponent(QSharedPointer<Circular_damper_noi>(noi.release()));
+            componentManager.addComponent(QSharedPointer<Circular_damper_noi>(noi.release()),"圆形调风门");
         }
     }
 }
@@ -1719,7 +1891,7 @@ void Widget::initTableWidget_rect_damper()
 {
     int colCount = 16;
     QStringList headerText;
-    headerText<< "" << "序号" << "品牌" << "型号" << "阀门开度" << "风量" << "63Hz" << "125Hz" << "250Hz"
+    headerText<< "" << "序号" << "品牌" << "型号" << "阀门开度" << "风量(m³/h)" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
     int columnWidths[] = {40, 50, 110, 130, 110, 110, 65, 65, 65, 65, 65, 65, 65, 65, 90, 70};
     // 调用封装好的初始化表格函数
@@ -1757,7 +1929,7 @@ void Widget::on_pushButton_rect_damper_add_clicked()
             // 使用通用函数添加行
             addRowToTable(tableWidget, data);
 
-            componentManager.addComponent(QSharedPointer<Rect_damper_noi>(noi.release()));
+            componentManager.addComponent(QSharedPointer<Rect_damper_noi>(noi.release()),"方形调风门");
         }
     }
 
@@ -1906,7 +2078,7 @@ void Widget::on_pushButton_air_diff_add_clicked()
             addRowToTable(tableWidget_atten, data_atten);
             addRowToTable(tableWidget_refl, data_refl);
 
-            componentManager.addComponent(QSharedPointer<AirDiff_noise>(noi));
+            componentManager.addComponent(QSharedPointer<AirDiff_noise>(noi),"布风器+散流器");
         }
     }
 }
@@ -2290,7 +2462,7 @@ void Widget::on_pushButton_pump_send_add_clicked()
             addRowToTable(tableWidget_atten, data_atten);
             addRowToTable(tableWidget_refl, data_refl);
 
-            componentManager.addComponent(QSharedPointer<PumpSend_noise>(noi.release()));
+            componentManager.addComponent(QSharedPointer<PumpSend_noise>(noi.release()),"抽/送风头");
         }
     }
 }
@@ -2614,7 +2786,7 @@ void Widget::on_pushButton_staticBox_grille_add_clicked()
             addRowToTable(tableWidget_atten, data_atten);
             addRowToTable(tableWidget_refl, data_refl);
 
-            componentManager.addComponent(QSharedPointer<StaticBox_grille_noise>(noi.release()));
+            componentManager.addComponent(QSharedPointer<StaticBox_grille_noise>(noi.release()),"静压箱+格栅");
         }
     }
 }
@@ -2946,7 +3118,7 @@ void Widget::on_pushButton_disp_vent_terminal_add_clicked()
             addRowToTable(tableWidget_atten, data_atten);
             addRowToTable(tableWidget_refl, data_refl);
 
-            componentManager.addComponent(QSharedPointer<Disp_vent_terminal_noise>(noi.release()));
+            componentManager.addComponent(QSharedPointer<Disp_vent_terminal_noise>(noi.release()),"置换通风末端");
         }
     }
 }
@@ -3286,7 +3458,7 @@ void Widget::on_pushButton_other_send_terminal_add_clicked()
             addRowToTable(tableWidget_atten, data_atten);
             addRowToTable(tableWidget_refl, data_refl);
 
-            componentManager.addComponent(QSharedPointer<Other_send_terminal_noise>(noi.release()));
+            componentManager.addComponent(QSharedPointer<Other_send_terminal_noise>(noi.release()),"其他送风末端");
         }
     }
 
@@ -3572,7 +3744,7 @@ void Widget::on_pushButton_static_box_add_clicked()
             // 使用通用函数添加行
             addRowToTable(tableWidget, data);
 
-            componentManager.addComponent(QSharedPointer<Static_box>(noi.release()));
+            componentManager.addComponent(QSharedPointer<Static_box>(noi.release()),"静压箱");
         }
     }
 }
@@ -3654,7 +3826,7 @@ void Widget::on_pushButton_duct_with_multi_ranc_add_clicked()
             // 使用通用函数添加行
             addRowToTable(tableWidget, data);
 
-            componentManager.addComponent(QSharedPointer<Multi_ranc_atten>(noi.release()));
+            componentManager.addComponent(QSharedPointer<Multi_ranc_atten>(noi.release()),"风道多分支");
         }
     }
 
@@ -3738,7 +3910,7 @@ void Widget::on_pushButton_tee_add_clicked()
 
             // 使用通用函数添加行
             addRowToTable(tableWidget, data);
-            componentManager.addComponent(QSharedPointer<Tee_atten>(noi.release()));
+            componentManager.addComponent(QSharedPointer<Tee_atten>(noi.release()),"三通");
         }
     }
 
@@ -3829,7 +4001,7 @@ void Widget::on_pushButton_pipe_add_clicked()
 
             // 使用通用函数添加行
             addRowToTable(tableWidget, data);
-            componentManager.addComponent(QSharedPointer<Pipe_atten>(noi.release()));
+            componentManager.addComponent(QSharedPointer<Pipe_atten>(noi.release()),"直管");
         }
     }
 
@@ -3915,7 +4087,7 @@ void Widget::on_pushButton_elbow_add_clicked()
 
             // 使用通用函数添加行
             addRowToTable(tableWidget, data);
-            componentManager.addComponent(QSharedPointer<Elbow_atten>(noi.release()));
+            componentManager.addComponent(QSharedPointer<Elbow_atten>(noi.release()),"弯头");
         }
     }
 }
@@ -3998,7 +4170,7 @@ void Widget::on_pushButton_reducer_add_clicked()
 
             // 使用通用函数添加行
             addRowToTable(tableWidget, data);
-            componentManager.addComponent(QSharedPointer<Reducer_atten>(noi.release()));
+            componentManager.addComponent(QSharedPointer<Reducer_atten>(noi.release()),"变径");
         }
     }
 
@@ -4150,7 +4322,7 @@ void Widget::on_pushButton_silencer_add_clicked()
             // 使用通用函数添加行
             addRowToTable(tableWidget, data);
 
-            componentManager.addComponent(QSharedPointer<Silencer_atten>(noi.release()));
+            componentManager.addComponent(QSharedPointer<Silencer_atten>(noi.release()),"消声器");
         }
     }
 }
@@ -4312,7 +4484,7 @@ void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
                 box->setlabeltext("系统编号");
                 if(box->exec()==QDialog::Accepted)
                 {
-                    QTreeWidgetItem *treeitemsystem=new QTreeWidgetItem(item,QStringList(box->getname()));
+                    QTreeWidgetItem *treeitemsystem = new QTreeWidgetItem(item,QStringList(box->getname()));
                     vec_system.append(treeitemsystem);
                     QTreeWidgetItem *treeitemcp1=new QTreeWidgetItem(map_zsq67.value(item),QStringList(box->getname()));
                     QTreeWidgetItem *treeitemcp2=new QTreeWidgetItem(map_zsq68.value(item),QStringList(box->getname()));
@@ -4320,7 +4492,7 @@ void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
                     map_system68.insert(treeitemsystem,treeitemcp2);
                     //  添加系统同时在6、7项的系统编号下添加界面
                     //6
-                    Form_system_list *form_sl=new Form_system_list;
+                    Form_system_list *form_sl = new Form_system_list(box->getname());
                     ui->stackedWidget->addWidget(form_sl);
                     connect(ui->treeWidget,&QTreeWidget::itemClicked,this,[=](QTreeWidgetItem *item1,int n){
                         if(item1 == treeitemsystem)     //     点击系统会显示系统清单界面
@@ -4333,8 +4505,8 @@ void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
                     form->setjiabanItem(treeitemcp2);   // 房间位于这一treeitem下
                     ui->stackedWidget->addWidget(form);
                     // 关联form发出的添加房间、删除房间信号
-                    connect(form,SIGNAL(roomadd(QTreeWidgetItem*,QString,int)),
-                            this,SLOT(upDateTreeItem8(QTreeWidgetItem*,QString,int)));
+                    connect(form,SIGNAL(roomadd(QTreeWidgetItem*,QString,int, QString, QString)),
+                            this,SLOT(upDateTreeItem8(QTreeWidgetItem*,QString,int, QString, QString)));
                     connect(form,SIGNAL(roomdel(QTreeWidgetItem*,QString)),
                             this,SLOT(delroom(QTreeWidgetItem*,QString)));
 
@@ -4460,13 +4632,17 @@ void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
 }
 
 //  更新第八项房间底下的主风管信息 房间编号，主风管数量
-void Widget::upDateTreeItem8(QTreeWidgetItem *item,QString roomid,int num) //
+void Widget::upDateTreeItem8(QTreeWidgetItem *item,QString roomid,int num, QString jiaban, QString limit) //
 {
     QTreeWidgetItem *treeitemfj=new QTreeWidgetItem(item,QStringList(roomid));
+    QString systemName = item->text(0);     //获取系统编号
+    QString zhushuqu = item->parent()->text(0);     //获取主竖区
     for(int i=0;i<num;i++)
     {
         // 创建 房间主风管 页面对象
         room_cal_baseWidget *page = new room_cal_baseWidget;
+        page->setInfo(zhushuqu,jiaban,roomid,limit,QString::number(num));   //设置信息
+        page->setSystemName(systemName);   //设置系统名
         // 保存 房间编号下的主风管page
         map_roomid_zfgpage[roomid].push_back(page);
 
@@ -4491,6 +4667,7 @@ void Widget::upDateTreeItem8(QTreeWidgetItem *item,QString roomid,int num) //
                     if(box->exec()==QDialog::Accepted)
                     {
                         treeitemfg->setText(0,box->getname());
+                        page->setMainDuctNumber(box->getname());    //room_cal_table设置名称
                     }
                     page->flag_firstopen=0;
                 }
@@ -5264,3 +5441,7 @@ void Widget::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWid
     }
 }
 /**************树列表************/
+
+
+
+

@@ -8,27 +8,57 @@ ComponentManager::ComponentManager()
 
 }
 
-void ComponentManager::addComponent(QSharedPointer<ComponentBase> component)
+QVector<QString> ComponentManager::getAirconditionNumbers()
 {
+    QVector<QString> AirconditionNumbers;
+    // 遍历airConditions容器
+    for (const QSharedPointer<Aircondition_noise>& airCondition : airConditions) {
+        AirconditionNumbers.push_back(airCondition->number);
+    }
+    return AirconditionNumbers;
+}
+
+QVector<QString> ComponentManager::getFanCoilNumbers()
+{
+    QVector<QString> FanCoilNumbers;
+    for (const QSharedPointer<FanCoil_noise>& fanCoil : fanCoils) {
+        FanCoilNumbers.push_back(fanCoil->model);
+    }
+    return FanCoilNumbers;
+}
+
+QVector<QString> ComponentManager::getFanNumbers()
+{
+    QVector<QString> FanNumbers;
+    for (const QSharedPointer<Fan_noise>& fan : fans) {
+        FanNumbers.push_back(fan->number);
+    }
+
+    return FanNumbers;
+}
+
+void ComponentManager::addComponent(QSharedPointer<ComponentBase> component, QString type)
+{
+
     //使用基类指针进行处理
-    if (qSharedPointerCast<AirDiff_noise>(component)) airDiffs.append(qSharedPointerCast<AirDiff_noise>(component));
-    else if(qSharedPointerCast<Aircondition_noise>(component)) airConditions.append(qSharedPointerCast<Aircondition_noise>(component));
-    else if(qSharedPointerCast<Circular_damper_noi>(component)) circularDampers.append(qSharedPointerCast<Circular_damper_noi>(component));
-    else if(qSharedPointerCast<Disp_vent_terminal_noise>(component)) dispVentTerminals.append(qSharedPointerCast<Disp_vent_terminal_noise>(component));
-    else if(qSharedPointerCast<Multi_ranc_atten>(component)) multiRancs.append(qSharedPointerCast<Multi_ranc_atten>(component));
-    else if(qSharedPointerCast<Elbow_atten>(component)) elbows.append(qSharedPointerCast<Elbow_atten>(component));
-    else if(qSharedPointerCast<Fan_noise>(component)) fans.append(qSharedPointerCast<Fan_noise>(component));
-    else if(qSharedPointerCast<FanCoil_noise>(component)) fanCoils.append(qSharedPointerCast<FanCoil_noise>(component));
-    else if(qSharedPointerCast<Other_send_terminal_noise>(component)) otherSendTerminals.append(qSharedPointerCast<Other_send_terminal_noise>(component));
-    else if(qSharedPointerCast<Pipe_atten>(component)) pipes.append(qSharedPointerCast<Pipe_atten>(component));
-    else if(qSharedPointerCast<PumpSend_noise>(component)) pumpSends.append(qSharedPointerCast<PumpSend_noise>(component));
-    else if(qSharedPointerCast<Rect_damper_noi>(component)) rectDampers.append(qSharedPointerCast<Rect_damper_noi>(component));
-    else if(qSharedPointerCast<Reducer_atten>(component)) reducers.append(qSharedPointerCast<Reducer_atten>(component));
-    else if(qSharedPointerCast<StaticBox_grille_noise>(component)) staticBoxGrilles.append(qSharedPointerCast<StaticBox_grille_noise>(component));
-    else if(qSharedPointerCast<Silencer_atten>(component)) silencers.append(qSharedPointerCast<Silencer_atten>(component));
-    else if(qSharedPointerCast<Static_box>(component)) staticboxs.append(qSharedPointerCast<Static_box>(component));
-    else if(qSharedPointerCast<Tee_atten>(component)) tees.append(qSharedPointerCast<Tee_atten>(component));
-    else if(qSharedPointerCast<VAV_terminal_noise>(component)) VAVTerminals.append(qSharedPointerCast<VAV_terminal_noise>(component));
+    if (type == "布风器+散流器") airDiffs.append(qSharedPointerCast<AirDiff_noise>(component));
+    else if(type == "空调器") airConditions.append(qSharedPointerCast<Aircondition_noise>(component));
+    else if(type == "圆形调风门") circularDampers.append(qSharedPointerCast<Circular_damper_noi>(component));
+    else if(type == "置换通风末端") dispVentTerminals.append(qSharedPointerCast<Disp_vent_terminal_noise>(component));
+    else if(type == "风道多分支") multiRancs.append(qSharedPointerCast<Multi_ranc_atten>(component));
+    else if(type == "弯头") elbows.append(qSharedPointerCast<Elbow_atten>(component));
+    else if(type == "风机") fans.append(qSharedPointerCast<Fan_noise>(component));
+    else if(type == "风机盘管") fanCoils.append(qSharedPointerCast<FanCoil_noise>(component));
+    else if(type == "其他送风末端") otherSendTerminals.append(qSharedPointerCast<Other_send_terminal_noise>(component));
+    else if(type == "直管") pipes.append(qSharedPointerCast<Pipe_atten>(component));
+    else if(type == "抽/送风头") pumpSends.append(qSharedPointerCast<PumpSend_noise>(component));
+    else if(type == "方形调风门") rectDampers.append(qSharedPointerCast<Rect_damper_noi>(component));
+    else if(type == "变径") reducers.append(qSharedPointerCast<Reducer_atten>(component));
+    else if(type == "静压箱+格栅") staticBoxGrilles.append(qSharedPointerCast<StaticBox_grille_noise>(component));
+    else if(type == "消声器") silencers.append(qSharedPointerCast<Silencer_atten>(component));
+    else if(type == "静压箱") staticboxs.append(qSharedPointerCast<Static_box>(component));
+    else if(type == "三通") tees.append(qSharedPointerCast<Tee_atten>(component));
+    else if(type == "变风量末端") VAVTerminals.append(qSharedPointerCast<VAV_terminal_noise>(component));
 }
 
 QString ComponentManager::getModelByNumber(QString number)
@@ -49,6 +79,33 @@ QString ComponentManager::getModelByNumber(QString number)
         }
     }
     return QString(); // 如果未找到匹配项，返回空字符串
+}
+
+ComponentBase* ComponentManager::getComponentByNumber(QString number)
+{
+    // 遍历airConditions容器
+    for (const QSharedPointer<Aircondition_noise>& airCondition : airConditions) {
+        // 检查空调编号是否匹配
+        if (airCondition->number == number) {
+            return airCondition.data(); // 返回匹配的型号
+        }
+    }
+
+    // 遍历fans容器
+    for (const QSharedPointer<Fan_noise>& fan : fans) {
+        // 检查空调编号是否匹配
+        if (fan->number == number) {
+            return fan.data(); // 返回匹配的型号
+        }
+    }
+
+    // 遍历fans容器
+    for (const QSharedPointer<FanCoil_noise>& fanCoil : fanCoils) {
+        // 检查空调编号是否匹配
+        if (fanCoil->model == number) {
+            return fanCoil.data(); // 返回匹配的型号
+        }
+    }
 }
 
 template<typename T>

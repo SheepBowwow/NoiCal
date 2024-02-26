@@ -8,6 +8,7 @@ Dialog_add_zhushuqu::Dialog_add_zhushuqu(QWidget *parent) :
     ui->setupUi(this);
     setWindowFlag(Qt::FramelessWindowHint);  // 写在窗口类构造函数里，隐藏边框
     setTopWidget(ui->widget_top);
+    ui->pushButton->setDefault(true);
 }
 
 Dialog_add_zhushuqu::~Dialog_add_zhushuqu()

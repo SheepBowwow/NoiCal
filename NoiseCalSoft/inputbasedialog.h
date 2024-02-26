@@ -46,6 +46,19 @@ public:
             instance = nullptr;
         }
     }
+
+    void updateImage(const QString& imagePath) {
+        QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(this->layout());
+        if (!layout) return; // 安全检查
+
+        // 假设imageLabel是layout的第一个widget
+        QLabel* imageLabel = qobject_cast<QLabel*>(layout->itemAt(0)->widget());
+        if (imageLabel) {
+            QPixmap image(imagePath);
+            imageLabel->setPixmap(image);
+        }
+    }
+
 public slots:
     void closeImageDialog();
 

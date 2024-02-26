@@ -262,6 +262,9 @@ font-family: '黑体';
        <family>黑体</family>
       </font>
      </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
     </widget>
     <widget class="QLabel" name="label_11">
      <property name="geometry">
@@ -298,6 +301,9 @@ font-family: '黑体';
       <font>
        <family>黑体</family>
       </font>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
      </property>
     </widget>
     <widget class="QLabel" name="label_4">

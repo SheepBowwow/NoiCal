@@ -113,52 +113,17 @@ background-color: rgb(157, 196, 229);
 border: 1px solid #DCDCDC;
 }</string>
      </property>
-     <widget class="QLabel" name="label_6">
+     <widget class="QLabel" name="label_4">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>41</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>说明</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_11">
-      <property name="geometry">
-       <rect>
-        <x>280</x>
-        <y>60</y>
-        <width>351</width>
-        <height>121</height>
+        <x>20</x>
+        <y>20</y>
+        <width>541</width>
+        <height>171</height>
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">border-image: url(:/images/image/reducer_formula.jpg);</string>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_12">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>50</y>
-        <width>261</width>
-        <height>91</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">border-image: url(:/images/image/round_reducer.jpg);</string>
+       <string notr="true">border-image: url(:/images/image/reducer_descri.png);</string>
       </property>
       <property name="text">
        <string/>
@@ -188,51 +153,17 @@ border: 1px solid #DCDCDC;
 border: 1px solid #DCDCDC;
 }</string>
      </property>
-     <widget class="QLabel" name="label_8">
+     <widget class="QLabel" name="label_6">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>41</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>说明</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_9">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>50</y>
-        <width>261</width>
-        <height>91</height>
+        <x>20</x>
+        <y>20</y>
+        <width>551</width>
+        <height>171</height>
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">border-image: url(:/images/image/round_reducer.jpg);</string>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_10">
-      <property name="geometry">
-       <rect>
-        <x>280</x>
-        <y>60</y>
-        <width>351</width>
-        <height>121</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">border-image: url(:/images/image/reducer_formula.jpg);</string>
+       <string notr="true">border-image: url(:/images/image/reducer_descri.png);</string>
       </property>
       <property name="text">
        <string/>

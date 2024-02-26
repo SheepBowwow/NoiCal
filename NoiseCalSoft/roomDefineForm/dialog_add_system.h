@@ -18,14 +18,18 @@ public:
     virtual void * getNoi() override;
 
     void setvalues(int,QString,QString);
-    QString getsyslx();
-    QString getsysbh();
-    QString getsysxh();
+    QString getType();
+    QString getNumber();
+    QString getModel();
 
 private slots:
     void on_pushButton_queding_clicked();
 
     void on_close_clicked();
+
+    void on_comboBox_type_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_number_currentTextChanged(const QString &arg1);
 
 private:
     Ui::dialog_add_system *ui;

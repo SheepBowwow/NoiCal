@@ -75,7 +75,7 @@ font-family: '黑体';
      </font>
     </property>
     <property name="text">
-     <string>主竖区 : </string>
+     <string>主竖区:</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
@@ -94,7 +94,7 @@ font-family: '黑体';
      </font>
     </property>
     <property name="text">
-     <string>甲板 : </string>
+     <string>甲板: </string>
     </property>
    </widget>
    <widget class="QLabel" name="label_3">
@@ -113,7 +113,7 @@ font-family: '黑体';
      </font>
     </property>
     <property name="text">
-     <string>房间编号 : </string>
+     <string>房间编号: </string>
     </property>
    </widget>
    <widget class="QLabel" name="label_4">
@@ -132,7 +132,7 @@ font-family: '黑体';
      </font>
     </property>
     <property name="text">
-     <string>噪声限值 : </string>
+     <string>噪声限值: </string>
     </property>
    </widget>
    <widget class="QLabel" name="label_5">
@@ -151,7 +151,7 @@ font-family: '黑体';
      </font>
     </property>
     <property name="text">
-     <string>主风管数量 : </string>
+     <string>主风管数量:</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_6">
@@ -170,10 +170,10 @@ font-family: '黑体';
      </font>
     </property>
     <property name="text">
-     <string>主风管编号 : </string>
+     <string>主风管编号:</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit">
+   <widget class="QLineEdit" name="lineEdit_main_duct_number">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -183,7 +183,7 @@ font-family: '黑体';
      </rect>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_2">
+   <widget class="QLineEdit" name="lineEdit_zhushuqu">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -193,7 +193,7 @@ font-family: '黑体';
      </rect>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_3">
+   <widget class="QLineEdit" name="lineEdit_deck">
     <property name="geometry">
      <rect>
       <x>380</x>
@@ -203,7 +203,7 @@ font-family: '黑体';
      </rect>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_4">
+   <widget class="QLineEdit" name="lineEdit_room_number">
     <property name="geometry">
      <rect>
       <x>610</x>
@@ -213,7 +213,7 @@ font-family: '黑体';
      </rect>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_5">
+   <widget class="QLineEdit" name="lineEdit_noise_limit">
     <property name="geometry">
      <rect>
       <x>830</x>
@@ -223,7 +223,7 @@ font-family: '黑体';
      </rect>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_6">
+   <widget class="QLineEdit" name="lineEdit_duct_num">
     <property name="geometry">
      <rect>
       <x>1070</x>
@@ -233,7 +233,7 @@ font-family: '黑体';
      </rect>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_7">
+   <widget class="QLineEdit" name="lineEdit_fan_quantity">
     <property name="geometry">
      <rect>
       <x>380</x>
@@ -262,7 +262,7 @@ font-family: '黑体';
      </font>
     </property>
     <property name="text">
-     <string>风量(m³/h) : </string>
+     <string>风量(m³/h):</string>
     </property>
    </widget>
   </widget>

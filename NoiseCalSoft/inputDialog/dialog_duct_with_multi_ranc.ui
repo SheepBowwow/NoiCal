@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>651</width>
-    <height>521</height>
+    <height>575</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -771,7 +771,7 @@ background-color:white;
 }</string>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="page_formula">
       <widget class="QLineEdit" name="lineEdit_q">
@@ -806,22 +806,6 @@ background-color:white;
         </font>
        </property>
       </widget>
-      <widget class="QLabel" name="label">
-       <property name="geometry">
-        <rect>
-         <x>65</x>
-         <y>0</y>
-         <width>21</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">border-image: url(:/images/image/Q.jpg);</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
       <widget class="QLabel" name="label_13">
        <property name="geometry">
         <rect>
@@ -841,22 +825,6 @@ background-color:white;
         <string>支管风量</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_2">
-       <property name="geometry">
-        <rect>
-         <x>270</x>
-         <y>0</y>
-         <width>31</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">border-image: url(:/images/image/Q1.jpg);</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
       <widget class="QLabel" name="label_15">
        <property name="geometry">
         <rect>
@@ -874,6 +842,67 @@ background-color:white;
        </property>
        <property name="text">
         <string>总风量</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_16">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>0</y>
+         <width>21</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Times New Roman</family>
+         <pointsize>15</pointsize>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 15pt &quot;Times New Roman&quot;;</string>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;Q&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_17">
+       <property name="geometry">
+        <rect>
+         <x>282</x>
+         <y>13</y>
+         <width>16</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>1</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_6">
+       <property name="geometry">
+        <rect>
+         <x>267</x>
+         <y>0</y>
+         <width>21</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Times New Roman</family>
+         <pointsize>15</pointsize>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 15pt &quot;Times New Roman&quot;;</string>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;Q&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </widget>
@@ -958,7 +987,7 @@ background-color:white;
      <x>0</x>
      <y>330</y>
      <width>651</width>
-     <height>201</height>
+     <height>241</height>
     </rect>
    </property>
    <property name="minimumSize">
@@ -980,7 +1009,7 @@ background-color:white;
        <x>0</x>
        <y>0</y>
        <width>651</width>
-       <height>191</height>
+       <height>251</height>
       </rect>
      </property>
      <property name="minimumSize">
@@ -995,77 +1024,20 @@ background-color:white;
 border: 1px solid #DCDCDC;
 }</string>
      </property>
-     <widget class="QWidget" name="widget_3" native="true">
-      <property name="geometry">
-       <rect>
-        <x>410</x>
-        <y>20</y>
-        <width>191</width>
-        <height>71</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">border-image: url(:/images/image/三通公式.jpg);
-border-image: url(:/images/image/tee_formula.jpg);</string>
-      </property>
-     </widget>
-     <widget class="QWidget" name="widget_4" native="true">
-      <property name="geometry">
-       <rect>
-        <x>410</x>
-        <y>110</y>
-        <width>161</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">border-image: url(:/images/image/tee_formula_descr2.jpg);</string>
-      </property>
-     </widget>
-     <widget class="QWidget" name="widget_5" native="true">
-      <property name="geometry">
-       <rect>
-        <x>410</x>
-        <y>150</y>
-        <width>191</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">border-image: url(:/images/image/三通公式说明2.jpg);
-border-image: url(:/images/image/tee_formula_descr1.jpg);</string>
-      </property>
-     </widget>
-     <widget class="QWidget" name="widget" native="true">
-      <property name="geometry">
-       <rect>
-        <x>60</x>
-        <y>10</y>
-        <width>201</width>
-        <height>171</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">border-image: url(:/images/image/duct_with_multi_ranc.png);</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_6">
+     <widget class="QLabel" name="label_3">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>10</y>
-        <width>41</width>
-        <height>31</height>
+        <y>20</y>
+        <width>531</width>
+        <height>201</height>
        </rect>
       </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
+      <property name="styleSheet">
+       <string notr="true">border-image: url(:/images/image/duct_with_multi_ranc_descri.png);</string>
       </property>
       <property name="text">
-       <string>说明</string>
+       <string/>
       </property>
      </widget>
     </widget>

@@ -19,6 +19,10 @@ public:
     ~room_cal_baseWidget();
     int flag_firstopen = 1;
     void addMenuAction(QString itemName);
+    void setInfo(QString zhushuqu, QString deck, QString room_number, QString noise_limit, QString duct_num);    //设置基本信息，主竖区、甲板、房间编号、噪声限值、主风管数量
+    void setMainDuctNumber(QString number); //设置主风管编号
+    void setFanQuantity(QString fanQuantity); //设置风量
+    void setSystemName(QString systemName); //设置系统名
 
 private slots:
     void handleAddBefore(int index);
@@ -36,7 +40,8 @@ private slots:
 private:
     Ui::room_cal_baseWidget *ui;
     QPointer<RoomCalTable> selectedTable;
-    QString roomName;
+    QString roomName;       //典型房间名，如果不是典型房间就为空
+    QString systemName;       //系统名称
     bool isAllCollapsed;
     void handleMenuAction(QString actionName);
 };

@@ -8,23 +8,12 @@
         <file>image/closeWindow.jpg</file>
         <file>image/maxWindow.jpg</file>
         <file>image/minWindow.jpg</file>
-        <file>image/rect_elbow.jpg</file>
         <file>image/rect_pipe.jpg</file>
         <file>image/reducer.jpg</file>
         <file>image/round_pipe.jpg</file>
         <file>image/round_reducer.jpg</file>
-        <file>image/static_box.jpg</file>
-        <file>image/tee_formula.jpg</file>
-        <file>image/tee_formula_descr1.jpg</file>
-        <file>image/tee_formula_descr2.jpg</file>
-        <file>image/tee.png</file>
         <file>image/Q.jpg</file>
         <file>image/Q1.jpg</file>
-        <file>image/duct_with_multi_ranc.png</file>
-        <file>image/damper_desci2.jpg</file>
-        <file>image/damper_descri1.jpg</file>
-        <file>image/damper_formula.jpg</file>
-        <file>image/reducer_formula.jpg</file>
         <file>image/terminal_refl_formula_descr1.jpg</file>
         <file>image/terminal_refl_formula_descr2.jpg</file>
         <file>image/higer425.png</file>
@@ -33,12 +22,19 @@
         <file>image/open.png</file>
         <file>image/rainFan.png</file>
         <file>image/slotFan.png</file>
-        <file>image/refl.jpg</file>
         <file>image/logo.png</file>
         <file>image/cover.png</file>
         <file>image/dictionary.png</file>
         <file>image/overview.png</file>
         <file>image/noise_require.png</file>
         <file>image/cal_room.png</file>
+        <file>image/refl.png</file>
+        <file>image/damper_desci.png</file>
+        <file>image/duct_with_multi_ranc_descri.png</file>
+        <file>image/elbow_descri.png</file>
+        <file>image/elbow_fw_value_table.png</file>
+        <file>image/reducer_descri.png</file>
+        <file>image/static_box_descri.png</file>
+        <file>image/tee_descri.png</file>
     </qresource>
 </RCC>

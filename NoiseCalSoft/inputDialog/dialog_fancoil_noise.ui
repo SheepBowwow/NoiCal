@@ -1189,7 +1189,7 @@ font-family: '黑体';
       <rect>
        <x>10</x>
        <y>90</y>
-       <width>41</width>
+       <width>71</width>
        <height>31</height>
       </rect>
      </property>
@@ -1200,7 +1200,7 @@ font-family: '黑体';
       </font>
      </property>
      <property name="text">
-      <string>进口</string>
+      <string>进口(dB)</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_19">
@@ -1208,7 +1208,7 @@ font-family: '黑体';
       <rect>
        <x>10</x>
        <y>200</y>
-       <width>41</width>
+       <width>71</width>
        <height>31</height>
       </rect>
      </property>
@@ -1219,7 +1219,7 @@ font-family: '黑体';
       </font>
      </property>
      <property name="text">
-      <string>出口</string>
+      <string>出口(dB)</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="lineEdit_brand">

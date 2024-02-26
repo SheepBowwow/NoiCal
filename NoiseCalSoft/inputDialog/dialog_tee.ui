@@ -612,22 +612,6 @@ background-color:white;
         </rect>
        </property>
       </widget>
-      <widget class="QLabel" name="label">
-       <property name="geometry">
-        <rect>
-         <x>65</x>
-         <y>0</y>
-         <width>21</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">border-image: url(:/images/image/Q.jpg);</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
       <widget class="QLabel" name="label_13">
        <property name="geometry">
         <rect>
@@ -647,22 +631,6 @@ background-color:white;
         <string>支管风量</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_2">
-       <property name="geometry">
-        <rect>
-         <x>270</x>
-         <y>0</y>
-         <width>31</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">border-image: url(:/images/image/Q1.jpg);</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
       <widget class="QLabel" name="label_15">
        <property name="geometry">
         <rect>
@@ -680,6 +648,67 @@ background-color:white;
        </property>
        <property name="text">
         <string>总风量</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label">
+       <property name="geometry">
+        <rect>
+         <x>63</x>
+         <y>0</y>
+         <width>21</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Times New Roman</family>
+         <pointsize>15</pointsize>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 15pt &quot;Times New Roman&quot;;</string>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;Q&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_6">
+       <property name="geometry">
+        <rect>
+         <x>270</x>
+         <y>0</y>
+         <width>21</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Times New Roman</family>
+         <pointsize>15</pointsize>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 15pt &quot;Times New Roman&quot;;</string>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;Q&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_17">
+       <property name="geometry">
+        <rect>
+         <x>285</x>
+         <y>13</y>
+         <width>16</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>1</string>
        </property>
       </widget>
      </widget>
@@ -938,77 +967,20 @@ border: 1px solid #DCDCDC;
 border: 1px solid #DCDCDC;
 }</string>
      </property>
-     <widget class="QWidget" name="widget_3" native="true">
+     <widget class="QLabel" name="label_3">
       <property name="geometry">
        <rect>
-        <x>410</x>
-        <y>20</y>
-        <width>191</width>
-        <height>71</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">border-image: url(:/images/image/三通公式.jpg);
-border-image: url(:/images/image/tee_formula.jpg);</string>
-      </property>
-     </widget>
-     <widget class="QWidget" name="widget_4" native="true">
-      <property name="geometry">
-       <rect>
-        <x>410</x>
-        <y>110</y>
-        <width>161</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">border-image: url(:/images/image/tee_formula_descr2.jpg);</string>
-      </property>
-     </widget>
-     <widget class="QWidget" name="widget_5" native="true">
-      <property name="geometry">
-       <rect>
-        <x>410</x>
-        <y>150</y>
-        <width>191</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">border-image: url(:/images/image/三通公式说明2.jpg);
-border-image: url(:/images/image/tee_formula_descr1.jpg);</string>
-      </property>
-     </widget>
-     <widget class="QWidget" name="widget" native="true">
-      <property name="geometry">
-       <rect>
-        <x>60</x>
-        <y>20</y>
-        <width>241</width>
-        <height>161</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">border-image: url(:/images/image/tee.png);</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_6">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
+        <x>20</x>
         <y>10</y>
-        <width>41</width>
-        <height>31</height>
+        <width>501</width>
+        <height>181</height>
        </rect>
       </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
+      <property name="styleSheet">
+       <string notr="true">border-image: url(:/images/image/tee_descri.png);</string>
       </property>
       <property name="text">
-       <string>说明</string>
+       <string/>
       </property>
      </widget>
     </widget>

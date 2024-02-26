@@ -12,7 +12,7 @@ class Form_system_list : public QWidget
     Q_OBJECT
 
 public:
-    explicit Form_system_list(QWidget *parent = nullptr);
+    explicit Form_system_list(QString system_name, QWidget *parent = nullptr);
     ~Form_system_list();
 
 private slots:
@@ -24,6 +24,7 @@ private slots:
 
 private:
     Ui::Form_system_list *ui;
+    QString system_name;
 };
 
 #endif // FORM_SYSTEM_LIST_H

@@ -1,5 +1,6 @@
 #include "dialog_addroom.h"
 #include "ui_dialog_addroom.h"
+#include "globle_var.h"
 
 Dialog_addroom::Dialog_addroom(QWidget *parent) :
     InputBaseDialog(parent),
@@ -8,6 +9,11 @@ Dialog_addroom::Dialog_addroom(QWidget *parent) :
     ui->setupUi(this);
     setWindowFlag(Qt::FramelessWindowHint);  // 写在窗口类构造函数里，隐藏边框
     setTopWidget(ui->widget_top);
+
+    for(const Room& room : rooms)
+    {
+        ui->comboBox->addItem(room.name);
+    }
 }
 
 Dialog_addroom::~Dialog_addroom()
@@ -70,7 +76,9 @@ void Dialog_addroom::on_pushButton_clicked()
     emit accept();
     QString name=ui->lineEdit_roomid->text();
     int num=ui->lineEdit_pipe->text().toInt();
-    emit dialogsent(name,num);
+    QString jiaban = ui->lineEdit_jiaban->text();
+    QString limit = ui->lineEdit_limit->text();
+    emit dialogsent(name,num, jiaban, limit);
     close();
 }
 
@@ -78,3 +86,22 @@ void Dialog_addroom::on_close_clicked()
 {
     close();
 }
+
+//房间类型选择后更改下面两项
+void Dialog_addroom::on_comboBox_currentTextChanged(const QString &arg1)
+{
+    Room matchedRoom;
+    // 假设rooms是QList<Room>，且已经在类中定义和填充了数据
+    for(const Room &room : rooms) {
+        if(room.name == arg1) {
+            // 找到匹配的Room，可以根据需要保存或使用它
+            matchedRoom = room; // 使用局部变量保存找到的Room
+            // 根据需要处理matchedRoom
+            break; // 如果只期望有一个匹配，找到后即可退出循环
+        }
+    }
+
+    ui->lineEdit_limit->setText(matchedRoom.noise);
+    ui->lineEdit_roomcalclass->setText(matchedRoom.type);
+}
+

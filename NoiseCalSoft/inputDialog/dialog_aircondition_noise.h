@@ -16,7 +16,7 @@ class Dialog_aircondition_noise : public InputBaseDialog
     Q_OBJECT
 
 public:
-    explicit Dialog_aircondition_noise(QWidget *parent = nullptr, int editRow = -1, const Aircondition_noise& data = Aircondition_noise());
+    explicit Dialog_aircondition_noise(QWidget *parent = nullptr, int editRow = -1, int fan = 0, const Aircondition_noise& data = Aircondition_noise());
     Dialog_aircondition_noise(const QString& name, QWidget *parent = nullptr, int editRow = -1, const Aircondition_noise& data = Aircondition_noise()){}
     ~Dialog_aircondition_noise();
     void* getNoi() override;

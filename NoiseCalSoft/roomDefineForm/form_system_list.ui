@@ -69,7 +69,6 @@ background-color : rgb(105, 105, 105);
         <font>
          <family>Microsoft YaHei</family>
          <pointsize>24</pointsize>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>

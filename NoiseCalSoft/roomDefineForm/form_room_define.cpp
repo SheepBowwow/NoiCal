@@ -26,9 +26,9 @@ void Form_room_define::setjiabanItem(QTreeWidgetItem *item)
     _jiabanitem=item;
 }
 
-void Form_room_define::jieshou(QString name,int num)
+void Form_room_define::jieshou(QString name,int num, QString jiaban, QString limit)
 {
-    emit roomadd(_jiabanitem,name,num);
+    emit roomadd(_jiabanitem,name,num,jiaban,limit);
 }
 
 void Form_room_define::on_buttonadd_clicked()
@@ -49,7 +49,7 @@ void Form_room_define::on_buttonadd_clicked()
     dialog = new Dialog_addroom;
 
     //弹窗点击确定，接收信号并发送提醒主界面改变
-    connect(dialog,SIGNAL(dialogsent(QString,int)),this,SLOT(jieshou(QString,int)));
+    connect(dialog,SIGNAL(dialogsent(QString,int,QString, QString)),this,SLOT(jieshou(QString,int,QString, QString)));
 
     if(dialog->exec()==QDialog::Accepted)
     {

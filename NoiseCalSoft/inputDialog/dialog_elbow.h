@@ -37,6 +37,8 @@ private slots:
 
     void on_radioButton_rect_clicked();
 
+    void on_pushButton_clicked();
+
 private:
     Ui::Dialog_elbow *ui;
     int editRow;    //当前修改行，如果是新建就为-1

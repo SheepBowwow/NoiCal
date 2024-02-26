@@ -2,6 +2,9 @@
 #define ROOMCALTABLE_H
 
 #include <QWidget>
+#include <QComboBox>
+#include <QWidget>
+
 
 namespace Ui {
 class RoomCalTable;
@@ -12,7 +15,7 @@ class RoomCalTable : public QWidget
     Q_OBJECT
 
 public:
-    explicit RoomCalTable(QWidget *parent = nullptr, QString type = "");
+    explicit RoomCalTable(QString systemName, QWidget *parent = nullptr, QString type = "");
     ~RoomCalTable();
     int getIndexInLayout() const;
     void setCollapsed();
@@ -20,6 +23,8 @@ public:
     void setSerialNum(int num);
     bool isValid;
     QString type;       //表格类型，如生源噪音
+    QVector<QString> noise_after_cal;        //当前计算后(增加或衰减)的噪音量
+    QVector<QString> variations;        //噪音变化量,和下一个表格相关
 
 signals:
     void addBeforeClicked(int index);
@@ -42,10 +47,22 @@ private slots:
 
     void on_pushButton_number_clicked();
 
+    void on_comboBox_room_type_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_noi_src_num_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_noi_locate_currentTextChanged(const QString &arg1);
+
 private:
     Ui::RoomCalTable *ui;
     void clearPage(QWidget *widget);
     bool isCollapsed;
+    void updateComboBoxItems();
+    QString currentTable;       //当前是什么表格
+    QString systemName;       //所属系统名称
+
+private:
+    QVector<QLineEdit*> noi_after_cal_lineEdits;
 };
 
 #endif // ROOMCALTABLE_H
