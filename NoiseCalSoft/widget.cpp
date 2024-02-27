@@ -4971,22 +4971,22 @@ void Widget::on_pushButton_reference_drawing_entry_clicked()
     }
 
     // 获取要插入的文本
-    QString originalText = ui->plainTextEdit_reference_drawing->toPlainText();
+    //QString originalText = ui->plainTextEdit_reference_drawing->toPlainText();
 
     // 在每一段的开头插入两个空格
-    QString indentedText = originalText.replace("\n", "\n    ");
+    //QString indentedText = originalText.replace("\n", "\n    ");
 
     // 在首行额外缩进两个字
-    indentedText.prepend("    ");
+    //indentedText.prepend("    ");
 
     // 插入内容
-    cursor.insertText(indentedText);
+    //cursor.insertText(indentedText);
 }
 
 //项目概述1.2清空
 void Widget::on_pushButton_reference_drawing_clear_clicked()
 {
-    ui->plainTextEdit_reference_drawing->clear();
+    //ui->plainTextEdit_reference_drawing->clear();
 
     QTextCursor cursor = ui->plainTextEdit_project_overview_image->textCursor();
     cursor.movePosition(QTextCursor::Start);

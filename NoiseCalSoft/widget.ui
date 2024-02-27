@@ -594,7 +594,7 @@ font-size: 13px;
 }</string>
    </property>
    <property name="currentIndex">
-    <number>30</number>
+    <number>32</number>
    </property>
    <widget class="QWidget" name="page_login">
     <layout class="QGridLayout" name="gridLayout" rowstretch="2,5,4">
@@ -12508,7 +12508,7 @@ border: 1px solid #000000;
         <x>20</x>
         <y>60</y>
         <width>461</width>
-        <height>351</height>
+        <height>601</height>
        </rect>
       </property>
       <property name="font">
@@ -12525,7 +12525,7 @@ border: 1px solid #000000;
        <property name="geometry">
         <rect>
          <x>230</x>
-         <y>310</y>
+         <y>560</y>
          <width>101</width>
          <height>31</height>
         </rect>
@@ -12560,7 +12560,7 @@ color: white;
        <property name="geometry">
         <rect>
          <x>350</x>
-         <y>310</y>
+         <y>560</y>
          <width>101</width>
          <height>31</height>
         </rect>
@@ -12597,7 +12597,7 @@ color: white;
          <x>10</x>
          <y>30</y>
          <width>441</width>
-         <height>271</height>
+         <height>521</height>
         </rect>
        </property>
        <property name="styleSheet">
@@ -12709,112 +12709,6 @@ border: 1px solid #000000;
 
 1.2 参考图纸清单：
 </string>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QGroupBox" name="groupBox_4">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>420</y>
-        <width>461</width>
-        <height>241</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Microsoft YaHei</family>
-        <pointsize>15</pointsize>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="title">
-       <string>参考图纸清单</string>
-      </property>
-      <widget class="QPushButton" name="pushButton_reference_drawing_entry">
-       <property name="geometry">
-        <rect>
-         <x>230</x>
-         <y>200</y>
-         <width>101</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <family>Microsoft YaHei</family>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-       </property>
-       <property name="text">
-        <string>录入</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="pushButton_reference_drawing_clear">
-       <property name="geometry">
-        <rect>
-         <x>350</x>
-         <y>200</y>
-         <width>101</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <family>Microsoft YaHei</family>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #CE5C5D;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: #AB4850;
-color: white;
-}</string>
-       </property>
-       <property name="text">
-        <string>清空</string>
-       </property>
-      </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_reference_drawing">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>30</y>
-         <width>441</width>
-         <height>161</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">border: 1px solid #778899;</string>
-       </property>
-       <property name="plainText">
-        <string/>
        </property>
       </widget>
      </widget>
@@ -13198,41 +13092,6 @@ QTableWidget::item:selected
      <widget class="QPushButton" name="pushButton_noise_require_table_entry">
       <property name="geometry">
        <rect>
-        <x>1060</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>录入</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButton_noise_require_print">
-      <property name="geometry">
-       <rect>
         <x>1120</x>
         <y>20</y>
         <width>51</width>
@@ -13262,7 +13121,7 @@ color: white;
 }</string>
       </property>
       <property name="text">
-       <string>打印</string>
+       <string>录入</string>
       </property>
      </widget>
     </widget>
@@ -13420,41 +13279,6 @@ QTableWidget::item:selected
      <widget class="QPushButton" name="pushButton_system_list_entry">
       <property name="geometry">
        <rect>
-        <x>1060</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>录入</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButton_system_list_print">
-      <property name="geometry">
-       <rect>
         <x>1120</x>
         <y>20</y>
         <width>51</width>
@@ -13484,7 +13308,7 @@ color: white;
 }</string>
       </property>
       <property name="text">
-       <string>打印</string>
+       <string>录入</string>
       </property>
      </widget>
     </widget>
@@ -13867,41 +13691,6 @@ QTableWidget::item:selected
      <widget class="QPushButton" name="pushButton_report_cal_room_table_entry">
       <property name="geometry">
        <rect>
-        <x>1060</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>录入</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButton_report_cal_room_table_print">
-      <property name="geometry">
-       <rect>
         <x>1120</x>
         <y>20</y>
         <width>51</width>
@@ -13931,7 +13720,7 @@ color: white;
 }</string>
       </property>
       <property name="text">
-       <string>打印</string>
+       <string>录入</string>
       </property>
      </widget>
     </widget>

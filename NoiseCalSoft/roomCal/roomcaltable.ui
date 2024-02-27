@@ -50,7 +50,7 @@ font-size: 14px;
 }</string>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>6</number>
    </property>
    <widget class="QWidget" name="page_noi_src_info">
     <widget class="ClickableComboBox" name="comboBox_noi_src_num">
@@ -972,7 +972,7 @@ border-bottom:1px solid black;</string>
       </rect>
      </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="page_air_diff_model">
       <widget class="QLabel" name="label_102">
@@ -1423,7 +1423,7 @@ border-bottom:1px solid black;</string>
       </rect>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="page_circle">
       <widget class="QLabel" name="label_105">
@@ -3299,7 +3299,7 @@ font-family: '黑体';
 }</string>
    </property>
    <property name="currentIndex">
-    <number>7</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="page_noi_src_table">
     <widget class="QWidget" name="widget_4" native="true">

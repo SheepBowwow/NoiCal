@@ -53,6 +53,11 @@ private slots:
 
     void on_comboBox_noi_locate_currentTextChanged(const QString &arg1);
 
+
+    void on_comboBox_atten_noi_end_size_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_pipe_elbow_type_currentTextChanged(const QString &arg1);
+
 private:
     Ui::RoomCalTable *ui;
     void clearPage(QWidget *widget);

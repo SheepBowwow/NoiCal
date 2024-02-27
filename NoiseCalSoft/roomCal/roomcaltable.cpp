@@ -306,10 +306,35 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                                         ui->lineEdit_damper_after_1k, ui->lineEdit_damper_after_2k, ui->lineEdit_damper_after_4k, ui->lineEdit_damper_after_8k,
                                         ui->lineEdit_damper_after_total};
     }
-    else if(arg1 == "末端/其他通风末端" || arg1 == "末端/抽风头" || arg1 == "末端/静压+格栅" || arg1 == "末端/送风头"
+    else if(arg1 == "末端/其他通风末端" || arg1 == "末端/抽风头" || arg1 == "末端/静压箱+格栅" || arg1 == "末端/送风头"
              || arg1 == "末端/置换通风末端" || arg1 == "末端/布风器+散流器")
     {
+
         ui->stackedWidget_info->setCurrentWidget(ui->page_atten_info);
+        if(arg1 == "末端/其他通风末端")
+        {
+            ui->stackedWidget_atten_noi_model->setCurrentWidget(ui->page_other_send_terminal_model);
+        }
+        else if(arg1 == "末端/抽风头")
+        {
+            ui->stackedWidget_atten_noi_model->setCurrentWidget(ui->page_pump_model);
+        }
+        else if(arg1 == "末端/静压箱+格栅")
+        {
+            ui->stackedWidget_atten_noi_model->setCurrentWidget(ui->page_static_grille_model);
+        }
+        else if(arg1 == "末端/送风头")
+        {
+            ui->stackedWidget_atten_noi_model->setCurrentWidget(ui->page_send_model);
+        }
+        else if(arg1 == "末端/置换通风末端")
+        {
+            ui->stackedWidget_atten_noi_model->setCurrentWidget(ui->page_disp_vent_terminal_model);
+        }
+        else if(arg1 == "末端/布风器+散流器")
+        {
+            ui->stackedWidget_atten_noi_model->setCurrentWidget(ui->page_air_diff_model);
+        }
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_atten_noi_table);
 
@@ -613,6 +638,32 @@ void RoomCalTable::on_comboBox_noi_locate_currentTextChanged(const QString &arg1
     {
         noi_after_cal_lineEdits[i]->setText(noises[i]);
         noise_after_cal[i] = noi_after_cal_lineEdits[i]->text();
+    }
+}
+
+void RoomCalTable::on_comboBox_atten_noi_end_size_currentTextChanged(const QString &arg1)
+{
+    //stackedWidget_terminal_size
+    if(arg1 == "圆形")
+    {
+        ui->stackedWidget_terminal_size->setCurrentWidget(ui->page_circle);
+    }
+    else if(arg1 == "方形")
+    {
+        ui->stackedWidget_terminal_size->setCurrentWidget(ui->page_rect);
+    }
+}
+
+
+void RoomCalTable::on_comboBox_pipe_elbow_type_currentTextChanged(const QString &arg1)
+{
+    if(arg1 == "圆形")
+    {
+        ui->stackedWidget_pipe_size->setCurrentWidget(ui->page_pipe_circle);
+    }
+    else if(arg1 == "方形")
+    {
+        ui->stackedWidget_pipe_size->setCurrentWidget(ui->page_pipe_rect);
     }
 }
 
