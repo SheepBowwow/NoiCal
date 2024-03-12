@@ -12,7 +12,8 @@ public:
 
 typedef struct AirDiff_noise : ComponentBase {
     QString brand;  // 品牌
-    QString model;  // 型号
+    QString air_distributor_model;  // 布风器型号
+    QString diffuser_model;  // 散流器型号
     QString type;   // 类型 圆还是方
     QString diameter;  // 直径
     QString length;  // 长
@@ -421,8 +422,6 @@ typedef struct Silencer_atten : ComponentBase
 {
     QString brand;  //品牌
     QString type;       //类型
-    QString model_prefix;   //前缀
-    QString model_suffix;   //前缀
     QString model;   //型号
     QString noi_63;     //63hz
     QString noi_125;     //125hz

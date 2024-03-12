@@ -85,7 +85,7 @@ font-family: '黑体';
     <widget class="QLabel" name="label_4">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>410</x>
        <y>10</y>
        <width>41</width>
        <height>31</height>
@@ -104,7 +104,7 @@ font-family: '黑体';
     <widget class="QLabel" name="label_5">
      <property name="geometry">
       <rect>
-       <x>160</x>
+       <x>20</x>
        <y>10</y>
        <width>41</width>
        <height>31</height>
@@ -123,7 +123,7 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_brand">
      <property name="geometry">
       <rect>
-       <x>50</x>
+       <x>450</x>
        <y>10</y>
        <width>91</width>
        <height>31</height>
@@ -136,31 +136,12 @@ font-family: '黑体';
       </font>
      </property>
     </widget>
-    <widget class="QComboBox" name="comboBox_prefix">
+    <widget class="QComboBox" name="comboBox_model">
      <property name="geometry">
       <rect>
-       <x>200</x>
+       <x>60</x>
        <y>10</y>
-       <width>111</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Microsoft YaHei</family>
-       <pointsize>-1</pointsize>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">outline:none;</string>
-     </property>
-    </widget>
-    <widget class="QComboBox" name="comboBox_suffix">
-     <property name="geometry">
-      <rect>
-       <x>320</x>
-       <y>10</y>
-       <width>201</width>
+       <width>331</width>
        <height>31</height>
       </rect>
      </property>

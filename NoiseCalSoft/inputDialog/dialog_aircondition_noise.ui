@@ -94,8 +94,8 @@ font-family: '黑体';
     <widget class="QLabel" name="label_5">
      <property name="geometry">
       <rect>
-       <x>220</x>
-       <y>10</y>
+       <x>200</x>
+       <y>50</y>
        <width>41</width>
        <height>31</height>
       </rect>
@@ -113,7 +113,7 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_number">
      <property name="geometry">
       <rect>
-       <x>100</x>
+       <x>80</x>
        <y>10</y>
        <width>101</width>
        <height>31</height>
@@ -660,8 +660,8 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_brand">
      <property name="geometry">
       <rect>
-       <x>290</x>
-       <y>10</y>
+       <x>240</x>
+       <y>50</y>
        <width>101</width>
        <height>31</height>
       </rect>
@@ -676,8 +676,8 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_air_volume">
      <property name="geometry">
       <rect>
-       <x>100</x>
-       <y>50</y>
+       <x>450</x>
+       <y>10</y>
        <width>101</width>
        <height>31</height>
       </rect>
@@ -692,8 +692,8 @@ font-family: '黑体';
     <widget class="QLabel" name="label_6">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>50</y>
+       <x>360</x>
+       <y>10</y>
        <width>81</width>
        <height>31</height>
       </rect>
@@ -711,7 +711,7 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_static_pressure">
      <property name="geometry">
       <rect>
-       <x>290</x>
+       <x>80</x>
        <y>50</y>
        <width>101</width>
        <height>31</height>
@@ -727,7 +727,7 @@ font-family: '黑体';
     <widget class="QLabel" name="label_17">
      <property name="geometry">
       <rect>
-       <x>220</x>
+       <x>10</x>
        <y>50</y>
        <width>61</width>
        <height>31</height>
@@ -746,7 +746,7 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_model">
      <property name="geometry">
       <rect>
-       <x>470</x>
+       <x>240</x>
        <y>10</y>
        <width>101</width>
        <height>31</height>
@@ -762,7 +762,7 @@ font-family: '黑体';
     <widget class="QLabel" name="label_18">
      <property name="geometry">
       <rect>
-       <x>430</x>
+       <x>200</x>
        <y>10</y>
        <width>41</width>
        <height>31</height>
@@ -2719,6 +2719,9 @@ color : rgb(105, 105, 105);
     <property name="text">
      <string>单风机</string>
     </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QRadioButton" name="radioButton_double">
     <property name="geometry">
@@ -2737,6 +2740,9 @@ color : rgb(105, 105, 105);
     </property>
     <property name="text">
      <string>双风机</string>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>

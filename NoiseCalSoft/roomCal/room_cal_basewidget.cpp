@@ -68,7 +68,7 @@ void room_cal_baseWidget::handleMenuAction(QString actionName)
             for(int i = 0; i < v.size(); i++)
             {
                 RoomCalTable * table = qobject_cast<RoomCalTable *>(v[i]);
-                this->addTable(-1,table->type);
+                this->addTable(-1,table->currentTableType);
             }
         }
     }

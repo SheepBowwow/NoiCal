@@ -7,64 +7,60 @@
 #include <QAction>
 #include <QVBoxLayout> // 添加此行
 #include <QDebug>
+#include <cmath>
 
-RoomCalTable::RoomCalTable(QString systemName, QWidget *parent,QString m_type) :
+RoomCalTable::RoomCalTable(QString systemName, QWidget *parent,QString currentTableType) :
     QWidget(parent),
     systemName(systemName),
     isCollapsed(false),
     ui(new Ui::RoomCalTable)
 {
     ui->setupUi(this);
-    connect(ui->comboBox_noi_src_num, &ClickableComboBox::clicked, this, &RoomCalTable::updateComboBoxItems);
+    //connect(ui->comboBox_noi_src_num, &ClickableComboBox::clicked, this, &RoomCalTable::updateComboBoxItems);
 
     this->isValid = true;
-    this->type = m_type;
-    if(type == "")
+    this->currentTableType = currentTableType;
+
+    variations.reserve(8);
+    for (int i = 0; i < 8; ++i) {
+        variations.push_back(QString());
+    }
+
+    if(currentTableType == "" || currentTableType == "声源噪音")
     {
         ui->stackedWidget_title->setCurrentWidget(ui->page_unit);
         ui->comboBox_sound_type->setCurrentText("声源噪音");
-        ui->comboBox_unit_name->setCurrentIndex(-1);
-        ui->stackedWidget_info->setCurrentWidget(ui->page_noi_src_info);
-        ui->stackedWidget_table->setCurrentWidget(ui->page_noi_src_table);
-        this->type = "声源噪音";
+        ui->comboBox_unit_name->setCurrentIndex(0);
+        ui->stackedWidget_table->setCurrentWidget(ui->page_fan);
+        this->currentTableType = "声源噪音";
     }
-    else if(type == "声压级计算")
+    else if (currentTableType == "气流噪音")
+    {
+        ui->stackedWidget_title->setCurrentWidget(ui->page_unit);
+        ui->comboBox_sound_type->setCurrentText("气流噪音");
+        ui->comboBox_unit_name->setCurrentIndex(0);
+        ui->stackedWidget_table->setCurrentWidget(ui->page_VAV_terminal);
+    }
+    else if(currentTableType == "噪音衰减+气流噪音")
+    {
+        ui->stackedWidget_title->setCurrentWidget(ui->page_room_cal);
+        ui->comboBox_sound_type->setCurrentText("噪音衰减+气流噪音");
+        ui->comboBox_unit_name->setCurrentIndex(0);
+        ui->stackedWidget_table->setCurrentWidget(ui->page_air_diff);
+    }
+    else if(currentTableType == "噪音衰减")
+    {
+        ui->stackedWidget_title->setCurrentWidget(ui->page_room_cal);
+        ui->comboBox_sound_type->setCurrentText("噪音衰减");
+        ui->comboBox_unit_name->setCurrentIndex(0);
+        ui->stackedWidget_table->setCurrentWidget(ui->page_static_box);
+    }
+    else if(currentTableType == "声压级计算")
     {
         ui->stackedWidget_title->setCurrentWidget(ui->page_room_cal);
         ui->comboBox_sound_type_room->setCurrentText("声压级计算");
-        ui->comboBox_room_type->setCurrentIndex(-1);
-        ui->stackedWidget_info->setCurrentWidget(ui->page_room_info);
-        ui->stackedWidget_table->setCurrentWidget(ui->page_room_table);
-    }
-    else if (type == "声源噪音" || type == "气流噪音" || type == "噪音衰减+气流噪音" || type == "噪音衰减")
-    {
-        ui->stackedWidget_title->setCurrentWidget(ui->page_unit);
-        ui->comboBox_sound_type->setCurrentText(type);
-        if(type == "声源噪音")
-        {
-            ui->comboBox_unit_name->setCurrentText("风机");
-            ui->stackedWidget_info->setCurrentWidget(ui->page_noi_src_info);
-            ui->stackedWidget_table->setCurrentWidget(ui->page_noi_src_table);
-        }
-        else if(type == "气流噪音")
-        {
-            ui->comboBox_unit_name->setCurrentText("阀门/变风量末端");
-            ui->stackedWidget_info->setCurrentWidget(ui->page_vav_terminal_info);
-            ui->stackedWidget_table->setCurrentWidget(ui->page_damper_table);
-        }
-        else if(type == "噪音衰减+气流噪音")
-        {
-            ui->comboBox_unit_name->setCurrentText("末端/布风器+散流器");
-            ui->stackedWidget_info->setCurrentWidget(ui->page_atten_info);
-            ui->stackedWidget_atten_noi_model->setCurrentWidget(ui->page_air_diff_model);
-            ui->stackedWidget_table->setCurrentWidget(ui->page_atten_noi_table);
-        }
-        else if(type == "噪音衰减")
-        {
-            ui->comboBox_unit_name->setCurrentText("分支/静压箱");
-            ui->stackedWidget_info->setCurrentWidget(ui->page_branch_info);
-            ui->stackedWidget_table->setCurrentWidget(ui->page_branch_table);
-        }
+        ui->comboBox_room_type->setCurrentIndex(0);
+        ui->stackedWidget_table->setCurrentWidget(ui->page_room_less425);
     }
     else
     {
@@ -78,26 +74,12 @@ RoomCalTable::RoomCalTable(QString systemName, QWidget *parent,QString m_type) :
     QWidget *currentWidget = ui->stackedWidget_table->currentWidget();
 
     if (currentWidget) {
-        // 获取所有子对象
-        QList<QObject *> childObjects = currentWidget->children();
+            int tableHeight = currentWidget->height();
+            int titleHeight = ui->widget_title->height();
 
-        // 遍历所有子对象
-        for (QObject *childObject : childObjects) {
-            // 判断是否是 QWidget 类型
-            if (QWidget *childWidget = qobject_cast<QWidget *>(childObject)) {
-                int widgetHeight = childWidget->height();
-
-                // 设置 QStackedWidget 的高度
-                ui->stackedWidget_table->setFixedHeight(widgetHeight);
-
-                // 设置窗口的高度
-                this->setMinimumSize(QSize(this->width(), 75 + widgetHeight));
-                this->setMaximumSize(QSize(this->width(), 75 + widgetHeight));
-
-                // 假设只需要获取第一个符合条件的子部件，可以注释下面这行来继续查找其他子部件
-                break;
-            }
-        }
+            // 设置窗口的高度
+            this->setMinimumSize(QSize(this->width(), tableHeight + titleHeight));
+            this->setMaximumSize(QSize(this->width(), tableHeight + titleHeight));
     }
 
 
@@ -107,9 +89,9 @@ RoomCalTable::RoomCalTable(QString systemName, QWidget *parent,QString m_type) :
        each->installEventFilter(this);
     }
     if(ui->stackedWidget_title->currentWidget() == ui->page_unit)
-        this->currentTable = ui->comboBox_unit_name->currentText();
+        this->currentUnitType = ui->comboBox_unit_name->currentText();
     else
-        this->currentTable = ui->comboBox_room_type->currentText();
+        this->currentUnitType = ui->comboBox_room_type->currentText();
 }
 
 int RoomCalTable::getIndexInLayout() const
@@ -159,26 +141,12 @@ void RoomCalTable::on_stackedWidget_table_currentChanged(int arg1)
     QWidget *currentWidget = ui->stackedWidget_table->currentWidget();
 
     if (currentWidget) {
-        // 获取所有子对象
-        QList<QObject *> childObjects = currentWidget->children();
+            int tableHeight = currentWidget->height();
+            int titleHeight = ui->widget_title->height();
 
-        // 遍历所有子对象
-        for (QObject *childObject : childObjects) {
-            // 判断是否是 QWidget 类型
-            if (QWidget *childWidget = qobject_cast<QWidget *>(childObject)) {
-                int widgetHeight = childWidget->height();
-
-                // 设置 QStackedWidget 的高度
-                ui->stackedWidget_table->setFixedHeight(widgetHeight);
-
-                // 设置窗口的高度
-                this->setMinimumSize(QSize(this->width(), 75 + widgetHeight));
-                this->setMaximumSize(QSize(this->width(), 75 + widgetHeight));
-
-                // 假设只需要获取第一个符合条件的子部件，可以注释下面这行来继续查找其他子部件
-                break;
-            }
-        }
+            // 设置窗口的高度
+            this->setMinimumSize(QSize(this->width(), tableHeight + titleHeight));
+            this->setMaximumSize(QSize(this->width(), tableHeight + titleHeight));
     }
 }
 
@@ -228,7 +196,7 @@ void RoomCalTable::on_comboBox_sound_type_currentTextChanged(const QString &arg1
         ui->comboBox_unit_name->addItem("末端/布风器+散流器");
         ui->comboBox_unit_name->addItem("末端/抽风头");
         ui->comboBox_unit_name->addItem("末端/送风头");
-        ui->comboBox_unit_name->addItem("末端/静压+格栅");
+        ui->comboBox_unit_name->addItem("末端/静压箱+格栅");
         ui->comboBox_unit_name->addItem("末端/置换通风末端");
         ui->comboBox_unit_name->addItem("末端/其他通风末端");
     }
@@ -246,7 +214,8 @@ void RoomCalTable::on_comboBox_sound_type_currentTextChanged(const QString &arg1
     else if(arg1 == "声压级计算")
     {
         ui->stackedWidget_title->setCurrentWidget(ui->page_room_cal);
-        ui->stackedWidget_table->setCurrentWidget(ui->page_room_table);
+        ui->stackedWidget_table->setCurrentWidget(ui->page_room_less425);
+        ui->comboBox_room_type->setCurrentIndex(0);
         ui->comboBox_sound_type_room->setCurrentText("声压级计算");
     }
 }
@@ -254,140 +223,417 @@ void RoomCalTable::on_comboBox_sound_type_currentTextChanged(const QString &arg1
 
 void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
 {
-    // 获取当前页面索引
-    int currentIndex = ui->stackedWidget_info->currentIndex();
+    // 递归清空切换前页面中的 QLineEdit 和 QComboBox
+    clearPage(ui->stackedWidget_table->currentWidget());
 
-    // 获取当前页面
-    QWidget *currentPage = ui->stackedWidget_info->widget(currentIndex);
-
-    // 递归清空当前页面中的 QLineEdit 和 QComboBox
-    clearPage(currentPage);
-
-    this->currentTable = ui->comboBox_unit_name->currentText();
-
-    if(arg1 == "风机" || arg1 == "空调器" || arg1 == "风机盘管")
+    if(arg1 == "风机")
     {
-        ui->stackedWidget_info->setCurrentWidget(ui->page_noi_src_info);
-        ui->stackedWidget_table->setCurrentWidget(ui->page_noi_src_table);
+        ui->stackedWidget_table->setCurrentWidget(ui->page_fan);
 
-        ui->comboBox_noi_src_num->clear();
+        ui->comboBox_fan_number->clear();
         for(QString number: systemListMap[systemName][arg1])
         {
-            ui->comboBox_noi_src_num->addItem(number);
+            ui->comboBox_fan_number->addItem(number);
         }
-        noi_after_cal_lineEdits = { ui->lineEdit_noi_src_63, ui->lineEdit_noi_src_125, ui->lineEdit_noi_src_250,ui->lineEdit_noi_src_500,
-                                        ui->lineEdit_noi_src_1k, ui->lineEdit_noi_src_2k, ui->lineEdit_noi_src_4k, ui->lineEdit_noi_src_8k,
-                                        ui->lineEdit_noi_src_total};
+        noi_after_cal_lineEdits = { ui->lineEdit_fan_63, ui->lineEdit_fan_125, ui->lineEdit_fan_250,ui->lineEdit_fan_500,
+                                        ui->lineEdit_fan_1k, ui->lineEdit_fan_2k, ui->lineEdit_fan_4k, ui->lineEdit_fan_8k,
+                                        ui->lineEdit_fan_total };
+
+        noi_lineEdits.clear();
+        terminal_atten_lineEdits.clear();
+        terminal_refl_lineEdits.clear();
+        terminal_noi_lineEdits.clear();
+        each_atten_lineEdits.clear();
+        sum_atten_lineEdits.clear();
+        atten_lineEdits.clear();
+    }
+    else if(arg1 == "空调器")
+    {
+        ui->stackedWidget_table->setCurrentWidget(ui->page_aircondition);
+
+        ui->comboBox_aircondition_model->clear();
+        for(QString number: systemListMap[systemName][arg1])
+        {
+            ui->comboBox_aircondition_model->addItem(number);
+        }
+        noi_after_cal_lineEdits = { ui->lineEdit_aircondition_63, ui->lineEdit_aircondition_125, ui->lineEdit_aircondition_250,ui->lineEdit_aircondition_500,
+                                        ui->lineEdit_aircondition_1k, ui->lineEdit_aircondition_2k, ui->lineEdit_aircondition_4k, ui->lineEdit_aircondition_8k,
+                                        ui->lineEdit_aircondition_total };
+        noi_lineEdits.clear();
+        terminal_atten_lineEdits.clear();
+        terminal_refl_lineEdits.clear();
+        terminal_noi_lineEdits.clear();
+        each_atten_lineEdits.clear();
+        sum_atten_lineEdits.clear();
+        atten_lineEdits.clear();
+    }
+    else if(arg1 == "风机盘管")
+    {
+        ui->stackedWidget_table->setCurrentWidget(ui->page_fanCoil);
+
+        ui->comboBox_fanCoil_number->clear();
+        for(QString number: systemListMap[systemName][arg1])
+        {
+            ui->comboBox_fanCoil_number->addItem(number);
+        }
+        noi_after_cal_lineEdits = { ui->lineEdit_aircondition_63, ui->lineEdit_aircondition_125, ui->lineEdit_aircondition_250,ui->lineEdit_aircondition_500,
+                                        ui->lineEdit_aircondition_1k, ui->lineEdit_aircondition_2k, ui->lineEdit_aircondition_4k, ui->lineEdit_aircondition_8k,
+                                        ui->lineEdit_aircondition_total };
+        noi_lineEdits.clear();
+        terminal_atten_lineEdits.clear();
+        terminal_refl_lineEdits.clear();
+        terminal_noi_lineEdits.clear();
+        each_atten_lineEdits.clear();
+        sum_atten_lineEdits.clear();
+        atten_lineEdits.clear();
     }
     else if(arg1 == "阀门/变风量末端")
     {
-        ui->stackedWidget_info->setCurrentWidget(ui->page_vav_terminal_info);
-        ui->stackedWidget_table->setCurrentWidget(ui->page_damper_table);
+        ui->stackedWidget_table->setCurrentWidget(ui->page_VAV_terminal);
 
-        noi_after_cal_lineEdits = { ui->lineEdit_damper_after_63, ui->lineEdit_damper_after_125, ui->lineEdit_damper_after_250,ui->lineEdit_damper_after_500,
-                                        ui->lineEdit_damper_after_1k, ui->lineEdit_damper_after_2k, ui->lineEdit_damper_after_4k, ui->lineEdit_damper_after_8k,
-                                        ui->lineEdit_damper_after_total};
+        noi_after_cal_lineEdits = { ui->lineEdit_VAV_terminal_after_63, ui->lineEdit_VAV_terminal_after_125, ui->lineEdit_VAV_terminal_after_250,ui->lineEdit_VAV_terminal_after_500,
+                                        ui->lineEdit_VAV_terminal_after_1k, ui->lineEdit_VAV_terminal_after_2k, ui->lineEdit_VAV_terminal_after_4k, ui->lineEdit_VAV_terminal_after_8k,
+                                        ui->lineEdit_VAV_terminal_after_total};
+
+        noi_lineEdits = { ui->lineEdit_VAV_terminal_63, ui->lineEdit_VAV_terminal_125, ui->lineEdit_VAV_terminal_250,ui->lineEdit_VAV_terminal_500,
+                          ui->lineEdit_VAV_terminal_1k, ui->lineEdit_VAV_terminal_2k, ui->lineEdit_VAV_terminal_4k, ui->lineEdit_VAV_terminal_8k,
+                          ui->lineEdit_VAV_terminal_total};
+
+        terminal_atten_lineEdits.clear();
+        terminal_refl_lineEdits.clear();
+        terminal_noi_lineEdits.clear();
+        each_atten_lineEdits.clear();
+        sum_atten_lineEdits.clear();
+        atten_lineEdits.clear();
     }
     else if(arg1 == "阀门/圆形调风门")
     {
-        ui->stackedWidget_info->setCurrentWidget(ui->page_circle_damper_info);
-        ui->stackedWidget_table->setCurrentWidget(ui->page_damper_table);
+        ui->stackedWidget_table->setCurrentWidget(ui->page_circular_damper);
 
-        noi_after_cal_lineEdits = { ui->lineEdit_damper_after_63, ui->lineEdit_damper_after_125, ui->lineEdit_damper_after_250,ui->lineEdit_damper_after_500,
-                                        ui->lineEdit_damper_after_1k, ui->lineEdit_damper_after_2k, ui->lineEdit_damper_after_4k, ui->lineEdit_damper_after_8k,
-                                        ui->lineEdit_damper_after_total};
+        noi_after_cal_lineEdits = { ui->lineEdit_circular_damper_after_63, ui->lineEdit_circular_damper_after_125, ui->lineEdit_circular_damper_after_250,ui->lineEdit_circular_damper_after_500,
+                                        ui->lineEdit_circular_damper_after_1k, ui->lineEdit_circular_damper_after_2k, ui->lineEdit_circular_damper_after_4k, ui->lineEdit_circular_damper_after_8k,
+                                        ui->lineEdit_circular_damper_after_total};
+
+        noi_lineEdits = { ui->lineEdit_circular_damper_63, ui->lineEdit_circular_damper_125, ui->lineEdit_circular_damper_250,ui->lineEdit_circular_damper_500,
+                          ui->lineEdit_circular_damper_1k, ui->lineEdit_circular_damper_2k, ui->lineEdit_circular_damper_4k, ui->lineEdit_circular_damper_8k,
+                          ui->lineEdit_circular_damper_total};
+
+
+        terminal_atten_lineEdits.clear();
+        terminal_refl_lineEdits.clear();
+        terminal_noi_lineEdits.clear();
+        each_atten_lineEdits.clear();
+        sum_atten_lineEdits.clear();
+        atten_lineEdits.clear();
     }
     else if(arg1 == "阀门/方形调风门")
     {
-        ui->stackedWidget_info->setCurrentWidget(ui->page_rect_damper_info);
-        ui->stackedWidget_table->setCurrentWidget(ui->page_damper_table);
+        ui->stackedWidget_table->setCurrentWidget(ui->page_rect_damper);
 
-        noi_after_cal_lineEdits = { ui->lineEdit_damper_after_63, ui->lineEdit_damper_after_125, ui->lineEdit_damper_after_250,ui->lineEdit_damper_after_500,
-                                        ui->lineEdit_damper_after_1k, ui->lineEdit_damper_after_2k, ui->lineEdit_damper_after_4k, ui->lineEdit_damper_after_8k,
-                                        ui->lineEdit_damper_after_total};
+        noi_after_cal_lineEdits = { ui->lineEdit_rect_damper_after_63, ui->lineEdit_rect_damper_after_125, ui->lineEdit_rect_damper_after_250,ui->lineEdit_rect_damper_after_500,
+                                        ui->lineEdit_rect_damper_after_1k, ui->lineEdit_rect_damper_after_2k, ui->lineEdit_rect_damper_after_4k, ui->lineEdit_rect_damper_after_8k,
+                                        ui->lineEdit_rect_damper_after_total};
+
+        noi_lineEdits = { ui->lineEdit_rect_damper_63, ui->lineEdit_rect_damper_125, ui->lineEdit_rect_damper_250,ui->lineEdit_rect_damper_500,
+                          ui->lineEdit_rect_damper_1k, ui->lineEdit_rect_damper_2k, ui->lineEdit_rect_damper_4k, ui->lineEdit_rect_damper_8k,
+                          ui->lineEdit_rect_damper_total};
+
+        terminal_atten_lineEdits.clear();
+        terminal_refl_lineEdits.clear();
+        terminal_noi_lineEdits.clear();
+        each_atten_lineEdits.clear();
+        sum_atten_lineEdits.clear();
+        atten_lineEdits.clear();
     }
-    else if(arg1 == "末端/其他通风末端" || arg1 == "末端/抽风头" || arg1 == "末端/静压箱+格栅" || arg1 == "末端/送风头"
-             || arg1 == "末端/置换通风末端" || arg1 == "末端/布风器+散流器")
+    else if(arg1 == "末端/布风器+散流器")
     {
+        ui->stackedWidget_table->setCurrentWidget(ui->page_air_diff);
 
-        ui->stackedWidget_info->setCurrentWidget(ui->page_atten_info);
-        if(arg1 == "末端/其他通风末端")
-        {
-            ui->stackedWidget_atten_noi_model->setCurrentWidget(ui->page_other_send_terminal_model);
-        }
-        else if(arg1 == "末端/抽风头")
-        {
-            ui->stackedWidget_atten_noi_model->setCurrentWidget(ui->page_pump_model);
-        }
-        else if(arg1 == "末端/静压箱+格栅")
-        {
-            ui->stackedWidget_atten_noi_model->setCurrentWidget(ui->page_static_grille_model);
-        }
-        else if(arg1 == "末端/送风头")
-        {
-            ui->stackedWidget_atten_noi_model->setCurrentWidget(ui->page_send_model);
-        }
-        else if(arg1 == "末端/置换通风末端")
-        {
-            ui->stackedWidget_atten_noi_model->setCurrentWidget(ui->page_disp_vent_terminal_model);
-        }
-        else if(arg1 == "末端/布风器+散流器")
-        {
-            ui->stackedWidget_atten_noi_model->setCurrentWidget(ui->page_air_diff_model);
-        }
+        noi_after_cal_lineEdits = { ui->lineEdit_air_diff_after_63, ui->lineEdit_air_diff_after_125, ui->lineEdit_air_diff_after_250,ui->lineEdit_air_diff_after_500,
+                                        ui->lineEdit_air_diff_after_1k, ui->lineEdit_air_diff_after_2k, ui->lineEdit_air_diff_after_4k, ui->lineEdit_air_diff_after_8k,
+                                        ui->lineEdit_air_diff_after_total};
 
-        ui->stackedWidget_table->setCurrentWidget(ui->page_atten_noi_table);
+        terminal_atten_lineEdits = { ui->lineEdit_air_diff_atten_63, ui->lineEdit_air_diff_atten_125, ui->lineEdit_air_diff_atten_250,ui->lineEdit_air_diff_atten_500,
+                                     ui->lineEdit_air_diff_atten_1k, ui->lineEdit_air_diff_atten_2k, ui->lineEdit_air_diff_atten_4k, ui->lineEdit_air_diff_atten_8k,
+                                     ui->lineEdit_air_diff_atten_total};
 
-        noi_after_cal_lineEdits = { ui->lineEdit_end_after_63, ui->lineEdit_end_after_125, ui->lineEdit_end_after_250,ui->lineEdit_end_after_500,
-                                        ui->lineEdit_end_after_1k, ui->lineEdit_end_after_2k, ui->lineEdit_end_after_4k, ui->lineEdit_end_after_8k,
-                                        ui->lineEdit_end_after_total};
+        terminal_refl_lineEdits = { ui->lineEdit_air_diff_refl_63, ui->lineEdit_air_diff_refl_125, ui->lineEdit_air_diff_refl_250,ui->lineEdit_air_diff_refl_500,
+                                     ui->lineEdit_air_diff_refl_1k, ui->lineEdit_air_diff_refl_2k, ui->lineEdit_air_diff_refl_4k, ui->lineEdit_air_diff_refl_8k,
+                                     ui->lineEdit_air_diff_refl_total};
+
+        terminal_noi_lineEdits = { ui->lineEdit_air_diff_noi_63, ui->lineEdit_air_diff_noi_125, ui->lineEdit_air_diff_noi_250,ui->lineEdit_air_diff_noi_500,
+                                   ui->lineEdit_air_diff_noi_1k, ui->lineEdit_air_diff_noi_2k, ui->lineEdit_air_diff_noi_4k, ui->lineEdit_air_diff_noi_8k,
+                                   ui->lineEdit_air_diff_noi_total};
+
+        noi_lineEdits.clear();
+        each_atten_lineEdits.clear();
+        sum_atten_lineEdits.clear();
+        atten_lineEdits.clear();
     }
-    else if(arg1 == "分支/静压箱" || arg1 == "分支/三通" || arg1 == "分支/风道多分支")
+    else if(arg1 == "末端/抽风头")
     {
-        ui->stackedWidget_info->setCurrentWidget(ui->page_branch_info);
-        ui->stackedWidget_table->setCurrentWidget(ui->page_branch_table);
+        ui->stackedWidget_table->setCurrentWidget(ui->page_pump);
 
-        noi_after_cal_lineEdits = { ui->lineEdit_branch_after_63, ui->lineEdit_branch_after_125, ui->lineEdit_branch_after_250,ui->lineEdit_branch_after_500,
-                                        ui->lineEdit_branch_after_1k, ui->lineEdit_branch_after_2k, ui->lineEdit_branch_after_4k, ui->lineEdit_branch_after_8k,
-                                        ui->lineEdit_branch_after_total};
+        noi_after_cal_lineEdits = { ui->lineEdit_pump_after_63, ui->lineEdit_pump_after_125, ui->lineEdit_pump_after_250,ui->lineEdit_pump_after_500,
+                                        ui->lineEdit_pump_after_1k, ui->lineEdit_pump_after_2k, ui->lineEdit_pump_after_4k, ui->lineEdit_pump_after_8k,
+                                        ui->lineEdit_pump_after_total};
+
+        terminal_atten_lineEdits = { ui->lineEdit_pump_atten_63, ui->lineEdit_pump_atten_125, ui->lineEdit_pump_atten_250,ui->lineEdit_pump_atten_500,
+                                     ui->lineEdit_pump_atten_1k, ui->lineEdit_pump_atten_2k, ui->lineEdit_pump_atten_4k, ui->lineEdit_pump_atten_8k,
+                                     ui->lineEdit_pump_atten_total};
+
+        terminal_refl_lineEdits = { ui->lineEdit_pump_refl_63, ui->lineEdit_pump_refl_125, ui->lineEdit_pump_refl_250,ui->lineEdit_pump_refl_500,
+                                     ui->lineEdit_pump_refl_1k, ui->lineEdit_pump_refl_2k, ui->lineEdit_pump_refl_4k, ui->lineEdit_pump_refl_8k,
+                                     ui->lineEdit_pump_refl_total};
+
+        terminal_noi_lineEdits = { ui->lineEdit_pump_noi_63, ui->lineEdit_pump_noi_125, ui->lineEdit_pump_noi_250,ui->lineEdit_pump_noi_500,
+                                   ui->lineEdit_pump_noi_1k, ui->lineEdit_pump_noi_2k, ui->lineEdit_pump_noi_4k, ui->lineEdit_pump_noi_8k,
+                                   ui->lineEdit_pump_noi_total};
+
+        noi_lineEdits.clear();
+        each_atten_lineEdits.clear();
+        sum_atten_lineEdits.clear();
+        atten_lineEdits.clear();
+    }
+    else if(arg1 == "末端/送风头")
+    {
+        ui->stackedWidget_table->setCurrentWidget(ui->page_send);
+
+        noi_after_cal_lineEdits = { ui->lineEdit_send_after_63, ui->lineEdit_send_after_125, ui->lineEdit_send_after_250,ui->lineEdit_send_after_500,
+                                        ui->lineEdit_send_after_1k, ui->lineEdit_send_after_2k, ui->lineEdit_send_after_4k, ui->lineEdit_send_after_8k,
+                                        ui->lineEdit_send_after_total};
+
+        terminal_atten_lineEdits = { ui->lineEdit_send_atten_63, ui->lineEdit_send_atten_125, ui->lineEdit_send_atten_250,ui->lineEdit_send_atten_500,
+                                     ui->lineEdit_send_atten_1k, ui->lineEdit_send_atten_2k, ui->lineEdit_send_atten_4k, ui->lineEdit_send_atten_8k,
+                                     ui->lineEdit_send_atten_total};
+
+        terminal_refl_lineEdits = { ui->lineEdit_send_refl_63, ui->lineEdit_send_refl_125, ui->lineEdit_send_refl_250,ui->lineEdit_send_refl_500,
+                                     ui->lineEdit_send_refl_1k, ui->lineEdit_send_refl_2k, ui->lineEdit_send_refl_4k, ui->lineEdit_send_refl_8k,
+                                     ui->lineEdit_send_refl_total};
+
+        terminal_noi_lineEdits = { ui->lineEdit_send_noi_63, ui->lineEdit_send_noi_125, ui->lineEdit_send_noi_250,ui->lineEdit_send_noi_500,
+                                   ui->lineEdit_send_noi_1k, ui->lineEdit_send_noi_2k, ui->lineEdit_send_noi_4k, ui->lineEdit_send_noi_8k,
+                                   ui->lineEdit_send_noi_total};
+
+        noi_lineEdits.clear();
+        each_atten_lineEdits.clear();
+        sum_atten_lineEdits.clear();
+        atten_lineEdits.clear();
+    }
+    else if(arg1 == "末端/静压箱+格栅")
+    {
+        ui->stackedWidget_table->setCurrentWidget(ui->page_staticBox_grille);
+
+        noi_after_cal_lineEdits = { ui->lineEdit_staticBox_grille_after_63, ui->lineEdit_staticBox_grille_after_125, ui->lineEdit_staticBox_grille_after_250,ui->lineEdit_staticBox_grille_after_500,
+                                        ui->lineEdit_staticBox_grille_after_1k, ui->lineEdit_staticBox_grille_after_2k, ui->lineEdit_staticBox_grille_after_4k, ui->lineEdit_staticBox_grille_after_8k,
+                                        ui->lineEdit_staticBox_grille_after_total};
+
+        terminal_atten_lineEdits = { ui->lineEdit_staticBox_grille_atten_63, ui->lineEdit_staticBox_grille_atten_125, ui->lineEdit_staticBox_grille_atten_250,ui->lineEdit_staticBox_grille_atten_500,
+                                     ui->lineEdit_staticBox_grille_atten_1k, ui->lineEdit_staticBox_grille_atten_2k, ui->lineEdit_staticBox_grille_atten_4k, ui->lineEdit_staticBox_grille_atten_8k,
+                                     ui->lineEdit_staticBox_grille_atten_total};
+
+        terminal_refl_lineEdits = { ui->lineEdit_staticBox_grille_refl_63, ui->lineEdit_staticBox_grille_refl_125, ui->lineEdit_staticBox_grille_refl_250,ui->lineEdit_staticBox_grille_refl_500,
+                                     ui->lineEdit_staticBox_grille_refl_1k, ui->lineEdit_staticBox_grille_refl_2k, ui->lineEdit_staticBox_grille_refl_4k, ui->lineEdit_staticBox_grille_refl_8k,
+                                     ui->lineEdit_staticBox_grille_refl_total};
+
+        terminal_noi_lineEdits = { ui->lineEdit_staticBox_grille_noi_63, ui->lineEdit_staticBox_grille_noi_125, ui->lineEdit_staticBox_grille_noi_250,ui->lineEdit_staticBox_grille_noi_500,
+                                   ui->lineEdit_staticBox_grille_noi_1k, ui->lineEdit_staticBox_grille_noi_2k, ui->lineEdit_staticBox_grille_noi_4k, ui->lineEdit_staticBox_grille_noi_8k,
+                                   ui->lineEdit_staticBox_grille_noi_total};
+
+        noi_lineEdits.clear();
+        each_atten_lineEdits.clear();
+        sum_atten_lineEdits.clear();
+        atten_lineEdits.clear();
+    }
+    else if(arg1 == "末端/置换通风末端")
+    {
+        ui->stackedWidget_table->setCurrentWidget(ui->page_disp_vent_terminal);
+
+        noi_after_cal_lineEdits = { ui->lineEdit_disp_vent_terminal_after_63, ui->lineEdit_disp_vent_terminal_after_125, ui->lineEdit_disp_vent_terminal_after_250,ui->lineEdit_disp_vent_terminal_after_500,
+                                        ui->lineEdit_disp_vent_terminal_after_1k, ui->lineEdit_disp_vent_terminal_after_2k, ui->lineEdit_disp_vent_terminal_after_4k, ui->lineEdit_disp_vent_terminal_after_8k,
+                                        ui->lineEdit_disp_vent_terminal_after_total};
+
+        terminal_atten_lineEdits = { ui->lineEdit_disp_vent_terminal_atten_63, ui->lineEdit_disp_vent_terminal_atten_125, ui->lineEdit_disp_vent_terminal_atten_250,ui->lineEdit_disp_vent_terminal_atten_500,
+                                     ui->lineEdit_disp_vent_terminal_atten_1k, ui->lineEdit_disp_vent_terminal_atten_2k, ui->lineEdit_disp_vent_terminal_atten_4k, ui->lineEdit_disp_vent_terminal_atten_8k,
+                                     ui->lineEdit_disp_vent_terminal_atten_total};
+
+        terminal_refl_lineEdits = { ui->lineEdit_disp_vent_terminal_refl_63, ui->lineEdit_disp_vent_terminal_refl_125, ui->lineEdit_disp_vent_terminal_refl_250,ui->lineEdit_disp_vent_terminal_refl_500,
+                                     ui->lineEdit_disp_vent_terminal_refl_1k, ui->lineEdit_disp_vent_terminal_refl_2k, ui->lineEdit_disp_vent_terminal_refl_4k, ui->lineEdit_disp_vent_terminal_refl_8k,
+                                     ui->lineEdit_disp_vent_terminal_refl_total};
+
+        terminal_noi_lineEdits = { ui->lineEdit_disp_vent_terminal_noi_63, ui->lineEdit_disp_vent_terminal_noi_125, ui->lineEdit_disp_vent_terminal_noi_250,ui->lineEdit_disp_vent_terminal_noi_500,
+                                   ui->lineEdit_disp_vent_terminal_noi_1k, ui->lineEdit_disp_vent_terminal_noi_2k, ui->lineEdit_disp_vent_terminal_noi_4k, ui->lineEdit_disp_vent_terminal_noi_8k,
+                                   ui->lineEdit_disp_vent_terminal_noi_total};
+
+        noi_lineEdits.clear();
+        each_atten_lineEdits.clear();
+        sum_atten_lineEdits.clear();
+        atten_lineEdits.clear();
+    }
+    else if(arg1 == "末端/其他通风末端")
+    {
+        ui->stackedWidget_table->setCurrentWidget(ui->page_other_send_terminal);
+
+        noi_after_cal_lineEdits = { ui->lineEdit_other_send_terminal_after_63, ui->lineEdit_other_send_terminal_after_125, ui->lineEdit_other_send_terminal_after_250,ui->lineEdit_other_send_terminal_after_500,
+                                        ui->lineEdit_other_send_terminal_after_1k, ui->lineEdit_other_send_terminal_after_2k, ui->lineEdit_other_send_terminal_after_4k, ui->lineEdit_other_send_terminal_after_8k,
+                                        ui->lineEdit_other_send_terminal_after_total};
+
+        terminal_atten_lineEdits = { ui->lineEdit_other_send_terminal_atten_63, ui->lineEdit_other_send_terminal_atten_125, ui->lineEdit_other_send_terminal_atten_250,ui->lineEdit_other_send_terminal_atten_500,
+                                     ui->lineEdit_other_send_terminal_atten_1k, ui->lineEdit_other_send_terminal_atten_2k, ui->lineEdit_other_send_terminal_atten_4k, ui->lineEdit_other_send_terminal_atten_8k,
+                                     ui->lineEdit_other_send_terminal_atten_total};
+
+        terminal_refl_lineEdits = { ui->lineEdit_other_send_terminal_refl_63, ui->lineEdit_other_send_terminal_refl_125, ui->lineEdit_other_send_terminal_refl_250,ui->lineEdit_other_send_terminal_refl_500,
+                                     ui->lineEdit_other_send_terminal_refl_1k, ui->lineEdit_other_send_terminal_refl_2k, ui->lineEdit_other_send_terminal_refl_4k, ui->lineEdit_other_send_terminal_refl_8k,
+                                     ui->lineEdit_other_send_terminal_refl_total};
+
+        terminal_noi_lineEdits = { ui->lineEdit_other_send_terminal_noi_63, ui->lineEdit_other_send_terminal_noi_125, ui->lineEdit_other_send_terminal_noi_250,ui->lineEdit_other_send_terminal_noi_500,
+                                   ui->lineEdit_other_send_terminal_noi_1k, ui->lineEdit_other_send_terminal_noi_2k, ui->lineEdit_other_send_terminal_noi_4k, ui->lineEdit_other_send_terminal_noi_8k,
+                                   ui->lineEdit_other_send_terminal_noi_total};
+
+        noi_lineEdits.clear();
+        each_atten_lineEdits.clear();
+        sum_atten_lineEdits.clear();
+        atten_lineEdits.clear();
+    }
+    else if(arg1 == "分支/静压箱")
+    {
+        ui->stackedWidget_table->setCurrentWidget(ui->page_static_box);
+
+        noi_after_cal_lineEdits = { ui->lineEdit_static_box_after_63, ui->lineEdit_static_box_after_125, ui->lineEdit_static_box_after_250,ui->lineEdit_static_box_after_500,
+                                        ui->lineEdit_static_box_after_1k, ui->lineEdit_static_box_after_2k, ui->lineEdit_static_box_after_4k, ui->lineEdit_static_box_after_8k,
+                                        ui->lineEdit_static_box_after_total};
+
+        atten_lineEdits = { ui->lineEdit_static_box_63, ui->lineEdit_static_box_125, ui->lineEdit_static_box_250,ui->lineEdit_static_box_500,
+                            ui->lineEdit_static_box_1k, ui->lineEdit_static_box_2k, ui->lineEdit_static_box_4k, ui->lineEdit_static_box_8k,
+                            ui->lineEdit_static_box_total};
+
+        noi_lineEdits.clear();
+        terminal_atten_lineEdits.clear();
+        terminal_refl_lineEdits.clear();
+        terminal_noi_lineEdits.clear();
+        each_atten_lineEdits.clear();
+        sum_atten_lineEdits.clear();
+    }
+    else if(arg1 == "分支/风道多分支")
+    {
+        ui->stackedWidget_table->setCurrentWidget(ui->page_duct_with_multi_ranc);
+
+        noi_after_cal_lineEdits = { ui->lineEdit_duct_with_multi_ranc_after_63, ui->lineEdit_duct_with_multi_ranc_after_125, ui->lineEdit_duct_with_multi_ranc_after_250,ui->lineEdit_duct_with_multi_ranc_after_500,
+                                        ui->lineEdit_duct_with_multi_ranc_after_1k, ui->lineEdit_duct_with_multi_ranc_after_2k, ui->lineEdit_duct_with_multi_ranc_after_4k, ui->lineEdit_duct_with_multi_ranc_after_8k,
+                                        ui->lineEdit_duct_with_multi_ranc_after_total};
+
+        atten_lineEdits = { ui->lineEdit_duct_with_multi_ranc_63, ui->lineEdit_duct_with_multi_ranc_125, ui->lineEdit_duct_with_multi_ranc_250,ui->lineEdit_duct_with_multi_ranc_500,
+                            ui->lineEdit_duct_with_multi_ranc_1k, ui->lineEdit_duct_with_multi_ranc_2k, ui->lineEdit_duct_with_multi_ranc_4k, ui->lineEdit_duct_with_multi_ranc_8k,
+                            ui->lineEdit_duct_with_multi_ranc_total};
+
+        noi_lineEdits.clear();
+        terminal_atten_lineEdits.clear();
+        terminal_refl_lineEdits.clear();
+        terminal_noi_lineEdits.clear();
+        each_atten_lineEdits.clear();
+        sum_atten_lineEdits.clear();
+    }
+    else if(arg1 == "分支/三通")
+    {
+        ui->stackedWidget_table->setCurrentWidget(ui->page_tee);
+
+        noi_after_cal_lineEdits = { ui->lineEdit_tee_after_63, ui->lineEdit_tee_after_125, ui->lineEdit_tee_after_250,ui->lineEdit_tee_after_500,
+                                        ui->lineEdit_tee_after_1k, ui->lineEdit_tee_after_2k, ui->lineEdit_tee_after_4k, ui->lineEdit_tee_after_8k,
+                                        ui->lineEdit_tee_after_total};
+
+        atten_lineEdits = { ui->lineEdit_tee_63, ui->lineEdit_tee_125, ui->lineEdit_tee_250,ui->lineEdit_tee_500,
+                            ui->lineEdit_tee_1k, ui->lineEdit_tee_2k, ui->lineEdit_tee_4k, ui->lineEdit_tee_8k,
+                            ui->lineEdit_tee_total};
+
+        noi_lineEdits.clear();
+        terminal_atten_lineEdits.clear();
+        terminal_refl_lineEdits.clear();
+        terminal_noi_lineEdits.clear();
+        each_atten_lineEdits.clear();
+        sum_atten_lineEdits.clear();
     }
     else if(arg1 == "直管")
     {
-        ui->stackedWidget_info->setCurrentWidget(ui->page_pipe_elbow_info);
-        ui->stackedWidget_pipe_elbow->setCurrentWidget(ui->page_pipe);
-        ui->stackedWidget_table->setCurrentWidget(ui->page_pipe_table);
+        ui->stackedWidget_table->setCurrentWidget(ui->page_pipe);
 
         noi_after_cal_lineEdits = { ui->lineEdit_pipe_after_63, ui->lineEdit_pipe_after_125, ui->lineEdit_pipe_after_250,ui->lineEdit_pipe_after_500,
                                         ui->lineEdit_pipe_after_1k, ui->lineEdit_pipe_after_2k, ui->lineEdit_pipe_after_4k, ui->lineEdit_pipe_after_8k,
                                         ui->lineEdit_pipe_after_total};
+
+        each_atten_lineEdits = { ui->lineEdit_pipe_63, ui->lineEdit_pipe_125, ui->lineEdit_pipe_250,ui->lineEdit_pipe_500,
+                                        ui->lineEdit_pipe_1k, ui->lineEdit_pipe_2k, ui->lineEdit_pipe_4k, ui->lineEdit_pipe_8k,
+                                        ui->lineEdit_pipe_total};
+
+        sum_atten_lineEdits = { ui->lineEdit_pipe_sum_63, ui->lineEdit_pipe_sum_125, ui->lineEdit_pipe_sum_250,ui->lineEdit_pipe_sum_500,
+                                ui->lineEdit_pipe_sum_1k, ui->lineEdit_pipe_sum_2k, ui->lineEdit_pipe_sum_4k, ui->lineEdit_pipe_sum_8k,
+                                ui->lineEdit_pipe_sum_total};
+
+        noi_lineEdits.clear();
+        terminal_atten_lineEdits.clear();
+        terminal_refl_lineEdits.clear();
+        terminal_noi_lineEdits.clear();
+        atten_lineEdits.clear();
     }
     else if(arg1 == "弯头")
     {
-        ui->stackedWidget_info->setCurrentWidget(ui->page_pipe_elbow_info);
-        ui->stackedWidget_pipe_elbow->setCurrentWidget(ui->page_elbow);
-        ui->stackedWidget_table->setCurrentWidget(ui->page_elbow_table);
+        ui->stackedWidget_table->setCurrentWidget(ui->page_elbow);
 
         noi_after_cal_lineEdits = { ui->lineEdit_elbow_after_63, ui->lineEdit_elbow_after_125, ui->lineEdit_elbow_after_250,ui->lineEdit_elbow_after_500,
                                         ui->lineEdit_elbow_after_1k, ui->lineEdit_elbow_after_2k, ui->lineEdit_elbow_after_4k, ui->lineEdit_elbow_after_8k,
                                         ui->lineEdit_elbow_after_total};
+
+        each_atten_lineEdits = { ui->lineEdit_elbow_63, ui->lineEdit_elbow_125, ui->lineEdit_elbow_250,ui->lineEdit_elbow_500,
+                                        ui->lineEdit_elbow_1k, ui->lineEdit_elbow_2k, ui->lineEdit_elbow_4k, ui->lineEdit_elbow_8k,
+                                        ui->lineEdit_elbow_total};
+
+        sum_atten_lineEdits = { ui->lineEdit_elbow_sum_63, ui->lineEdit_elbow_sum_125, ui->lineEdit_elbow_sum_250,ui->lineEdit_elbow_sum_500,
+                                ui->lineEdit_elbow_sum_1k, ui->lineEdit_elbow_sum_2k, ui->lineEdit_elbow_sum_4k, ui->lineEdit_elbow_sum_8k,
+                                ui->lineEdit_elbow_sum_total};
+
+        noi_lineEdits.clear();
+        terminal_atten_lineEdits.clear();
+        terminal_refl_lineEdits.clear();
+        terminal_noi_lineEdits.clear();
+        atten_lineEdits.clear();
     }
     else if(arg1 == "变径")
     {
-        ui->stackedWidget_info->setCurrentWidget(ui->page_reducer_info);
-        ui->stackedWidget_table->setCurrentWidget(ui->page_reducer_table);
+        ui->stackedWidget_table->setCurrentWidget(ui->page_reducer);
 
         noi_after_cal_lineEdits = { ui->lineEdit_reducer_after_63, ui->lineEdit_reducer_after_125, ui->lineEdit_reducer_after_250,ui->lineEdit_reducer_after_500,
                                         ui->lineEdit_reducer_after_1k, ui->lineEdit_reducer_after_2k, ui->lineEdit_reducer_after_4k, ui->lineEdit_reducer_after_8k,
                                         ui->lineEdit_reducer_after_total};
+
+        atten_lineEdits = { ui->lineEdit_reducer_63, ui->lineEdit_reducer_125, ui->lineEdit_reducer_250,ui->lineEdit_reducer_500,
+                                        ui->lineEdit_reducer_1k, ui->lineEdit_reducer_2k, ui->lineEdit_reducer_4k, ui->lineEdit_reducer_8k,
+                                        ui->lineEdit_reducer_total};
+
+        noi_lineEdits.clear();
+        terminal_atten_lineEdits.clear();
+        terminal_refl_lineEdits.clear();
+        terminal_noi_lineEdits.clear();
+        each_atten_lineEdits.clear();
+        sum_atten_lineEdits.clear();
     }
     else if(arg1 == "消音器")
     {
-        ui->stackedWidget_info->setCurrentWidget(ui->page_silencer_info);
-        ui->stackedWidget_table->setCurrentWidget(ui->page_silencer_table);
+        ui->stackedWidget_table->setCurrentWidget(ui->page_silencer);
 
         noi_after_cal_lineEdits = { ui->lineEdit_silencer_after_63, ui->lineEdit_silencer_after_125, ui->lineEdit_silencer_after_250,ui->lineEdit_silencer_after_500,
                                         ui->lineEdit_silencer_after_1k, ui->lineEdit_silencer_after_2k, ui->lineEdit_silencer_after_4k, ui->lineEdit_silencer_after_8k, nullptr};
+
+        atten_lineEdits = { ui->lineEdit_silencer_63, ui->lineEdit_silencer_125, ui->lineEdit_silencer_250,ui->lineEdit_silencer_500,
+                                        ui->lineEdit_silencer_1k, ui->lineEdit_silencer_2k, ui->lineEdit_silencer_4k, ui->lineEdit_silencer_8k, nullptr};
+
+        noi_lineEdits.clear();
+        terminal_atten_lineEdits.clear();
+        terminal_refl_lineEdits.clear();
+        terminal_noi_lineEdits.clear();
+        each_atten_lineEdits.clear();
+        sum_atten_lineEdits.clear();
     }
+    // 递归清空切换后页面中的 QLineEdit 和 QComboBox
+    clearPage(ui->stackedWidget_table->currentWidget());
 }
 
 
@@ -422,7 +668,7 @@ void RoomCalTable::on_comboBox_sound_type_room_currentTextChanged(const QString 
         ui->comboBox_unit_name->addItem("末端/布风器+散流器");
         ui->comboBox_unit_name->addItem("末端/抽风头");
         ui->comboBox_unit_name->addItem("末端/送风头");
-        ui->comboBox_unit_name->addItem("末端/静压+格栅");
+        ui->comboBox_unit_name->addItem("末端/静压箱+格栅");
         ui->comboBox_unit_name->addItem("末端/置换通风末端");
         ui->comboBox_unit_name->addItem("末端/其他通风末端");
     }
@@ -440,8 +686,9 @@ void RoomCalTable::on_comboBox_sound_type_room_currentTextChanged(const QString 
     else if(arg1 == "声压级计算")
     {
         ui->stackedWidget_title->setCurrentWidget(ui->page_room_cal);
-        ui->stackedWidget_table->setCurrentWidget(ui->page_room_table);
         ui->comboBox_sound_type_room->setCurrentText("声压级计算");
+        ui->comboBox_room_type->setCurrentIndex(0);
+        ui->stackedWidget_table->setCurrentWidget(ui->page_room_less425);
     }
 }
 
@@ -454,7 +701,6 @@ void RoomCalTable::setCollapsed()
 {
     if(!isCollapsed)
     {
-        ui->stackedWidget_info->setVisible(false);
         ui->stackedWidget_table->setVisible(false);
         this->setMinimumSize(QSize(this->width(), ui->widget_title->height()));
         this->setMaximumSize(QSize(this->width(), ui->widget_title->height()));
@@ -462,7 +708,6 @@ void RoomCalTable::setCollapsed()
     }
     else
     {
-        ui->stackedWidget_info->setVisible(true);
         ui->stackedWidget_table->setVisible(true);
         // 清除最小和最大大小限制
         this->setMinimumSize(QSize(0, 0));
@@ -471,26 +716,12 @@ void RoomCalTable::setCollapsed()
         QWidget *currentWidget = ui->stackedWidget_table->currentWidget();
 
         if (currentWidget) {
-            // 获取所有子对象
-            QList<QObject *> childObjects = currentWidget->children();
+                int tableHeight = currentWidget->height();
+                int titleHeight = ui->widget_title->height();
 
-            // 遍历所有子对象
-            for (QObject *childObject : childObjects) {
-                // 判断是否是 QWidget 类型
-                if (QWidget *childWidget = qobject_cast<QWidget *>(childObject)) {
-                    int widgetHeight = childWidget->height();
-
-                    // 设置 QStackedWidget 的高度
-                    ui->stackedWidget_table->setFixedHeight(widgetHeight);
-
-                    // 设置窗口的高度
-                    this->setMinimumSize(QSize(this->width(), 75 + widgetHeight));
-                    this->setMaximumSize(QSize(this->width(), 75 + widgetHeight));
-
-                    // 假设只需要获取第一个符合条件的子部件，可以注释下面这行来继续查找其他子部件
-                    break;
-                }
-            }
+                // 设置窗口的高度
+                this->setMinimumSize(QSize(this->width(), tableHeight + titleHeight));
+                this->setMaximumSize(QSize(this->width(), tableHeight + titleHeight));
         }
         ui->widget_title->setStyleSheet(QString("#widget_title{ border:2px solid black;border-bottom:1px solid black;}QLabel{font-family: '黑体';font-size: 15px;}QLineEdit,QComboBox{font-family: '黑体';font-size: 14px;}QComboBox QAbstractItemView::item { height: 30px; }"));
     }
@@ -519,151 +750,157 @@ void RoomCalTable::setSerialNum(int num)
 }
 
 void RoomCalTable::updateComboBoxItems() {
-    // 清除当前所有选项
-    ui->comboBox_noi_src_num->clear();
+//    // 清除当前所有选项
+//    ui->comboBox_noi_src_num->clear();
 
-    if(ui->stackedWidget_title->currentWidget() == ui->page_unit)
-    {
-        for(QString number : systemListMap[systemName][ui->comboBox_unit_name->currentText()])
-        {
-            ui->comboBox_noi_src_num->addItem(number);
-        }
-    }
+//    if(ui->stackedWidget_title->currentWidget() == ui->page_unit)
+//    {
+//        for(QString number : systemListMap[systemName][ui->comboBox_unit_name->currentText()])
+//        {
+//            ui->comboBox_noi_src_num->addItem(number);
+//        }
+//    }
 }
+
 
 void RoomCalTable::on_comboBox_room_type_currentTextChanged(const QString &arg1)
 {
-    if(arg1 == "室外开敞处所（点噪音源）")
+    if(arg1 == "体积小于425m³房间（点噪音源）")
     {
-        ui->label_room_input_power->setText("进入开敞处所噪音声功率(dB)");
-        ui->label_power_amend->setText(" 开敞处所声压与功率修正(dB) ");
+        ui->stackedWidget_table->setCurrentWidget(ui->page_room_less425);
     }
-    else
+    else if(arg1 == "体积大于425m³房间（点噪音源）")
     {
-        ui->label_room_input_power->setText("进入房间噪音声功率(dB)");
-        ui->label_power_amend->setText(" 房间声压与声功率修正(dB) ");
+        ui->stackedWidget_table->setCurrentWidget(ui->page_room_more425);
+    }
+    else if(arg1 == "无家具空房间（点噪音源）")
+    {
+        ui->stackedWidget_table->setCurrentWidget(ui->page_room_noFurniture);
+    }
+    else if(arg1 == "室外开敞处所（点噪音源）")
+    {
+        ui->stackedWidget_table->setCurrentWidget(ui->page_room_open);
+    }
+    else if(arg1 == "条缝风口房间（线噪音源）")
+    {
+        ui->stackedWidget_table->setCurrentWidget(ui->page_room_gap_tuyere);
+    }
+    else if(arg1 == "雨降风口房间（面噪音源）")
+    {
+        ui->stackedWidget_table->setCurrentWidget(ui->page_room_rain);
     }
 }
 
+void RoomCalTable::connectLineEditsToCalSlot(const QVector<QLineEdit*>& lineEdits) {
+    for (QLineEdit* lineEdit : lineEdits) {
+        // 确保 lineEdit 非空后再连接
+        if (lineEdit) {
+            connect(lineEdit, &QLineEdit::textChanged, this, &RoomCalTable::calVariations);
+        } else {
+            // 处理潜在的空 lineEdit（可选）
+            // 您可能需要记录警告或提供备用行为
+        }
+    }
+}
 
-void RoomCalTable::on_comboBox_noi_src_num_currentTextChanged(const QString &arg1)
+void RoomCalTable::disconnectLineEditsToCalSlot(const QVector<QLineEdit*>& lineEdits)
 {
-    if(ui->comboBox_noi_src_num->currentText() == "")
-        return;
-
-    ComponentBase* component = componentManager.getComponentByNumber(arg1);
-    if(ui->comboBox_unit_name->currentText() == "风机")
-    {
-        Fan_noise* fan = static_cast<Fan_noise*>(component);
-        ui->lineEdit_noi_src_brand->setText(fan->brand);
-        ui->lineEdit_noi_src_model->setText(fan->model);
-        ui->lineEdit_noi_src_air_volume->setText(fan->air_volume);
-        ui->lineEdit_noi_src_static_press->setText(fan->brand);
-    }
-    else if(ui->comboBox_unit_name->currentText() == "风机盘管")
-    {
-        FanCoil_noise* fanCoil = static_cast<FanCoil_noise*>(component);
-        ui->lineEdit_noi_src_brand->setText(fanCoil->brand);
-        ui->lineEdit_noi_src_model->setText(fanCoil->model);
-        ui->lineEdit_noi_src_air_volume->setText(fanCoil->air_volume);
-        ui->lineEdit_noi_src_static_press->setText(fanCoil->brand);
-    }
-    else if(ui->comboBox_unit_name->currentText() == "空调器")
-    {
-        Aircondition_noise* aircondition = static_cast<Aircondition_noise*>(component);
-        ui->lineEdit_noi_src_brand->setText(aircondition->brand);
-        ui->lineEdit_noi_src_model->setText(aircondition->model);
-        ui->lineEdit_noi_src_air_volume->setText(aircondition->air_volume);
-        ui->lineEdit_noi_src_static_press->setText(aircondition->brand);
+    for (QLineEdit* lineEdit : lineEdits) {
+        if (lineEdit) {
+            disconnect(lineEdit, &QLineEdit::textChanged, this, &RoomCalTable::calVariations);
+        }
     }
 }
 
-
-void RoomCalTable::on_comboBox_noi_locate_currentTextChanged(const QString &arg1)
+void RoomCalTable::calVariations()
 {
-    if(ui->comboBox_noi_src_num->currentText() == "")
-        return;
-
-    ComponentBase* component = componentManager.getComponentByNumber(ui->comboBox_noi_src_num->currentText());
-    Fan_noise* fan = nullptr;
-    FanCoil_noise* fanCoil = nullptr;
-    Aircondition_noise* aircondition = nullptr;
-
-
-    QVector<QString> noises;
-    if(arg1 == "进口")
+    if(!noi_lineEdits.empty())
     {
-        if(ui->comboBox_unit_name->currentText() == "风机")
+        for(int i = 0; i < 8; i++)
         {
-            fan = static_cast<Fan_noise*>(component);
-            noises = {fan->noi_in_63, fan->noi_in_125, fan->noi_in_250, fan->noi_in_500, fan->noi_in_1k, fan->noi_in_2k, fan->noi_in_4k,
-                        fan->noi_in_8k,fan->noi_in_total};
-        }
-        else if(ui->comboBox_unit_name->currentText() == "风机盘管")
-        {
-            fanCoil = static_cast<FanCoil_noise*>(component);
-            noises = {fanCoil->noi_in_63, fanCoil->noi_in_125, fanCoil->noi_in_250, fanCoil->noi_in_500, fanCoil->noi_in_1k, fanCoil->noi_in_2k, fanCoil->noi_in_4k,
-                        fanCoil->noi_in_8k,fanCoil->noi_in_total};
-        }
-        else if(ui->comboBox_unit_name->currentText() == "空调器")
-        {
-            aircondition = static_cast<Aircondition_noise*>(component);
-            noises = {aircondition->noi_send_in_125, aircondition->noi_send_in_125, aircondition->noi_send_in_250, aircondition->noi_send_in_500, aircondition->noi_send_in_1k, aircondition->noi_send_in_2k, aircondition->noi_send_in_4k,
-                        aircondition->noi_send_in_8k,aircondition->noi_send_in_total};
+            if(!(noi_lineEdits[i] && noi_lineEdits[i]->text() != ""))
+            {
+                variations.clear();
+                return;
+            }
+            variations[i] = noi_lineEdits[i]->text();
         }
     }
-    else if(arg1 == "出口")
+    else if(!atten_lineEdits.empty())
     {
-        if(ui->comboBox_unit_name->currentText() == "风机")
+        for(int i = 0; i < 8; i++)
         {
-            fan = static_cast<Fan_noise*>(component);
-            noises = {fan->noi_out_63, fan->noi_out_125, fan->noi_out_250, fan->noi_out_500, fan->noi_out_1k, fan->noi_out_2k, fan->noi_out_4k,
-                        fan->noi_out_8k,fan->noi_out_total};
+            if(!(atten_lineEdits[i] && atten_lineEdits[i]->text() != ""))
+            {
+                variations.clear();
+                return;
+            }
+            variations[i] = atten_lineEdits[i]->text();
         }
-        else if(ui->comboBox_unit_name->currentText() == "风机盘管")
+    }
+    else if(!terminal_atten_lineEdits.empty() && !terminal_refl_lineEdits.empty() && !terminal_noi_lineEdits.empty())
+    {
+        for(int i = 0; i < 8; i++)
         {
-            fanCoil = static_cast<FanCoil_noise*>(component);
-            noises = {fanCoil->noi_out_63, fanCoil->noi_out_125, fanCoil->noi_out_250, fanCoil->noi_out_500, fanCoil->noi_out_1k, fanCoil->noi_out_2k, fanCoil->noi_out_4k,
-                        fanCoil->noi_out_8k,fanCoil->noi_out_total};
+            if(!(terminal_atten_lineEdits[i] && terminal_atten_lineEdits[i]->text() != ""
+                 && terminal_refl_lineEdits[i] && terminal_refl_lineEdits[i]->text() != ""
+                 && terminal_noi_lineEdits[i] && terminal_noi_lineEdits[i]->text() != ""))
+            {
+                variations.clear();
+                return;
+            }
+
+            double atten = terminal_atten_lineEdits[i]->text().toDouble();
+            double refl = terminal_atten_lineEdits[i]->text().toDouble();
+            double noi = terminal_atten_lineEdits[i]->text().toDouble();
+            double last_noi = noise_before_cal[i].toDouble();
+
+            double sup_noi = 10 * log10(pow(10,noi / 10) + pow(10, last_noi / 10));
+
+            variations[i] = QString::number(sup_noi - atten - refl ,'f',1);
         }
-        else if(ui->comboBox_unit_name->currentText() == "空调器")
+    }
+    else if(!each_atten_lineEdits.empty() && !sum_atten_lineEdits.empty())
+    {
+        for(int i = 0; i < 8; i++)
         {
-            aircondition = static_cast<Aircondition_noise*>(component);
-            noises = {aircondition->noi_send_out_125, aircondition->noi_send_out_125, aircondition->noi_send_out_250, aircondition->noi_send_out_500, aircondition->noi_send_out_1k, aircondition->noi_send_out_2k, aircondition->noi_send_out_4k,
-                        aircondition->noi_send_out_8k,aircondition->noi_send_out_total};
+            if(!(each_atten_lineEdits[i] && each_atten_lineEdits[i]->text() != ""
+                 && sum_atten_lineEdits[i] && sum_atten_lineEdits[i]->text() != ""))
+            {
+                variations.clear();
+                return;
+            }
+
+            if(ui->lineEdit_pipe_length && ui->lineEdit_pipe_length->text() != "")
+            {
+                double each_atten = each_atten_lineEdits[i]->text().toDouble();
+                sum_atten_lineEdits[i]->setText(QString::number(each_atten * ui->lineEdit_pipe_length->text().toInt(),'f',1));
+                variations[i] = QString::number(each_atten * ui->lineEdit_pipe_length->text().toInt(),'f',1);
+            }
+            else if(ui->lineEdit_elbow_count && ui->lineEdit_elbow_count->text() != "")
+            {
+                 double each_atten = each_atten_lineEdits[i]->text().toDouble();
+                 sum_atten_lineEdits[i]->setText(QString::number(each_atten * ui->lineEdit_elbow_count->text().toInt(),'f',1));
+                 variations[i] = QString::number(each_atten * ui->lineEdit_elbow_count->text().toInt(),'f',1);
+            }
+            else
+            {
+                return;
+            }
         }
     }
 
-    for(int i = 0; i < noises.size(); i++)
+    double temp = 0;
+
+    for(int i = 0; i < 8; i++)
     {
-        noi_after_cal_lineEdits[i]->setText(noises[i]);
-        noise_after_cal[i] = noi_after_cal_lineEdits[i]->text();
+        if(variations[i].isEmpty())
+        {
+            return;
+        }
+        noi_after_cal_lineEdits[i]->setText(variations[i]);
+        temp += pow(10, variations[i].toDouble() / 10);
     }
+    double total = 10 * log10(temp);
+    noi_after_cal_lineEdits[8]->setText(QString::number(total,'f' ,1));
 }
-
-void RoomCalTable::on_comboBox_atten_noi_end_size_currentTextChanged(const QString &arg1)
-{
-    //stackedWidget_terminal_size
-    if(arg1 == "圆形")
-    {
-        ui->stackedWidget_terminal_size->setCurrentWidget(ui->page_circle);
-    }
-    else if(arg1 == "方形")
-    {
-        ui->stackedWidget_terminal_size->setCurrentWidget(ui->page_rect);
-    }
-}
-
-
-void RoomCalTable::on_comboBox_pipe_elbow_type_currentTextChanged(const QString &arg1)
-{
-    if(arg1 == "圆形")
-    {
-        ui->stackedWidget_pipe_size->setCurrentWidget(ui->page_pipe_circle);
-    }
-    else if(arg1 == "方形")
-    {
-        ui->stackedWidget_pipe_size->setCurrentWidget(ui->page_pipe_rect);
-    }
-}
-

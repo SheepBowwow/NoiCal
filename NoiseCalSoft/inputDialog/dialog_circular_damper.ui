@@ -75,8 +75,8 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_brand">
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>10</y>
+       <x>80</x>
+       <y>50</y>
        <width>91</width>
        <height>31</height>
       </rect>
@@ -91,7 +91,7 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_air_volume">
      <property name="geometry">
       <rect>
-       <x>470</x>
+       <x>290</x>
        <y>10</y>
        <width>71</width>
        <height>31</height>
@@ -108,7 +108,7 @@ font-family: '黑体';
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>10</y>
+       <y>50</y>
        <width>41</width>
        <height>31</height>
       </rect>
@@ -126,7 +126,7 @@ font-family: '黑体';
     <widget class="QLabel" name="label_15">
      <property name="geometry">
       <rect>
-       <x>370</x>
+       <x>200</x>
        <y>10</y>
        <width>81</width>
        <height>31</height>
@@ -145,8 +145,8 @@ font-family: '黑体';
     <widget class="QLabel" name="label_5">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>50</y>
+       <x>390</x>
+       <y>10</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -164,8 +164,8 @@ font-family: '黑体';
     <widget class="QComboBox" name="comboBox_angle">
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>50</y>
+       <x>460</x>
+       <y>10</y>
        <width>91</width>
        <height>31</height>
       </rect>
@@ -180,9 +180,9 @@ font-family: '黑体';
     <widget class="QStackedWidget" name="stackedWidget_input">
      <property name="geometry">
       <rect>
-       <x>200</x>
+       <x>10</x>
        <y>10</y>
-       <width>151</width>
+       <width>161</width>
        <height>31</height>
       </rect>
      </property>
@@ -190,15 +190,15 @@ font-family: '黑体';
       <string notr="true">background-color: rgb(255, 255, 255);</string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="page_formula">
       <widget class="QLineEdit" name="lineEdit_diameter">
        <property name="geometry">
         <rect>
-         <x>80</x>
+         <x>70</x>
          <y>0</y>
-         <width>71</width>
+         <width>91</width>
          <height>31</height>
         </rect>
        </property>
@@ -252,9 +252,9 @@ font-family: '黑体';
       <widget class="QLineEdit" name="lineEdit_model">
        <property name="geometry">
         <rect>
-         <x>50</x>
+         <x>70</x>
          <y>0</y>
-         <width>101</width>
+         <width>91</width>
          <height>31</height>
         </rect>
        </property>

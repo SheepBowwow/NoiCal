@@ -19,17 +19,13 @@ public:
     explicit Dialog_silencer(QString type, QWidget *parent = nullptr, int editRow = -1, const Silencer_atten& data = Silencer_atten());
     Dialog_silencer(QWidget *parent = nullptr, int editRow = -1, const Silencer_atten& data = Silencer_atten()){}
     ~Dialog_silencer();
-    void setPrefix();
+    void setModelComboBoxItems();
     void* getNoi() override;
 
 private slots:
     void on_close_clicked();
 
     void on_pushButton_confirm_clicked();
-
-    void on_comboBox_prefix_currentTextChanged(const QString &arg1);
-
-    void on_comboBox_suffix_currentTextChanged(const QString &arg1);
 
 private:
     Ui::Dialog_silencer *ui;

@@ -122,7 +122,7 @@ font-family: '黑体';
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>10</y>
+       <y>50</y>
        <width>41</width>
        <height>31</height>
       </rect>
@@ -141,7 +141,7 @@ font-family: '黑体';
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>50</y>
+       <y>10</y>
        <width>91</width>
        <height>31</height>
       </rect>
@@ -159,8 +159,8 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_brand">
      <property name="geometry">
       <rect>
-       <x>60</x>
-       <y>10</y>
+       <x>100</x>
+       <y>50</y>
        <width>101</width>
        <height>31</height>
       </rect>
@@ -172,11 +172,11 @@ font-family: '黑体';
       </font>
      </property>
     </widget>
-    <widget class="QComboBox" name="comboBox_model">
+    <widget class="QComboBox" name="comboBox_air_distributor_model">
      <property name="geometry">
       <rect>
        <x>100</x>
-       <y>50</y>
+       <y>10</y>
        <width>181</width>
        <height>31</height>
       </rect>
@@ -2123,7 +2123,7 @@ border: 1px solid #DCDCDC;
      <property name="geometry">
       <rect>
        <x>300</x>
-       <y>50</y>
+       <y>10</y>
        <width>91</width>
        <height>31</height>
       </rect>
@@ -2138,11 +2138,11 @@ border: 1px solid #DCDCDC;
       <string>散流器型号</string>
      </property>
     </widget>
-    <widget class="QComboBox" name="comboBox_model_2">
+    <widget class="QComboBox" name="comboBox_diffuser_model">
      <property name="geometry">
       <rect>
        <x>390</x>
-       <y>50</y>
+       <y>10</y>
        <width>191</width>
        <height>31</height>
       </rect>

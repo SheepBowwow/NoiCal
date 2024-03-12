@@ -35,10 +35,10 @@ Dialog_air_diff::Dialog_air_diff(const QString &name, QWidget *parent, int editR
     {
         QString s = airDiffModel[i];
         // 检查是否已经添加过该前缀
-        ui->comboBox_model->addItem(s);
+        ui->comboBox_air_distributor_model->addItem(s);
     }
     /******设置combobox******/
-    ui->comboBox_model->setCurrentIndex(-1);
+    ui->comboBox_air_distributor_model->setCurrentIndex(-1);
 
 
     if(editRow != -1)
@@ -67,7 +67,8 @@ Dialog_air_diff::Dialog_air_diff(const QString &name, QWidget *parent, int editR
 
 
         ui->lineEdit_brand->setText(data.brand);
-        ui->comboBox_model->setCurrentText(data.model);
+        ui->comboBox_air_distributor_model->setCurrentText(data.air_distributor_model);
+        ui->comboBox_diffuser_model->setCurrentText(data.diffuser_model);
         ui->lineEdit_63->setText(data.noi_63);
         ui->lineEdit_125->setText(data.noi_125);
         ui->lineEdit_250->setText(data.noi_250);
@@ -131,7 +132,7 @@ void Dialog_air_diff::on_comboBox_model_currentTextChanged(const QString &arg1)
     QVector<QLineEdit*> v_lineEdit_atten = {ui->lineEdit_63_atten, ui->lineEdit_125_atten, ui->lineEdit_250_atten, ui->lineEdit_500_atten, ui->lineEdit_1k_atten, ui->lineEdit_2k_atten, ui->lineEdit_4k_atten, ui->lineEdit_8k_atten};
     QMap<int,QString> eightNoi;
     QMap<int,QString> eightAtten;
-    QString modelName = QString(ui->comboBox_model->currentText());
+    QString modelName = QString(ui->comboBox_air_distributor_model->currentText());
     DBManager->queryEightNoi(eightNoi, AIR_DIFF_TABLE, AIR_DIFF_MODEL, modelName);
     DBManager->queryEightNoi(eightAtten, TERMINAL_TABLE, TERMINAL_MODEL, modelName);
     for(int i = 0; i < 8; i++)
@@ -253,7 +254,8 @@ void Dialog_air_diff::on_pushButton_confirm_clicked()
     noi->noi_4k = ui->lineEdit_4k->text();
     noi->noi_8k = ui->lineEdit_8k->text();
     noi->noi_total = ui->lineEdit_total->text();
-    noi->model = ui->comboBox_model->currentText();
+    noi->air_distributor_model = ui->comboBox_air_distributor_model->currentText();
+    noi->diffuser_model = ui->comboBox_diffuser_model->currentText();
 
     noi->atten_63 = ui->lineEdit_63_atten->text();
     noi->atten_125 = ui->lineEdit_125_atten->text();
@@ -273,7 +275,7 @@ void Dialog_air_diff::on_pushButton_confirm_clicked()
     noi->refl_4k = ui->lineEdit_4k_refl->text();
     noi->refl_8k = ui->lineEdit_8k_refl->text();
 
-    noi->identifier = noi->model;
+    //noi->identifier = noi->model;
 
     this->accept(); // 关闭对话框
 }

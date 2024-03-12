@@ -123,8 +123,8 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_brand">
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>10</y>
+       <x>360</x>
+       <y>50</y>
        <width>91</width>
        <height>31</height>
       </rect>
@@ -133,8 +133,8 @@ font-family: '黑体';
     <widget class="QLabel" name="label_4">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>10</y>
+       <x>280</x>
+       <y>50</y>
        <width>41</width>
        <height>31</height>
       </rect>
@@ -152,8 +152,8 @@ font-family: '黑体';
     <widget class="QLabel" name="label_5">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>50</y>
+       <x>280</x>
+       <y>10</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -171,8 +171,8 @@ font-family: '黑体';
     <widget class="QComboBox" name="comboBox_angle">
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>50</y>
+       <x>360</x>
+       <y>10</y>
        <width>91</width>
        <height>31</height>
       </rect>
@@ -181,7 +181,7 @@ font-family: '黑体';
     <widget class="QLabel" name="label_16">
      <property name="geometry">
       <rect>
-       <x>200</x>
+       <x>10</x>
        <y>50</y>
        <width>81</width>
        <height>31</height>
@@ -200,7 +200,7 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_air_volume">
      <property name="geometry">
       <rect>
-       <x>300</x>
+       <x>110</x>
        <y>50</y>
        <width>141</width>
        <height>31</height>
@@ -210,7 +210,7 @@ font-family: '黑体';
     <widget class="QStackedWidget" name="stackedWidget_input">
      <property name="geometry">
       <rect>
-       <x>200</x>
+       <x>10</x>
        <y>10</y>
        <width>241</width>
        <height>31</height>

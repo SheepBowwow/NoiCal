@@ -11,6 +11,7 @@ Dialog_fanCoil_noise::Dialog_fanCoil_noise(QWidget *parent, int editRow,  const 
     setTopWidget(ui->widget_top);  // 设置顶部部件
     if(editRow != -1)
     {
+        ui->lineEdit_type->setText(data.type);
         ui->lineEdit_brand->setText(data.brand);
         ui->lineEdit_model->setText(data.model);
         ui->lineEdit_air_volume->setText(data.air_volume);

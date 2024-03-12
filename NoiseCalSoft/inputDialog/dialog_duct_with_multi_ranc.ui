@@ -753,9 +753,9 @@ font-family: '黑体';
     <widget class="QStackedWidget" name="stackedWidget_input">
      <property name="geometry">
       <rect>
-       <x>160</x>
+       <x>20</x>
        <y>9</y>
-       <width>421</width>
+       <width>391</width>
        <height>31</height>
       </rect>
      </property>
@@ -777,7 +777,7 @@ background-color:white;
       <widget class="QLineEdit" name="lineEdit_q">
        <property name="geometry">
         <rect>
-         <x>310</x>
+         <x>300</x>
          <y>0</y>
          <width>71</width>
          <height>31</height>
@@ -793,7 +793,7 @@ background-color:white;
       <widget class="QLineEdit" name="lineEdit_q1">
        <property name="geometry">
         <rect>
-         <x>100</x>
+         <x>90</x>
          <y>0</y>
          <width>81</width>
          <height>31</height>
@@ -809,7 +809,7 @@ background-color:white;
       <widget class="QLabel" name="label_13">
        <property name="geometry">
         <rect>
-         <x>200</x>
+         <x>190</x>
          <y>0</y>
          <width>71</width>
          <height>31</height>
@@ -828,7 +828,7 @@ background-color:white;
       <widget class="QLabel" name="label_15">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>0</x>
          <y>0</y>
          <width>51</width>
          <height>31</height>
@@ -847,7 +847,7 @@ background-color:white;
       <widget class="QLabel" name="label_16">
        <property name="geometry">
         <rect>
-         <x>60</x>
+         <x>50</x>
          <y>0</y>
          <width>21</width>
          <height>31</height>
@@ -871,7 +871,7 @@ background-color:white;
       <widget class="QLabel" name="label_17">
        <property name="geometry">
         <rect>
-         <x>282</x>
+         <x>270</x>
          <y>13</y>
          <width>16</width>
          <height>16</height>
@@ -884,7 +884,7 @@ background-color:white;
       <widget class="QLabel" name="label_6">
        <property name="geometry">
         <rect>
-         <x>267</x>
+         <x>257</x>
          <y>0</y>
          <width>21</width>
          <height>31</height>
@@ -910,7 +910,7 @@ background-color:white;
       <widget class="QLabel" name="label_5">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>0</x>
          <y>0</y>
          <width>41</width>
          <height>31</height>
@@ -929,7 +929,7 @@ background-color:white;
       <widget class="QLineEdit" name="lineEdit_model">
        <property name="geometry">
         <rect>
-         <x>50</x>
+         <x>40</x>
          <y>0</y>
          <width>91</width>
          <height>31</height>
@@ -947,7 +947,7 @@ background-color:white;
     <widget class="QLabel" name="label_4">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>430</x>
        <y>10</y>
        <width>41</width>
        <height>31</height>
@@ -966,7 +966,7 @@ background-color:white;
     <widget class="QLineEdit" name="lineEdit_brand">
      <property name="geometry">
       <rect>
-       <x>60</x>
+       <x>470</x>
        <y>10</y>
        <width>91</width>
        <height>31</height>

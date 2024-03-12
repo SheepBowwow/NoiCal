@@ -114,7 +114,7 @@ font-family: '黑体';
     <widget class="QLabel" name="label_4">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>290</x>
        <y>10</y>
        <width>41</width>
        <height>31</height>
@@ -133,7 +133,7 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_brand">
      <property name="geometry">
       <rect>
-       <x>60</x>
+       <x>340</x>
        <y>10</y>
        <width>101</width>
        <height>31</height>
@@ -149,7 +149,7 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_model">
      <property name="geometry">
       <rect>
-       <x>230</x>
+       <x>60</x>
        <y>10</y>
        <width>211</width>
        <height>31</height>
@@ -165,7 +165,7 @@ font-family: '黑体';
     <widget class="QLabel" name="label_5">
      <property name="geometry">
       <rect>
-       <x>180</x>
+       <x>10</x>
        <y>10</y>
        <width>41</width>
        <height>31</height>

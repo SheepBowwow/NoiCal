@@ -334,8 +334,6 @@ private slots:
 
     void on_pushButton_choose_basis_clear_clicked();
 
-    void on_pushButton_choose_report_filePath_clicked();
-
     void on_pushButton_noise_require_table_entry_clicked();
 
     void on_pushButton_drawing_list_add_clicked();

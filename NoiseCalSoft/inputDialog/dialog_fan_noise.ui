@@ -134,8 +134,8 @@ font-family: '黑体';
     <widget class="QLabel" name="label_5">
      <property name="geometry">
       <rect>
-       <x>220</x>
-       <y>10</y>
+       <x>210</x>
+       <y>50</y>
        <width>41</width>
        <height>31</height>
       </rect>
@@ -153,7 +153,7 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_number">
      <property name="geometry">
       <rect>
-       <x>100</x>
+       <x>90</x>
        <y>10</y>
        <width>101</width>
        <height>31</height>
@@ -700,8 +700,8 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_brand">
      <property name="geometry">
       <rect>
-       <x>290</x>
-       <y>10</y>
+       <x>260</x>
+       <y>50</y>
        <width>101</width>
        <height>31</height>
       </rect>
@@ -716,8 +716,8 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_air_volume">
      <property name="geometry">
       <rect>
-       <x>100</x>
-       <y>50</y>
+       <x>470</x>
+       <y>10</y>
        <width>101</width>
        <height>31</height>
       </rect>
@@ -732,8 +732,8 @@ font-family: '黑体';
     <widget class="QLabel" name="label_6">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>50</y>
+       <x>380</x>
+       <y>10</y>
        <width>81</width>
        <height>31</height>
       </rect>
@@ -751,7 +751,7 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_static_pressure">
      <property name="geometry">
       <rect>
-       <x>290</x>
+       <x>90</x>
        <y>50</y>
        <width>101</width>
        <height>31</height>
@@ -767,7 +767,7 @@ font-family: '黑体';
     <widget class="QLabel" name="label_17">
      <property name="geometry">
       <rect>
-       <x>220</x>
+       <x>10</x>
        <y>50</y>
        <width>61</width>
        <height>31</height>
@@ -786,7 +786,7 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_model">
      <property name="geometry">
       <rect>
-       <x>470</x>
+       <x>260</x>
        <y>10</y>
        <width>101</width>
        <height>31</height>
@@ -802,7 +802,7 @@ font-family: '黑体';
     <widget class="QLabel" name="label_18">
      <property name="geometry">
       <rect>
-       <x>430</x>
+       <x>210</x>
        <y>10</y>
        <width>41</width>
        <height>31</height>

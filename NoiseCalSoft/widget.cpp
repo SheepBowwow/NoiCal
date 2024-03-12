@@ -314,7 +314,7 @@ void Widget::deleteRowFromTable(QTableWidget *tableWidget, int deleteRowNum, QSt
 void Widget::deleteRowFromTable(QTableWidget *tableWidget_noise, QTableWidget *tableWidget_atten, QTableWidget *tableWidget_refl, QString componentName)
 {
     // 获取选中的行索引
-    QSet<int> selectedRows;
+    QList<int> selectedRows;
     QVector<QTableWidget *> tableWidgets= {tableWidget_noise,tableWidget_atten,tableWidget_refl};
     for(int i = 0; i < tableWidgets.size(); i++)
     {
@@ -323,32 +323,56 @@ void Widget::deleteRowFromTable(QTableWidget *tableWidget_noise, QTableWidget *t
             QCheckBox* checkBox = widget->findChild<QCheckBox*>(); // Find the checkbox within the widget
 
             if (checkBox && checkBox->isChecked()) {
-                selectedRows.insert(row);
+                selectedRows.append(row);
             }
         }
     }
 
-    for (int row : selectedRows)
+    // 弹窗确认
+    QString confirmationMessage = "确认删除以下行吗？\n";
+    for (int i = 0; i < selectedRows.size(); ++i)
     {
-        tableWidget_noise->removeRow(row);
-        tableWidget_atten->removeRow(row);
-        tableWidget_refl->removeRow(row);
-
-        componentManager.del_and_updateTableID(row + 1, componentName);
+        int row = selectedRows[i];
+        confirmationMessage += QString::number(row + 1) + "\n"; // 从1开始计数
     }
 
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("确认删除");
+    msgBox.setText(confirmationMessage);
+    msgBox.setIcon(QMessageBox::Warning);
+    QPushButton *yesButton = msgBox.addButton("确认", QMessageBox::YesRole);
+    QPushButton *noButton = msgBox.addButton("取消", QMessageBox::NoRole);
+    msgBox.exec();
 
-    // 重新编号
-    for(int i = 0; i < tableWidgets.size(); i++)
+    if (msgBox.clickedButton() == yesButton)
     {
-        for (int row = 0; row < tableWidgets[i]->rowCount(); ++row) {
-            QTableWidgetItem* item = new QTableWidgetItem(QString::number(row + 1));
-            tableWidgets[i]->setItem(row, 1, item); // Assuming the sequence numbers are in the second column (index 1)
-            item->setTextAlignment(Qt::AlignCenter);
-            item->setFlags(Qt::ItemIsEditable);
-            item->setBackground(QBrush(Qt::lightGray));
-            item->setData(Qt::ForegroundRole, QColor(70, 70, 70));
+
+        for (int row : selectedRows)
+        {
+            tableWidget_noise->removeRow(row);
+            tableWidget_atten->removeRow(row);
+            tableWidget_refl->removeRow(row);
+
+            componentManager.del_and_updateTableID(row + 1, componentName);
         }
+
+
+        // 重新编号
+        for(int i = 0; i < tableWidgets.size(); i++)
+        {
+            for (int row = 0; row < tableWidgets[i]->rowCount(); ++row) {
+                QTableWidgetItem* item = new QTableWidgetItem(QString::number(row + 1));
+                tableWidgets[i]->setItem(row, 1, item); // Assuming the sequence numbers are in the second column (index 1)
+                item->setTextAlignment(Qt::AlignCenter);
+                item->setFlags(Qt::ItemIsEditable);
+                item->setBackground(QBrush(Qt::lightGray));
+                item->setData(Qt::ForegroundRole, QColor(70, 70, 70));
+            }
+        }
+    }
+    else if(msgBox.clickedButton() == noButton)
+    {
+        return;
     }
 }
 
@@ -987,10 +1011,10 @@ void Widget::initTableWidget_fan_noi()
     int colCount = 18;
     // 设置表头标题
     QStringList headerText;
-    headerText << "" << "序号" << "编号" << "品牌" << "型号" << "风量(m³/h)" << "静压(Pa)" << "噪音位置" << "63Hz" << "125Hz" << "250Hz"
+    headerText << "" << "序号" << "编号" << "型号" << "风量(m³/h)" << "静压(Pa)"  << "品牌" << "噪音位置" << "63Hz" << "125Hz" << "250Hz"
                << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";
     // 设置每列的宽度
-    int columnWidths[] = {30, 38, 120, 100, 100, 95, 95, 80, 55, 55, 55, 55, 55, 55, 55, 55, 90, 60};
+    int columnWidths[] = {30, 38, 120, 100, 95, 95, 80, 100, 55, 55, 55, 55, 55, 55, 55, 55, 90, 60};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_fan_noi, headerText, columnWidths, colCount);
 }
@@ -1010,10 +1034,10 @@ void Widget::on_pushButton_fanNoi_add_clicked()
             QStringList data_in = {
                 noi->table_id,
                 noi->number,
-                noi->brand,
                 noi->model,
                 noi->air_volume,
                 noi->static_pressure,
+                noi->brand,
                 "进口(dB)",
                 noi->noi_in_63,
                 noi->noi_in_125,
@@ -1029,10 +1053,10 @@ void Widget::on_pushButton_fanNoi_add_clicked()
             QStringList data_out = {
                 noi->table_id,
                 noi->number,
-                noi->brand,
                 noi->model,
                 noi->air_volume,
                 noi->static_pressure,
+                noi->brand,
                 "出口(dB)",
                 noi->noi_out_63,
                 noi->noi_out_125,
@@ -1078,10 +1102,10 @@ void Widget::on_pushButton_fanNoi_revise_clicked()
         if (checkBox && checkBox->isChecked()) {
             Fan_noise *noi = new Fan_noise();
             noi->number = ui->tableWidget_fan_noi->item(row - 1,2)->text();
-            noi->brand = ui->tableWidget_fan_noi->item(row - 1,3)->text();
-            noi->model = ui->tableWidget_fan_noi->item(row - 1,4)->text();
-            noi->air_volume = ui->tableWidget_fan_noi->item(row - 1,5)->text();
-            noi->static_pressure = ui->tableWidget_fan_noi->item(row - 1,6)->text();
+            noi->model = ui->tableWidget_fan_noi->item(row - 1,3)->text();
+            noi->air_volume = ui->tableWidget_fan_noi->item(row - 1,4)->text();
+            noi->static_pressure = ui->tableWidget_fan_noi->item(row - 1,5)->text();
+            noi->brand = ui->tableWidget_fan_noi->item(row - 1,6)->text();
 
             noi->noi_in_63 = ui->tableWidget_fan_noi->item(row - 1,8)->text();
             noi->noi_in_125 = ui->tableWidget_fan_noi->item(row - 1,9)->text();
@@ -1112,10 +1136,10 @@ void Widget::on_pushButton_fanNoi_revise_clicked()
             {
                 noi = static_cast<Fan_noise*>(fanNoiseDialog->getNoi());
                 ui->tableWidget_fan_noi->item(row - 1,2)->setText(noi->number);
-                ui->tableWidget_fan_noi->item(row - 1,3)->setText(noi->brand);
-                ui->tableWidget_fan_noi->item(row - 1,4)->setText(noi->model);
-                ui->tableWidget_fan_noi->item(row - 1,5)->setText(noi->air_volume);
-                ui->tableWidget_fan_noi->item(row - 1,6)->setText(noi->static_pressure);
+                ui->tableWidget_fan_noi->item(row - 1,3)->setText(noi->model);
+                ui->tableWidget_fan_noi->item(row - 1,4)->setText(noi->air_volume);
+                ui->tableWidget_fan_noi->item(row - 1,5)->setText(noi->static_pressure);
+                ui->tableWidget_fan_noi->item(row - 1,6)->setText(noi->brand);
 
                 ui->tableWidget_fan_noi->item(row - 1,8)->setText(noi->noi_in_63);
                 ui->tableWidget_fan_noi->item(row - 1,9)->setText(noi->noi_in_125);
@@ -1126,6 +1150,12 @@ void Widget::on_pushButton_fanNoi_revise_clicked()
                 ui->tableWidget_fan_noi->item(row - 1,14)->setText(noi->noi_in_4k);
                 ui->tableWidget_fan_noi->item(row - 1,15)->setText(noi->noi_in_8k);
                 ui->tableWidget_fan_noi->item(row - 1,16)->setText(noi->noi_in_total);
+
+                ui->tableWidget_fan_noi->item(row,2)->setText(noi->number);
+                ui->tableWidget_fan_noi->item(row,3)->setText(noi->model);
+                ui->tableWidget_fan_noi->item(row,4)->setText(noi->air_volume);
+                ui->tableWidget_fan_noi->item(row,5)->setText(noi->static_pressure);
+                ui->tableWidget_fan_noi->item(row,6)->setText(noi->brand);
 
                 ui->tableWidget_fan_noi->item(row,8)->setText(noi->noi_out_63);
                 ui->tableWidget_fan_noi->item(row,9)->setText(noi->noi_out_125);
@@ -1156,9 +1186,9 @@ void Widget::initTableWidget_fanCoil_noi()
 {
     int colCount = 18;
     QStringList headerText;
-    headerText << "" << "序号" << "品牌" << "类型" << "型号" << "风量(m³/h)" << "静压(Pa)" << "噪音位置" << "63Hz" << "125Hz" << "250Hz"
+    headerText << "" << "序号" << "类型" << "型号" << "风量(m³/h)" << "静压(Pa)" << "品牌" << "噪音位置" << "63Hz" << "125Hz" << "250Hz"
                << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";
-    int columnWidths[] = {30, 120, 90, 90, 90, 95, 95, 80, 55, 55, 55, 55, 55, 55, 55, 55, 80, 55};
+    int columnWidths[] = {30, 40, 90, 120, 90, 95, 95, 80, 55, 55, 55, 55, 55, 55, 55, 55, 80, 55};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_fanCoil_noi, headerText, columnWidths, colCount);
 }
@@ -1177,11 +1207,11 @@ void Widget::on_pushButton_fanCoil_noi_add_clicked()
         if (noi != nullptr) {
             QStringList data_in = {
                 noi->table_id,
-                noi->brand,
                 noi->type,
                 noi->model,
                 noi->air_volume,
                 noi->static_pressure,
+                noi->brand,
                 "进口(dB)",
                 noi->noi_in_63,
                 noi->noi_in_125,
@@ -1196,11 +1226,11 @@ void Widget::on_pushButton_fanCoil_noi_add_clicked()
             };
             QStringList data_out = {
                 noi->table_id,
-                noi->brand,
                 noi->type,
                 noi->model,
                 noi->air_volume,
                 noi->static_pressure,
+                noi->brand,
                 "出口(dB)",
                 noi->noi_out_63,
                 noi->noi_out_125,
@@ -1245,31 +1275,31 @@ void Widget::on_pushButton_fanCoil_noi_revise_clicked()
         if (checkBox && checkBox->isChecked()) {
             qDebug() << "row: " << row <<"checkBox" << checkBox->isChecked();
             FanCoil_noise *noi = new FanCoil_noise();
-            noi->brand = ui->tableWidget_fanCoil_noi->item(row,2)->text();
-            noi->type = ui->tableWidget_fanCoil_noi->item(row,3)->text();
-            noi->model = ui->tableWidget_fanCoil_noi->item(row,4)->text();
-            noi->air_volume = ui->tableWidget_fanCoil_noi->item(row,5)->text();
-            noi->static_pressure = ui->tableWidget_fanCoil_noi->item(row,6)->text();
+            noi->type = ui->tableWidget_fanCoil_noi->item(row - 1,2)->text();
+            noi->model = ui->tableWidget_fanCoil_noi->item(row - 1,3)->text();
+            noi->air_volume = ui->tableWidget_fanCoil_noi->item(row - 1,4)->text();
+            noi->static_pressure = ui->tableWidget_fanCoil_noi->item(row - 1,5)->text();
+            noi->brand = ui->tableWidget_fanCoil_noi->item(row - 1,6)->text();
 
-            noi->noi_in_63 = ui->tableWidget_fanCoil_noi->item(row,8)->text();
-            noi->noi_in_125 = ui->tableWidget_fanCoil_noi->item(row,9)->text();
-            noi->noi_in_250 = ui->tableWidget_fanCoil_noi->item(row,10)->text();
-            noi->noi_in_500 = ui->tableWidget_fanCoil_noi->item(row,11)->text();
-            noi->noi_in_1k = ui->tableWidget_fanCoil_noi->item(row,12)->text();
-            noi->noi_in_2k = ui->tableWidget_fanCoil_noi->item(row,13)->text();
-            noi->noi_in_4k = ui->tableWidget_fanCoil_noi->item(row,14)->text();
-            noi->noi_in_8k = ui->tableWidget_fanCoil_noi->item(row,15)->text();
-            noi->noi_in_total = ui->tableWidget_fanCoil_noi->item(row,16)->text();
+            noi->noi_in_63 = ui->tableWidget_fanCoil_noi->item(row - 1,8)->text();
+            noi->noi_in_125 = ui->tableWidget_fanCoil_noi->item(row - 1,9)->text();
+            noi->noi_in_250 = ui->tableWidget_fanCoil_noi->item(row - 1,10)->text();
+            noi->noi_in_500 = ui->tableWidget_fanCoil_noi->item(row - 1,11)->text();
+            noi->noi_in_1k = ui->tableWidget_fanCoil_noi->item(row - 1,12)->text();
+            noi->noi_in_2k = ui->tableWidget_fanCoil_noi->item(row - 1,13)->text();
+            noi->noi_in_4k = ui->tableWidget_fanCoil_noi->item(row - 1,14)->text();
+            noi->noi_in_8k = ui->tableWidget_fanCoil_noi->item(row - 1,15)->text();
+            noi->noi_in_total = ui->tableWidget_fanCoil_noi->item(row - 1,16)->text();
 
-            noi->noi_out_63 = ui->tableWidget_fanCoil_noi->item(row + 1,8)->text();
-            noi->noi_out_125 = ui->tableWidget_fanCoil_noi->item(row + 1,9)->text();
-            noi->noi_out_250 = ui->tableWidget_fanCoil_noi->item(row + 1,10)->text();
-            noi->noi_out_500 = ui->tableWidget_fanCoil_noi->item(row + 1,11)->text();
-            noi->noi_out_1k = ui->tableWidget_fanCoil_noi->item(row + 1,12)->text();
-            noi->noi_out_2k = ui->tableWidget_fanCoil_noi->item(row + 1,13)->text();
-            noi->noi_out_4k = ui->tableWidget_fanCoil_noi->item(row + 1,14)->text();
-            noi->noi_out_8k = ui->tableWidget_fanCoil_noi->item(row + 1,15)->text();
-            noi->noi_out_total = ui->tableWidget_fanCoil_noi->item(row + 1,16)->text();
+            noi->noi_out_63 = ui->tableWidget_fanCoil_noi->item(row,8)->text();
+            noi->noi_out_125 = ui->tableWidget_fanCoil_noi->item(row,9)->text();
+            noi->noi_out_250 = ui->tableWidget_fanCoil_noi->item(row,10)->text();
+            noi->noi_out_500 = ui->tableWidget_fanCoil_noi->item(row,11)->text();
+            noi->noi_out_1k = ui->tableWidget_fanCoil_noi->item(row,12)->text();
+            noi->noi_out_2k = ui->tableWidget_fanCoil_noi->item(row,13)->text();
+            noi->noi_out_4k = ui->tableWidget_fanCoil_noi->item(row,14)->text();
+            noi->noi_out_8k = ui->tableWidget_fanCoil_noi->item(row,15)->text();
+            noi->noi_out_total = ui->tableWidget_fanCoil_noi->item(row,16)->text();
             // 创建模态对话框，并设置为模态
             Dialog_fanCoil_noise *fanCoilNoiseDialog = new Dialog_fanCoil_noise(this,row,*noi);
             fanCoilNoiseDialog->setWindowModality(Qt::ApplicationModal);
@@ -1279,31 +1309,37 @@ void Widget::on_pushButton_fanCoil_noi_revise_clicked()
             if (fanCoilNoiseDialog->exec() == QDialog::Accepted)
             {
                 noi = static_cast<FanCoil_noise*>(fanCoilNoiseDialog->getNoi());
+                ui->tableWidget_fanCoil_noi->item(row - 1,2)->setText(noi->brand);
+                ui->tableWidget_fanCoil_noi->item(row - 1,3)->setText(noi->type);
+                ui->tableWidget_fanCoil_noi->item(row - 1,4)->setText(noi->model);
+                ui->tableWidget_fanCoil_noi->item(row - 1,5)->setText(noi->air_volume);
+                ui->tableWidget_fanCoil_noi->item(row - 1,6)->setText(noi->static_pressure);
+
+                ui->tableWidget_fanCoil_noi->item(row - 1,8)->setText(noi->noi_in_63);
+                ui->tableWidget_fanCoil_noi->item(row - 1,9)->setText(noi->noi_in_125);
+                ui->tableWidget_fanCoil_noi->item(row - 1,10)->setText(noi->noi_in_250);
+                ui->tableWidget_fanCoil_noi->item(row - 1,11)->setText(noi->noi_in_500);
+                ui->tableWidget_fanCoil_noi->item(row - 1,12)->setText(noi->noi_in_1k);
+                ui->tableWidget_fanCoil_noi->item(row - 1,13)->setText(noi->noi_in_2k);
+                ui->tableWidget_fanCoil_noi->item(row - 1,14)->setText(noi->noi_in_4k);
+                ui->tableWidget_fanCoil_noi->item(row - 1,15)->setText(noi->noi_in_8k);
+                ui->tableWidget_fanCoil_noi->item(row - 1,16)->setText(noi->noi_in_total);
+
                 ui->tableWidget_fanCoil_noi->item(row,2)->setText(noi->brand);
                 ui->tableWidget_fanCoil_noi->item(row,3)->setText(noi->type);
                 ui->tableWidget_fanCoil_noi->item(row,4)->setText(noi->model);
                 ui->tableWidget_fanCoil_noi->item(row,5)->setText(noi->air_volume);
                 ui->tableWidget_fanCoil_noi->item(row,6)->setText(noi->static_pressure);
 
-                ui->tableWidget_fanCoil_noi->item(row,8)->setText(noi->noi_in_63);
-                ui->tableWidget_fanCoil_noi->item(row,9)->setText(noi->noi_in_125);
-                ui->tableWidget_fanCoil_noi->item(row,10)->setText(noi->noi_in_250);
-                ui->tableWidget_fanCoil_noi->item(row,11)->setText(noi->noi_in_500);
-                ui->tableWidget_fanCoil_noi->item(row,12)->setText(noi->noi_in_1k);
-                ui->tableWidget_fanCoil_noi->item(row,13)->setText(noi->noi_in_2k);
-                ui->tableWidget_fanCoil_noi->item(row,14)->setText(noi->noi_in_4k);
-                ui->tableWidget_fanCoil_noi->item(row,15)->setText(noi->noi_in_8k);
-                ui->tableWidget_fanCoil_noi->item(row,16)->setText(noi->noi_in_total);
-
-                ui->tableWidget_fanCoil_noi->item(row + 1,8)->setText(noi->noi_out_63);
-                ui->tableWidget_fanCoil_noi->item(row + 1,9)->setText(noi->noi_out_125);
-                ui->tableWidget_fanCoil_noi->item(row + 1,10)->setText(noi->noi_out_250);
-                ui->tableWidget_fanCoil_noi->item(row + 1,11)->setText(noi->noi_out_500);
-                ui->tableWidget_fanCoil_noi->item(row + 1,12)->setText(noi->noi_out_1k);
-                ui->tableWidget_fanCoil_noi->item(row + 1,13)->setText(noi->noi_out_2k);
-                ui->tableWidget_fanCoil_noi->item(row + 1,14)->setText(noi->noi_out_4k);
-                ui->tableWidget_fanCoil_noi->item(row + 1,15)->setText(noi->noi_out_8k);
-                ui->tableWidget_fanCoil_noi->item(row + 1,16)->setText(noi->noi_out_total);
+                ui->tableWidget_fanCoil_noi->item(row,8)->setText(noi->noi_out_63);
+                ui->tableWidget_fanCoil_noi->item(row,9)->setText(noi->noi_out_125);
+                ui->tableWidget_fanCoil_noi->item(row,10)->setText(noi->noi_out_250);
+                ui->tableWidget_fanCoil_noi->item(row,11)->setText(noi->noi_out_500);
+                ui->tableWidget_fanCoil_noi->item(row,12)->setText(noi->noi_out_1k);
+                ui->tableWidget_fanCoil_noi->item(row,13)->setText(noi->noi_out_2k);
+                ui->tableWidget_fanCoil_noi->item(row,14)->setText(noi->noi_out_4k);
+                ui->tableWidget_fanCoil_noi->item(row,15)->setText(noi->noi_out_8k);
+                ui->tableWidget_fanCoil_noi->item(row,16)->setText(noi->noi_out_total);
             }
             delete noi;
         }
@@ -1326,7 +1362,7 @@ void Widget::initTableWidget_air_noi()
     int colCount = 19;
 
     QStringList headerText;
-    headerText << "" << "序号" << "编号" << "品牌" << "型号" << "风量(m³/h)" << "静压(Pa)" << "类型" << "噪音位置" << "63Hz" << "125Hz" << "250Hz"
+    headerText << "" << "序号" << "编号" << "型号" << "风量(m³/h)" << "静压(Pa)" << "品牌" << "类型" << "噪音位置" << "63Hz" << "125Hz" << "250Hz"
                << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";
 
     int columnWidths[] = {30, 38, 120, 100, 100, 95, 95, 80, 80, 55, 55, 55, 55, 55, 55, 55, 55, 90, 60};
@@ -1362,10 +1398,10 @@ void Widget::on_pushButton_air_noi_add_clicked()
             QStringList data_send_in = {
                 noi->table_id,
                 noi->number,
-                noi->brand,
                 noi->model,
                 noi->air_volume,
                 noi->static_pressure,
+                noi->brand,
                 "送风机",
                 "进口(dB)",
                 noi->noi_send_in_63,
@@ -1382,10 +1418,10 @@ void Widget::on_pushButton_air_noi_add_clicked()
             QStringList data_send_out = {
                 noi->table_id,
                 noi->number,
-                noi->brand,
                 noi->model,
                 noi->air_volume,
                 noi->static_pressure,
+                noi->brand,
                 "送风机",
                 "出口(dB)",
                 noi->noi_send_out_63,
@@ -1408,10 +1444,10 @@ void Widget::on_pushButton_air_noi_add_clicked()
                 QStringList data_exhaust_in = {
                     noi->table_id,
                     noi->number,
-                    noi->brand,
                     noi->model,
                     noi->air_volume,
                     noi->static_pressure,
+                    noi->brand,
                     "排风机",
                     "进口(dB)",
                     noi->noi_exhaust_in_63,
@@ -1428,10 +1464,10 @@ void Widget::on_pushButton_air_noi_add_clicked()
                 QStringList data_exhaust_out = {
                     noi->table_id,
                     noi->number,
-                    noi->brand,
                     noi->model,
                     noi->air_volume,
                     noi->static_pressure,
+                    noi->brand,
                     "排风机",
                     "出口(dB)",
                     noi->noi_exhaust_out_63,
@@ -1557,10 +1593,10 @@ void Widget::on_pushButton_air_noi_revise_clicked()
             {
                 noi->type = "单风机";
                 noi->number = ui->tableWidget_air_single_fan_noi->item(row - 1,2)->text();
-                noi->brand = ui->tableWidget_air_single_fan_noi->item(row - 1,3)->text();
-                noi->model = ui->tableWidget_air_single_fan_noi->item(row - 1,4)->text();
-                noi->air_volume = ui->tableWidget_air_single_fan_noi->item(row - 1,5)->text();
-                noi->static_pressure = ui->tableWidget_air_single_fan_noi->item(row - 1,6)->text();
+                noi->model = ui->tableWidget_air_single_fan_noi->item(row - 1,3)->text();
+                noi->air_volume = ui->tableWidget_air_single_fan_noi->item(row - 1,4)->text();
+                noi->static_pressure = ui->tableWidget_air_single_fan_noi->item(row - 1,5)->text();
+                noi->brand = ui->tableWidget_air_single_fan_noi->item(row - 1,6)->text();
 
                 noi->noi_send_in_63 = ui->tableWidget_air_single_fan_noi->item(row - 1,9)->text();
                 noi->noi_send_in_125 = ui->tableWidget_air_single_fan_noi->item(row - 1,10)->text();
@@ -1596,9 +1632,9 @@ void Widget::on_pushButton_air_noi_revise_clicked()
                 {
                     ui->tableWidget_air_single_fan_noi->item(row - 1,2)->setText(noi->number);
                     ui->tableWidget_air_single_fan_noi->item(row - 1,3)->setText(noi->brand);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,4)->setText(noi->model);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,5)->setText(noi->air_volume);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,6)->setText(noi->static_pressure);
+                    ui->tableWidget_air_single_fan_noi->item(row - 1,4)->setText(noi->air_volume);
+                    ui->tableWidget_air_single_fan_noi->item(row - 1,5)->setText(noi->static_pressure);
+                    ui->tableWidget_air_single_fan_noi->item(row - 1,6)->setText(noi->model);
 
                     ui->tableWidget_air_single_fan_noi->item(row - 1,9)->setText(noi->noi_send_in_63);
                     ui->tableWidget_air_single_fan_noi->item(row - 1,10)->setText(noi->noi_send_in_125);
@@ -1609,6 +1645,12 @@ void Widget::on_pushButton_air_noi_revise_clicked()
                     ui->tableWidget_air_single_fan_noi->item(row - 1,15)->setText(noi->noi_send_in_4k);
                     ui->tableWidget_air_single_fan_noi->item(row - 1,16)->setText(noi->noi_send_in_8k);
                     ui->tableWidget_air_single_fan_noi->item(row - 1,17)->setText(noi->noi_send_in_total);
+
+                    ui->tableWidget_air_single_fan_noi->item(row,2)->setText(noi->number);
+                    ui->tableWidget_air_single_fan_noi->item(row,3)->setText(noi->brand);
+                    ui->tableWidget_air_single_fan_noi->item(row,4)->setText(noi->air_volume);
+                    ui->tableWidget_air_single_fan_noi->item(row,5)->setText(noi->static_pressure);
+                    ui->tableWidget_air_single_fan_noi->item(row,6)->setText(noi->model);
 
                     ui->tableWidget_air_single_fan_noi->item(row,9)->setText(noi->noi_send_out_63);
                     ui->tableWidget_air_single_fan_noi->item(row,10)->setText(noi->noi_send_out_125);
@@ -1624,9 +1666,9 @@ void Widget::on_pushButton_air_noi_revise_clicked()
                 {
                     ui->tableWidget_air_single_fan_noi->item(row - 3,2)->setText(noi->number);
                     ui->tableWidget_air_single_fan_noi->item(row - 3,3)->setText(noi->brand);
-                    ui->tableWidget_air_single_fan_noi->item(row - 3,4)->setText(noi->model);
-                    ui->tableWidget_air_single_fan_noi->item(row - 3,5)->setText(noi->air_volume);
-                    ui->tableWidget_air_single_fan_noi->item(row - 3,6)->setText(noi->static_pressure);
+                    ui->tableWidget_air_single_fan_noi->item(row - 3,4)->setText(noi->air_volume);
+                    ui->tableWidget_air_single_fan_noi->item(row - 3,5)->setText(noi->static_pressure);
+                    ui->tableWidget_air_single_fan_noi->item(row - 3,6)->setText(noi->model);
 
                     ui->tableWidget_air_single_fan_noi->item(row - 3,9)->setText(noi->noi_send_in_63);
                     ui->tableWidget_air_single_fan_noi->item(row - 3,10)->setText(noi->noi_send_in_125);
@@ -1638,6 +1680,12 @@ void Widget::on_pushButton_air_noi_revise_clicked()
                     ui->tableWidget_air_single_fan_noi->item(row - 3,16)->setText(noi->noi_send_in_8k);
                     ui->tableWidget_air_single_fan_noi->item(row - 3,17)->setText(noi->noi_send_in_total);
 
+                    ui->tableWidget_air_single_fan_noi->item(row - 2,2)->setText(noi->number);
+                    ui->tableWidget_air_single_fan_noi->item(row - 2,3)->setText(noi->brand);
+                    ui->tableWidget_air_single_fan_noi->item(row - 2,4)->setText(noi->air_volume);
+                    ui->tableWidget_air_single_fan_noi->item(row - 2,5)->setText(noi->static_pressure);
+                    ui->tableWidget_air_single_fan_noi->item(row - 2,6)->setText(noi->model);
+
                     ui->tableWidget_air_single_fan_noi->item(row - 2,9)->setText(noi->noi_send_out_63);
                     ui->tableWidget_air_single_fan_noi->item(row - 2,10)->setText(noi->noi_send_out_125);
                     ui->tableWidget_air_single_fan_noi->item(row - 2,11)->setText(noi->noi_send_out_250);
@@ -1648,6 +1696,12 @@ void Widget::on_pushButton_air_noi_revise_clicked()
                     ui->tableWidget_air_single_fan_noi->item(row - 2,16)->setText(noi->noi_send_out_8k);
                     ui->tableWidget_air_single_fan_noi->item(row - 2,17)->setText(noi->noi_send_out_total);
 
+                    ui->tableWidget_air_single_fan_noi->item(row - 1,2)->setText(noi->number);
+                    ui->tableWidget_air_single_fan_noi->item(row - 1,3)->setText(noi->brand);
+                    ui->tableWidget_air_single_fan_noi->item(row - 1,4)->setText(noi->air_volume);
+                    ui->tableWidget_air_single_fan_noi->item(row - 1,5)->setText(noi->static_pressure);
+                    ui->tableWidget_air_single_fan_noi->item(row - 1,6)->setText(noi->model);
+
                     ui->tableWidget_air_single_fan_noi->item(row - 1,9)->setText(noi->noi_exhaust_in_63);
                     ui->tableWidget_air_single_fan_noi->item(row - 1,10)->setText(noi->noi_exhaust_in_125);
                     ui->tableWidget_air_single_fan_noi->item(row - 1,11)->setText(noi->noi_exhaust_in_250);
@@ -1657,6 +1711,12 @@ void Widget::on_pushButton_air_noi_revise_clicked()
                     ui->tableWidget_air_single_fan_noi->item(row - 1,15)->setText(noi->noi_exhaust_in_4k);
                     ui->tableWidget_air_single_fan_noi->item(row - 1,16)->setText(noi->noi_exhaust_in_8k);
                     ui->tableWidget_air_single_fan_noi->item(row - 1,17)->setText(noi->noi_exhaust_in_total);
+
+                    ui->tableWidget_air_single_fan_noi->item(row,2)->setText(noi->number);
+                    ui->tableWidget_air_single_fan_noi->item(row,3)->setText(noi->brand);
+                    ui->tableWidget_air_single_fan_noi->item(row,4)->setText(noi->air_volume);
+                    ui->tableWidget_air_single_fan_noi->item(row,5)->setText(noi->static_pressure);
+                    ui->tableWidget_air_single_fan_noi->item(row,6)->setText(noi->model);
 
                     ui->tableWidget_air_single_fan_noi->item(row,9)->setText(noi->noi_exhaust_out_63);
                     ui->tableWidget_air_single_fan_noi->item(row,10)->setText(noi->noi_exhaust_out_125);
@@ -1709,9 +1769,9 @@ void Widget::initTableWidget_VAV_terminal()
 {
     int colCount = 17;
     QStringList headerText;
-    headerText<< "" << "序号" << "编号" << "品牌" << "型号" << "阀门开度" << "风量(m³/h)" << "63Hz" << "125Hz" << "250Hz"
+    headerText<< "" << "序号" << "编号" << "型号" << "阀门开度" << "风量(m³/h)"  << "品牌" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 140, 110, 140, 100, 110, 80, 80, 80, 80, 80, 80, 80, 80, 95 ,90};
+    int columnWidths[] = {40, 50, 140, 110, 110, 120, 110, 80, 80, 80, 80, 80, 80, 80, 80, 95 ,90};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_VAV_terminal, headerText, columnWidths, colCount);
 }
@@ -1729,10 +1789,10 @@ void Widget::on_pushButton_VAV_terminal_add_clicked()
             QStringList data = {
                 noi->table_id,
                 noi->number,
-                noi->brand,
                 noi->model,
                 noi->valve_open_degree,
                 noi->air_volume,
+                noi->brand,
                 noi->noi_63,
                 noi->noi_125,
                 noi->noi_250,
@@ -1765,11 +1825,11 @@ void Widget::on_pushButton_VAV_terminal_revise_clicked()
     QTableWidget* tableWidget = ui->tableWidget_VAV_terminal;
     VAV_terminal_noise *noi = new VAV_terminal_noise();
     QVector<QString*> items = {
-        &noi->number,
-        &noi->brand,
+        &noi->number,        
         &noi->model,
         &noi->valve_open_degree,
         &noi->air_volume,
+        &noi->brand,
         &noi->noi_63,
         &noi->noi_125,
         &noi->noi_250,
@@ -1801,9 +1861,9 @@ void Widget::initTableWidget_circular_damper()
 {
     int colCount = 16;
     QStringList headerText;
-    headerText<< "" << "序号" << "品牌" << "型号" << "阀门开度" << "风量(m³/h)" << "63Hz" << "125Hz" << "250Hz"
+    headerText<< "" << "序号" << "型号" << "阀门开度" << "风量(m³/h)" << "品牌" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 100, 120, 100, 110, 65, 65, 65, 65, 65, 65, 65, 65, 90, 70};
+    int columnWidths[] = {40, 50, 120, 110, 120, 110, 65, 65, 65, 65, 65, 65, 65, 65, 90, 70};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_circular_damper, headerText, columnWidths, colCount);
 }
@@ -1820,10 +1880,10 @@ void Widget::on_pushButton_circular_damper_add_clicked()
         if (noi != nullptr) {
             QStringList data = {
                 noi->table_id,
-                noi->brand,
                 noi->model,
                 noi->angle,
                 noi->air_volume,
+                noi->brand,
                 noi->noi_63,
                 noi->noi_125,
                 noi->noi_250,
@@ -1855,10 +1915,10 @@ void Widget::on_pushButton_circular_damper_revise_clicked()
     QTableWidget* tableWidget = ui->tableWidget_circular_damper;
     Circular_damper_noi *noi = new Circular_damper_noi();
     QVector<QString*> items = {
-        &noi->brand,
         &noi->model,
         &noi->angle,
         &noi->air_volume,
+        &noi->brand,
         &noi->noi_63,
         &noi->noi_125,
         &noi->noi_250,
@@ -1891,7 +1951,7 @@ void Widget::initTableWidget_rect_damper()
 {
     int colCount = 16;
     QStringList headerText;
-    headerText<< "" << "序号" << "品牌" << "型号" << "阀门开度" << "风量(m³/h)" << "63Hz" << "125Hz" << "250Hz"
+    headerText<< "" << "序号" << "型号" << "阀门开度" << "风量(m³/h)" << "品牌" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
     int columnWidths[] = {40, 50, 110, 130, 110, 110, 65, 65, 65, 65, 65, 65, 65, 65, 90, 70};
     // 调用封装好的初始化表格函数
@@ -1910,10 +1970,10 @@ void Widget::on_pushButton_rect_damper_add_clicked()
         if (noi != nullptr) {
             QStringList data = {
                 noi->table_id,
-                noi->brand,
                 noi->model,
                 noi->angle,
                 noi->air_volume,
+                noi->brand,
                 noi->noi_63,
                 noi->noi_125,
                 noi->noi_250,
@@ -1946,11 +2006,11 @@ void Widget::on_pushButton_rect_damper_revise_clicked()
 {
     QTableWidget* tableWidget = ui->tableWidget_rect_damper;
     Rect_damper_noi *noi = new Rect_damper_noi();
-    QVector<QString*> items = {
-        &noi->brand,
+    QVector<QString*> items = {        
         &noi->model,
         &noi->angle,
         &noi->air_volume,
+        &noi->brand,
         &noi->noi_63,
         &noi->noi_125,
         &noi->noi_250,
@@ -1982,28 +2042,28 @@ void Widget::on_pushButton_rect_damper_revise_clicked()
 //初始化表格
 void Widget::initTableWidget_air_diff()
 {
-    int colCount = 16;
+    int colCount = 17;
     QStringList headerText;
-    headerText<< "" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
+    headerText<< "" << "序号" << "布风器型号" << "散流器型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 130, 250, 130, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90};
+    int columnWidths[] = {40, 50, 250, 250, 130, 130, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_air_diff, headerText, columnWidths, colCount);
 
-    colCount = 15;
+    colCount = 16;
     QStringList headerText_atten;
-    headerText_atten<< "" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
+    headerText_atten<< "" << "序号" << "布风器型号" << "散流器型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
                     << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int atten_columnWidths[] = {40, 50, 140, 230, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    int atten_columnWidths[] = {40, 50, 230, 230, 130, 130, 80, 140, 80, 80, 80, 80, 80, 80, 80, 90};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_air_diff_terminal_atten, headerText_atten, atten_columnWidths, colCount);
 
-    colCount = 15;
+    colCount = 16;
     QStringList headerText_refl;
-    headerText_refl<< "" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
+    headerText_refl<< "" << "序号" << "布风器型号" << "散流器型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int refl_columnWidths[] = {40, 50, 140, 230, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    int refl_columnWidths[] = {40, 50, 230, 230, 130, 130, 80, 140, 80, 80, 80, 80, 80, 80, 80, 90};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_air_diff_terminal_refl, headerText_refl, refl_columnWidths, colCount);
@@ -2023,10 +2083,11 @@ void Widget::on_pushButton_air_diff_add_clicked()
         if (noi != nullptr) {
             QStringList data_noise = {
                 noi->table_id,
-                noi->brand,
-                noi->model,
+                noi->air_distributor_model,
+                noi->diffuser_model,
                 noi->type,
                 noi->size,
+                noi->brand,
                 noi->noi_63,
                 noi->noi_125,
                 noi->noi_250,
@@ -2041,10 +2102,11 @@ void Widget::on_pushButton_air_diff_add_clicked()
 
             QStringList data_atten = {
                 noi->table_id,
-                noi->brand,
-                noi->model,
+                noi->air_distributor_model,
+                noi->diffuser_model,
                 noi->type,
                 noi->size,
+                noi->brand,
                 noi->atten_63,
                 noi->atten_125,
                 noi->atten_250,
@@ -2058,10 +2120,11 @@ void Widget::on_pushButton_air_diff_add_clicked()
 
             QStringList data_refl = {
                 noi->table_id,
-                noi->brand,
-                noi->model,
+                noi->air_distributor_model,
+                noi->diffuser_model,
                 noi->type,
                 noi->size,
+                noi->brand,
                 noi->refl_63,
                 noi->refl_125,
                 noi->refl_250,
@@ -2118,11 +2181,12 @@ void Widget::on_pushButton_air_diff_revise_clicked()
     QTableWidget* tableWidget_atten = ui->tableWidget_air_diff_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_air_diff_terminal_refl;
     AirDiff_noise *noi = new AirDiff_noise();
-    QVector<QString*> items_noise = {
-        &noi->brand,
-        &noi->model,
+    QVector<QString*> items_noise = {        
+        &noi->air_distributor_model,
+        &noi->diffuser_model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->noi_63,
         &noi->noi_125,
         &noi->noi_250,
@@ -2133,13 +2197,14 @@ void Widget::on_pushButton_air_diff_revise_clicked()
         &noi->noi_8k,
         &noi->noi_total,
     };
-    int cols_noise[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
+    int cols_noise[] = {2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 
-    QVector<QString*> items_atten = {
-        &noi->brand,
-        &noi->model,
+    QVector<QString*> items_atten = {        
+        &noi->air_distributor_model,
+        &noi->diffuser_model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->atten_63,
         &noi->atten_125,
         &noi->atten_250,
@@ -2149,13 +2214,14 @@ void Widget::on_pushButton_air_diff_revise_clicked()
         &noi->atten_4k,
         &noi->atten_8k,
     };
-    int cols_atten[] = {2,3,4,5,6,7,8,9,10,11,12,13};
+    int cols_atten[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
 
-    QVector<QString*> items_refl = {
-        &noi->brand,
-        &noi->model,
+    QVector<QString*> items_refl = {        
+        &noi->air_distributor_model,
+        &noi->diffuser_model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->refl_63,
         &noi->refl_125,
         &noi->refl_250,
@@ -2166,7 +2232,7 @@ void Widget::on_pushButton_air_diff_revise_clicked()
         &noi->refl_8k,
         &noi->getMode
     };
-    int cols_refl[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
+    int cols_refl[] = {2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 
 
     for (int row = 0; row < currentTableWidget->rowCount(); ++row)
@@ -2182,11 +2248,12 @@ void Widget::on_pushButton_air_diff_terminal_atten_revise_clicked()
     QTableWidget* tableWidget_atten = ui->tableWidget_air_diff_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_air_diff_terminal_refl;
     AirDiff_noise *noi = new AirDiff_noise();
-    QVector<QString*> items_noise = {
-        &noi->brand,
-        &noi->model,
+    QVector<QString*> items_noise = {        
+        &noi->air_distributor_model,
+        &noi->diffuser_model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->noi_63,
         &noi->noi_125,
         &noi->noi_250,
@@ -2197,13 +2264,14 @@ void Widget::on_pushButton_air_diff_terminal_atten_revise_clicked()
         &noi->noi_8k,
         &noi->noi_total,
     };
-    int cols_noise[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
+    int cols_noise[] = {2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 
-    QVector<QString*> items_atten = {
-        &noi->brand,
-        &noi->model,
+    QVector<QString*> items_atten = {        
+        &noi->air_distributor_model,
+        &noi->diffuser_model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->atten_63,
         &noi->atten_125,
         &noi->atten_250,
@@ -2213,13 +2281,14 @@ void Widget::on_pushButton_air_diff_terminal_atten_revise_clicked()
         &noi->atten_4k,
         &noi->atten_8k,
     };
-    int cols_atten[] = {2,3,4,5,6,7,8,9,10,11,12,13};
+    int cols_atten[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
 
-    QVector<QString*> items_refl = {
-        &noi->brand,
-        &noi->model,
+    QVector<QString*> items_refl = {        
+        &noi->air_distributor_model,
+        &noi->diffuser_model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->refl_63,
         &noi->refl_125,
         &noi->refl_250,
@@ -2230,7 +2299,7 @@ void Widget::on_pushButton_air_diff_terminal_atten_revise_clicked()
         &noi->refl_8k,
         &noi->getMode
     };
-    int cols_refl[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
+    int cols_refl[] = {2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 
 
     for (int row = 0; row < currentTableWidget->rowCount(); ++row)
@@ -2246,11 +2315,12 @@ void Widget::on_pushButton_air_diff_terminal_refl_revise_clicked()
     QTableWidget* tableWidget_atten = ui->tableWidget_air_diff_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_air_diff_terminal_refl;
     AirDiff_noise *noi = new AirDiff_noise();
-    QVector<QString*> items_noise = {
-        &noi->brand,
-        &noi->model,
+    QVector<QString*> items_noise = {        
+        &noi->air_distributor_model,
+        &noi->diffuser_model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->noi_63,
         &noi->noi_125,
         &noi->noi_250,
@@ -2261,13 +2331,14 @@ void Widget::on_pushButton_air_diff_terminal_refl_revise_clicked()
         &noi->noi_8k,
         &noi->noi_total,
     };
-    int cols_noise[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
+    int cols_noise[] = {2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 
-    QVector<QString*> items_atten = {
-        &noi->brand,
-        &noi->model,
+    QVector<QString*> items_atten = {        
+        &noi->air_distributor_model,
+        &noi->diffuser_model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->atten_63,
         &noi->atten_125,
         &noi->atten_250,
@@ -2277,13 +2348,14 @@ void Widget::on_pushButton_air_diff_terminal_refl_revise_clicked()
         &noi->atten_4k,
         &noi->atten_8k,
     };
-    int cols_atten[] = {2,3,4,5,6,7,8,9,10,11,12,13};
+    int cols_atten[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
 
-    QVector<QString*> items_refl = {
-        &noi->brand,
-        &noi->model,
+    QVector<QString*> items_refl = {        
+        &noi->air_distributor_model,
+        &noi->diffuser_model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->refl_63,
         &noi->refl_125,
         &noi->refl_250,
@@ -2294,7 +2366,7 @@ void Widget::on_pushButton_air_diff_terminal_refl_revise_clicked()
         &noi->refl_8k,
         &noi->getMode
     };
-    int cols_refl[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
+    int cols_refl[] = {2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 
 
     for (int row = 0; row < currentTableWidget->rowCount(); ++row)
@@ -2324,26 +2396,26 @@ void Widget::initTableWidget_pump_tuyere()
 {
     int colCount = 16;
     QStringList headerText;
-    headerText<< "抽" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
+    headerText<< "抽" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 130, 250, 130, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90};
+    int columnWidths[] = {40, 50, 250, 130, 130, 130,75, 75, 75, 75, 75, 75, 75, 75, 110 ,90};
 
     initTableWidget(ui->tableWidget_pump_tuyere, headerText, columnWidths, colCount);
 
     colCount = 15;
     QStringList headerText_atten;
-    headerText_atten<< "抽" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
+    headerText_atten<< "抽" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
                     << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int atten_columnWidths[] = {40, 50, 140, 230, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    int atten_columnWidths[] = {40, 50, 230, 130, 130, 140, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_pump_tuyere_terminal_atten, headerText_atten, atten_columnWidths, colCount);
 
     colCount = 15;
     QStringList headerText_refl;
-    headerText_refl<< "抽" << "序号" << "品牌" << "型号" << "类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
+    headerText_refl<< "抽" << "序号" << "型号" << "类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int refl_columnWidths[] = {40, 50, 100, 160, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    int refl_columnWidths[] = {40, 50, 230, 130, 130, 140, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_pump_tuyere_terminal_refl, headerText_refl, refl_columnWidths, colCount);
@@ -2353,26 +2425,26 @@ void Widget::initTableWidget_send_tuyere()
 {
     int colCount = 16;
     QStringList headerText;
-    headerText<< "送" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
+    headerText<< "送" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 130, 250, 130, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90};
+    int columnWidths[] = {40, 50, 250, 130, 130, 130,75, 75, 75, 75, 75, 75, 75, 75, 110 ,90};
 
     initTableWidget(ui->tableWidget_send_tuyere, headerText, columnWidths, colCount);
 
     colCount = 15;
     QStringList headerText_atten;
-    headerText_atten<< "送" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
+    headerText_atten<< "抽" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
                     << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int atten_columnWidths[] = {40, 50, 140, 230, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    int atten_columnWidths[] = {40, 50, 230, 130, 130, 140, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_send_tuyere_terminal_atten, headerText_atten, atten_columnWidths, colCount);
 
     colCount = 15;
     QStringList headerText_refl;
-    headerText_refl<< "送" << "序号" << "品牌" << "型号" << "类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
+    headerText_refl<< "抽" << "序号" << "型号" << "类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int refl_columnWidths[] = {40, 50, 100, 160, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    int refl_columnWidths[] = {40, 50, 230, 130, 130, 140, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_send_tuyere_terminal_refl, headerText_refl, refl_columnWidths, colCount);
@@ -2406,11 +2478,11 @@ void Widget::on_pushButton_pump_send_add_clicked()
         noi->table_id = QString::number(tableWidget_noise->rowCount() + 1);
         if (noi != nullptr) {
             QStringList data_noise = {
-                noi->table_id,
-                noi->brand,
+                noi->table_id,                
                 noi->model,
                 noi->type,
                 noi->size,
+                noi->brand,
                 noi->noi_63,
                 noi->noi_125,
                 noi->noi_250,
@@ -2424,11 +2496,11 @@ void Widget::on_pushButton_pump_send_add_clicked()
             };
 
             QStringList data_atten = {
-                noi->table_id,
-                noi->brand,
+                noi->table_id,                
                 noi->model,
                 noi->type,
                 noi->size,
+                noi->brand,
                 noi->atten_63,
                 noi->atten_125,
                 noi->atten_250,
@@ -2441,11 +2513,11 @@ void Widget::on_pushButton_pump_send_add_clicked()
             };
 
             QStringList data_refl = {
-                noi->table_id,
-                noi->brand,
+                noi->table_id,                
                 noi->model,
                 noi->type,
                 noi->size,
+                noi->brand,
                 noi->refl_63,
                 noi->refl_125,
                 noi->refl_250,
@@ -2537,11 +2609,11 @@ void Widget::on_pushButton_pump_send_revise_clicked()
         typeName = "送风头";
     }
 
-    QVector<QString*> items_noise = {
-        &noi->brand,
+    QVector<QString*> items_noise = {        
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->noi_63,
         &noi->noi_125,
         &noi->noi_250,
@@ -2554,11 +2626,11 @@ void Widget::on_pushButton_pump_send_revise_clicked()
     };
     int cols_noise[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
 
-    QVector<QString*> items_atten = {
-        &noi->brand,
+    QVector<QString*> items_atten = {        
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->atten_63,
         &noi->atten_125,
         &noi->atten_250,
@@ -2570,11 +2642,11 @@ void Widget::on_pushButton_pump_send_revise_clicked()
     };
     int cols_atten[] = {2,3,4,5,6,7,8,9,10,11,12,13};
 
-    QVector<QString*> items_refl = {
-        &noi->brand,
+    QVector<QString*> items_refl = {        
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->refl_63,
         &noi->refl_125,
         &noi->refl_250,
@@ -2691,17 +2763,17 @@ void Widget::initTableWidget_staticBox_grille()
 {
     int colCount = 16;
     QStringList headerText;
-    headerText<< "" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
+    headerText<< "" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 130, 250, 130, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90};
+    int columnWidths[] = {40, 50, 250, 130, 130, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90};
     initTableWidget(ui->tableWidget_staticBox_grille, headerText, columnWidths, colCount);
 
 
     colCount = 15;
     QStringList headerText_atten;
-    headerText_atten<< "" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
+    headerText_atten<< "" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
                     << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int atten_columnWidths[] = {40, 50, 140, 230, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    int atten_columnWidths[] = {40, 50, 230, 130, 130, 140, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_staticBox_grille_terminal_atten, headerText_atten, atten_columnWidths, colCount);
@@ -2709,9 +2781,9 @@ void Widget::initTableWidget_staticBox_grille()
 
     colCount = 15;
     QStringList headerText_refl;
-    headerText_refl<< "" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
+    headerText_refl<< "" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int refl_columnWidths[] = {40, 50, 140, 230, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    int refl_columnWidths[] = {40, 50, 230, 130, 130, 140, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_staticBox_grille_terminal_refl, headerText_refl, refl_columnWidths, colCount);
@@ -2730,11 +2802,11 @@ void Widget::on_pushButton_staticBox_grille_add_clicked()
         noi->table_id = QString::number(tableWidget_noise->rowCount() + 1);
         if (noi != nullptr) {
             QStringList data_noise = {
-                noi->table_id,
-                noi->brand,
+                noi->table_id,                
                 noi->model,
                 noi->type,
                 noi->size,
+                noi->brand,
                 noi->noi_63,
                 noi->noi_125,
                 noi->noi_250,
@@ -2748,11 +2820,11 @@ void Widget::on_pushButton_staticBox_grille_add_clicked()
             };
 
             QStringList data_atten = {
-                noi->table_id,
-                noi->brand,
+                noi->table_id,                
                 noi->model,
                 noi->type,
                 noi->size,
+                noi->brand,
                 noi->atten_63,
                 noi->atten_125,
                 noi->atten_250,
@@ -2765,11 +2837,11 @@ void Widget::on_pushButton_staticBox_grille_add_clicked()
             };
 
             QStringList data_refl = {
-                QString::number(tableWidget_noise->rowCount() + 1),
-                noi->brand,
+                QString::number(tableWidget_noise->rowCount() + 1),                
                 noi->model,
                 noi->type,
                 noi->size,
+                noi->brand,
                 noi->refl_63,
                 noi->refl_125,
                 noi->refl_250,
@@ -2826,11 +2898,11 @@ void Widget::on_pushButton_staticBox_grille_terminal_atten_revise_clicked()
     QTableWidget* tableWidget_atten = ui->tableWidget_staticBox_grille_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_staticBox_grille_terminal_refl;
     StaticBox_grille_noise *noi = new StaticBox_grille_noise();
-    QVector<QString*> items_noise = {
-        &noi->brand,
+    QVector<QString*> items_noise = {        
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->noi_63,
         &noi->noi_125,
         &noi->noi_250,
@@ -2843,11 +2915,11 @@ void Widget::on_pushButton_staticBox_grille_terminal_atten_revise_clicked()
     };
     int cols_noise[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
 
-    QVector<QString*> items_atten = {
-        &noi->brand,
+    QVector<QString*> items_atten = {        
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->atten_63,
         &noi->atten_125,
         &noi->atten_250,
@@ -2859,11 +2931,11 @@ void Widget::on_pushButton_staticBox_grille_terminal_atten_revise_clicked()
     };
     int cols_atten[] = {2,3,4,5,6,7,8,9,10,11,12,13};
 
-    QVector<QString*> items_refl = {
-        &noi->brand,
+    QVector<QString*> items_refl = {        
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->refl_63,
         &noi->refl_125,
         &noi->refl_250,
@@ -2890,11 +2962,11 @@ void Widget::on_pushButton_staticBox_grille_terminal_refl_revise_clicked()
     QTableWidget* tableWidget_atten = ui->tableWidget_staticBox_grille_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_staticBox_grille_terminal_refl;
     StaticBox_grille_noise *noi = new StaticBox_grille_noise();
-    QVector<QString*> items_noise = {
-        &noi->brand,
+    QVector<QString*> items_noise = {        
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->noi_63,
         &noi->noi_125,
         &noi->noi_250,
@@ -2907,11 +2979,11 @@ void Widget::on_pushButton_staticBox_grille_terminal_refl_revise_clicked()
     };
     int cols_noise[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
 
-    QVector<QString*> items_atten = {
-        &noi->brand,
+    QVector<QString*> items_atten = {        
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->atten_63,
         &noi->atten_125,
         &noi->atten_250,
@@ -2923,11 +2995,11 @@ void Widget::on_pushButton_staticBox_grille_terminal_refl_revise_clicked()
     };
     int cols_atten[] = {2,3,4,5,6,7,8,9,10,11,12,13};
 
-    QVector<QString*> items_refl = {
-        &noi->brand,
+    QVector<QString*> items_refl = {        
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->refl_63,
         &noi->refl_125,
         &noi->refl_250,
@@ -2954,11 +3026,11 @@ void Widget::on_pushButton_staticBox_grille_revise_clicked()
     QTableWidget* tableWidget_atten = ui->tableWidget_staticBox_grille_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_staticBox_grille_terminal_refl;
     StaticBox_grille_noise *noi = new StaticBox_grille_noise();
-    QVector<QString*> items_noise = {
-        &noi->brand,
+    QVector<QString*> items_noise = {        
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->noi_63,
         &noi->noi_125,
         &noi->noi_250,
@@ -2971,11 +3043,11 @@ void Widget::on_pushButton_staticBox_grille_revise_clicked()
     };
     int cols_noise[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
 
-    QVector<QString*> items_atten = {
-        &noi->brand,
+    QVector<QString*> items_atten = {        
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->atten_63,
         &noi->atten_125,
         &noi->atten_250,
@@ -2987,11 +3059,11 @@ void Widget::on_pushButton_staticBox_grille_revise_clicked()
     };
     int cols_atten[] = {2,3,4,5,6,7,8,9,10,11,12,13};
 
-    QVector<QString*> items_refl = {
-        &noi->brand,
+    QVector<QString*> items_refl = {        
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->refl_63,
         &noi->refl_125,
         &noi->refl_250,
@@ -3024,26 +3096,26 @@ void Widget::initTableWidget_disp_vent_terminal()
 {
     int colCount = 16;
     QStringList headerText;
-    headerText<< "" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
+    headerText<< "" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 130, 250, 130, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90};
+    int columnWidths[] = {40, 50, 250, 130, 130, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90};
 
     initTableWidget(ui->tableWidget_disp_vent_terminal, headerText, columnWidths, colCount);
 
     colCount = 15;
     QStringList headerText_atten;
-    headerText_atten<< "" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
+    headerText_atten<< "" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
                     << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int atten_columnWidths[] = {40, 50, 140, 230, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    int atten_columnWidths[] = {40, 50, 230, 130, 130, 140, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_disp_vent_terminal_atten, headerText_atten, atten_columnWidths, colCount);
 
     colCount = 15;
     QStringList headerText_refl;
-    headerText_refl<< "" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
+    headerText_refl<< "" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int refl_columnWidths[] = {40, 50, 140, 230, 130, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    int refl_columnWidths[] = {40, 50, 230, 130, 130, 140, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_disp_vent_terminal_refl, headerText_refl, refl_columnWidths, colCount);
@@ -3062,11 +3134,11 @@ void Widget::on_pushButton_disp_vent_terminal_add_clicked()
         noi->table_id = QString::number(tableWidget_noise->rowCount() + 1);
         if (noi != nullptr) {
             QStringList data_noise = {
-                QString::number(tableWidget_noise->rowCount() + 1),
-                noi->brand,
+                QString::number(tableWidget_noise->rowCount() + 1),                
                 noi->model,
                 noi->type,
                 noi->size,
+                noi->brand,
                 noi->noi_63,
                 noi->noi_125,
                 noi->noi_250,
@@ -3080,11 +3152,11 @@ void Widget::on_pushButton_disp_vent_terminal_add_clicked()
             };
 
             QStringList data_atten = {
-                QString::number(tableWidget_noise->rowCount() + 1),
-                noi->brand,
+                QString::number(tableWidget_noise->rowCount() + 1),                
                 noi->model,
                 noi->type,
                 noi->size,
+                noi->brand,
                 noi->atten_63,
                 noi->atten_125,
                 noi->atten_250,
@@ -3097,11 +3169,11 @@ void Widget::on_pushButton_disp_vent_terminal_add_clicked()
             };
 
             QStringList data_refl = {
-                QString::number(tableWidget_noise->rowCount() + 1),
-                noi->brand,
+                QString::number(tableWidget_noise->rowCount() + 1),                
                 noi->model,
                 noi->type,
                 noi->size,
+                noi->brand,
                 noi->refl_63,
                 noi->refl_125,
                 noi->refl_250,
@@ -3161,11 +3233,11 @@ void Widget::on_pushButton_disp_vent_terminal_revise_clicked()
     QTableWidget* tableWidget_atten = ui->tableWidget_disp_vent_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_disp_vent_terminal_refl;
     Disp_vent_terminal_noise *noi = new Disp_vent_terminal_noise();
-    QVector<QString*> items_noise = {
-        &noi->brand,
+    QVector<QString*> items_noise = {        
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->noi_63,
         &noi->noi_125,
         &noi->noi_250,
@@ -3178,11 +3250,11 @@ void Widget::on_pushButton_disp_vent_terminal_revise_clicked()
     };
     int cols_noise[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
 
-    QVector<QString*> items_atten = {
-        &noi->brand,
+    QVector<QString*> items_atten = {        
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->atten_63,
         &noi->atten_125,
         &noi->atten_250,
@@ -3194,11 +3266,11 @@ void Widget::on_pushButton_disp_vent_terminal_revise_clicked()
     };
     int cols_atten[] = {2,3,4,5,6,7,8,9,10,11,12,13};
 
-    QVector<QString*> items_refl = {
-        &noi->brand,
+    QVector<QString*> items_refl = {        
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->refl_63,
         &noi->refl_125,
         &noi->refl_250,
@@ -3225,11 +3297,11 @@ void Widget::on_pushButton_disp_vent_terminal_atten_revise_clicked()
     QTableWidget* tableWidget_atten = ui->tableWidget_disp_vent_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_disp_vent_terminal_refl;
     Disp_vent_terminal_noise *noi = new Disp_vent_terminal_noise();
-    QVector<QString*> items_noise = {
-        &noi->brand,
+    QVector<QString*> items_noise = {        
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->noi_63,
         &noi->noi_125,
         &noi->noi_250,
@@ -3242,11 +3314,11 @@ void Widget::on_pushButton_disp_vent_terminal_atten_revise_clicked()
     };
     int cols_noise[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
 
-    QVector<QString*> items_atten = {
-        &noi->brand,
+    QVector<QString*> items_atten = {        
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->atten_63,
         &noi->atten_125,
         &noi->atten_250,
@@ -3258,11 +3330,11 @@ void Widget::on_pushButton_disp_vent_terminal_atten_revise_clicked()
     };
     int cols_atten[] = {2,3,4,5,6,7,8,9,10,11,12,13};
 
-    QVector<QString*> items_refl = {
-        &noi->brand,
+    QVector<QString*> items_refl = {        
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->refl_63,
         &noi->refl_125,
         &noi->refl_250,
@@ -3289,11 +3361,11 @@ void Widget::on_pushButton_disp_vent_terminal_refl_revise_clicked()
     QTableWidget* tableWidget_atten = ui->tableWidget_disp_vent_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_disp_vent_terminal_refl;
     Disp_vent_terminal_noise *noi = new Disp_vent_terminal_noise();
-    QVector<QString*> items_noise = {
-        &noi->brand,
+    QVector<QString*> items_noise = {        
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->noi_63,
         &noi->noi_125,
         &noi->noi_250,
@@ -3306,11 +3378,11 @@ void Widget::on_pushButton_disp_vent_terminal_refl_revise_clicked()
     };
     int cols_noise[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
 
-    QVector<QString*> items_atten = {
-        &noi->brand,
+    QVector<QString*> items_atten = {        
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->atten_63,
         &noi->atten_125,
         &noi->atten_250,
@@ -3322,11 +3394,11 @@ void Widget::on_pushButton_disp_vent_terminal_refl_revise_clicked()
     };
     int cols_atten[] = {2,3,4,5,6,7,8,9,10,11,12,13};
 
-    QVector<QString*> items_refl = {
-        &noi->brand,
+    QVector<QString*> items_refl = {        
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->refl_63,
         &noi->refl_125,
         &noi->refl_250,
@@ -3359,18 +3431,18 @@ void Widget::initTableWidget_other_send_terminal()
 {
     int colCount = 17;
     QStringList headerText;
-    headerText<< "" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
+    headerText<< "" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源" << "备注";  //表头标题用QStringList来表示
 
-    int columnWidths[] = {40, 50, 130, 250, 110, 110, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90, 180};
+    int columnWidths[] = {40, 50, 250, 110, 110, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90, 180};
 
     initTableWidget(ui->tableWidget_other_send_terminal, headerText, columnWidths, colCount);
 
     colCount = 16;
     QStringList headerText_atten;
-    headerText_atten<< "" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
+    headerText_atten<< "" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
                     << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "备注";  //表头标题用QStringList来表示
-    int atten_columnWidths[] = {40, 50, 140, 230, 110, 110, 80, 80, 80, 80, 80, 80, 80, 80, 90, 180};
+    int atten_columnWidths[] = {40, 50, 230, 110, 110, 140, 80, 80, 80, 80, 80, 80, 80, 80, 90, 180};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_other_send_terminal_atten, headerText_atten, atten_columnWidths, colCount);
@@ -3378,9 +3450,9 @@ void Widget::initTableWidget_other_send_terminal()
 
     colCount = 16;
     QStringList headerText_refl;
-    headerText_refl<< "" << "序号" << "品牌" << "型号" << "末端类型" << "末端尺寸" << "63Hz" << "125Hz" << "250Hz"
+    headerText_refl<< "" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "备注";  //表头标题用QStringList来表示
-    int refl_columnWidths[] = {40, 50, 140, 230, 110, 110, 80, 80, 80, 80, 80, 80, 80, 80, 90, 180};
+    int refl_columnWidths[] = {40, 50, 230, 110, 110, 140, 80, 80, 80, 80, 80, 80, 80, 80, 90, 180};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_other_send_terminal_refl, headerText_refl, refl_columnWidths, colCount);
@@ -3399,11 +3471,11 @@ void Widget::on_pushButton_other_send_terminal_add_clicked()
         noi->table_id = QString::number(tableWidget_noise->rowCount() + 1);
         if (noi != nullptr) {
             QStringList data_noise = {
-                QString::number(tableWidget_noise->rowCount() + 1),
-                noi->brand,
+                QString::number(tableWidget_noise->rowCount() + 1),                
                 noi->model,
                 noi->type,
                 noi->size,
+                noi->brand,
                 noi->noi_63,
                 noi->noi_125,
                 noi->noi_250,
@@ -3418,11 +3490,11 @@ void Widget::on_pushButton_other_send_terminal_add_clicked()
             };
 
             QStringList data_atten = {
-                QString::number(tableWidget_noise->rowCount() + 1),
-                noi->brand,
+                QString::number(tableWidget_noise->rowCount() + 1),                
                 noi->model,
                 noi->type,
                 noi->size,
+                noi->brand,
                 noi->atten_63,
                 noi->atten_125,
                 noi->atten_250,
@@ -3436,11 +3508,11 @@ void Widget::on_pushButton_other_send_terminal_add_clicked()
             };
 
             QStringList data_refl = {
-                QString::number(tableWidget_noise->rowCount() + 1),
-                noi->brand,
+                QString::number(tableWidget_noise->rowCount() + 1),                
                 noi->model,
                 noi->type,
                 noi->size,
+                noi->brand,
                 noi->refl_63,
                 noi->refl_125,
                 noi->refl_250,
@@ -3501,11 +3573,11 @@ void Widget::on_pushButton_other_send_terminal_revise_clicked()
     QTableWidget* tableWidget_atten = ui->tableWidget_other_send_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_other_send_terminal_refl;
     Other_send_terminal_noise *noi = new Other_send_terminal_noise();
-    QVector<QString*> items_noise = {
-        &noi->brand,
+    QVector<QString*> items_noise = {        
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->noi_63,
         &noi->noi_125,
         &noi->noi_250,
@@ -3519,11 +3591,11 @@ void Widget::on_pushButton_other_send_terminal_revise_clicked()
     };
     int cols_noise[] = {2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 
-    QVector<QString*> items_atten = {
-        &noi->brand,
+    QVector<QString*> items_atten = {        
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->atten_63,
         &noi->atten_125,
         &noi->atten_250,
@@ -3536,11 +3608,11 @@ void Widget::on_pushButton_other_send_terminal_revise_clicked()
     };
     int cols_atten[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
 
-    QVector<QString*> items_refl = {
-        &noi->brand,
+    QVector<QString*> items_refl = {        
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->refl_63,
         &noi->refl_125,
         &noi->refl_250,
@@ -3569,10 +3641,10 @@ void Widget::on_pushButton_other_send_terminal_atten_revise_clicked()
     QTableWidget* tableWidget_refl = ui->tableWidget_other_send_terminal_refl;
     Other_send_terminal_noise *noi = new Other_send_terminal_noise();
     QVector<QString*> items_noise = {
-        &noi->brand,
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->noi_63,
         &noi->noi_125,
         &noi->noi_250,
@@ -3587,10 +3659,10 @@ void Widget::on_pushButton_other_send_terminal_atten_revise_clicked()
     int cols_noise[] = {2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 
     QVector<QString*> items_atten = {
-        &noi->brand,
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->atten_63,
         &noi->atten_125,
         &noi->atten_250,
@@ -3604,10 +3676,10 @@ void Widget::on_pushButton_other_send_terminal_atten_revise_clicked()
     int cols_atten[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
 
     QVector<QString*> items_refl = {
-        &noi->brand,
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->refl_63,
         &noi->refl_125,
         &noi->refl_250,
@@ -3708,9 +3780,9 @@ void Widget::initTableWidget_static_box()
 {
     int colCount = 13;
     QStringList headerText;
-    headerText<< "" << "序号" << "品牌" << "型号" << "63Hz" << "125Hz" << "250Hz"
+    headerText<< "" << "序号" << "型号" << "品牌" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 100, 120, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    int columnWidths[] = {40, 50, 120, 100, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     initTableWidget(ui->tableWidget_static_box, headerText, columnWidths, colCount);
 
@@ -3727,9 +3799,9 @@ void Widget::on_pushButton_static_box_add_clicked()
         noi->table_id = QString::number(tableWidget->rowCount() + 1);
         if (noi != nullptr) {
             QStringList data = {
-                noi->table_id,
-                noi->brand,
+                noi->table_id,                
                 noi->model,
+                noi->brand,
                 noi->noi_63,
                 noi->noi_125,
                 noi->noi_250,
@@ -3760,9 +3832,9 @@ void Widget::on_pushButton_static_box_revise_clicked()
 {
     QTableWidget* tableWidget = ui->tableWidget_static_box;
     Static_box *noi = new Static_box();
-    QVector<QString*> items = {
-        &noi->brand,
+    QVector<QString*> items = {       
         &noi->model,
+         &noi->brand,
         &noi->noi_63,
         &noi->noi_125,
         &noi->noi_250,
@@ -3791,9 +3863,9 @@ void Widget::initTableWidegt_duct_with_multi_ranc()
 {
     int colCount = 13;
     QStringList headerText;
-    headerText<< "" << "序号" << "品牌" << "型号" << "63Hz" << "125Hz" << "250Hz"
+    headerText<< "" << "序号" << "型号" << "品牌" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 100, 120, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    int columnWidths[] = {40, 50, 120, 100, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     initTableWidget(ui->tableWidget_duct_with_multi_ranc, headerText, columnWidths, colCount);
 }
@@ -3809,9 +3881,9 @@ void Widget::on_pushButton_duct_with_multi_ranc_add_clicked()
         noi->table_id = QString::number(tableWidget->rowCount() + 1);
         if (noi != nullptr) {
             QStringList data = {
-               noi->table_id,
-               noi->brand,
+               noi->table_id,               
                noi->model,
+               noi->brand,
                noi->noi_63,
                noi->noi_125,
                noi->noi_250,
@@ -3843,9 +3915,9 @@ void Widget::on_pushButton_duct_with_multi_ranc_revise_clicked()
 {
     QTableWidget* tableWidget = ui->tableWidget_duct_with_multi_ranc;
     Multi_ranc_atten *noi = new Multi_ranc_atten();
-    QVector<QString*> items = {
-        &noi->brand,
+    QVector<QString*> items = {        
         &noi->model,
+        &noi->brand,
         &noi->noi_63,
         &noi->noi_125,
         &noi->noi_250,
@@ -3876,10 +3948,10 @@ void Widget::initTableWidegt_tee()
 {
     int colCount = 13;
     QStringList headerText;
-    headerText<< "" << "序号" << "品牌" << "型号" << "63Hz" << "125Hz" << "250Hz"
+    headerText<< "" << "序号" << "型号" << "品牌" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
 
-    int columnWidths[] = {40, 50, 100, 120, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    int columnWidths[] = {40, 50, 120, 100, 80, 80, 80, 80, 80, 80, 80, 80, 90};
     initTableWidget(ui->tableWidget_tee, headerText, columnWidths, colCount);
 }
 
@@ -3894,9 +3966,9 @@ void Widget::on_pushButton_tee_add_clicked()
         noi->table_id = QString::number(tableWidget->rowCount() + 1);
         if (noi != nullptr) {
             QStringList data = {
-               QString::number(tableWidget->rowCount() + 1),
-               noi->brand,
+               QString::number(tableWidget->rowCount() + 1),               
                noi->model,
+               noi->brand,
                noi->noi_63,
                noi->noi_125,
                noi->noi_250,
@@ -3927,9 +3999,9 @@ void Widget::on_pushButton_tee_revise_clicked()
 {
     QTableWidget* tableWidget = ui->tableWidget_tee;
     Tee_atten *noi = new Tee_atten();
-    QVector<QString*> items = {
-        &noi->brand,
+    QVector<QString*> items = {        
         &noi->model,
+        &noi->brand,
         &noi->noi_63,
         &noi->noi_125,
         &noi->noi_250,
@@ -4230,9 +4302,9 @@ void Widget::initTableWidget_circular_silencer()
 {
     int colCount = 13;
     QStringList headerText;
-    headerText<< "圆形" << "序号" << "品牌" << "型号" << "63Hz" << "125Hz" << "250Hz"
+    headerText<< "圆形" << "序号" << "型号"  << "品牌" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 40, 120, 370, 82, 82, 82, 82, 82, 82, 82, 82, 90};
+    int columnWidths[] = {40, 40, 370, 120, 82, 82, 82, 82, 82, 82, 82, 82, 90};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_circular_silencer, headerText, columnWidths, colCount);
 }
@@ -4241,9 +4313,9 @@ void Widget::initTableWidget_rect_silencer()
 {
     int colCount = 13;
     QStringList headerText;
-    headerText<< "矩形" << "序号" << "品牌" << "型号" << "63Hz" << "125Hz" << "250Hz"
+    headerText<< "矩形" << "序号" << "型号" << "品牌" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 40, 120, 370, 82, 82, 82, 82, 82, 82, 82, 82, 90};
+    int columnWidths[] = {40, 40, 370, 120, 82, 82, 82, 82, 82, 82, 82, 82, 90};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_rect_silencer, headerText, columnWidths, colCount);
 }
@@ -4252,9 +4324,9 @@ void Widget::initTableWidget_circular_silencerEb()
 {
     int colCount = 13;
     QStringList headerText;
-    headerText<< "圆弯" << "序号" << "品牌" << "型号" << "63Hz" << "125Hz" << "250Hz"
+    headerText<< "圆弯" << "序号" << "型号" << "品牌" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 40, 120, 370, 82, 82, 82, 82, 82, 82, 82, 82, 90};
+    int columnWidths[] = {40, 40, 370, 120, 82, 82, 82, 82, 82, 82, 82, 82, 90};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_circular_silencerEb, headerText, columnWidths, colCount);
 }
@@ -4263,9 +4335,9 @@ void Widget::initTableWidget_rect_silencerEb()
 {
     int colCount = 13;
     QStringList headerText;
-    headerText<< "矩弯" << "序号" << "品牌" << "型号" << "63Hz" << "125Hz" << "250Hz"
+    headerText<< "矩弯" << "序号" << "型号" << "品牌" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 40, 120, 370, 82, 82, 82, 82, 82, 82, 82, 82, 90};
+    int columnWidths[] = {40, 40, 370, 120, 82, 82, 82, 82, 82, 82, 82, 82, 90};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_rect_silencerEb, headerText, columnWidths, colCount);
 }
@@ -4305,9 +4377,9 @@ void Widget::on_pushButton_silencer_add_clicked()
         noi->table_id = QString::number(tableWidget->rowCount() + 1);
         if (noi != nullptr) {
             QStringList data = {
-               noi->table_id,
-               noi->brand,
+               noi->table_id,               
                noi->model,
+               noi->brand,
                noi->noi_63,
                noi->noi_125,
                noi->noi_250,
@@ -4376,9 +4448,9 @@ void Widget::on_pushButton_silencer_revise_clicked()
     }
 
     Silencer_atten *noi = new Silencer_atten();
-    QVector<QString*> items = {
-        &noi->brand,
+    QVector<QString*> items = {        
         &noi->model,
+        &noi->brand,
         &noi->noi_63,
         &noi->noi_125,
         &noi->noi_250,
@@ -4760,35 +4832,6 @@ void Widget::initRightButtonMenu()
 
 /**********报表**********/
 #pragma region "report"{
-
-void Widget::on_pushButton_choose_report_filePath_clicked()
-{
-    QString filename = QFileDialog::getSaveFileName(this,
-        tr("Save Word Document"),
-        "",
-        tr("Word Documents (*.docx);;All Files (*)"));
-
-    if (filename.isEmpty()) {
-        return;
-    } else {
-        // 将文件路径显示在ui->plainTextEdit中
-        ui->plainTextEdit_report_filePath->setPlainText(filename);
-
-
-        // 构建资源路径
-        QString templatePath = "./document/template.docx";
-        templatePath.replace("/", "\\");  // 如果你需要将正斜杠替换为反斜杠
-        QFile file(templatePath);
-        templatePath = QDir(file.fileName()).absolutePath();
-
-        // 打开 Word 模板文件
-        wordEngine->openAndCopy(templatePath);
-        wordEngine->saveAs(filename);
-        wordEngine->close();
-
-        reportPath = filename;
-    }
-}
 
 //封面录入
 void Widget::on_pushButton_cover_entry_clicked()
