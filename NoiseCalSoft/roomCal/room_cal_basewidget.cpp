@@ -74,6 +74,20 @@ void room_cal_baseWidget::handleMenuAction(QString actionName)
     }
 }
 
+void room_cal_baseWidget::updateAllTables()
+{
+    QVBoxLayout *layout = qobject_cast<QVBoxLayout *>(ui->scrollArea->widget()->layout());
+    for (int i = 1; i < layout->count(); ++i) {
+        RoomCalTable *beforeRoomCalTable = qobject_cast<RoomCalTable *>(layout->itemAt(i - 1)->widget());
+        RoomCalTable *currentRoomCalTable = qobject_cast<RoomCalTable *>(layout->itemAt(i)->widget());
+        //更新所有表格的noise_before_cal,并且计算变化量,和结果
+        if (beforeRoomCalTable && currentRoomCalTable) {
+            currentRoomCalTable->noise_before_cal = beforeRoomCalTable->noise_after_cal;
+            currentRoomCalTable->calVariations();
+        }
+    }
+}
+
 void room_cal_baseWidget::addTable(int index, QString type)
 {
     QVBoxLayout *layout = qobject_cast<QVBoxLayout *>(ui->scrollArea->widget()->layout());
@@ -82,6 +96,8 @@ void room_cal_baseWidget::addTable(int index, QString type)
     }
 
     RoomCalTable *newRoomCalTable = new RoomCalTable(systemName,nullptr,type);
+    //绑定信号与槽，当有数据改变时，更新所有表格
+    connect(newRoomCalTable, &RoomCalTable::tableChanged, this, &room_cal_baseWidget::updateAllTables);
     if (!newRoomCalTable->isValid) {
         delete newRoomCalTable;
         return;
@@ -102,6 +118,18 @@ void room_cal_baseWidget::addTable(int index, QString type)
             }
         }
     }
+
+    //遍历到插入的表格的上一个表格
+    RoomCalTable *beforeCalTable = nullptr;
+    for (int i = 0; i < index; ++i) {
+        beforeCalTable = qobject_cast<RoomCalTable *>(layout->itemAt(i)->widget());
+    }
+
+    //设置表格上一个的值
+    if (beforeCalTable) {
+        newRoomCalTable->noise_before_cal = beforeCalTable->noise_after_cal;
+    }
+
     // Connect signals and slots for the new RoomCalTable
     connect(newRoomCalTable, &RoomCalTable::addBeforeClicked, this, &room_cal_baseWidget::handleAddBefore);
     connect(newRoomCalTable, &RoomCalTable::addAfterClicked, this, &room_cal_baseWidget::handleAddAfter);

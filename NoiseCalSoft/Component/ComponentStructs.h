@@ -384,7 +384,8 @@ typedef struct Reducer_atten : ComponentBase
 typedef struct StaticBox_grille_noise : ComponentBase
 {
     QString brand;  //品牌
-    QString model;   //型号
+    QString staticBox_model;   //静压箱型号
+    QString grille_model;   //静压箱型号
     QString type;  //类型 圆还是方
     QString diameter;  //直径
     QString length;  //长

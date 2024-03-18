@@ -26,11 +26,11 @@ Dialog_staticBox_grille::Dialog_staticBox_grille(QWidget *parent, int editRow,  
     {
         QString s = staticBoxGrilleModel[i];
         // 检查是否已经添加过该前缀
-        ui->comboBox_model->addItem(s);
+        ui->comboBox_staticBox_model->addItem(s);
     }
     /******设置combobox******/
 
-    ui->comboBox_model->setCurrentIndex(-1);
+    ui->comboBox_staticBox_model->setCurrentIndex(-1);
 
     if(editRow != -1)
     {
@@ -57,7 +57,8 @@ Dialog_staticBox_grille::Dialog_staticBox_grille(QWidget *parent, int editRow,  
         }
 
         ui->lineEdit_brand->setText(data.brand);
-        ui->comboBox_model->setCurrentText(data.model);
+        ui->comboBox_staticBox_model->setCurrentText(data.staticBox_model);
+        ui->comboBox_grille_model->setCurrentText(data.grille_model);
         ui->lineEdit_63->setText(data.noi_63);
         ui->lineEdit_125->setText(data.noi_125);
         ui->lineEdit_250->setText(data.noi_250);
@@ -214,8 +215,9 @@ void Dialog_staticBox_grille::on_pushButton_confirm_clicked()
     noi->noi_4k = ui->lineEdit_4k->text();
     noi->noi_8k = ui->lineEdit_8k->text();
     noi->noi_total = ui->lineEdit_total->text();
-    noi->model = ui->comboBox_model->currentText();
-    noi->identifier = noi->model;
+    noi->staticBox_model = ui->comboBox_staticBox_model->currentText();
+    noi->grille_model = ui->comboBox_grille_model->currentText();
+    noi->identifier = noi->staticBox_model + "+" + noi->grille_model;
 
     noi->atten_63 = ui->lineEdit_63_atten->text();
     noi->atten_125 = ui->lineEdit_125_atten->text();
@@ -239,12 +241,12 @@ void Dialog_staticBox_grille::on_pushButton_confirm_clicked()
 }
 
 
-void Dialog_staticBox_grille::on_comboBox_model_currentTextChanged(const QString &arg1)
+void Dialog_staticBox_grille::on_comboBox_staticBox_model_currentTextChanged(const QString &arg1)
 {
     int band[8] = {63 , 125, 250, 500, 1000, 2000, 4000, 8000};
     QVector<QLineEdit*> v_lineEdit = {ui->lineEdit_63, ui->lineEdit_125, ui->lineEdit_250, ui->lineEdit_500, ui->lineEdit_1k, ui->lineEdit_2k, ui->lineEdit_4k, ui->lineEdit_8k};
     QMap<int,QString> eightNoi;
-    QString modelName = ui->comboBox_model->currentText();
+    QString modelName = ui->comboBox_staticBox_model->currentText();
     DBManager->queryEightNoi(eightNoi, RETURN_AIR_BOX_GRILLE_TABLE, RETURN_AIR_BOX_GRILLE_MODEL, modelName);
     for(int i = 0; i < 8; i++)
     {

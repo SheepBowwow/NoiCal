@@ -377,7 +377,7 @@ void Widget::deleteRowFromTable(QTableWidget *tableWidget_noise, QTableWidget *t
 }
 
 template <typename NoiType, typename DialogType>
-void Widget::noiseRevision(QTableWidget *tableWidget, int row,NoiType *noi, QVector<QString*>& items, int* cols, QString name)
+void Widget::noiseRevision(QTableWidget *tableWidget, int row,NoiType *& noi, QVector<QString*>& items, int* cols, int table_id_col, QString& table_id, QString name)
 {
     QWidget* widget = tableWidget->cellWidget(row, 0);
     QCheckBox* checkBox = widget->findChild<QCheckBox*>();
@@ -393,6 +393,8 @@ void Widget::noiseRevision(QTableWidget *tableWidget, int row,NoiType *noi, QVec
     {
         return;
     }
+
+    table_id = tableWidget->item(row, table_id_col)->text();
 
     // 创建模态对话框，并设置为模态
     DialogType* dialog;
@@ -413,6 +415,7 @@ void Widget::noiseRevision(QTableWidget *tableWidget, int row,NoiType *noi, QVec
         // 使用 static_cast 将 void* 转换为期望的类型
         NoiType* dialogNoi = static_cast<NoiType*>(dialog->getNoi());
         // 直接通过引用更新 'noi' 对象的内容
+        dialogNoi->table_id = table_id;
         *noi = *dialogNoi;
         for(int i = 0; i < items.size(); i++)
         {
@@ -425,8 +428,8 @@ void Widget::noiseRevision(QTableWidget *tableWidget, int row,NoiType *noi, QVec
 
 template <typename NoiType, typename DialogType>
 void Widget::noiseRevision(QTableWidget *currentTableWidget, QTableWidget *tableWidget_noise, QTableWidget *tableWidget_atten, QTableWidget *tableWidget_refl,
-                   int row,NoiType *noi, QVector<QString*>& items_noise, QVector<QString*>& items_atten, QVector<QString*>& items_refl,
-                   int* cols_noise, int* cols_atten, int* cols_refl, QString name)
+                   int row,NoiType *& noi, QVector<QString*>& items_noise, QVector<QString*>& items_atten, QVector<QString*>& items_refl,
+                   int* cols_noise, int* cols_atten, int* cols_refl, int table_id_col, QString& table_id, QString name)
 {
     QVector<QTableWidget *> tableWidgets = {tableWidget_noise, tableWidget_atten, tableWidget_refl};
     QVector<QVector<QString*>> items = {items_noise, items_atten, items_refl};
@@ -450,6 +453,8 @@ void Widget::noiseRevision(QTableWidget *currentTableWidget, QTableWidget *table
         return;
     }
 
+    table_id = (tableWidget_noise->item(row, table_id_col)->text());
+
     // 创建模态对话框，并设置为模态
     DialogType* dialog;
     if(name != "")
@@ -469,6 +474,7 @@ void Widget::noiseRevision(QTableWidget *currentTableWidget, QTableWidget *table
         // 使用 static_cast 将 void* 转换为期望的类型
         NoiType* dialogNoi = static_cast<NoiType*>(dialog->getNoi());
         // 直接通过引用更新 'noi' 对象的内容
+        dialogNoi->table_id = table_id;
         *noi = *dialogNoi;
         for(int i = 0; i < 3; i++)
         {
@@ -627,7 +633,7 @@ void Widget::initializeTreeWidget()
     ui->treeWidget->addTopLevelItem(item_system_list);    //系统清单
     ui->treeWidget->addTopLevelItem(item_room_define);   //计算房间
     ui->treeWidget->addTopLevelItem(item_room_calculate);   //噪音计算
-    ui->treeWidget->addTopLevelItem(item_report);   //报表
+    //ui->treeWidget->addTopLevelItem(item_report);   //报表
 
     // 设置子项为展开状态
     item_prj->setExpanded(true); // 这一行将子项设置为展开状态
@@ -1095,6 +1101,7 @@ void Widget::on_pushButton_fanNoi_del_clicked()
 void Widget::on_pushButton_fanNoi_revise_clicked()
 {
     int colCount = 18;
+    QString table_id = "";
     for (int row = 0; row < ui->tableWidget_fan_noi->rowCount(); ++row) {
 
         QWidget* widget = ui->tableWidget_fan_noi->cellWidget(row, 0); // Assuming the checkbox is in the first column (index 0)
@@ -1102,6 +1109,7 @@ void Widget::on_pushButton_fanNoi_revise_clicked()
         if (checkBox && checkBox->isChecked()) {
             Fan_noise *noi = new Fan_noise();
             noi->number = ui->tableWidget_fan_noi->item(row - 1,2)->text();
+            table_id = noi->table_id;
             noi->model = ui->tableWidget_fan_noi->item(row - 1,3)->text();
             noi->air_volume = ui->tableWidget_fan_noi->item(row - 1,4)->text();
             noi->static_pressure = ui->tableWidget_fan_noi->item(row - 1,5)->text();
@@ -1135,6 +1143,7 @@ void Widget::on_pushButton_fanNoi_revise_clicked()
             if (fanNoiseDialog->exec() == QDialog::Accepted)
             {
                 noi = static_cast<Fan_noise*>(fanNoiseDialog->getNoi());
+                noi->table_id = table_id;
                 ui->tableWidget_fan_noi->item(row - 1,2)->setText(noi->number);
                 ui->tableWidget_fan_noi->item(row - 1,3)->setText(noi->model);
                 ui->tableWidget_fan_noi->item(row - 1,4)->setText(noi->air_volume);
@@ -1167,6 +1176,8 @@ void Widget::on_pushButton_fanNoi_revise_clicked()
                 ui->tableWidget_fan_noi->item(row,15)->setText(noi->noi_out_8k);
                 ui->tableWidget_fan_noi->item(row,16)->setText(noi->noi_out_total);
             }
+
+            componentManager.updateRevisedComponent(noi->table_id, QSharedPointer<Fan_noise>(new Fan_noise(*noi)),"风机");
             delete noi;
         }
     }
@@ -1268,13 +1279,13 @@ void Widget::on_pushButton_fanCoil_noi_del_clicked()
 //修改按钮
 void Widget::on_pushButton_fanCoil_noi_revise_clicked()
 {
+    QString table_id = "";
     for (int row = 0; row < ui->tableWidget_fanCoil_noi->rowCount(); ++row) {
         QWidget* widget = ui->tableWidget_fanCoil_noi->cellWidget(row, 0); // Assuming the checkbox is in the first column (index 0)
         QCheckBox* checkBox = widget->findChild<QCheckBox*>(); // Find the checkbox within the widget
-
         if (checkBox && checkBox->isChecked()) {
-            qDebug() << "row: " << row <<"checkBox" << checkBox->isChecked();
             FanCoil_noise *noi = new FanCoil_noise();
+            table_id = ui->tableWidget_fanCoil_noi->item(row - 1,1)->text();
             noi->type = ui->tableWidget_fanCoil_noi->item(row - 1,2)->text();
             noi->model = ui->tableWidget_fanCoil_noi->item(row - 1,3)->text();
             noi->air_volume = ui->tableWidget_fanCoil_noi->item(row - 1,4)->text();
@@ -1309,11 +1320,12 @@ void Widget::on_pushButton_fanCoil_noi_revise_clicked()
             if (fanCoilNoiseDialog->exec() == QDialog::Accepted)
             {
                 noi = static_cast<FanCoil_noise*>(fanCoilNoiseDialog->getNoi());
-                ui->tableWidget_fanCoil_noi->item(row - 1,2)->setText(noi->brand);
-                ui->tableWidget_fanCoil_noi->item(row - 1,3)->setText(noi->type);
-                ui->tableWidget_fanCoil_noi->item(row - 1,4)->setText(noi->model);
-                ui->tableWidget_fanCoil_noi->item(row - 1,5)->setText(noi->air_volume);
-                ui->tableWidget_fanCoil_noi->item(row - 1,6)->setText(noi->static_pressure);
+                noi->table_id = table_id;   //设置table_id
+                ui->tableWidget_fanCoil_noi->item(row - 1,2)->setText(noi->type);
+                ui->tableWidget_fanCoil_noi->item(row - 1,3)->setText(noi->model);
+                ui->tableWidget_fanCoil_noi->item(row - 1,4)->setText(noi->air_volume);
+                ui->tableWidget_fanCoil_noi->item(row - 1,5)->setText(noi->static_pressure);
+                ui->tableWidget_fanCoil_noi->item(row - 1,6)->setText(noi->brand);
 
                 ui->tableWidget_fanCoil_noi->item(row - 1,8)->setText(noi->noi_in_63);
                 ui->tableWidget_fanCoil_noi->item(row - 1,9)->setText(noi->noi_in_125);
@@ -1341,6 +1353,7 @@ void Widget::on_pushButton_fanCoil_noi_revise_clicked()
                 ui->tableWidget_fanCoil_noi->item(row,15)->setText(noi->noi_out_8k);
                 ui->tableWidget_fanCoil_noi->item(row,16)->setText(noi->noi_out_total);
             }
+            componentManager.updateRevisedComponent(noi->table_id, QSharedPointer<FanCoil_noise>(new FanCoil_noise(*noi)),"风机盘管");
             delete noi;
         }
     }
@@ -1535,14 +1548,16 @@ void Widget::on_pushButton_air_noi_revise_clicked()
 {
     int colCount = 19;
     QString origin_type;
+    QString table_id = "";
     for (int row = 0; row < ui->tableWidget_air_single_fan_noi->rowCount(); ++row) {
         QWidget* widget = ui->tableWidget_air_single_fan_noi->cellWidget(row, 0); // Assuming the checkbox is in the first column (index 0)
         QCheckBox* checkBox = widget->findChild<QCheckBox*>(); // Find the checkbox within the widget
         if (checkBox && checkBox->isChecked()) {
             Aircondition_noise *noi = new Aircondition_noise();
-            if(ui->tableWidget_air_single_fan_noi->item(row - 1,1)->text() == ui->tableWidget_air_single_fan_noi->item(row - 3,1)->text())
+            if(row - 3 > 0 && ui->tableWidget_air_single_fan_noi->item(row - 1,1)->text() == ui->tableWidget_air_single_fan_noi->item(row - 3,1)->text())
             {
                 noi->type = "双风机";
+                table_id = ui->tableWidget_air_single_fan_noi->item(row - 3,1)->text();
                 noi->number = ui->tableWidget_air_single_fan_noi->item(row - 3,2)->text();
                 noi->brand = ui->tableWidget_air_single_fan_noi->item(row - 3,3)->text();
                 noi->model = ui->tableWidget_air_single_fan_noi->item(row - 3,4)->text();
@@ -1592,6 +1607,7 @@ void Widget::on_pushButton_air_noi_revise_clicked()
             else
             {
                 noi->type = "单风机";
+                table_id = ui->tableWidget_air_single_fan_noi->item(row - 1,1)->text();
                 noi->number = ui->tableWidget_air_single_fan_noi->item(row - 1,2)->text();
                 noi->model = ui->tableWidget_air_single_fan_noi->item(row - 1,3)->text();
                 noi->air_volume = ui->tableWidget_air_single_fan_noi->item(row - 1,4)->text();
@@ -1733,6 +1749,9 @@ void Widget::on_pushButton_air_noi_revise_clicked()
                     //ui->tableWidget_air_single_fan_noi->
                 }
             }
+            noi->table_id = table_id;
+            componentManager.updateRevisedComponent(noi->table_id, QSharedPointer<Aircondition_noise>(new Aircondition_noise(*noi)),"空调器");
+
             delete noi;
         }
     }
@@ -1824,6 +1843,8 @@ void Widget::on_pushButton_VAV_terminal_revise_clicked()
 {
     QTableWidget* tableWidget = ui->tableWidget_VAV_terminal;
     VAV_terminal_noise *noi = new VAV_terminal_noise();
+    QString table_id = "";
+    int table_id_col = 1;
     QVector<QString*> items = {
         &noi->number,        
         &noi->model,
@@ -1844,7 +1865,8 @@ void Widget::on_pushButton_VAV_terminal_revise_clicked()
 
     for (int row = 0; row < tableWidget->rowCount(); ++row)
     {
-        noiseRevision<VAV_terminal_noise, Dialog_VAV_terminal>(tableWidget, row, noi, items, cols);
+        noiseRevision<VAV_terminal_noise, Dialog_VAV_terminal>(tableWidget, row, noi, items, cols, table_id_col, table_id);
+        componentManager.updateRevisedComponent(table_id, QSharedPointer<VAV_terminal_noise>(new VAV_terminal_noise(*noi)),"变风量末端");
     }
 }
 
@@ -1914,6 +1936,8 @@ void Widget::on_pushButton_circular_damper_revise_clicked()
 {
     QTableWidget* tableWidget = ui->tableWidget_circular_damper;
     Circular_damper_noi *noi = new Circular_damper_noi();
+    QString table_id = "";
+    int table_id_col = 1;
     QVector<QString*> items = {
         &noi->model,
         &noi->angle,
@@ -1934,7 +1958,8 @@ void Widget::on_pushButton_circular_damper_revise_clicked()
 
     for (int row = 0; row < tableWidget->rowCount(); ++row)
     {
-        noiseRevision<Circular_damper_noi, Dialog_circular_damper>(tableWidget, row, noi, items, cols);
+        noiseRevision<Circular_damper_noi, Dialog_circular_damper>(tableWidget, row, noi, items, cols, table_id_col, table_id);
+        componentManager.updateRevisedComponent(table_id, QSharedPointer<Circular_damper_noi>(new Circular_damper_noi(*noi)),"圆形调风门");
     }
 }
 
@@ -2006,7 +2031,9 @@ void Widget::on_pushButton_rect_damper_revise_clicked()
 {
     QTableWidget* tableWidget = ui->tableWidget_rect_damper;
     Rect_damper_noi *noi = new Rect_damper_noi();
-    QVector<QString*> items = {        
+    QString table_id = "";
+    int table_id_col = 1;
+    QVector<QString*> items = {
         &noi->model,
         &noi->angle,
         &noi->air_volume,
@@ -2026,7 +2053,8 @@ void Widget::on_pushButton_rect_damper_revise_clicked()
 
     for (int row = 0; row < tableWidget->rowCount(); ++row)
     {
-        noiseRevision<Rect_damper_noi, Dialog_rect_damper>(tableWidget, row, noi, items, cols);
+        noiseRevision<Rect_damper_noi, Dialog_rect_damper>(tableWidget, row, noi, items, cols, table_id_col, table_id);
+        componentManager.updateRevisedComponent(table_id, QSharedPointer<Rect_damper_noi>(new Rect_damper_noi(*noi)),"方形调风门");
     }
 }
 
@@ -2181,7 +2209,9 @@ void Widget::on_pushButton_air_diff_revise_clicked()
     QTableWidget* tableWidget_atten = ui->tableWidget_air_diff_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_air_diff_terminal_refl;
     AirDiff_noise *noi = new AirDiff_noise();
-    QVector<QString*> items_noise = {        
+    int table_id_col = 1;
+    QString table_id = "";
+    QVector<QString*> items_noise = {
         &noi->air_distributor_model,
         &noi->diffuser_model,
         &noi->type,
@@ -2237,7 +2267,8 @@ void Widget::on_pushButton_air_diff_revise_clicked()
 
     for (int row = 0; row < currentTableWidget->rowCount(); ++row)
     {
-        noiseRevision<AirDiff_noise, Dialog_air_diff>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl,"布风器+散流器");
+        noiseRevision<AirDiff_noise, Dialog_air_diff>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl, table_id_col, table_id,"布风器+散流器");
+        componentManager.updateRevisedComponent(table_id, QSharedPointer<AirDiff_noise>(new AirDiff_noise(*noi)),"布风器+散流器");
     }
 }
 
@@ -2248,7 +2279,9 @@ void Widget::on_pushButton_air_diff_terminal_atten_revise_clicked()
     QTableWidget* tableWidget_atten = ui->tableWidget_air_diff_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_air_diff_terminal_refl;
     AirDiff_noise *noi = new AirDiff_noise();
-    QVector<QString*> items_noise = {        
+    int table_id_col = 1;
+    QString table_id = "";
+    QVector<QString*> items_noise = {
         &noi->air_distributor_model,
         &noi->diffuser_model,
         &noi->type,
@@ -2304,7 +2337,8 @@ void Widget::on_pushButton_air_diff_terminal_atten_revise_clicked()
 
     for (int row = 0; row < currentTableWidget->rowCount(); ++row)
     {
-        noiseRevision<AirDiff_noise, Dialog_air_diff>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl,"布风器+散流器");
+        noiseRevision<AirDiff_noise, Dialog_air_diff>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl, table_id_col, table_id,"布风器+散流器");
+        componentManager.updateRevisedComponent(table_id, QSharedPointer<AirDiff_noise>(new AirDiff_noise(*noi)),"布风器+散流器");
     }
 }
 
@@ -2315,7 +2349,10 @@ void Widget::on_pushButton_air_diff_terminal_refl_revise_clicked()
     QTableWidget* tableWidget_atten = ui->tableWidget_air_diff_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_air_diff_terminal_refl;
     AirDiff_noise *noi = new AirDiff_noise();
-    QVector<QString*> items_noise = {        
+
+    int table_id_col = 1;
+    QString table_id = "";
+    QVector<QString*> items_noise = {
         &noi->air_distributor_model,
         &noi->diffuser_model,
         &noi->type,
@@ -2371,7 +2408,8 @@ void Widget::on_pushButton_air_diff_terminal_refl_revise_clicked()
 
     for (int row = 0; row < currentTableWidget->rowCount(); ++row)
     {
-        noiseRevision<AirDiff_noise, Dialog_air_diff>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl,"布风器+散流器");
+        noiseRevision<AirDiff_noise, Dialog_air_diff>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl, table_id_col, table_id,"布风器+散流器");
+        componentManager.updateRevisedComponent(table_id, QSharedPointer<AirDiff_noise>(new AirDiff_noise(*noi)),"布风器+散流器");
     }
 }
 #pragma endregion}
@@ -2609,7 +2647,9 @@ void Widget::on_pushButton_pump_send_revise_clicked()
         typeName = "送风头";
     }
 
-    QVector<QString*> items_noise = {        
+    int table_id_col = 1;
+    QString table_id = "";
+    QVector<QString*> items_noise = {
         &noi->model,
         &noi->type,
         &noi->size,
@@ -2664,7 +2704,8 @@ void Widget::on_pushButton_pump_send_revise_clicked()
     {
         noiseRevision<PumpSend_noise, Dialog_pump_send>(currentTableWidget, tableWidget_noise, tableWidget_atten,
                                                         tableWidget_refl, row, noi, items_noise, items_atten, items_refl,
-                                                        cols_noise, cols_atten, cols_refl,typeName);
+                                                        cols_noise, cols_atten, cols_refl, table_id_col, table_id,typeName);
+        componentManager.updateRevisedComponent(table_id, QSharedPointer<PumpSend_noise>(new PumpSend_noise(*noi)),"抽/送风头");
     }
 
     delete noi;  // 在这里删除 noi 对象
@@ -2761,29 +2802,29 @@ void Widget::on_tableWidget_send_tuyere_itemDoubleClicked(QTableWidgetItem *item
 #pragma region "stack_staticBox_grille"{
 void Widget::initTableWidget_staticBox_grille()
 {
-    int colCount = 16;
+    int colCount = 17;
     QStringList headerText;
-    headerText<< "" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
+    headerText<< "" << "序号" << "静压箱型号" << "格栅型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 250, 130, 130, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90};
+    int columnWidths[] = {40, 50, 250, 250, 130, 130, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90};
     initTableWidget(ui->tableWidget_staticBox_grille, headerText, columnWidths, colCount);
 
 
-    colCount = 15;
+    colCount = 16;
     QStringList headerText_atten;
-    headerText_atten<< "" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
+    headerText_atten<< "" << "序号" << "静压箱型号" << "格栅型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
                     << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int atten_columnWidths[] = {40, 50, 230, 130, 130, 140, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    int atten_columnWidths[] = {40, 50, 230, 230, 130, 130, 140, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_staticBox_grille_terminal_atten, headerText_atten, atten_columnWidths, colCount);
 
 
-    colCount = 15;
+    colCount = 16;
     QStringList headerText_refl;
-    headerText_refl<< "" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
+    headerText_refl<< "" << "序号" << "静压箱型号" << "格栅型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int refl_columnWidths[] = {40, 50, 230, 130, 130, 140, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    int refl_columnWidths[] = {40, 50, 230, 230, 130, 130, 140, 80, 80, 80, 80, 80, 80, 80, 80, 90};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_staticBox_grille_terminal_refl, headerText_refl, refl_columnWidths, colCount);
@@ -2803,7 +2844,8 @@ void Widget::on_pushButton_staticBox_grille_add_clicked()
         if (noi != nullptr) {
             QStringList data_noise = {
                 noi->table_id,                
-                noi->model,
+                noi->staticBox_model,
+                noi->grille_model,
                 noi->type,
                 noi->size,
                 noi->brand,
@@ -2821,7 +2863,8 @@ void Widget::on_pushButton_staticBox_grille_add_clicked()
 
             QStringList data_atten = {
                 noi->table_id,                
-                noi->model,
+                noi->staticBox_model,
+                noi->grille_model,
                 noi->type,
                 noi->size,
                 noi->brand,
@@ -2838,7 +2881,8 @@ void Widget::on_pushButton_staticBox_grille_add_clicked()
 
             QStringList data_refl = {
                 QString::number(tableWidget_noise->rowCount() + 1),                
-                noi->model,
+                noi->staticBox_model,
+                noi->grille_model,
                 noi->type,
                 noi->size,
                 noi->brand,
@@ -2898,8 +2942,12 @@ void Widget::on_pushButton_staticBox_grille_terminal_atten_revise_clicked()
     QTableWidget* tableWidget_atten = ui->tableWidget_staticBox_grille_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_staticBox_grille_terminal_refl;
     StaticBox_grille_noise *noi = new StaticBox_grille_noise();
-    QVector<QString*> items_noise = {        
-        &noi->model,
+
+    int table_id_col = 1;
+    QString table_id = "";
+    QVector<QString*> items_noise = {
+        &noi->staticBox_model,
+        &noi->grille_model,
         &noi->type,
         &noi->size,
         &noi->brand,
@@ -2916,7 +2964,8 @@ void Widget::on_pushButton_staticBox_grille_terminal_atten_revise_clicked()
     int cols_noise[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
 
     QVector<QString*> items_atten = {        
-        &noi->model,
+        &noi->staticBox_model,
+        &noi->grille_model,
         &noi->type,
         &noi->size,
         &noi->brand,
@@ -2932,7 +2981,8 @@ void Widget::on_pushButton_staticBox_grille_terminal_atten_revise_clicked()
     int cols_atten[] = {2,3,4,5,6,7,8,9,10,11,12,13};
 
     QVector<QString*> items_refl = {        
-        &noi->model,
+        &noi->staticBox_model,
+        &noi->grille_model,
         &noi->type,
         &noi->size,
         &noi->brand,
@@ -2951,7 +3001,8 @@ void Widget::on_pushButton_staticBox_grille_terminal_atten_revise_clicked()
 
     for (int row = 0; row < currentTableWidget->rowCount(); ++row)
     {
-        noiseRevision<StaticBox_grille_noise, Dialog_staticBox_grille>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl);
+        noiseRevision<StaticBox_grille_noise, Dialog_staticBox_grille>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl, table_id_col, table_id);
+        componentManager.updateRevisedComponent(table_id, QSharedPointer<StaticBox_grille_noise>(new StaticBox_grille_noise(*noi)),"静压箱+格栅");
     }
 }
 
@@ -2962,8 +3013,12 @@ void Widget::on_pushButton_staticBox_grille_terminal_refl_revise_clicked()
     QTableWidget* tableWidget_atten = ui->tableWidget_staticBox_grille_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_staticBox_grille_terminal_refl;
     StaticBox_grille_noise *noi = new StaticBox_grille_noise();
-    QVector<QString*> items_noise = {        
-        &noi->model,
+
+    int table_id_col = 1;
+    QString table_id = "";
+    QVector<QString*> items_noise = {
+        &noi->staticBox_model,
+        &noi->grille_model,
         &noi->type,
         &noi->size,
         &noi->brand,
@@ -2980,7 +3035,8 @@ void Widget::on_pushButton_staticBox_grille_terminal_refl_revise_clicked()
     int cols_noise[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
 
     QVector<QString*> items_atten = {        
-        &noi->model,
+        &noi->staticBox_model,
+        &noi->grille_model,
         &noi->type,
         &noi->size,
         &noi->brand,
@@ -2996,7 +3052,8 @@ void Widget::on_pushButton_staticBox_grille_terminal_refl_revise_clicked()
     int cols_atten[] = {2,3,4,5,6,7,8,9,10,11,12,13};
 
     QVector<QString*> items_refl = {        
-        &noi->model,
+        &noi->staticBox_model,
+        &noi->grille_model,
         &noi->type,
         &noi->size,
         &noi->brand,
@@ -3015,7 +3072,8 @@ void Widget::on_pushButton_staticBox_grille_terminal_refl_revise_clicked()
 
     for (int row = 0; row < currentTableWidget->rowCount(); ++row)
     {
-        noiseRevision<StaticBox_grille_noise, Dialog_staticBox_grille>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl);
+        noiseRevision<StaticBox_grille_noise, Dialog_staticBox_grille>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl, table_id_col, table_id);
+        componentManager.updateRevisedComponent(table_id, QSharedPointer<StaticBox_grille_noise>(new StaticBox_grille_noise(*noi)),"静压箱+格栅");
     }
 }
 
@@ -3026,8 +3084,12 @@ void Widget::on_pushButton_staticBox_grille_revise_clicked()
     QTableWidget* tableWidget_atten = ui->tableWidget_staticBox_grille_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_staticBox_grille_terminal_refl;
     StaticBox_grille_noise *noi = new StaticBox_grille_noise();
-    QVector<QString*> items_noise = {        
-        &noi->model,
+
+    int table_id_col = 1;
+    QString table_id = "";
+    QVector<QString*> items_noise = {
+        &noi->staticBox_model,
+        &noi->grille_model,
         &noi->type,
         &noi->size,
         &noi->brand,
@@ -3044,7 +3106,8 @@ void Widget::on_pushButton_staticBox_grille_revise_clicked()
     int cols_noise[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
 
     QVector<QString*> items_atten = {        
-        &noi->model,
+        &noi->staticBox_model,
+        &noi->grille_model,
         &noi->type,
         &noi->size,
         &noi->brand,
@@ -3060,7 +3123,8 @@ void Widget::on_pushButton_staticBox_grille_revise_clicked()
     int cols_atten[] = {2,3,4,5,6,7,8,9,10,11,12,13};
 
     QVector<QString*> items_refl = {        
-        &noi->model,
+        &noi->staticBox_model,
+        &noi->grille_model,
         &noi->type,
         &noi->size,
         &noi->brand,
@@ -3079,7 +3143,8 @@ void Widget::on_pushButton_staticBox_grille_revise_clicked()
 
     for (int row = 0; row < currentTableWidget->rowCount(); ++row)
     {
-        noiseRevision<StaticBox_grille_noise, Dialog_staticBox_grille>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl);
+        noiseRevision<StaticBox_grille_noise, Dialog_staticBox_grille>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl, table_id_col, table_id);
+        componentManager.updateRevisedComponent(table_id, QSharedPointer<StaticBox_grille_noise>(new StaticBox_grille_noise(*noi)),"静压箱+格栅");
     }
 }
 
@@ -3233,7 +3298,9 @@ void Widget::on_pushButton_disp_vent_terminal_revise_clicked()
     QTableWidget* tableWidget_atten = ui->tableWidget_disp_vent_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_disp_vent_terminal_refl;
     Disp_vent_terminal_noise *noi = new Disp_vent_terminal_noise();
-    QVector<QString*> items_noise = {        
+    int table_id_col = 1;
+    QString table_id = "";
+    QVector<QString*> items_noise = {
         &noi->model,
         &noi->type,
         &noi->size,
@@ -3286,7 +3353,8 @@ void Widget::on_pushButton_disp_vent_terminal_revise_clicked()
 
     for (int row = 0; row < currentTableWidget->rowCount(); ++row)
     {
-        noiseRevision<Disp_vent_terminal_noise, Dialog_disp_vent_terminal>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl);
+        noiseRevision<Disp_vent_terminal_noise, Dialog_disp_vent_terminal>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl, table_id_col, table_id);
+        componentManager.updateRevisedComponent(table_id, QSharedPointer<Disp_vent_terminal_noise>(new Disp_vent_terminal_noise(*noi)),"置换通风末端");
     }
 }
 
@@ -3297,7 +3365,10 @@ void Widget::on_pushButton_disp_vent_terminal_atten_revise_clicked()
     QTableWidget* tableWidget_atten = ui->tableWidget_disp_vent_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_disp_vent_terminal_refl;
     Disp_vent_terminal_noise *noi = new Disp_vent_terminal_noise();
-    QVector<QString*> items_noise = {        
+
+    int table_id_col = 1;
+    QString table_id = "";
+    QVector<QString*> items_noise = {
         &noi->model,
         &noi->type,
         &noi->size,
@@ -3350,7 +3421,8 @@ void Widget::on_pushButton_disp_vent_terminal_atten_revise_clicked()
 
     for (int row = 0; row < currentTableWidget->rowCount(); ++row)
     {
-        noiseRevision<Disp_vent_terminal_noise, Dialog_disp_vent_terminal>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl);
+        noiseRevision<Disp_vent_terminal_noise, Dialog_disp_vent_terminal>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl, table_id_col, table_id);
+        componentManager.updateRevisedComponent(table_id, QSharedPointer<Disp_vent_terminal_noise>(new Disp_vent_terminal_noise(*noi)),"置换通风末端");
     }
 }
 
@@ -3361,7 +3433,10 @@ void Widget::on_pushButton_disp_vent_terminal_refl_revise_clicked()
     QTableWidget* tableWidget_atten = ui->tableWidget_disp_vent_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_disp_vent_terminal_refl;
     Disp_vent_terminal_noise *noi = new Disp_vent_terminal_noise();
-    QVector<QString*> items_noise = {        
+
+    int table_id_col = 1;
+    QString table_id = "";
+    QVector<QString*> items_noise = {
         &noi->model,
         &noi->type,
         &noi->size,
@@ -3414,7 +3489,8 @@ void Widget::on_pushButton_disp_vent_terminal_refl_revise_clicked()
 
     for (int row = 0; row < currentTableWidget->rowCount(); ++row)
     {
-        noiseRevision<Disp_vent_terminal_noise, Dialog_disp_vent_terminal>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl);
+        noiseRevision<Disp_vent_terminal_noise, Dialog_disp_vent_terminal>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl, table_id_col, table_id);
+        componentManager.updateRevisedComponent(table_id, QSharedPointer<Disp_vent_terminal_noise>(new Disp_vent_terminal_noise(*noi)),"置换通风末端");
     }
 }
 
@@ -3573,7 +3649,10 @@ void Widget::on_pushButton_other_send_terminal_revise_clicked()
     QTableWidget* tableWidget_atten = ui->tableWidget_other_send_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_other_send_terminal_refl;
     Other_send_terminal_noise *noi = new Other_send_terminal_noise();
-    QVector<QString*> items_noise = {        
+
+    int table_id_col = 1;
+    QString table_id = "";
+    QVector<QString*> items_noise = {
         &noi->model,
         &noi->type,
         &noi->size,
@@ -3629,7 +3708,8 @@ void Widget::on_pushButton_other_send_terminal_revise_clicked()
 
     for (int row = 0; row < currentTableWidget->rowCount(); ++row)
     {
-        noiseRevision<Other_send_terminal_noise, Dialog_other_send_terminal>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl);
+        noiseRevision<Other_send_terminal_noise, Dialog_other_send_terminal>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl, table_id_col, table_id);
+        componentManager.updateRevisedComponent(table_id, QSharedPointer<Other_send_terminal_noise>(new Other_send_terminal_noise(*noi)),"置换通风末端");
     }
 }
 
@@ -3640,6 +3720,9 @@ void Widget::on_pushButton_other_send_terminal_atten_revise_clicked()
     QTableWidget* tableWidget_atten = ui->tableWidget_other_send_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_other_send_terminal_refl;
     Other_send_terminal_noise *noi = new Other_send_terminal_noise();
+
+    int table_id_col = 1;
+    QString table_id = "";
     QVector<QString*> items_noise = {
         &noi->model,
         &noi->type,
@@ -3696,7 +3779,8 @@ void Widget::on_pushButton_other_send_terminal_atten_revise_clicked()
 
     for (int row = 0; row < currentTableWidget->rowCount(); ++row)
     {
-        noiseRevision<Other_send_terminal_noise, Dialog_other_send_terminal>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl);
+        noiseRevision<Other_send_terminal_noise, Dialog_other_send_terminal>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl, table_id_col, table_id);
+        componentManager.updateRevisedComponent(table_id, QSharedPointer<Other_send_terminal_noise>(new Other_send_terminal_noise(*noi)),"置换通风末端");
     }
 }
 
@@ -3707,11 +3791,14 @@ void Widget::on_pushButton_other_send_terminal_refl_revise_clicked()
     QTableWidget* tableWidget_atten = ui->tableWidget_other_send_terminal_atten;
     QTableWidget* tableWidget_refl = ui->tableWidget_other_send_terminal_refl;
     Other_send_terminal_noise *noi = new Other_send_terminal_noise();
+
+    int table_id_col = 1;
+    QString table_id = "";
     QVector<QString*> items_noise = {
-        &noi->brand,
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->noi_63,
         &noi->noi_125,
         &noi->noi_250,
@@ -3726,10 +3813,10 @@ void Widget::on_pushButton_other_send_terminal_refl_revise_clicked()
     int cols_noise[] = {2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 
     QVector<QString*> items_atten = {
-        &noi->brand,
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->atten_63,
         &noi->atten_125,
         &noi->atten_250,
@@ -3743,10 +3830,10 @@ void Widget::on_pushButton_other_send_terminal_refl_revise_clicked()
     int cols_atten[] = {2,3,4,5,6,7,8,9,10,11,12,13,14};
 
     QVector<QString*> items_refl = {
-        &noi->brand,
         &noi->model,
         &noi->type,
         &noi->size,
+        &noi->brand,
         &noi->refl_63,
         &noi->refl_125,
         &noi->refl_250,
@@ -3763,7 +3850,8 @@ void Widget::on_pushButton_other_send_terminal_refl_revise_clicked()
 
     for (int row = 0; row < currentTableWidget->rowCount(); ++row)
     {
-        noiseRevision<Other_send_terminal_noise, Dialog_other_send_terminal>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl);
+        noiseRevision<Other_send_terminal_noise, Dialog_other_send_terminal>(currentTableWidget, tableWidget_noise, tableWidget_atten, tableWidget_refl, row, noi, items_noise, items_atten, items_refl, cols_noise, cols_atten, cols_refl, table_id_col, table_id);
+        componentManager.updateRevisedComponent(table_id, QSharedPointer<Other_send_terminal_noise>(new Other_send_terminal_noise(*noi)),"置换通风末端");
     }
 }
 #pragma endregion}
@@ -3832,9 +3920,11 @@ void Widget::on_pushButton_static_box_revise_clicked()
 {
     QTableWidget* tableWidget = ui->tableWidget_static_box;
     Static_box *noi = new Static_box();
-    QVector<QString*> items = {       
+    QString table_id = "";
+    int table_id_col = 1;
+    QVector<QString*> items = {
         &noi->model,
-         &noi->brand,
+        &noi->brand,
         &noi->noi_63,
         &noi->noi_125,
         &noi->noi_250,
@@ -3849,7 +3939,8 @@ void Widget::on_pushButton_static_box_revise_clicked()
 
     for (int row = 0; row < tableWidget->rowCount(); ++row)
     {
-        noiseRevision<Static_box, Dialog_static_box>(tableWidget, row, noi, items, cols);
+        noiseRevision<Static_box, Dialog_static_box>(tableWidget, row, noi, items, cols, table_id_col, table_id);
+        componentManager.updateRevisedComponent(table_id, QSharedPointer<Static_box>(new Static_box(*noi)),"静压箱");
     }
 }
 #pragma endregion}
@@ -3915,7 +4006,9 @@ void Widget::on_pushButton_duct_with_multi_ranc_revise_clicked()
 {
     QTableWidget* tableWidget = ui->tableWidget_duct_with_multi_ranc;
     Multi_ranc_atten *noi = new Multi_ranc_atten();
-    QVector<QString*> items = {        
+    QString table_id = "";
+    int table_id_col = 1;
+    QVector<QString*> items = {
         &noi->model,
         &noi->brand,
         &noi->noi_63,
@@ -3932,7 +4025,8 @@ void Widget::on_pushButton_duct_with_multi_ranc_revise_clicked()
 
     for (int row = 0; row < tableWidget->rowCount(); ++row)
     {
-        noiseRevision<Multi_ranc_atten, Dialog_duct_with_multi_ranc>(tableWidget, row, noi, items, cols);
+        noiseRevision<Multi_ranc_atten, Dialog_duct_with_multi_ranc>(tableWidget, row, noi, items, cols, table_id_col, table_id);
+        componentManager.updateRevisedComponent(table_id, QSharedPointer<Multi_ranc_atten>(new Multi_ranc_atten(*noi)),"风道多分支");
     }
 }
 
@@ -3999,7 +4093,9 @@ void Widget::on_pushButton_tee_revise_clicked()
 {
     QTableWidget* tableWidget = ui->tableWidget_tee;
     Tee_atten *noi = new Tee_atten();
-    QVector<QString*> items = {        
+    QString table_id = "";
+    int table_id_col = 1;
+    QVector<QString*> items = {
         &noi->model,
         &noi->brand,
         &noi->noi_63,
@@ -4016,7 +4112,8 @@ void Widget::on_pushButton_tee_revise_clicked()
 
     for (int row = 0; row < tableWidget->rowCount(); ++row)
     {
-        noiseRevision<Tee_atten, Dialog_tee>(tableWidget, row, noi, items, cols);
+        noiseRevision<Tee_atten, Dialog_tee>(tableWidget, row, noi, items, cols, table_id_col, table_id);
+        componentManager.updateRevisedComponent(table_id, QSharedPointer<Tee_atten>(new Tee_atten(*noi)),"三通衰减");
     }
 }
 
@@ -4090,6 +4187,8 @@ void Widget::on_pushButton_pipe_revise_clicked()
 {
     QTableWidget* tableWidget = ui->tableWidget_duct_with_multi_ranc;
     Pipe_atten *noi = new Pipe_atten();
+    QString table_id = "";
+    int table_id_col = 1;
     QVector<QString*> items = {
         &noi->model,
         &noi->type,
@@ -4107,7 +4206,8 @@ void Widget::on_pushButton_pipe_revise_clicked()
 
     for (int row = 0; row < tableWidget->rowCount(); ++row)
     {
-        noiseRevision<Pipe_atten, Dialog_pipe>(tableWidget, row, noi, items, cols);
+        noiseRevision<Pipe_atten, Dialog_pipe>(tableWidget, row, noi, items, cols, table_id_col, table_id);
+        componentManager.updateRevisedComponent(table_id, QSharedPointer<Pipe_atten>(new Pipe_atten(*noi)),"直管衰减");
     }
 }
 
@@ -4175,6 +4275,8 @@ void Widget::on_pushButton_elbow_revise_clicked()
 {
     QTableWidget* tableWidget = ui->tableWidget_elbow;
     Elbow_atten *noi = new Elbow_atten();
+    QString table_id = "";
+    int table_id_col = 1;
     QVector<QString*> items = {
         &noi->model,
         &noi->type,
@@ -4192,7 +4294,8 @@ void Widget::on_pushButton_elbow_revise_clicked()
 
     for (int row = 0; row < tableWidget->rowCount(); ++row)
     {
-        noiseRevision<Elbow_atten, Dialog_elbow>(tableWidget, row, noi, items, cols);
+        noiseRevision<Elbow_atten, Dialog_elbow>(tableWidget, row, noi, items, cols, table_id_col, table_id);
+        componentManager.updateRevisedComponent(table_id, QSharedPointer<Elbow_atten>(new Elbow_atten(*noi)),"弯头衰减");
     }
 }
 
@@ -4259,6 +4362,8 @@ void Widget::on_pushButton_reducer_revise_clicked()
 {
     QTableWidget* tableWidget = ui->tableWidget_reducer;
     Reducer_atten *noi = new Reducer_atten();
+    QString table_id = "";
+    int table_id_col = 1;
     QVector<QString*> items = {
         &noi->model,
         &noi->type,
@@ -4276,7 +4381,8 @@ void Widget::on_pushButton_reducer_revise_clicked()
 
     for (int row = 0; row < tableWidget->rowCount(); ++row)
     {
-        noiseRevision<Reducer_atten, Dialog_reducer>(tableWidget, row, noi, items, cols);
+        noiseRevision<Reducer_atten, Dialog_reducer>(tableWidget, row, noi, items, cols, table_id_col, table_id);
+        componentManager.updateRevisedComponent(table_id, QSharedPointer<Reducer_atten>(new Reducer_atten(*noi)),"变径衰减");
     }
 }
 
@@ -4426,6 +4532,8 @@ void Widget::on_pushButton_silencer_revise_clicked()
 {
     QTableWidget* tableWidget = nullptr;
     QString name = "";
+    QString table_id = "";
+    int table_id_col = 1;
     if(ui->stackedWidget_silencer_table->currentWidget() == ui->page_circular_silencer)
     {
         tableWidget = ui->tableWidget_circular_silencer;
@@ -4464,7 +4572,8 @@ void Widget::on_pushButton_silencer_revise_clicked()
 
     for (int row = 0; row < tableWidget->rowCount(); ++row)
     {
-        noiseRevision<Silencer_atten, Dialog_silencer>(tableWidget, row, noi, items, cols, name);
+        noiseRevision<Silencer_atten, Dialog_silencer>(tableWidget, row, noi, items, cols, table_id_col, table_id, name);
+        componentManager.updateRevisedComponent(table_id, QSharedPointer<Silencer_atten>(new Silencer_atten(*noi)),"消声器");
     }
 
     delete noi;  // 在这里删除 noi 对象

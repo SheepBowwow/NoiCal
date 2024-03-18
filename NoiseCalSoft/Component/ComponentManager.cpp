@@ -61,6 +61,227 @@ void ComponentManager::addComponent(QSharedPointer<ComponentBase> component, QSt
     else if(type == "变风量末端") VAVTerminals.append(qSharedPointerCast<VAV_terminal_noise>(component));
 }
 
+void ComponentManager::updateRevisedComponent(QString table_id, QSharedPointer<ComponentBase> component, QString type)
+{
+    //使用基类指针进行处理
+    if (type == "布风器+散流器")
+    {
+        QSharedPointer<AirDiff_noise> input_component = qSharedPointerCast<AirDiff_noise>(component);
+        auto it = airDiffs.begin();
+        for ( ; it != airDiffs.end(); ++it) {
+            // 使用QSharedPointer，可以直接解引用来访问对象的成员
+            if (table_id == (*it)->table_id) {
+                (*it) = input_component;  // 如果找到，替换
+                break;
+            }
+        }
+    }
+    else if(type == "空调器")
+    {
+        QSharedPointer<Aircondition_noise> input_component = qSharedPointerCast<Aircondition_noise>(component);
+        auto it = airConditions.begin();
+        for ( ; it != airConditions.end(); ++it) {
+            // 使用QSharedPointer，可以直接解引用来访问对象的成员
+            if (table_id == (*it)->table_id) {
+                (*it) = input_component;  // 如果找到，替换
+                break;
+            }
+        }
+    }
+    else if(type == "圆形调风门")
+    {
+        QSharedPointer<Circular_damper_noi> input_component = qSharedPointerCast<Circular_damper_noi>(component);
+        auto it = circularDampers.begin();
+        for ( ; it != circularDampers.end(); ++it) {
+            // 使用QSharedPointer，可以直接解引用来访问对象的成员
+            if (table_id == (*it)->table_id) {
+                (*it) = input_component;  // 如果找到，替换
+                break;
+            }
+        }
+    }
+    else if(type == "置换通风末端")
+    {
+        QSharedPointer<Disp_vent_terminal_noise> input_component = qSharedPointerCast<Disp_vent_terminal_noise>(component);
+        auto it = dispVentTerminals.begin();
+        for ( ; it != dispVentTerminals.end(); ++it) {
+            // 使用QSharedPointer，可以直接解引用来访问对象的成员
+            if (table_id == (*it)->table_id) {
+                (*it) = input_component;  // 如果找到，替换
+                break;
+            }
+        }
+    }
+    else if(type == "风道多分支")
+    {
+        QSharedPointer<Multi_ranc_atten> input_component = qSharedPointerCast<Multi_ranc_atten>(component);
+        auto it = multiRancs.begin();
+        for ( ; it != multiRancs.end(); ++it) {
+            // 使用QSharedPointer，可以直接解引用来访问对象的成员
+            if (table_id == (*it)->table_id) {
+                (*it) = input_component;  // 如果找到，替换
+                break;
+            }
+        }
+    }
+    else if(type == "弯头")
+    {
+        QSharedPointer<Elbow_atten> input_component = qSharedPointerCast<Elbow_atten>(component);
+        auto it = elbows.begin();
+        for ( ; it != elbows.end(); ++it) {
+            // 使用QSharedPointer，可以直接解引用来访问对象的成员
+            if (table_id == (*it)->table_id) {
+                (*it) = input_component;  // 如果找到，替换
+                break;
+            }
+        }
+    }
+    else if(type == "风机")
+    {
+        QSharedPointer<Fan_noise> input_component = qSharedPointerCast<Fan_noise>(component);
+        auto it = fans.begin();
+        for ( ; it != fans.end(); ++it) {
+            // 使用QSharedPointer，可以直接解引用来访问对象的成员
+            if (table_id == (*it)->table_id) {
+                (*it) = input_component;  // 如果找到，替换
+                break;
+            }
+        }
+    }
+    else if(type == "风机盘管")
+    {
+        QSharedPointer<FanCoil_noise> input_component = qSharedPointerCast<FanCoil_noise>(component);
+        auto it = fanCoils.begin();
+        for ( ; it != fanCoils.end(); ++it) {
+            // 使用QSharedPointer，可以直接解引用来访问对象的成员
+            if (table_id == (*it)->table_id) {
+                (*it) = input_component;  // 如果找到，替换
+                break;
+            }
+        }
+    }
+    else if(type == "其他送风末端")
+    {
+        QSharedPointer<Other_send_terminal_noise> input_component = qSharedPointerCast<Other_send_terminal_noise>(component);
+        auto it = otherSendTerminals.begin();
+        for ( ; it != otherSendTerminals.end(); ++it) {
+            // 使用QSharedPointer，可以直接解引用来访问对象的成员
+            if (table_id == (*it)->table_id) {
+                (*it) = input_component;  // 如果找到，替换
+                break;
+            }
+        }
+    }
+    else if(type == "直管")
+    {
+        QSharedPointer<Pipe_atten> input_component = qSharedPointerCast<Pipe_atten>(component);
+        auto it = pipes.begin();
+        for ( ; it != pipes.end(); ++it) {
+            // 使用QSharedPointer，可以直接解引用来访问对象的成员
+            if (table_id == (*it)->table_id) {
+                (*it) = input_component;  // 如果找到，替换
+                break;
+            }
+        }
+    }
+    else if(type == "抽/送风头")
+    {
+        QSharedPointer<PumpSend_noise> input_component = qSharedPointerCast<PumpSend_noise>(component);
+        auto it = pumpSends.begin();
+        for ( ; it != pumpSends.end(); ++it) {
+            // 使用QSharedPointer，可以直接解引用来访问对象的成员
+            if (table_id == (*it)->table_id) {
+                (*it) = input_component;  // 如果找到，替换
+                break;
+            }
+        }
+    }
+    else if(type == "方形调风门")
+    {
+        QSharedPointer<Rect_damper_noi> input_component = qSharedPointerCast<Rect_damper_noi>(component);
+        auto it = rectDampers.begin();
+        for ( ; it != rectDampers.end(); ++it) {
+            // 使用QSharedPointer，可以直接解引用来访问对象的成员
+            if (table_id == (*it)->table_id) {
+                (*it) = input_component;  // 如果找到，替换
+                break;
+            }
+        }
+    }
+    else if(type == "变径")
+    {
+        QSharedPointer<Reducer_atten> input_component = qSharedPointerCast<Reducer_atten>(component);
+        auto it = reducers.begin();
+        for ( ; it != reducers.end(); ++it) {
+            // 使用QSharedPointer，可以直接解引用来访问对象的成员
+            if (table_id == (*it)->table_id) {
+                (*it) = input_component;  // 如果找到，替换
+                break;
+            }
+        }
+    }
+    else if(type == "静压箱+格栅")
+    {
+        QSharedPointer<Reducer_atten> input_component = qSharedPointerCast<Reducer_atten>(component);
+        auto it = reducers.begin();
+        for ( ; it != reducers.end(); ++it) {
+            // 使用QSharedPointer，可以直接解引用来访问对象的成员
+            if (table_id == (*it)->table_id) {
+                (*it) = input_component;  // 如果找到，替换
+                break;
+            }
+        }
+    }
+    else if(type == "消声器")
+    {
+        QSharedPointer<Silencer_atten> input_component = qSharedPointerCast<Silencer_atten>(component);
+        auto it = silencers.begin();
+        for ( ; it != silencers.end(); ++it) {
+            // 使用QSharedPointer，可以直接解引用来访问对象的成员
+            if (table_id == (*it)->table_id) {
+                (*it) = input_component;  // 如果找到，替换
+                break;
+            }
+        }
+    }
+    else if(type == "静压箱")
+    {
+        QSharedPointer<Static_box> input_component = qSharedPointerCast<Static_box>(component);
+        auto it = staticboxs.begin();
+        for ( ; it != staticboxs.end(); ++it) {
+            // 使用QSharedPointer，可以直接解引用来访问对象的成员
+            if (table_id == (*it)->table_id) {
+                (*it) = input_component;  // 如果找到，替换
+                break;
+            }
+        }
+    }
+    else if(type == "三通")
+    {
+        QSharedPointer<Tee_atten> input_component = qSharedPointerCast<Tee_atten>(component);
+        auto it = tees.begin();
+        for ( ; it != tees.end(); ++it) {
+            // 使用QSharedPointer，可以直接解引用来访问对象的成员
+            if (table_id == (*it)->table_id) {
+                (*it) = input_component;  // 如果找到，替换
+                break;
+            }
+        }
+    }
+    else if(type == "变风量末端")
+    {
+        QSharedPointer<VAV_terminal_noise> input_component = qSharedPointerCast<VAV_terminal_noise>(component);
+        auto it = VAVTerminals.begin();
+        for ( ; it != VAVTerminals.end(); ++it) {
+            // 使用QSharedPointer，可以直接解引用来访问对象的成员
+            if (table_id == (*it)->table_id) {
+                (*it) = input_component;  // 如果找到，替换
+                break;
+            }
+        }
+    }
+}
+
 QString ComponentManager::getModelByNumber(QString number)
 {
     // 遍历airConditions容器
@@ -83,6 +304,9 @@ QString ComponentManager::getModelByNumber(QString number)
 
 ComponentBase* ComponentManager::getComponentByNumber(QString number)
 {
+    if(number == "")
+        return nullptr;
+
     // 遍历airConditions容器
     for (const QSharedPointer<Aircondition_noise>& airCondition : airConditions) {
         // 检查空调编号是否匹配
@@ -99,13 +323,59 @@ ComponentBase* ComponentManager::getComponentByNumber(QString number)
         }
     }
 
-    // 遍历fans容器
-    for (const QSharedPointer<FanCoil_noise>& fanCoil : fanCoils) {
-        // 检查空调编号是否匹配
-        if (fanCoil->model == number) {
-            return fanCoil.data(); // 返回匹配的型号
+    return nullptr;
+}
+
+ComponentBase* ComponentManager::getComponentByModel(QString model, QString type)
+{
+    if(model == "")
+        return nullptr;
+
+    if(type == "风机盘管")
+    {
+        for (const QSharedPointer<FanCoil_noise>& fanCoil : fanCoils) {
+            if (fanCoil->model == model) {
+                return fanCoil.data(); // 返回匹配的型号
+            }
         }
     }
+
+    return nullptr;
+}
+
+QList<const ComponentBase*> ComponentManager::getComponents(QString type)
+{
+    QList<const ComponentBase*> result;
+
+    if(type == "变风量末端")
+    {
+        for (const QSharedPointer<VAV_terminal_noise>& component : VAVTerminals) {
+            result.push_back(component.get());
+        }
+    }
+    else if(type == "圆形调风门")
+    {
+        for (const QSharedPointer<Circular_damper_noi>& component : circularDampers)
+        {
+            result.push_back(component.get());
+        }
+    }
+    else if(type == "方形调风门")
+    {
+        for (const QSharedPointer<Rect_damper_noi>& component : rectDampers)
+        {
+            result.push_back(component.get());
+        }
+    }
+    else if(type == "布风器+散流器")
+    {
+        for (const QSharedPointer<AirDiff_noise>& component : airDiffs)
+        {
+            result.push_back(component.get());
+        }
+    }
+
+    return result;
 }
 
 template<typename T>

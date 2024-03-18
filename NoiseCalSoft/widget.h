@@ -35,11 +35,11 @@ public:
     void deleteRowFromTable(QTableWidget *tableWidget, int deleteRowNum, QString componentName);
     void deleteRowFromTable(QTableWidget *tableWidget_noise, QTableWidget *tableWidget_atten, QTableWidget *tableWidget_refl, QString componentName);
     template <typename NoiType, typename DialogType>
-    void noiseRevision(QTableWidget *tableWidget, int row,NoiType *noi, QVector<QString*>& items, int* cols, QString name = "");
+    void noiseRevision(QTableWidget *tableWidget, int row,NoiType *& noi, QVector<QString*>& items, int* cols,int table_id_col, QString& table_id,QString name = "");
     template <typename NoiType, typename DialogType>
     void noiseRevision(QTableWidget *currentTableWidget, QTableWidget *tableWidget_noise, QTableWidget *tableWidget_atten, QTableWidget *tableWidget_refl,
-                       int row,NoiType *noi, QVector<QString*>& items_noise, QVector<QString*>& items_atten, QVector<QString*>& items_refl,
-                       int* cols_noise, int* cols_atten, int* cols_refl, QString name = "");
+                       int row,NoiType *& noi, QVector<QString*>& items_noise, QVector<QString*>& items_atten, QVector<QString*>& items_refl,
+                       int* cols_noise, int* cols_atten, int* cols_refl, int table_id_col, QString& table_id, QString name = "");
     double getNoiseLimitByName(const QString& name);
     void mergeSimilarCellsInColumn(QTableWidget* tableWidget, int column, int startRow, int numRows, int rowsPerGroup = -1);
     void prj_TreeWidget();

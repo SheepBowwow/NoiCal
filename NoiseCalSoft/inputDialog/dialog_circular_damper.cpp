@@ -29,14 +29,7 @@ Dialog_circular_damper::Dialog_circular_damper(QWidget *parent, int editRow, con
 
     if(editRow != -1)
     {
-        QString diameter = "";
-        for(int i = 0; i < data.model.length(); i++)
-        {
-            if(data.model[i] >= '0' && data.model[i] <= '9')
-            {
-                diameter += data.model[i];
-            }
-        }
+        QString diameter = data.model;
 
         ui->lineEdit_brand->setText(data.brand);
         ui->lineEdit_air_volume->setText(data.air_volume);
@@ -176,7 +169,7 @@ void Dialog_circular_damper::on_pushButton_confirm_clicked()
     {
         noi->getMode = "公式";
         noi->diameter = ui->lineEdit_diameter->text();
-        noi->model = "DN" + noi->diameter;
+        noi->model = noi->diameter;
     }
     else if(ui->radioButton_known->isChecked())
     {

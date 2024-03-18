@@ -20,6 +20,7 @@ public:
     }
 
     void addComponent(QSharedPointer<ComponentBase> component, QString type);
+    void updateRevisedComponent(QString preName ,QSharedPointer<ComponentBase> component, QString type);
 
     void del_and_updateTableID(int deleteID, QString containerName);
 
@@ -29,6 +30,8 @@ public:
 
     QString getModelByNumber(QString number);
     ComponentBase* getComponentByNumber(QString number);
+    ComponentBase* getComponentByModel(QString model, QString type);
+    QList<const ComponentBase*> getComponents(QString type);
 
 private:
     // 禁止通过构造函数和复制构造函数创建实例

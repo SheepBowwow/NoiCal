@@ -184,7 +184,7 @@ void Dialog_rect_damper::on_pushButton_confirm_clicked()
         noi->getMode = "公式";
         noi->length = ui->lineEdit_length->text();
         noi->width = ui->lineEdit_width->text();
-        noi->model = "R" + noi->length + "X" + noi->width;
+        noi->model = noi->length + "X" + noi->width;
     }
     else if(ui->radioButton_known->isChecked())
     {

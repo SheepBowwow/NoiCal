@@ -28,6 +28,7 @@ private slots:
     void handleAddBefore(int index);
     void handleAddAfter(int index);
     void handleDelete(int index);
+    void updateAllTables();
 
     void addTable(int index, QString type = "");
 
