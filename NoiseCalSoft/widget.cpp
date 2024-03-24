@@ -44,6 +44,7 @@
 #include <iostream>
 #include <string>
 #include <regex>
+#include <QDateTime>
 
 WordEngine* wordEngine = new WordEngine();
 
@@ -4936,6 +4937,365 @@ void Widget::initRightButtonMenu()
             this, SLOT(TreeWidgetItemPressed_Slot(QTreeWidgetItem*, int)));
 }
 
+/*
+日期: 2024-3-23
+作者: JJH
+环境: win10 QT5.14.2 MinGW32
+参数：要提取的表格，输出器件名+时间戳
+功能: 提取tablewidget的数据（除去第一二列）导出数据到execl表格
+*/
+void Widget::SaveExeclData(QTableWidget *table,QString component_name)
+{
+    // 获取当前时间
+       QDateTime currentDateTime = QDateTime::currentDateTime();
+       QString defaultFileName = component_name+"_" + currentDateTime.toString("yyyyMMdd_hhmmss") + ".xlsx";
+    //获取保存路径
+       QString filepath=QFileDialog::getSaveFileName(this,tr("Save"),defaultFileName,tr(" (*.xlsx)"));
+       if(!filepath.isEmpty()){
+           QAxObject *excel = new QAxObject(this);
+           //连接Excel控件
+           excel->setControl("Excel.Application");
+           if (excel->isNull()) {
+               QMessageBox::critical(this, tr("错误"), tr("未能创建 Excel 对象，请安装 Microsoft Excel。"));
+               delete excel;
+               return;
+           }
+           //不显示窗体
+           excel->dynamicCall("SetVisible (bool Visible)","false");
+           //不显示任何警告信息。如果为true那么在关闭是会出现类似“文件已修改，是否保存”的提示
+           excel->setProperty("DisplayAlerts", false);
+           //获取工作簿集合
+           QAxObject *workbooks = excel->querySubObject("WorkBooks");
+           //新建一个工作簿
+           workbooks->dynamicCall("Add");
+           //获取当前工作簿
+           QAxObject *workbook = excel->querySubObject("ActiveWorkBook");
+           //获取工作表集合
+           QAxObject *worksheets = workbook->querySubObject("Sheets");
+           //获取工作表集合的工作表1，即sheet1
+           QAxObject *worksheet = worksheets->querySubObject("Item(int)",1);
+
+           /*注意事项：
+            1.提取值 不要第一二列
+            2.设置某行某列,在 Qt 中，数组的索引是从 0 开始的，
+              而在 Excel 中，列的索引是从 1 开始的，所以需要进行调整。
+            */
+
+           //设置表头值
+           for(int i=1;i<table->columnCount()-1;i++)
+           {
+               if(table->horizontalHeaderItem(i+1) != nullptr) {//空值空指针会使程序崩溃
+                   QAxObject *Range = worksheet->querySubObject("Cells(int,int)", 1, i);
+                   //调用Excel的函数设置设置表头
+                   Range->dynamicCall("SetValue(const QString &)",table->horizontalHeaderItem(i+1)->text());
+               }
+           }
+           //设置表格数据
+           for(int i=1;i<table->rowCount()+1;i++)
+           {
+               for(int j = 1;j<table->columnCount()-1;j++)
+               {
+                   if(table->item(i-1,j+1) != nullptr) {
+                       QAxObject *Range = worksheet->querySubObject("Cells(int,int)", i+1, j);
+                       Range->dynamicCall("SetValue(const QString &)",table->item(i-1,j+1)->data(Qt::DisplayRole).toString());
+                   }
+               }
+           }
+           workbook->dynamicCall("SaveAs(const QString&)",QDir::toNativeSeparators(filepath));//保存至filepath
+           workbook->dynamicCall("Close()");//关闭工作簿
+           excel->dynamicCall("Quit()");//关闭excel
+           delete excel;
+           excel=NULL;
+
+           QMessageBox::information(this,"提示","导出成功",QMessageBox::Yes);
+       }
+}
+
+
+/*
+日期: 2024-3-23
+作者: JJH
+环境: win10 QT5.14.2 MinGW32
+参数：要导入到的表格
+功能: 从Excel中提取数据到tableWidget（第一列自动添加复选框，第二列加递增序号）
+*/
+void Widget::LoadExeclData(QTableWidget *table)
+{
+    // 提示用户清空表格
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, tr("注意"), tr("确定清除当前表格再导入新表格"), QMessageBox::Yes|QMessageBox::No);
+    if (reply == QMessageBox::Yes) {
+        // 清空表格
+        table->clearContents();
+    } else {
+        // 用户选择不清空表格，直接返回
+        return;
+    }
+
+    // 选择要导入的 Excel 文件
+    QString filePath = QFileDialog::getOpenFileName(this, tr("打开Excel文件"), ".", tr("Excel Files (*.xls *.xlsx)"));
+    if (filePath.isEmpty()) {
+        QMessageBox::warning(this,"警告","路径错误！");
+        return;
+    }
+
+    QAxObject *excel = new QAxObject(this);
+    //连接Excel控件
+    excel->setControl("Excel.Application");
+    if (excel->isNull()) {
+        QMessageBox::critical(this, tr("错误"), tr("未能创建 Excel 对象，请安装 Microsoft Excel。"));
+        delete excel;
+        return;
+    }
+    excel->dynamicCall("SetVisible(bool)", false); // 不显示 Excel 界面
+
+    QAxObject *workbooks = excel->querySubObject("Workbooks");
+    QAxObject *workbook = workbooks->querySubObject("Open(const QString&)", filePath);
+    QAxObject *worksheets = workbook->querySubObject("Worksheets");
+
+    // 假设只导入第一个工作表
+    QAxObject *worksheet = worksheets->querySubObject("Item(int)", 1);
+    QAxObject *usedRange = worksheet->querySubObject("UsedRange");
+    QAxObject *rows = usedRange->querySubObject("Rows");
+    QAxObject *columns = usedRange->querySubObject("Columns");
+
+    //计算Excel表格行列数
+    int rowCount = rows->property("Count").toInt();
+    int columnCount = columns->property("Count").toInt();
+
+    // 设置表格的行列数
+    table->setRowCount(rowCount-1);// 不算表头的行数
+    table->setColumnCount(columnCount+2); //加上一二列
+
+    // 读取数据并填充表格
+    for (int row = 0; row < rowCount; ++row) {
+
+        // 添加复选框
+        QCheckBox* checkBox = new QCheckBox();
+        QWidget* widget = new QWidget();
+        widget->setStyleSheet("background-color: #C0C0C0;");
+        QHBoxLayout* layout = new QHBoxLayout(widget);
+        layout->addWidget(checkBox);
+        layout->setAlignment(Qt::AlignCenter);
+        layout->setContentsMargins(0, 0, 0, 0);
+        table->setCellWidget(row, 0, widget);
+        //table->setItem(row, 0, new QTableWidgetItem("复选框"));
+        table->setItem(row, 1, new QTableWidgetItem(QString::number(row+1)));
+
+
+        for (int col = 0; col < columnCount; ++col) {
+            //提取数据时，从Excel的第二行、第一列开始
+            QAxObject *cell = worksheet->querySubObject("Cells(int,int)", row+2, col+1);
+            QString value = cell->dynamicCall("Value()").toString();
+            table->setItem(row, col+2, new QTableWidgetItem(value));
+            delete cell;
+        }
+    }
+
+    workbook->dynamicCall("Close()");//关闭工作簿
+    excel->dynamicCall("Quit()");//关闭excel
+    delete excel;
+    excel=NULL;
+
+}
+
+
+/*
+日期: 2024-3-23
+作者: JJH
+环境: win10 QT5.14.2 MinGW32
+参数：要提取的表格，输出器件名+时间戳
+功能: 提取噪声源tablewidget的数据（除去第一二列）导出数据到execl表格，并合并某些单元格
+*/
+void Widget::SaveExeclData_noisourse(QTableWidget *table,QString component_name)
+{
+    // 获取当前时间
+       QDateTime currentDateTime = QDateTime::currentDateTime();
+       QString defaultFileName = component_name+"_" + currentDateTime.toString("yyyyMMdd_hhmmss") + ".xlsx";
+    //获取保存路径
+       QString filepath=QFileDialog::getSaveFileName(this,tr("Save"),defaultFileName,tr(" (*.xlsx)"));
+       if(!filepath.isEmpty()){
+           QAxObject *excel = new QAxObject(this);
+           //连接Excel控件
+           excel->setControl("Excel.Application");
+           if (excel->isNull()) {
+               QMessageBox::critical(this, tr("错误"), tr("未能创建 Excel 对象，请安装 Microsoft Excel。"));
+               delete excel;
+               return;
+           }
+           //不显示窗体
+           excel->dynamicCall("SetVisible (bool Visible)","false");
+           //不显示任何警告信息。如果为true那么在关闭是会出现类似“文件已修改，是否保存”的提示
+           excel->setProperty("DisplayAlerts", false);
+           //获取工作簿集合
+           QAxObject *workbooks = excel->querySubObject("WorkBooks");
+           //新建一个工作簿
+           workbooks->dynamicCall("Add");
+           //获取当前工作簿
+           QAxObject *workbook = excel->querySubObject("ActiveWorkBook");
+           //获取工作表集合
+           QAxObject *worksheets = workbook->querySubObject("Sheets");
+           //获取工作表集合的工作表1，即sheet1
+           QAxObject *worksheet = worksheets->querySubObject("Item(int)",1);
+
+           /*注意事项：
+            1.提取值 不要第一二列
+            2.设置某行某列,在 Qt 中，数组的索引是从 0 开始的，
+              而在 Excel 中，列的索引是从 1 开始的，所以需要进行调整。
+            */
+
+           //设置表头值
+           for(int i=1;i<table->columnCount()-1;i++)
+           {
+               if(table->horizontalHeaderItem(i+1) != nullptr) {//空值空指针会使程序崩溃
+                   QAxObject *Range = worksheet->querySubObject("Cells(int,int)", 1, i);
+                   //调用Excel的函数设置设置表头
+                   Range->dynamicCall("SetValue(const QString &)",table->horizontalHeaderItem(i+1)->text());
+               }
+           }
+           //设置表格数据
+           for(int i=1;i<table->rowCount()+1;i++)
+           {
+               for(int j = 1;j<table->columnCount()-1;j++)
+               {
+                   if(table->item(i-1,j+1) != nullptr) {
+                       QAxObject *Range = worksheet->querySubObject("Cells(int,int)", i+1, j);
+                       Range->dynamicCall("SetValue(const QString &)",table->item(i-1,j+1)->data(Qt::DisplayRole).toString());
+                   }
+               }
+           }
+
+           qDebug()<<"合并单元格";
+           //合并单元格
+           for(int i=2;i<table->rowCount()+2;i+=2)
+           {
+               for(int j=0;j<5;j++)
+               {
+                   QString letter = QChar('A' + j);
+                   QString mergeCell = letter + QString::number(i) + ":" + letter + QString::number(i + 1);
+                   qDebug()<<mergeCell;
+                   QAxObject *rangeObject = worksheet->querySubObject("Range(const QString&)", mergeCell);
+                   rangeObject->setProperty("MergeCells", true);
+                   rangeObject->setProperty("HorizontalAlignment", -4108); // xlCenter
+               }
+           }
+
+           workbook->dynamicCall("SaveAs(const QString&)",QDir::toNativeSeparators(filepath));//保存至filepath
+           workbook->dynamicCall("Close()");//关闭工作簿
+           excel->dynamicCall("Quit()");//关闭excel
+           delete excel;
+           excel=NULL;
+
+           QMessageBox::information(this,"提示","导出成功",QMessageBox::Yes);
+       }
+}
+
+/*
+日期: 2024-3-23
+作者: JJH
+环境: win10 QT5.14.2 MinGW32
+参数：要导入到的表格
+功能: 从Excel中提取数据到tableWidget（第一列自动添加复选框，第二列加递增序号）并合并某些单元格
+*/
+void Widget::LoadExeclData_noisourse(QTableWidget *table)
+{
+    // 提示用户清空表格
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, tr("注意"), tr("确定清除当前表格再导入新表格"), QMessageBox::Yes|QMessageBox::No);
+    if (reply == QMessageBox::Yes) {
+        // 清空表格
+        table->clearContents();
+    } else {
+        // 用户选择不清空表格，直接返回
+        return;
+    }
+
+    // 选择要导入的 Excel 文件
+    QString filePath = QFileDialog::getOpenFileName(this, tr("打开Excel文件"), ".", tr("Excel Files (*.xls *.xlsx)"));
+    if (filePath.isEmpty()) {
+        QMessageBox::warning(this,"警告","路径错误！");
+        return;
+    }
+
+    QAxObject *excel = new QAxObject(this);
+    //连接Excel控件
+    excel->setControl("Excel.Application");
+    if (excel->isNull()) {
+        QMessageBox::critical(this, tr("错误"), tr("未能创建 Excel 对象，请安装 Microsoft Excel。"));
+        delete excel;
+        return;
+    }
+    excel->dynamicCall("SetVisible(bool)", false); // 不显示 Excel 界面
+
+    QAxObject *workbooks = excel->querySubObject("Workbooks");
+    QAxObject *workbook = workbooks->querySubObject("Open(const QString&)", filePath);
+    QAxObject *worksheets = workbook->querySubObject("Worksheets");
+
+    // 假设只导入第一个工作表
+    QAxObject *worksheet = worksheets->querySubObject("Item(int)", 1);
+    QAxObject *usedRange = worksheet->querySubObject("UsedRange");
+    QAxObject *rows = usedRange->querySubObject("Rows");
+    QAxObject *columns = usedRange->querySubObject("Columns");
+
+    //计算Excel表格行列数
+    int excel_rowCount = rows->property("Count").toInt();
+    int excel_columnCount = columns->property("Count").toInt();
+
+    // 设置表格的行列数
+    table->setRowCount(excel_rowCount-1);// 不算表头的行数
+    table->setColumnCount(excel_columnCount+2); //加上一二列
+
+    // 读取数据并填充表格
+    //以Excel的行列为基准
+    for (int i=2;i<=excel_rowCount;i++)
+    {
+        for(int j=1;j<=excel_columnCount;j++){
+            QAxObject *cell = worksheet->querySubObject("Cells(int,int)", i, j);
+            QString value = cell->dynamicCall("Value()").toString();
+
+            QTableWidgetItem *item = new QTableWidgetItem(value);
+            table->setItem(i-2, j+1, item);
+            item->setTextAlignment(Qt::AlignCenter); // 将内容居中对齐
+            item->setFlags(Qt::ItemIsEditable); // 设置为只读
+            item->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
+            item->setData(Qt::ForegroundRole, QColor(70,70,70)); // 只读单元格文本颜色设置为深灰色
+        }
+
+        // 处理复选框
+        QCheckBox* checkBox = new QCheckBox();
+        QWidget* widget = new QWidget();
+        widget->setStyleSheet("background-color: #C0C0C0;");
+        QHBoxLayout* layout = new QHBoxLayout(widget);
+        layout->addWidget(checkBox);
+        layout->setAlignment(Qt::AlignCenter);
+        layout->setContentsMargins(0, 0, 0, 0);
+        table->setCellWidget(i-2, 0, widget);
+    }
+
+    int row=1;
+    for(int i = 0; i < table->rowCount(); i+=2)
+    {
+        for (int j=0;j<table->columnCount();j++) {
+            if(j < 7 || j > 16)
+            {
+                table->setSpan(i, j, 2, 1);
+            }
+        }
+        QTableWidgetItem *item = new QTableWidgetItem(QString::number(row++));
+        table->setItem(i, 1, item);
+        item->setTextAlignment(Qt::AlignCenter); // 将内容居中对齐
+        item->setFlags(Qt::ItemIsEditable); // 设置为只读
+        item->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
+        item->setData(Qt::ForegroundRole, QColor(70,70,70)); // 只读单元格文本颜色设置为深灰色
+    }
+
+    workbook->dynamicCall("Close()");//关闭工作簿
+    excel->dynamicCall("Quit()");//关闭excel
+    delete excel;
+    excel=NULL;
+
+}
+
 
 
 
@@ -5596,4 +5956,273 @@ void Widget::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWid
 
 
 
+/******************导入导出表格********************/
+//噪声源
+void Widget::on_pushButton_fanNoi_input_clicked(){
+    LoadExeclData_noisourse(ui->tableWidget_fan_noi);
+}
 
+void Widget::on_pushButton_fanNoi_output_clicked(){
+    SaveExeclData_noisourse(ui->tableWidget_fan_noi,"风机");
+}
+
+void Widget::on_pushButton_fanCoil_noi_input_clicked(){
+    LoadExeclData_noisourse(ui->tableWidget_fanCoil_noi);
+}
+
+void Widget::on_pushButton_fanCoil_noi_output_clicked(){
+    SaveExeclData_noisourse(ui->tableWidget_fanCoil_noi,"风机盘管");
+}
+
+void Widget::on_pushButton_air_noi_input_clicked(){
+    //询问导入单风机还是双风机
+    /*QMessageBox messageBox;
+        messageBox.setWindowTitle("提示");
+        messageBox.setText("导入单风机还是双风机？");
+
+        // 添加自定义按钮，并设置按钮文本
+        QPushButton *b1 = messageBox.addButton("单风机", QMessageBox::ActionRole);
+        QPushButton *b2 = messageBox.addButton("双风机", QMessageBox::ActionRole);
+        QPushButton *b5 = messageBox.addButton(QMessageBox::Abort);
+        b5->setText("取消");
+
+        // 显示消息框并等待用户响应
+        messageBox.exec();
+
+        // 根据用户响应执行相应的操作
+        if (messageBox.clickedButton() == b1) {
+            LoadExeclData_noisourse(ui->tableWidget_air_single_fan_noi);
+        } else if (messageBox.clickedButton() == b2) {
+            LoadExeclData_noisourse(ui->tableWidget_air_double_fan_noi);
+        }*/
+
+}
+
+void Widget::on_pushButton_air_noi_output_clicked(){
+    //询问导出单风机还是双风机
+    /*QMessageBox messageBox;
+        messageBox.setWindowTitle("提示");
+        messageBox.setText("导出单风机还是双风机？");
+
+        // 添加自定义按钮，并设置按钮文本
+        QPushButton *b1 = messageBox.addButton("单风机", QMessageBox::ActionRole);
+        QPushButton *b2 = messageBox.addButton("双风机", QMessageBox::ActionRole);
+        QPushButton *b5 = messageBox.addButton(QMessageBox::Abort);
+        b5->setText("取消");
+
+        // 显示消息框并等待用户响应
+        messageBox.exec();
+
+        // 根据用户响应执行相应的操作
+        if (messageBox.clickedButton() == b1) {
+            SaveExeclData_noisourse(ui->tableWidget_air_single_fan_noi,"空调器单风机");
+        } else if (messageBox.clickedButton() == b2) {
+            SaveExeclData_noisourse(ui->tableWidget_air_single_fan_noi,"空调器双风机");
+        }*/
+}
+
+//其他器件
+void Widget::on_pushButton_VAV_terminal_input_clicked(){
+    LoadExeclData(ui->tableWidget_VAV_terminal);
+}
+
+void Widget::on_pushButton_VAV_terminal_output_clicked(){
+    SaveExeclData(ui->tableWidget_VAV_terminal,"变风量末端");
+}
+
+void Widget::on_pushButton_circular_damper_input_clicked(){
+    LoadExeclData(ui->tableWidget_circular_damper);
+}
+
+void Widget::on_pushButton_circular_damper_output_clicked(){
+    SaveExeclData(ui->tableWidget_circular_damper,"圆形调风门");
+}
+
+void Widget::on_pushButton_rect_damper_input_clicked(){
+    LoadExeclData(ui->tableWidget_rect_damper);
+}
+
+void Widget::on_pushButton_rect_damper_output_clicked(){
+    SaveExeclData(ui->tableWidget_rect_damper,"方形调风门");
+}
+
+void Widget::on_pushButton_air_diff_input_clicked(){
+    LoadExeclData(ui->tableWidget_air_diff);
+}
+
+void Widget::on_pushButton_air_diff_output_clicked(){
+    SaveExeclData(ui->tableWidget_air_diff,"布风器+散流器");
+}
+
+void Widget::on_pushButton_pump_send_input_clicked(){
+    //询问是送风头还是抽风头
+    QMessageBox messageBox;
+    messageBox.setWindowTitle("提示");
+    messageBox.setText("导入抽风头还是送风头？");
+
+    // 添加自定义按钮，并设置按钮文本
+    QPushButton *b1 = messageBox.addButton("抽风头", QMessageBox::ActionRole);
+    QPushButton *b2 = messageBox.addButton("送风头", QMessageBox::ActionRole);
+    QPushButton *b5 = messageBox.addButton(QMessageBox::Abort);
+    b5->setText("取消");
+
+    // 显示消息框并等待用户响应
+    messageBox.exec();
+
+    // 根据用户响应执行相应的操作
+    if (messageBox.clickedButton() == b1) {
+        LoadExeclData(ui->tableWidget_pump_tuyere);
+    } else if (messageBox.clickedButton() == b2) {
+        LoadExeclData(ui->tableWidget_send_tuyere);
+    }
+}
+
+void Widget::on_pushButton_pump_send_output_clicked(){
+    //询问是送风头还是抽风头
+    QMessageBox messageBox;
+    messageBox.setWindowTitle("提示");
+    messageBox.setText("导出抽风头还是送风头？");
+
+    // 添加自定义按钮，并设置按钮文本
+    QPushButton *b1 = messageBox.addButton("抽风头", QMessageBox::ActionRole);
+    QPushButton *b2 = messageBox.addButton("送风头", QMessageBox::ActionRole);
+    QPushButton *b5 = messageBox.addButton(QMessageBox::Abort);
+    b5->setText("取消");
+
+    // 显示消息框并等待用户响应
+    messageBox.exec();
+
+    // 根据用户响应执行相应的操作
+    if (messageBox.clickedButton() == b1) {
+        SaveExeclData(ui->tableWidget_pump_tuyere,"抽风头");
+    } else if (messageBox.clickedButton() == b2) {
+        SaveExeclData(ui->tableWidget_send_tuyere,"送风头");
+    }
+}
+
+void Widget::on_pushButton_staticBox_grille_input_clicked(){
+    LoadExeclData(ui->tableWidget_staticBox_grille);
+}
+
+void Widget::on_pushButton_staticBox_grille_output_clicked(){
+    SaveExeclData(ui->tableWidget_staticBox_grille,"静压箱+格栅");
+}
+
+
+void Widget::on_pushButton_disp_vent_terminal_input_clicked(){
+    LoadExeclData(ui->tableWidget_disp_vent_terminal);
+}
+
+void Widget::on_pushButton_disp_vent_terminal_output_clicked()
+{
+    SaveExeclData(ui->tableWidget_disp_vent_terminal,"置换通风末端");
+}
+
+void Widget::on_pushButton_other_send_terminal_input_clicked(){
+    LoadExeclData(ui->tableWidget_other_send_terminal);
+}
+
+void Widget::on_pushButton_other_send_terminal_output_clicked(){
+    SaveExeclData(ui->tableWidget_other_send_terminal,"其他送风末端");
+}
+
+void Widget::on_pushButton_static_box_input_clicked(){
+    LoadExeclData(ui->tableWidget_static_box);
+}
+
+void Widget::on_pushButton_static_box_output_clicked(){
+    SaveExeclData(ui->tableWidget_static_box,"静压箱");
+}
+
+void Widget::on_pushButton_duct_with_multi_ranc_input_clicked(){
+    LoadExeclData(ui->tableWidget_duct_with_multi_ranc);
+}
+
+void Widget::on_pushButton_duct_with_multi_ranc_output_clicked(){
+    SaveExeclData(ui->tableWidget_duct_with_multi_ranc,"风道多分支");
+}
+
+void Widget::on_pushButton_tee_input_clicked(){
+    LoadExeclData(ui->tableWidget_tee);
+}
+
+void Widget::on_pushButton_tee_output_clicked(){
+    SaveExeclData(ui->tableWidget_tee,"三通");
+}
+
+void Widget::on_pushButton_pipe_input_clicked(){
+    LoadExeclData(ui->tableWidget_pipe);
+}
+
+void Widget::on_pushButton_pipe_output_clicked(){
+    SaveExeclData(ui->tableWidget_pipe,"直管");
+}
+
+void Widget::on_pushButton_elbow_input_clicked(){
+    LoadExeclData(ui->tableWidget_elbow);
+}
+
+void Widget::on_pushButton_elbow_output_clicked(){
+    SaveExeclData(ui->tableWidget_elbow,"弯头");
+}
+
+void Widget::on_pushButton_reducer_input_clicked(){
+    LoadExeclData(ui->tableWidget_reducer);
+}
+
+void Widget::on_pushButton_reducer_output_clicked(){
+    SaveExeclData(ui->tableWidget_reducer,"变径");
+}
+
+void Widget::on_pushButton_silencer_input_clicked(){
+    //询问哪个消音器
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("提示");
+    msgBox.setText("导入哪种消音器？");
+
+    QPushButton *b1 = msgBox.addButton("圆形消音器", QMessageBox::ActionRole);
+    QPushButton *b2 = msgBox.addButton("矩形消音器", QMessageBox::ActionRole);
+    QPushButton *b3 = msgBox.addButton("圆形消音弯头", QMessageBox::ActionRole);
+    QPushButton *b4 = msgBox.addButton("矩形消音弯头", QMessageBox::ActionRole);
+    QPushButton *b5 = msgBox.addButton(QMessageBox::Abort);
+    b5->setText("取消");
+
+    msgBox.exec();
+
+    if (msgBox.clickedButton() == b1) {
+        LoadExeclData(ui->tableWidget_circular_silencer);
+    } else if (msgBox.clickedButton() == b2) {
+        LoadExeclData(ui->tableWidget_rect_silencer);
+    } else if (msgBox.clickedButton() == b3) {
+        LoadExeclData(ui->tableWidget_circular_silencerEb);
+    } else if (msgBox.clickedButton() == b4) {
+        LoadExeclData(ui->tableWidget_rect_silencerEb);
+    }
+}
+
+void Widget::on_pushButton_silencer_output_clicked(){
+    //询问哪个消音器
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("提示");
+    msgBox.setText("导出哪种消音器？");
+
+    QPushButton *b1 = msgBox.addButton("圆形消音器", QMessageBox::ActionRole);
+    QPushButton *b2 = msgBox.addButton("矩形消音器", QMessageBox::ActionRole);
+    QPushButton *b3 = msgBox.addButton("圆形消音弯头", QMessageBox::ActionRole);
+    QPushButton *b4 = msgBox.addButton("矩形消音弯头", QMessageBox::ActionRole);
+    QPushButton *b5 = msgBox.addButton(QMessageBox::Abort);
+    b5->setText("取消");
+    msgBox.exec();
+
+    if (msgBox.clickedButton() == b1) {
+        SaveExeclData(ui->tableWidget_circular_silencer,"圆形消音器");
+    } else if (msgBox.clickedButton() == b2) {
+        SaveExeclData(ui->tableWidget_rect_silencer,"矩形消音器");
+    } else if (msgBox.clickedButton() == b3) {
+        SaveExeclData(ui->tableWidget_circular_silencerEb,"圆形消音弯头");
+    } else if (msgBox.clickedButton() == b4) {
+        SaveExeclData(ui->tableWidget_rect_silencerEb,"矩形消音弯头");
+    }
+
+
+}
