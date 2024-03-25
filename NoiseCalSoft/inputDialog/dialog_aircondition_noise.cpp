@@ -168,6 +168,7 @@ void Dialog_aircondition_noise::on_pushButton_confirm_clicked()
     this->noi = new Aircondition_noise;
 
     noi->brand = ui->lineEdit_brand->text();
+    noi->number = ui->lineEdit_number->text();
     noi->model = ui->lineEdit_model->text();
     noi->air_volume = ui->lineEdit_air_volume->text();
     noi->static_pressure = ui->lineEdit_static_pressure->text();

@@ -349,6 +349,87 @@ private slots:
 
     void on_pushButton_air_noi_single_fan_revise_clicked();
 
+    void LoadExeclData_noisourse(QTableWidget *table,int spancolfirst,int spancollast);
+    void SaveExeclData_noisourse(QTableWidget *table,QString component_name,int mergeCellfirst,int mergeCelllast);
+    void LoadExeclData(QTableWidget *table);
+    void SaveExeclData(QTableWidget *table,QString component_name);
+
+    void on_pushButton_fanNoi_input_clicked();
+
+    void on_pushButton_fanNoi_output_clicked();
+
+    void on_pushButton_fanCoil_noi_input_clicked();
+
+    void on_pushButton_fanCoil_noi_output_clicked();
+
+    void on_pushButton_air_noi_single_fan_input_clicked();
+
+    void on_pushButton_air_noi_single_fan_output_clicked();
+
+    void on_pushButton_air_noi_double_fan_input_clicked();
+
+    void on_pushButton_air_noi_double_fan_output_clicked();
+
+    void on_pushButton_VAV_terminal_input_clicked();
+
+    void on_pushButton_VAV_terminal_output_clicked();
+
+    void on_pushButton_circular_damper_input_clicked();
+
+    void on_pushButton_circular_damper_output_clicked();
+
+    void on_pushButton_rect_damper_input_clicked();
+
+    void on_pushButton_rect_damper_output_clicked();
+
+    void on_pushButton_air_diff_input_clicked();
+
+    void on_pushButton_air_diff_output_clicked();
+
+    void on_pushButton_pump_send_input_clicked();
+
+    void on_pushButton_pump_send_output_clicked();
+
+    void on_pushButton_staticBox_grille_input_clicked();
+
+    void on_pushButton_staticBox_grille_output_clicked();
+
+    void on_pushButton_disp_vent_terminal_input_clicked();
+
+    void on_pushButton_disp_vent_terminal_output_clicked();
+
+    void on_pushButton_other_send_terminal_input_clicked();
+
+    void on_pushButton_other_send_terminal_output_clicked();
+
+    void on_pushButton_static_box_input_clicked();
+
+    void on_pushButton_static_box_output_clicked();
+
+    void on_pushButton_duct_with_multi_ranc_input_clicked();
+
+    void on_pushButton_duct_with_multi_ranc_output_clicked();
+
+    void on_pushButton_tee_input_clicked();
+
+    void on_pushButton_tee_output_clicked();
+
+    void on_pushButton_pipe_input_clicked();
+
+    void on_pushButton_pipe_output_clicked();
+
+    void on_pushButton_elbow_input_clicked();
+
+    void on_pushButton_elbow_output_clicked();
+
+    void on_pushButton_reducer_input_clicked();
+
+    void on_pushButton_reducer_output_clicked();
+
+    void on_pushButton_silencer_input_clicked();
+
+    void on_pushButton_silencer_output_clicked();
+
 private:
     Ui::Widget *ui;
     QTreeWidgetItem *item_prj;   //工程
