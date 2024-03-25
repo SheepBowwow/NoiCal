@@ -37,7 +37,6 @@
    <property name="font">
     <font>
      <family>黑体</family>
-     <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
@@ -69,7 +68,6 @@
      <font>
       <family>Microsoft YaHei</family>
       <pointsize>10</pointsize>
-      <weight>75</weight>
       <italic>false</italic>
       <bold>true</bold>
       <underline>true</underline>
@@ -192,7 +190,6 @@
      <font>
       <family>黑体</family>
       <pointsize>12</pointsize>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -225,7 +222,6 @@
      <font>
       <family>黑体</family>
       <pointsize>12</pointsize>
-      <weight>50</weight>
       <bold>false</bold>
      </font>
     </property>
@@ -273,7 +269,6 @@
      <font>
       <family>Microsoft YaHei</family>
       <pointsize>11</pointsize>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -344,7 +339,6 @@
      <font>
       <family>Microsoft YaHei</family>
       <pointsize>11</pointsize>
-      <weight>50</weight>
       <bold>false</bold>
      </font>
     </property>
@@ -396,7 +390,6 @@
      <font>
       <family>Microsoft YaHei</family>
       <pointsize>11</pointsize>
-      <weight>50</weight>
       <bold>false</bold>
      </font>
     </property>
@@ -448,7 +441,6 @@
      <font>
       <family>Microsoft YaHei</family>
       <pointsize>11</pointsize>
-      <weight>50</weight>
       <bold>false</bold>
      </font>
     </property>
@@ -500,7 +492,6 @@
      <font>
       <family>Microsoft YaHei</family>
       <pointsize>11</pointsize>
-      <weight>50</weight>
       <bold>false</bold>
      </font>
     </property>
@@ -521,7 +512,6 @@
      <font>
       <family>Microsoft YaHei</family>
       <pointsize>20</pointsize>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -604,7 +594,7 @@ font-size: 13px;
 }</string>
    </property>
    <property name="currentIndex">
-    <number>20</number>
+    <number>4</number>
    </property>
    <widget class="QWidget" name="page_login">
     <layout class="QGridLayout" name="gridLayout" rowstretch="2,5,4">
@@ -672,7 +662,6 @@ font-size: 13px;
             <font>
              <family>Microsoft YaHei</family>
              <pointsize>14</pointsize>
-             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -737,7 +726,6 @@ font-size: 13px;
               <font>
                <family>Microsoft YaHei</family>
                <pointsize>16</pointsize>
-               <weight>75</weight>
                <bold>true</bold>
               </font>
              </property>
@@ -774,7 +762,6 @@ font-size: 13px;
               <font>
                <family>Microsoft YaHei</family>
                <pointsize>16</pointsize>
-               <weight>75</weight>
                <bold>true</bold>
               </font>
              </property>
@@ -852,7 +839,6 @@ font-size: 13px;
             <font>
              <family>Microsoft YaHei</family>
              <pointsize>10</pointsize>
-             <weight>75</weight>
              <bold>true</bold>
              <underline>true</underline>
             </font>
@@ -907,7 +893,6 @@ font-size: 13px;
             <font>
              <family>Microsoft YaHei</family>
              <pointsize>-1</pointsize>
-             <weight>75</weight>
              <italic>false</italic>
              <bold>true</bold>
             </font>
@@ -1327,7 +1312,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -1549,7 +1533,6 @@ border: 1px solid #000000;
        <font>
         <family>Microsoft YaHei</family>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -1765,7 +1748,6 @@ border: 1px solid #000000;
        <font>
         <family>Microsoft YaHei</family>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -1934,8 +1916,8 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>108</width>
-        <height>54</height>
+        <width>101</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_15">
@@ -1970,7 +1952,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -2214,41 +2195,6 @@ QTableWidget::item:selected
        <enum>QFrame::StyledPanel</enum>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_fanNoi_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_fanCoil_noi">
@@ -2272,8 +2218,8 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>188</width>
-        <height>54</height>
+        <width>161</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_16">
@@ -2308,7 +2254,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -2546,41 +2491,6 @@ color: white;
        <string>新增</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_fanCoil_noi_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_air_noi_single_fan">
@@ -2604,8 +2514,8 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>148</width>
-        <height>54</height>
+        <width>245</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_17">
@@ -2640,7 +2550,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -3175,94 +3084,9 @@ QTableWidget::item:selected
 		border: 2px solid #0398FC;	
         color : black;				
 }</string>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-       </widget>
-      </widget>
-     </widget>
-     <widget class="QPushButton" name="pushButton_air_double_fan_table">
-      <property name="geometry">
-       <rect>
-        <x>240</x>
-        <y>15</y>
-        <width>81</width>
-        <height>41</height>
-       </rect>
       </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>14</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>双风机</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButton_air_single_fan_table">
-      <property name="geometry">
-       <rect>
-        <x>150</x>
-        <y>15</y>
-        <width>81</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>14</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton { background-color: #E0EEF9; }</string>
-      </property>
-      <property name="text">
-       <string>单风机</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButton_air_noi_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
       </property>
      </widget>
     </widget>
@@ -3288,8 +3112,8 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>228</width>
-        <height>54</height>
+        <width>191</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_18">
@@ -3324,7 +3148,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -3562,41 +3385,6 @@ color: white;
        <string>导入</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_VAV_terminal_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_circular_damper">
@@ -3620,7 +3408,7 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>228</width>
+        <width>191</width>
         <height>45</height>
        </rect>
       </property>
@@ -3668,7 +3456,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -3906,41 +3693,6 @@ color: white;
        <string>新增</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_circular_damper_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_rect_damper">
@@ -3964,8 +3716,8 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>228</width>
-        <height>54</height>
+        <width>191</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_20">
@@ -4000,7 +3752,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -4238,41 +3989,6 @@ color: white;
        <string>删除</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_rect_damper_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_air_diff">
@@ -4296,8 +4012,8 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>298</width>
-        <height>54</height>
+        <width>251</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_21">
@@ -4332,7 +4048,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -4570,41 +4285,6 @@ color: white;
        <string>修改</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_air_diff_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_pump_send_tuyere">
@@ -4628,8 +4308,8 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>207</width>
-        <height>54</height>
+        <width>181</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_27">
@@ -4664,7 +4344,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -4696,7 +4375,6 @@ color : rgb(105, 105, 105);
       <property name="font">
        <font>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -4719,7 +4397,6 @@ color : rgb(105, 105, 105);
       <property name="font">
        <font>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -4740,7 +4417,7 @@ color : rgb(105, 105, 105);
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page_pump">
        <widget class="QTableWidget" name="tableWidget_pump_tuyere">
@@ -5043,41 +4720,6 @@ color: white;
        <string>删除</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_pump_send_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_staticBox_grille">
@@ -5101,8 +4743,8 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>258</width>
-        <height>54</height>
+        <width>221</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_23">
@@ -5137,7 +4779,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -5375,41 +5016,6 @@ color: white;
        <string>修改</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_staticBox_grille_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_disp_vent_terminal">
@@ -5511,8 +5117,8 @@ QTableWidget::item:selected
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>268</width>
-        <height>54</height>
+        <width>221</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_28">
@@ -5547,7 +5153,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -5707,41 +5312,6 @@ color: white;
        <string>删除</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_disp_vent_terminal_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_other_send_terminal">
@@ -5843,8 +5413,8 @@ QTableWidget::item:selected
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>268</width>
-        <height>54</height>
+        <width>231</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_29">
@@ -5879,7 +5449,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -6039,41 +5608,6 @@ color: white;
        <string>删除</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_other_send_terminal_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_static_box">
@@ -6175,8 +5709,8 @@ QTableWidget::item:selected
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>148</width>
-        <height>54</height>
+        <width>131</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_25">
@@ -6211,7 +5745,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -6371,41 +5904,6 @@ color: white;
        <string>删除</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_static_box_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_duct_with_multi_ranc">
@@ -6507,8 +6005,8 @@ QTableWidget::item:selected
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>228</width>
-        <height>54</height>
+        <width>201</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_26">
@@ -6543,7 +6041,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -6703,41 +6200,6 @@ color: white;
        <string>删除</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_duct_with_multi_ranc_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_tee">
@@ -6839,8 +6301,8 @@ QTableWidget::item:selected
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>108</width>
-        <height>54</height>
+        <width>101</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_30">
@@ -6875,7 +6337,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -7035,41 +6496,6 @@ color: white;
        <string>修改</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_tee_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_pipe">
@@ -7171,8 +6597,8 @@ QTableWidget::item:selected
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>108</width>
-        <height>54</height>
+        <width>101</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_31">
@@ -7207,7 +6633,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -7367,41 +6792,6 @@ color: white;
        <string>新增</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_pipe_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_elbow">
@@ -7503,8 +6893,8 @@ QTableWidget::item:selected
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>108</width>
-        <height>54</height>
+        <width>101</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_32">
@@ -7539,7 +6929,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -7699,41 +7088,6 @@ color: white;
        <string>导入</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_elbow_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_reducer">
@@ -7835,8 +7189,8 @@ QTableWidget::item:selected
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>108</width>
-        <height>54</height>
+        <width>101</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_33">
@@ -7871,7 +7225,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -8031,41 +7384,6 @@ color: white;
        <string>修改</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_reducer_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_silencer">
@@ -8089,8 +7407,8 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>148</width>
-        <height>54</height>
+        <width>141</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_34">
@@ -8125,7 +7443,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -8158,7 +7475,6 @@ color : rgb(105, 105, 105);
        <font>
         <family>黑体</family>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -8179,7 +7495,7 @@ color : rgb(105, 105, 105);
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="page_circular_silencer">
        <widget class="QTableWidget" name="tableWidget_circular_silencer">
@@ -8515,7 +7831,6 @@ QTableWidget::item:selected
        <font>
         <family>黑体</family>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -8539,7 +7854,6 @@ QTableWidget::item:selected
        <font>
         <family>黑体</family>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -8563,7 +7877,6 @@ QTableWidget::item:selected
        <font>
         <family>黑体</family>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -8714,41 +8027,6 @@ color: white;
        <string>新增</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_silencer_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_air_diff_terminal_atten">
@@ -8850,8 +8128,8 @@ QTableWidget::item:selected
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>298</width>
-        <height>54</height>
+        <width>251</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_35">
@@ -8886,7 +8164,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -9046,41 +8323,6 @@ color: white;
        <string>修改</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_air_diff_terminal_atten_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_pump_send_tuyere_terminal_atten">
@@ -9104,8 +8346,8 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>207</width>
-        <height>54</height>
+        <width>181</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_37">
@@ -9140,7 +8382,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -9178,7 +8419,6 @@ color : rgb(105, 105, 105);
       <property name="font">
        <font>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -9201,7 +8441,6 @@ color : rgb(105, 105, 105);
       <property name="font">
        <font>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -9523,41 +8762,6 @@ color: white;
        <string>修改</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_pump_send_terminal_atten_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_staticBox_grille_terminal_atten">
@@ -9581,8 +8785,8 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>258</width>
-        <height>54</height>
+        <width>221</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_24">
@@ -9617,7 +8821,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -9855,41 +9058,6 @@ color: white;
        <string>删除</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_staticBox_grille_terminal_atten_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_disp_vent_terminal_atten">
@@ -9991,8 +9159,8 @@ QTableWidget::item:selected
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>268</width>
-        <height>54</height>
+        <width>221</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_46">
@@ -10027,7 +9195,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -10187,41 +9354,6 @@ color: white;
        <string>删除</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_disp_vent_terminal_atten_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_other_send_terminal_atten">
@@ -10323,8 +9455,8 @@ QTableWidget::item:selected
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>268</width>
-        <height>54</height>
+        <width>231</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_48">
@@ -10359,7 +9491,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -10519,41 +9650,6 @@ color: white;
        <string>删除</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_other_send_terminal_atten_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_air_diff_terminal_refl">
@@ -10655,8 +9751,8 @@ QTableWidget::item:selected
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>298</width>
-        <height>54</height>
+        <width>251</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_36">
@@ -10691,7 +9787,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -10851,41 +9946,6 @@ color: white;
        <string>导入</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_air_diff_terminal_refl_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_pump_send_tuyere_terminal_refl">
@@ -10909,8 +9969,8 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>207</width>
-        <height>54</height>
+        <width>181</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_38">
@@ -10945,7 +10005,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -10977,7 +10036,6 @@ color : rgb(105, 105, 105);
       <property name="font">
        <font>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -11000,7 +10058,6 @@ color : rgb(105, 105, 105);
       <property name="font">
        <font>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -11322,41 +10379,6 @@ color: white;
        <string>修改</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_pump_send_terminal_refl_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_staticBox_grille_terminal_refl">
@@ -11380,8 +10402,8 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>258</width>
-        <height>54</height>
+        <width>231</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_39">
@@ -11416,7 +10438,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -11654,41 +10675,6 @@ color: white;
        <string>导入</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_staticBox_grille_terminal_refl_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_disp_vent_terminal_refl">
@@ -11790,8 +10776,8 @@ QTableWidget::item:selected
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>268</width>
-        <height>54</height>
+        <width>231</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_47">
@@ -11826,7 +10812,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -11986,41 +10971,6 @@ color: white;
        <string>删除</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_disp_vent_terminal_refl_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_other_send_terminal_refl">
@@ -12122,8 +11072,8 @@ QTableWidget::item:selected
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>268</width>
-        <height>54</height>
+        <width>231</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_49">
@@ -12158,7 +11108,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -12318,41 +11267,6 @@ color: white;
        <string>删除</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_other_send_terminal_refl_output">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton
-{
-	color:#ffffff; /*文字颜色*/
-    background-color: #00ACB9;/*背景色*/
-    border-radius:0px; /*边框倒角*/
-	border: 1px solid #000000;
-}
-
-
-QPushButton:hover 
-{
-background-color: rgb(0,142,153);
-color: white;
-}</string>
-      </property>
-      <property name="text">
-       <string>导出</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_room_less425">
@@ -12376,8 +11290,8 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>752</width>
-        <height>54</height>
+        <width>608</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_40">
@@ -12412,7 +11326,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -12471,8 +11384,8 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>752</width>
-        <height>54</height>
+        <width>615</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_41">
@@ -12507,7 +11420,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -12566,8 +11478,8 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>541</width>
-        <height>54</height>
+        <width>451</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_42">
@@ -12602,7 +11514,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -12674,8 +11585,8 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>581</width>
-        <height>54</height>
+        <width>471</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_43">
@@ -12710,7 +11621,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -12769,8 +11679,8 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>569</width>
-        <height>54</height>
+        <width>471</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_44">
@@ -12805,7 +11715,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -12864,8 +11773,8 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>581</width>
-        <height>54</height>
+        <width>471</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_45">
@@ -12900,7 +11809,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -12991,7 +11899,6 @@ border: 1px solid #000000;
        <font>
         <family>Microsoft YaHei</family>
         <pointsize>15</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -13258,8 +12165,8 @@ color: white;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>108</width>
-        <height>54</height>
+        <width>101</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_50">
@@ -13294,7 +12201,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -13380,7 +12286,6 @@ border: 1px solid #000000;
        <font>
         <family>Microsoft YaHei</family>
         <pointsize>15</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -13550,8 +12455,8 @@ color: white;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>108</width>
-        <height>54</height>
+        <width>101</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_51">
@@ -13586,7 +12491,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -13740,7 +12644,6 @@ border: 1px solid #000000;
        <font>
         <family>Microsoft YaHei</family>
         <pointsize>15</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -13769,8 +12672,8 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>188</width>
-        <height>54</height>
+        <width>171</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_52">
@@ -13805,7 +12708,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -13882,7 +12784,6 @@ border: 1px solid #000000;
        <font>
         <family>Microsoft YaHei</family>
         <pointsize>15</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -14007,7 +12908,6 @@ border: 1px solid #000000;
        <font>
         <family>Microsoft YaHei</family>
         <pointsize>15</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -14106,8 +13006,8 @@ color: white;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>188</width>
-        <height>54</height>
+        <width>161</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_53">
@@ -14142,7 +13042,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -14226,8 +13125,8 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>188</width>
-        <height>54</height>
+        <width>161</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_55">
@@ -14262,7 +13161,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -14414,8 +13312,8 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>188</width>
-        <height>54</height>
+        <width>161</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_56">
@@ -14450,7 +13348,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -14610,7 +13507,6 @@ border: 1px solid #000000;
        <font>
         <family>Microsoft YaHei</family>
         <pointsize>15</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -14709,8 +13605,8 @@ color: white;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>268</width>
-        <height>54</height>
+        <width>220</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_54">
@@ -14745,7 +13641,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -14829,8 +13724,8 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>268</width>
-        <height>54</height>
+        <width>220</width>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_57">
@@ -14865,7 +13760,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
