@@ -594,7 +594,7 @@ font-size: 13px;
 }</string>
    </property>
    <property name="currentIndex">
-    <number>39</number>
+    <number>4</number>
    </property>
    <widget class="QWidget" name="page_login">
     <layout class="QGridLayout" name="gridLayout" rowstretch="2,5,4">
@@ -2493,8 +2493,8 @@ color: white;
      </widget>
     </widget>
    </widget>
-   <widget class="QWidget" name="page_air_noi">
-    <widget class="QWidget" name="widget_air_noi" native="true">
+   <widget class="QWidget" name="page_air_noi_single_fan">
+    <widget class="QWidget" name="widget_air_noi_single_fan" native="true">
      <property name="geometry">
       <rect>
        <x>6</x>
@@ -2504,7 +2504,7 @@ color: white;
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">#widget_air_noi
+      <string notr="true">#widget_air_noi_single_fan
 {
 border: 1px solid #000000;
 }</string>
@@ -2514,7 +2514,7 @@ border: 1px solid #000000;
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>131</width>
+        <width>245</width>
         <height>45</height>
        </rect>
       </property>
@@ -2560,7 +2560,7 @@ color : rgb(105, 105, 105);
 }</string>
          </property>
          <property name="text">
-          <string>空调器</string>
+          <string>空调器(单风机)</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -2569,7 +2569,7 @@ color : rgb(105, 105, 105);
        </item>
       </layout>
      </widget>
-     <widget class="QPushButton" name="pushButton_air_noi_del">
+     <widget class="QPushButton" name="pushButton_air_noi_single_fan_del">
       <property name="geometry">
        <rect>
         <x>1000</x>
@@ -2604,7 +2604,7 @@ color: white;
        <string>删除</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_air_noi_input">
+     <widget class="QPushButton" name="pushButton_air_noi_single_fan_input">
       <property name="geometry">
        <rect>
         <x>940</x>
@@ -2639,7 +2639,7 @@ color: white;
        <string>导入</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_air_noi_revise">
+     <widget class="QPushButton" name="pushButton_air_noi_single_fan_revise">
       <property name="geometry">
        <rect>
         <x>1060</x>
@@ -2674,7 +2674,7 @@ color: white;
        <string>修改</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_air_noi_add">
+     <widget class="QPushButton" name="pushButton_air_noi_single_fan_add">
       <property name="geometry">
        <rect>
         <x>1120</x>
@@ -2709,7 +2709,7 @@ color: white;
        <string>新增</string>
       </property>
      </widget>
-     <widget class="QStackedWidget" name="stackedWidget_air_table">
+     <widget class="QTableWidget" name="tableWidget_air_noi_single_fan">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -2718,32 +2718,14 @@ color: white;
         <height>611</height>
        </rect>
       </property>
-      <property name="currentIndex">
-       <number>0</number>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
       </property>
-      <widget class="QWidget" name="page_single_fan">
-       <property name="font">
-        <font>
-         <family>黑体</family>
-        </font>
-       </property>
-       <widget class="QTableWidget" name="tableWidget_air_single_fan_noi">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>1161</width>
-          <height>611</height>
-         </rect>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">/*设置标题(包括垂直+水平的)*/
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">/*设置标题(包括垂直+水平的)*/
 QHeaderView
 {							
 	
@@ -2800,35 +2782,252 @@ QTableWidget::item:selected
 		border: 2px solid #0398FC;	
         color : black;				
 }</string>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-       </widget>
-      </widget>
-      <widget class="QWidget" name="page_double_fan">
-       <property name="font">
-        <font>
-         <family>黑体</family>
-        </font>
-       </property>
-       <widget class="QTableWidget" name="tableWidget_air_double_fan_noi">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>1161</width>
-          <height>611</height>
-         </rect>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">/*设置标题(包括垂直+水平的)*/
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+     </widget>
+     <zorder>pushButton_air_noi_single_fan_revise</zorder>
+     <zorder>layoutWidget_4</zorder>
+     <zorder>pushButton_air_noi_single_fan_del</zorder>
+     <zorder>pushButton_air_noi_single_fan_input</zorder>
+     <zorder>pushButton_air_noi_single_fan_add</zorder>
+     <zorder>tableWidget_air_noi_single_fan</zorder>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="page_air_noi_double_fan">
+    <widget class="QWidget" name="widget_air_noi_double_fan" native="true">
+     <property name="geometry">
+      <rect>
+       <x>6</x>
+       <y>6</y>
+       <width>1183</width>
+       <height>679</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">#widget_air_noi_double_fan
+{
+border: 1px solid #000000;
+}</string>
+     </property>
+     <widget class="QWidget" name="layoutWidget_9">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>245</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_22">
+       <item>
+        <widget class="QLabel" name="label_28">
+         <property name="minimumSize">
+          <size>
+           <width>20</width>
+           <height>41</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>20</width>
+           <height>41</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLabel { 
+border: none; 
+background-color : rgb(105, 105, 105);
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_90">
+         <property name="font">
+          <font>
+           <family>Microsoft YaHei</family>
+           <pointsize>24</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLabel { 
+border: none; 
+color : rgb(105, 105, 105);
+}</string>
+         </property>
+         <property name="text">
+          <string>空调器(双风机)</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QPushButton" name="pushButton_air_noi_double_fan_del">
+      <property name="geometry">
+       <rect>
+        <x>1000</x>
+        <y>20</y>
+        <width>51</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+      </property>
+      <property name="text">
+       <string>删除</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_air_noi_double_fan_input">
+      <property name="geometry">
+       <rect>
+        <x>940</x>
+        <y>20</y>
+        <width>51</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+      </property>
+      <property name="text">
+       <string>导入</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_air_noi_double_fan_revise">
+      <property name="geometry">
+       <rect>
+        <x>1060</x>
+        <y>20</y>
+        <width>51</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+      </property>
+      <property name="text">
+       <string>修改</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_air_noi_double_fan_add">
+      <property name="geometry">
+       <rect>
+        <x>1120</x>
+        <y>20</y>
+        <width>51</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+      </property>
+      <property name="text">
+       <string>新增</string>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="tableWidget_air_noi_double_fan">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>1161</width>
+        <height>611</height>
+       </rect>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">/*设置标题(包括垂直+水平的)*/
 QHeaderView
 {							
 	
@@ -2885,57 +3084,9 @@ QTableWidget::item:selected
 		border: 2px solid #0398FC;	
         color : black;				
 }</string>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-       </widget>
-      </widget>
-     </widget>
-     <widget class="QPushButton" name="pushButton_air_double_fan_table">
-      <property name="geometry">
-       <rect>
-        <x>240</x>
-        <y>15</y>
-        <width>81</width>
-        <height>41</height>
-       </rect>
       </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>14</pointsize>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>双风机</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButton_air_single_fan_table">
-      <property name="geometry">
-       <rect>
-        <x>150</x>
-        <y>15</y>
-        <width>81</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>14</pointsize>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton { background-color: #E0EEF9; }</string>
-      </property>
-      <property name="text">
-       <string>单风机</string>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
       </property>
      </widget>
     </widget>
@@ -7322,6 +7473,7 @@ color : rgb(105, 105, 105);
       </property>
       <property name="font">
        <font>
+        <family>黑体</family>
         <pointsize>14</pointsize>
         <bold>true</bold>
        </font>
@@ -7343,7 +7495,7 @@ color : rgb(105, 105, 105);
        </rect>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="page_circular_silencer">
        <widget class="QTableWidget" name="tableWidget_circular_silencer">
@@ -7366,7 +7518,8 @@ color : rgb(105, 105, 105);
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -7402,7 +7555,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -7524,7 +7678,8 @@ QTableWidget::item:selected
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -7560,7 +7715,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -7602,7 +7758,8 @@ QTableWidget::item:selected
 QHeaderView
 {							
 	
-	font-size: 13px;				/*字大小*/
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
 	/*border: 1px solid #B4B4B4;*/
 	border:none;
     /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
@@ -7638,7 +7795,8 @@ QHeaderView::section:horizontal:pressed
 
 QTableWidget 
 {
-		font-size: 13px;				/*10榜*/				
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
 		color : black;				
         border: 1px solid #000000;		
         background: white;
@@ -7671,6 +7829,7 @@ QTableWidget::item:selected
       </property>
       <property name="font">
        <font>
+        <family>黑体</family>
         <pointsize>14</pointsize>
         <bold>true</bold>
        </font>
@@ -7693,6 +7852,7 @@ QTableWidget::item:selected
       </property>
       <property name="font">
        <font>
+        <family>黑体</family>
         <pointsize>14</pointsize>
         <bold>true</bold>
        </font>
@@ -7715,6 +7875,7 @@ QTableWidget::item:selected
       </property>
       <property name="font">
        <font>
+        <family>黑体</family>
         <pointsize>14</pointsize>
         <bold>true</bold>
        </font>
