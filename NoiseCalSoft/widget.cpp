@@ -72,7 +72,8 @@ Widget::Widget(QWidget *parent)
     this->initTableWidget_circular_damper();
     this->initTableWidget_rect_damper();
     this->initTableWidget_pipe();
-    this->initTableWidget_air_noi();
+    this->initTableWidget_air_noi_single();
+    this->initTableWidget_air_noi_double();
     this->initTableWidget_reducer();
     this->initTableWidget_elbow();
     this->initRightButtonMenu();
@@ -201,7 +202,7 @@ void Widget::deleteRowFromTable(QTableWidget *tableWidget, int deleteRowNum, QSt
     for (int i = 0; i < selectedRows.size(); ++i)
     {
         int row = selectedRows[i];
-        confirmationMessage += QString::number(deleteRowNum == 1 ? (row + 1) : ((row + 1) / 2)) + "\n"; // 从1开始计数
+        confirmationMessage += QString::number((row + 1) / deleteRowNum) + "\n"; // 从1开始计数
     }
 
     QMessageBox msgBox;
@@ -560,7 +561,8 @@ void Widget::initializeTreeWidget()
     item_sound_sorce_noise = new QTreeWidgetItem(QStringList("2.声源噪音"));   //1音源噪音
     item_fan_noise = new QTreeWidgetItem(item_sound_sorce_noise,QStringList("风机噪音"));   //1.1风机噪音
     item_fan_coil_noise = new QTreeWidgetItem(item_sound_sorce_noise,QStringList("风机盘管噪音"));   //1.2风机盘管噪音
-    item_aircondition_noise = new QTreeWidgetItem(item_sound_sorce_noise,QStringList("空调器噪音"));   //1.3空调器噪音
+    item_aircondition_noise_single_fan = new QTreeWidgetItem(item_sound_sorce_noise,QStringList("空调器噪音(单风机)"));   //1.3空调器噪音(单风机)
+    item_aircondition_noise_double_fan = new QTreeWidgetItem(item_sound_sorce_noise,QStringList("空调器噪音(双风机)"));   //1.3空调器噪音(双风机)
 
     item_pipe_and_acce_airflow_noise = new QTreeWidgetItem(QStringList("3.管路及附件气流噪音"));            //2.管路及附件气流噪音
     item_valve_noise = new QTreeWidgetItem(item_pipe_and_acce_airflow_noise,QStringList("阀门噪音"));                                  //2.1 阀门噪音
@@ -1018,10 +1020,11 @@ void Widget::initTableWidget_fan_noi()
     int colCount = 18;
     // 设置表头标题
     QStringList headerText;
-    headerText << "" << "序号" << "编号" << "型号" << "风量(m³/h)" << "静压(Pa)"  << "品牌" << "噪音位置" << "63Hz" << "125Hz" << "250Hz"
-               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";
+    headerText << "" << "序号" << "编号" << "型号" << "风量\n(m³/h)" << "静压\n(Pa)"  << "品牌" << "噪音\n位置" << "63Hz\n(dB)"
+               << "125Hz\n(dB)" << "250Hz\n(dB)" << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)"
+               << "8kHz\n(dB)" << "总值\ndB(A)" << "来源";
     // 设置每列的宽度
-    int columnWidths[] = {30, 38, 120, 100, 95, 95, 80, 100, 55, 55, 55, 55, 55, 55, 55, 55, 90, 60};
+    int columnWidths[] = {30, 38, 120, 120, 55, 55, 60, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 60};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_fan_noi, headerText, columnWidths, colCount);
 }
@@ -1045,7 +1048,7 @@ void Widget::on_pushButton_fanNoi_add_clicked()
                 noi->air_volume,
                 noi->static_pressure,
                 noi->brand,
-                "进口(dB)",
+                "进口",
                 noi->noi_in_63,
                 noi->noi_in_125,
                 noi->noi_in_250,
@@ -1055,7 +1058,7 @@ void Widget::on_pushButton_fanNoi_add_clicked()
                 noi->noi_in_4k,
                 noi->noi_in_8k,
                 noi->noi_in_total,
-                "厂家"
+                "厂家信息"
             };
             QStringList data_out = {
                 noi->table_id,
@@ -1064,7 +1067,7 @@ void Widget::on_pushButton_fanNoi_add_clicked()
                 noi->air_volume,
                 noi->static_pressure,
                 noi->brand,
-                "出口(dB)",
+                "出口",
                 noi->noi_out_63,
                 noi->noi_out_125,
                 noi->noi_out_250,
@@ -1079,7 +1082,6 @@ void Widget::on_pushButton_fanNoi_add_clicked()
             // 使用通用函数添加行
             addRowToTable(tableWidget, data_in);
             addRowToTable(tableWidget, data_out);
-            //int numRows = tableWidget->rowCount() - startRow; //获取当前行数
 
             componentManager.addComponent(QSharedPointer<Fan_noise>(noi.release()),"风机");
             for(int i = 0; i < tableWidget->columnCount(); i++)
@@ -1198,9 +1200,9 @@ void Widget::initTableWidget_fanCoil_noi()
 {
     int colCount = 18;
     QStringList headerText;
-    headerText << "" << "序号" << "类型" << "型号" << "风量(m³/h)" << "静压(Pa)" << "品牌" << "噪音位置" << "63Hz" << "125Hz" << "250Hz"
-               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";
-    int columnWidths[] = {30, 40, 90, 120, 90, 95, 95, 80, 55, 55, 55, 55, 55, 55, 55, 55, 80, 55};
+    headerText << "" << "序号" << "类型" << "型号" << "风量\n(m³/h)" << "静压\n(Pa)" << "品牌" << "噪音\n位置" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+               << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)" << "总值\ndB(A)" << "来源";
+    int columnWidths[] = {30, 40, 90, 150, 55, 55, 95, 55, 55, 55, 55, 55, 55, 55, 55, 55, 60, 55};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_fanCoil_noi, headerText, columnWidths, colCount);
 }
@@ -1224,7 +1226,7 @@ void Widget::on_pushButton_fanCoil_noi_add_clicked()
                 noi->air_volume,
                 noi->static_pressure,
                 noi->brand,
-                "进口(dB)",
+                "进口",
                 noi->noi_in_63,
                 noi->noi_in_125,
                 noi->noi_in_250,
@@ -1243,7 +1245,7 @@ void Widget::on_pushButton_fanCoil_noi_add_clicked()
                 noi->air_volume,
                 noi->static_pressure,
                 noi->brand,
-                "出口(dB)",
+                "出口",
                 noi->noi_out_63,
                 noi->noi_out_125,
                 noi->noi_out_250,
@@ -1367,47 +1369,35 @@ void Widget::on_pushButton_fanCoil_noi_revise_clicked()
 
 
 
-/**********空调器噪音**********/
-#pragma region "stack_air_noi"{
+/**********空调器噪音(单风机)**********/
+#pragma region "stack_air_noi_single"{
 
 //初始化表格
-void Widget::initTableWidget_air_noi()
+void Widget::initTableWidget_air_noi_single()
 {
     int colCount = 19;
 
     QStringList headerText;
-    headerText << "" << "序号" << "编号" << "型号" << "风量(m³/h)" << "静压(Pa)" << "品牌" << "类型" << "噪音位置" << "63Hz" << "125Hz" << "250Hz"
-               << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";
+    headerText << "" << "序号" << "编号" << "型号" << "风量\n(m³/h)" << "静压\n(Pa)" << "品牌" << "类型"
+               << "噪音\n位置" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+               << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)" << "总值\ndB(A)" << "来源";
 
-    int columnWidths[] = {30, 38, 120, 100, 100, 95, 95, 80, 80, 55, 55, 55, 55, 55, 55, 55, 55, 90, 60};
+    int columnWidths[] = {30, 40, 120, 120, 55, 55, 55, 80, 60, 55, 55, 55, 55, 55, 55, 55, 55, 55, 60};
 
     // 调用封装好的初始化表格函数
-    initTableWidget(ui->tableWidget_air_single_fan_noi, headerText, columnWidths, colCount);
-    initTableWidget(ui->tableWidget_air_double_fan_noi, headerText, columnWidths, colCount);
+    initTableWidget(ui->tableWidget_air_noi_single_fan, headerText, columnWidths, colCount);
 }
 
-void Widget::on_pushButton_air_noi_add_clicked()
+void Widget::on_pushButton_air_noi_single_fan_add_clicked()
 {
-    QTableWidget *tableWidget = nullptr;
-    Dialog_aircondition_noise *dialog = nullptr;
+    QTableWidget *tableWidget = ui->tableWidget_air_noi_single_fan;
+    Dialog_aircondition_noise *dialog =  new Dialog_aircondition_noise(this,-1,0);
     std::unique_ptr<Aircondition_noise> noi;
-
-    if(ui->stackedWidget_air_table->currentWidget() == ui->page_single_fan)
-    {
-        tableWidget = ui->tableWidget_air_single_fan_noi;
-        dialog = new Dialog_aircondition_noise(this,-1,0);
-    }
-    else if(ui->stackedWidget_air_table->currentWidget() == ui->page_double_fan)
-    {
-        tableWidget = ui->tableWidget_air_double_fan_noi;
-        dialog = new Dialog_aircondition_noise(this,-1,1);
-    }
 
     int rowCount = tableWidget->rowCount(); //获取当前行数
     if (dialog->exec() == QDialog::Accepted) {
         noi = std::make_unique<Aircondition_noise>(std::move(*static_cast<Aircondition_noise*>(dialog->getNoi())));
-        if(tableWidget == ui->tableWidget_air_single_fan_noi) noi->table_id = QString::number(tableWidget->rowCount() / 2 + 1);
-        else if(tableWidget == ui->tableWidget_air_double_fan_noi) noi->table_id = QString::number(tableWidget->rowCount() / 4 + 1);
+        noi->table_id = QString::number(tableWidget->rowCount() / 2 + 1);
         if (noi != nullptr) {
             QStringList data_send_in = {
                 noi->table_id,
@@ -1417,7 +1407,7 @@ void Widget::on_pushButton_air_noi_add_clicked()
                 noi->static_pressure,
                 noi->brand,
                 "送风机",
-                "进口(dB)",
+                "进口",
                 noi->noi_send_in_63,
                 noi->noi_send_in_125,
                 noi->noi_send_in_250,
@@ -1437,7 +1427,7 @@ void Widget::on_pushButton_air_noi_add_clicked()
                 noi->static_pressure,
                 noi->brand,
                 "送风机",
-                "出口(dB)",
+                "出口",
                 noi->noi_send_out_63,
                 noi->noi_send_out_125,
                 noi->noi_send_out_250,
@@ -1453,189 +1443,61 @@ void Widget::on_pushButton_air_noi_add_clicked()
             addRowToTable(tableWidget, data_send_in);
             addRowToTable(tableWidget, data_send_out);
 
-            if(noi->type == "双风机")
-            {
-                QStringList data_exhaust_in = {
-                    noi->table_id,
-                    noi->number,
-                    noi->model,
-                    noi->air_volume,
-                    noi->static_pressure,
-                    noi->brand,
-                    "排风机",
-                    "进口(dB)",
-                    noi->noi_exhaust_in_63,
-                    noi->noi_exhaust_in_125,
-                    noi->noi_exhaust_in_250,
-                    noi->noi_exhaust_in_500,
-                    noi->noi_exhaust_in_1k,
-                    noi->noi_exhaust_in_2k,
-                    noi->noi_exhaust_in_4k,
-                    noi->noi_exhaust_in_8k,
-                    noi->noi_exhaust_in_total,
-                    "厂家"
-                };
-                QStringList data_exhaust_out = {
-                    noi->table_id,
-                    noi->number,
-                    noi->model,
-                    noi->air_volume,
-                    noi->static_pressure,
-                    noi->brand,
-                    "排风机",
-                    "出口(dB)",
-                    noi->noi_exhaust_out_63,
-                    noi->noi_exhaust_out_125,
-                    noi->noi_exhaust_out_250,
-                    noi->noi_exhaust_out_500,
-                    noi->noi_exhaust_out_1k,
-                    noi->noi_exhaust_out_2k,
-                    noi->noi_exhaust_out_4k,
-                    noi->noi_exhaust_out_8k,
-                    noi->noi_exhaust_out_total,
-                    "厂家"
-                };
-                // 使用通用函数添加行
-                addRowToTable(tableWidget, data_exhaust_in);
-                addRowToTable(tableWidget, data_exhaust_out);
-            }
 
             componentManager.addComponent(QSharedPointer<Aircondition_noise>(noi.release()),"空调器");
-            if(tableWidget == ui->tableWidget_air_single_fan_noi)
+            for(int i = 0; i < tableWidget->columnCount(); i++)
             {
-                for(int i = 0; i < tableWidget->columnCount(); i++)
+                if(i < 8 || i > 17)
                 {
-                    if(i < 8 || i > 17)
-                    {
-                        tableWidget->setSpan(rowCount, i, 2, 1);
-                    }
-                }
-            }
-            else if(tableWidget == ui->tableWidget_air_double_fan_noi)
-            {
-                for(int i = 0; i < tableWidget->columnCount(); i++)
-                {
-                    if(i < 7)
-                    {
-                        tableWidget->setSpan(rowCount, i, 4, 1);
-                    }
-                    if(i == 7 || i > 17)
-                    {
-                        tableWidget->setSpan(rowCount, i, 2, 1);
-                        tableWidget->setSpan(rowCount + 2, i, 2, 1);
-                    }
+                    tableWidget->setSpan(rowCount, i, 2, 1);
                 }
             }
         }
     }
 }
 
-
-void Widget::on_pushButton_air_noi_del_clicked()
+void Widget::on_pushButton_air_noi_single_fan_del_clicked()
 {
-    if(ui->stackedWidget_air_table->currentWidget() == ui->page_single_fan)
-    {
-        deleteRowFromTable(ui->tableWidget_air_single_fan_noi, 2, "空调器");
-    }
-    else if(ui->stackedWidget_air_table->currentWidget() == ui->page_double_fan)
-    {
-        deleteRowFromTable(ui->tableWidget_air_double_fan_noi, 4, "空调器");
-    }
-
+    deleteRowFromTable(ui->tableWidget_air_noi_single_fan, 2, "空调器");
 }
 
 //修改按钮
-void Widget::on_pushButton_air_noi_revise_clicked()
+void Widget::on_pushButton_air_noi_single_fan_revise_clicked()
 {
     int colCount = 19;
-    QString origin_type;
     QString table_id = "";
-    for (int row = 0; row < ui->tableWidget_air_single_fan_noi->rowCount(); ++row) {
-        QWidget* widget = ui->tableWidget_air_single_fan_noi->cellWidget(row, 0); // Assuming the checkbox is in the first column (index 0)
+    for (int row = 0; row < ui->tableWidget_air_noi_single_fan->rowCount(); ++row) {
+        QWidget* widget = ui->tableWidget_air_noi_single_fan->cellWidget(row, 0); // Assuming the checkbox is in the first column (index 0)
         QCheckBox* checkBox = widget->findChild<QCheckBox*>(); // Find the checkbox within the widget
         if (checkBox && checkBox->isChecked()) {
             Aircondition_noise *noi = new Aircondition_noise();
-            if(row - 3 > 0 && ui->tableWidget_air_single_fan_noi->item(row - 1,1)->text() == ui->tableWidget_air_single_fan_noi->item(row - 3,1)->text())
-            {
-                noi->type = "双风机";
-                table_id = ui->tableWidget_air_single_fan_noi->item(row - 3,1)->text();
-                noi->number = ui->tableWidget_air_single_fan_noi->item(row - 3,2)->text();
-                noi->brand = ui->tableWidget_air_single_fan_noi->item(row - 3,3)->text();
-                noi->model = ui->tableWidget_air_single_fan_noi->item(row - 3,4)->text();
-                noi->air_volume = ui->tableWidget_air_single_fan_noi->item(row - 3,5)->text();
-                noi->static_pressure = ui->tableWidget_air_single_fan_noi->item(row - 3,6)->text();
+            noi->type = "单风机";
+            table_id = ui->tableWidget_air_noi_single_fan->item(row - 1,1)->text();
+            noi->number = ui->tableWidget_air_noi_single_fan->item(row - 1,2)->text();
+            noi->model = ui->tableWidget_air_noi_single_fan->item(row - 1,3)->text();
+            noi->air_volume = ui->tableWidget_air_noi_single_fan->item(row - 1,4)->text();
+            noi->static_pressure = ui->tableWidget_air_noi_single_fan->item(row - 1,5)->text();
+            noi->brand = ui->tableWidget_air_noi_single_fan->item(row - 1,6)->text();
 
-                noi->noi_send_in_63 = ui->tableWidget_air_single_fan_noi->item(row - 3,9)->text();
-                noi->noi_send_in_125 = ui->tableWidget_air_single_fan_noi->item(row - 3,10)->text();
-                noi->noi_send_in_250 = ui->tableWidget_air_single_fan_noi->item(row - 3,11)->text();
-                noi->noi_send_in_500 = ui->tableWidget_air_single_fan_noi->item(row - 3,12)->text();
-                noi->noi_send_in_1k = ui->tableWidget_air_single_fan_noi->item(row - 3,13)->text();
-                noi->noi_send_in_2k = ui->tableWidget_air_single_fan_noi->item(row - 3,14)->text();
-                noi->noi_send_in_4k = ui->tableWidget_air_single_fan_noi->item(row - 3,15)->text();
-                noi->noi_send_in_8k = ui->tableWidget_air_single_fan_noi->item(row - 3,16)->text();
-                noi->noi_send_in_total = ui->tableWidget_air_single_fan_noi->item(row - 3,17)->text();
+            noi->noi_send_in_63 = ui->tableWidget_air_noi_single_fan->item(row - 1,9)->text();
+            noi->noi_send_in_125 = ui->tableWidget_air_noi_single_fan->item(row - 1,10)->text();
+            noi->noi_send_in_250 = ui->tableWidget_air_noi_single_fan->item(row - 1,11)->text();
+            noi->noi_send_in_500 = ui->tableWidget_air_noi_single_fan->item(row - 1,12)->text();
+            noi->noi_send_in_1k = ui->tableWidget_air_noi_single_fan->item(row - 1,13)->text();
+            noi->noi_send_in_2k = ui->tableWidget_air_noi_single_fan->item(row - 1,14)->text();
+            noi->noi_send_in_4k = ui->tableWidget_air_noi_single_fan->item(row - 1,15)->text();
+            noi->noi_send_in_8k = ui->tableWidget_air_noi_single_fan->item(row - 1,16)->text();
+            noi->noi_send_in_total = ui->tableWidget_air_noi_single_fan->item(row - 1,17)->text();
 
-                noi->noi_send_out_63 = ui->tableWidget_air_single_fan_noi->item(row - 2,9)->text();
-                noi->noi_send_out_125 = ui->tableWidget_air_single_fan_noi->item(row - 2,10)->text();
-                noi->noi_send_out_250 = ui->tableWidget_air_single_fan_noi->item(row - 2,11)->text();
-                noi->noi_send_out_500 = ui->tableWidget_air_single_fan_noi->item(row - 2,12)->text();
-                noi->noi_send_out_1k = ui->tableWidget_air_single_fan_noi->item(row - 2,13)->text();
-                noi->noi_send_out_2k = ui->tableWidget_air_single_fan_noi->item(row - 2,14)->text();
-                noi->noi_send_out_4k = ui->tableWidget_air_single_fan_noi->item(row - 2,15)->text();
-                noi->noi_send_out_8k = ui->tableWidget_air_single_fan_noi->item(row - 2,16)->text();
-                noi->noi_send_out_total = ui->tableWidget_air_single_fan_noi->item(row - 2,17)->text();
-
-                noi->noi_exhaust_in_63 = ui->tableWidget_air_single_fan_noi->item(row - 1,9)->text();
-                noi->noi_exhaust_in_125 = ui->tableWidget_air_single_fan_noi->item(row - 1,10)->text();
-                noi->noi_exhaust_in_250 = ui->tableWidget_air_single_fan_noi->item(row - 1,11)->text();
-                noi->noi_exhaust_in_500 = ui->tableWidget_air_single_fan_noi->item(row - 1,12)->text();
-                noi->noi_exhaust_in_1k = ui->tableWidget_air_single_fan_noi->item(row - 1,13)->text();
-                noi->noi_exhaust_in_2k = ui->tableWidget_air_single_fan_noi->item(row - 1,14)->text();
-                noi->noi_exhaust_in_4k = ui->tableWidget_air_single_fan_noi->item(row - 1,15)->text();
-                noi->noi_exhaust_in_8k = ui->tableWidget_air_single_fan_noi->item(row - 1,16)->text();
-                noi->noi_exhaust_in_total = ui->tableWidget_air_single_fan_noi->item(row - 1,17)->text();
-
-                noi->noi_exhaust_out_63 = ui->tableWidget_air_single_fan_noi->item(row,9)->text();
-                noi->noi_exhaust_out_125 = ui->tableWidget_air_single_fan_noi->item(row,10)->text();
-                noi->noi_exhaust_out_250 = ui->tableWidget_air_single_fan_noi->item(row,11)->text();
-                noi->noi_exhaust_out_500 = ui->tableWidget_air_single_fan_noi->item(row,12)->text();
-                noi->noi_exhaust_out_1k = ui->tableWidget_air_single_fan_noi->item(row,13)->text();
-                noi->noi_exhaust_out_2k = ui->tableWidget_air_single_fan_noi->item(row,14)->text();
-                noi->noi_exhaust_out_4k = ui->tableWidget_air_single_fan_noi->item(row,15)->text();
-                noi->noi_exhaust_out_8k = ui->tableWidget_air_single_fan_noi->item(row,16)->text();
-                noi->noi_exhaust_out_total = ui->tableWidget_air_single_fan_noi->item(row,17)->text();
-            }
-            else
-            {
-                noi->type = "单风机";
-                table_id = ui->tableWidget_air_single_fan_noi->item(row - 1,1)->text();
-                noi->number = ui->tableWidget_air_single_fan_noi->item(row - 1,2)->text();
-                noi->model = ui->tableWidget_air_single_fan_noi->item(row - 1,3)->text();
-                noi->air_volume = ui->tableWidget_air_single_fan_noi->item(row - 1,4)->text();
-                noi->static_pressure = ui->tableWidget_air_single_fan_noi->item(row - 1,5)->text();
-                noi->brand = ui->tableWidget_air_single_fan_noi->item(row - 1,6)->text();
-
-                noi->noi_send_in_63 = ui->tableWidget_air_single_fan_noi->item(row - 1,9)->text();
-                noi->noi_send_in_125 = ui->tableWidget_air_single_fan_noi->item(row - 1,10)->text();
-                noi->noi_send_in_250 = ui->tableWidget_air_single_fan_noi->item(row - 1,11)->text();
-                noi->noi_send_in_500 = ui->tableWidget_air_single_fan_noi->item(row - 1,12)->text();
-                noi->noi_send_in_1k = ui->tableWidget_air_single_fan_noi->item(row - 1,13)->text();
-                noi->noi_send_in_2k = ui->tableWidget_air_single_fan_noi->item(row - 1,14)->text();
-                noi->noi_send_in_4k = ui->tableWidget_air_single_fan_noi->item(row - 1,15)->text();
-                noi->noi_send_in_8k = ui->tableWidget_air_single_fan_noi->item(row - 1,16)->text();
-                noi->noi_send_in_total = ui->tableWidget_air_single_fan_noi->item(row - 1,17)->text();
-
-                noi->noi_send_out_63 = ui->tableWidget_air_single_fan_noi->item(row,9)->text();
-                noi->noi_send_out_125 = ui->tableWidget_air_single_fan_noi->item(row,10)->text();
-                noi->noi_send_out_250 = ui->tableWidget_air_single_fan_noi->item(row,11)->text();
-                noi->noi_send_out_500 = ui->tableWidget_air_single_fan_noi->item(row,12)->text();
-                noi->noi_send_out_1k = ui->tableWidget_air_single_fan_noi->item(row,13)->text();
-                noi->noi_send_out_2k = ui->tableWidget_air_single_fan_noi->item(row,14)->text();
-                noi->noi_send_out_4k = ui->tableWidget_air_single_fan_noi->item(row,15)->text();
-                noi->noi_send_out_8k = ui->tableWidget_air_single_fan_noi->item(row,16)->text();
-                noi->noi_send_out_total = ui->tableWidget_air_single_fan_noi->item(row,17)->text();
-            }
-            origin_type = noi->type;
+            noi->noi_send_out_63 = ui->tableWidget_air_noi_single_fan->item(row,9)->text();
+            noi->noi_send_out_125 = ui->tableWidget_air_noi_single_fan->item(row,10)->text();
+            noi->noi_send_out_250 = ui->tableWidget_air_noi_single_fan->item(row,11)->text();
+            noi->noi_send_out_500 = ui->tableWidget_air_noi_single_fan->item(row,12)->text();
+            noi->noi_send_out_1k = ui->tableWidget_air_noi_single_fan->item(row,13)->text();
+            noi->noi_send_out_2k = ui->tableWidget_air_noi_single_fan->item(row,14)->text();
+            noi->noi_send_out_4k = ui->tableWidget_air_noi_single_fan->item(row,15)->text();
+            noi->noi_send_out_8k = ui->tableWidget_air_noi_single_fan->item(row,16)->text();
+            noi->noi_send_out_total = ui->tableWidget_air_noi_single_fan->item(row,17)->text();
             // 创建模态对话框，并设置为模态
             Dialog_aircondition_noise *airNoiseDialog = new Dialog_aircondition_noise(this,row, 0,*noi);
             airNoiseDialog->setWindowModality(Qt::ApplicationModal);
@@ -1645,110 +1507,37 @@ void Widget::on_pushButton_air_noi_revise_clicked()
             if (airNoiseDialog->exec() == QDialog::Accepted)
             {
                 noi = static_cast<Aircondition_noise*>(airNoiseDialog->getNoi());
-                if(origin_type == noi->type && noi->type == "单风机")
-                {
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,2)->setText(noi->number);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,3)->setText(noi->brand);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,4)->setText(noi->air_volume);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,5)->setText(noi->static_pressure);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,6)->setText(noi->model);
+                ui->tableWidget_air_noi_single_fan->item(row - 1,2)->setText(noi->number);
+                ui->tableWidget_air_noi_single_fan->item(row - 1,3)->setText(noi->brand);
+                ui->tableWidget_air_noi_single_fan->item(row - 1,4)->setText(noi->air_volume);
+                ui->tableWidget_air_noi_single_fan->item(row - 1,5)->setText(noi->static_pressure);
+                ui->tableWidget_air_noi_single_fan->item(row - 1,6)->setText(noi->model);
 
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,9)->setText(noi->noi_send_in_63);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,10)->setText(noi->noi_send_in_125);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,11)->setText(noi->noi_send_in_250);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,12)->setText(noi->noi_send_in_500);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,13)->setText(noi->noi_send_in_1k);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,14)->setText(noi->noi_send_in_2k);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,15)->setText(noi->noi_send_in_4k);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,16)->setText(noi->noi_send_in_8k);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,17)->setText(noi->noi_send_in_total);
+                ui->tableWidget_air_noi_single_fan->item(row - 1,9)->setText(noi->noi_send_in_63);
+                ui->tableWidget_air_noi_single_fan->item(row - 1,10)->setText(noi->noi_send_in_125);
+                ui->tableWidget_air_noi_single_fan->item(row - 1,11)->setText(noi->noi_send_in_250);
+                ui->tableWidget_air_noi_single_fan->item(row - 1,12)->setText(noi->noi_send_in_500);
+                ui->tableWidget_air_noi_single_fan->item(row - 1,13)->setText(noi->noi_send_in_1k);
+                ui->tableWidget_air_noi_single_fan->item(row - 1,14)->setText(noi->noi_send_in_2k);
+                ui->tableWidget_air_noi_single_fan->item(row - 1,15)->setText(noi->noi_send_in_4k);
+                ui->tableWidget_air_noi_single_fan->item(row - 1,16)->setText(noi->noi_send_in_8k);
+                ui->tableWidget_air_noi_single_fan->item(row - 1,17)->setText(noi->noi_send_in_total);
 
-                    ui->tableWidget_air_single_fan_noi->item(row,2)->setText(noi->number);
-                    ui->tableWidget_air_single_fan_noi->item(row,3)->setText(noi->brand);
-                    ui->tableWidget_air_single_fan_noi->item(row,4)->setText(noi->air_volume);
-                    ui->tableWidget_air_single_fan_noi->item(row,5)->setText(noi->static_pressure);
-                    ui->tableWidget_air_single_fan_noi->item(row,6)->setText(noi->model);
+                ui->tableWidget_air_noi_single_fan->item(row,2)->setText(noi->number);
+                ui->tableWidget_air_noi_single_fan->item(row,3)->setText(noi->brand);
+                ui->tableWidget_air_noi_single_fan->item(row,4)->setText(noi->air_volume);
+                ui->tableWidget_air_noi_single_fan->item(row,5)->setText(noi->static_pressure);
+                ui->tableWidget_air_noi_single_fan->item(row,6)->setText(noi->model);
 
-                    ui->tableWidget_air_single_fan_noi->item(row,9)->setText(noi->noi_send_out_63);
-                    ui->tableWidget_air_single_fan_noi->item(row,10)->setText(noi->noi_send_out_125);
-                    ui->tableWidget_air_single_fan_noi->item(row,11)->setText(noi->noi_send_out_250);
-                    ui->tableWidget_air_single_fan_noi->item(row,12)->setText(noi->noi_send_out_500);
-                    ui->tableWidget_air_single_fan_noi->item(row,13)->setText(noi->noi_send_out_1k);
-                    ui->tableWidget_air_single_fan_noi->item(row,14)->setText(noi->noi_send_out_2k);
-                    ui->tableWidget_air_single_fan_noi->item(row,15)->setText(noi->noi_send_out_4k);
-                    ui->tableWidget_air_single_fan_noi->item(row,16)->setText(noi->noi_send_out_8k);
-                    ui->tableWidget_air_single_fan_noi->item(row,17)->setText(noi->noi_send_out_total);
-                }
-                else if(origin_type == noi->type && noi->type == "双风机")
-                {
-                    ui->tableWidget_air_single_fan_noi->item(row - 3,2)->setText(noi->number);
-                    ui->tableWidget_air_single_fan_noi->item(row - 3,3)->setText(noi->brand);
-                    ui->tableWidget_air_single_fan_noi->item(row - 3,4)->setText(noi->air_volume);
-                    ui->tableWidget_air_single_fan_noi->item(row - 3,5)->setText(noi->static_pressure);
-                    ui->tableWidget_air_single_fan_noi->item(row - 3,6)->setText(noi->model);
-
-                    ui->tableWidget_air_single_fan_noi->item(row - 3,9)->setText(noi->noi_send_in_63);
-                    ui->tableWidget_air_single_fan_noi->item(row - 3,10)->setText(noi->noi_send_in_125);
-                    ui->tableWidget_air_single_fan_noi->item(row - 3,11)->setText(noi->noi_send_in_250);
-                    ui->tableWidget_air_single_fan_noi->item(row - 3,12)->setText(noi->noi_send_in_500);
-                    ui->tableWidget_air_single_fan_noi->item(row - 3,13)->setText(noi->noi_send_in_1k);
-                    ui->tableWidget_air_single_fan_noi->item(row - 3,14)->setText(noi->noi_send_in_2k);
-                    ui->tableWidget_air_single_fan_noi->item(row - 3,15)->setText(noi->noi_send_in_4k);
-                    ui->tableWidget_air_single_fan_noi->item(row - 3,16)->setText(noi->noi_send_in_8k);
-                    ui->tableWidget_air_single_fan_noi->item(row - 3,17)->setText(noi->noi_send_in_total);
-
-                    ui->tableWidget_air_single_fan_noi->item(row - 2,2)->setText(noi->number);
-                    ui->tableWidget_air_single_fan_noi->item(row - 2,3)->setText(noi->brand);
-                    ui->tableWidget_air_single_fan_noi->item(row - 2,4)->setText(noi->air_volume);
-                    ui->tableWidget_air_single_fan_noi->item(row - 2,5)->setText(noi->static_pressure);
-                    ui->tableWidget_air_single_fan_noi->item(row - 2,6)->setText(noi->model);
-
-                    ui->tableWidget_air_single_fan_noi->item(row - 2,9)->setText(noi->noi_send_out_63);
-                    ui->tableWidget_air_single_fan_noi->item(row - 2,10)->setText(noi->noi_send_out_125);
-                    ui->tableWidget_air_single_fan_noi->item(row - 2,11)->setText(noi->noi_send_out_250);
-                    ui->tableWidget_air_single_fan_noi->item(row - 2,12)->setText(noi->noi_send_out_500);
-                    ui->tableWidget_air_single_fan_noi->item(row - 2,13)->setText(noi->noi_send_out_1k);
-                    ui->tableWidget_air_single_fan_noi->item(row - 2,14)->setText(noi->noi_send_out_2k);
-                    ui->tableWidget_air_single_fan_noi->item(row - 2,15)->setText(noi->noi_send_out_4k);
-                    ui->tableWidget_air_single_fan_noi->item(row - 2,16)->setText(noi->noi_send_out_8k);
-                    ui->tableWidget_air_single_fan_noi->item(row - 2,17)->setText(noi->noi_send_out_total);
-
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,2)->setText(noi->number);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,3)->setText(noi->brand);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,4)->setText(noi->air_volume);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,5)->setText(noi->static_pressure);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,6)->setText(noi->model);
-
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,9)->setText(noi->noi_exhaust_in_63);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,10)->setText(noi->noi_exhaust_in_125);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,11)->setText(noi->noi_exhaust_in_250);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,12)->setText(noi->noi_exhaust_in_500);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,13)->setText(noi->noi_exhaust_in_1k);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,14)->setText(noi->noi_exhaust_in_2k);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,15)->setText(noi->noi_exhaust_in_4k);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,16)->setText(noi->noi_exhaust_in_8k);
-                    ui->tableWidget_air_single_fan_noi->item(row - 1,17)->setText(noi->noi_exhaust_in_total);
-
-                    ui->tableWidget_air_single_fan_noi->item(row,2)->setText(noi->number);
-                    ui->tableWidget_air_single_fan_noi->item(row,3)->setText(noi->brand);
-                    ui->tableWidget_air_single_fan_noi->item(row,4)->setText(noi->air_volume);
-                    ui->tableWidget_air_single_fan_noi->item(row,5)->setText(noi->static_pressure);
-                    ui->tableWidget_air_single_fan_noi->item(row,6)->setText(noi->model);
-
-                    ui->tableWidget_air_single_fan_noi->item(row,9)->setText(noi->noi_exhaust_out_63);
-                    ui->tableWidget_air_single_fan_noi->item(row,10)->setText(noi->noi_exhaust_out_125);
-                    ui->tableWidget_air_single_fan_noi->item(row,11)->setText(noi->noi_exhaust_out_250);
-                    ui->tableWidget_air_single_fan_noi->item(row,12)->setText(noi->noi_exhaust_out_500);
-                    ui->tableWidget_air_single_fan_noi->item(row,13)->setText(noi->noi_exhaust_out_1k);
-                    ui->tableWidget_air_single_fan_noi->item(row,14)->setText(noi->noi_exhaust_out_2k);
-                    ui->tableWidget_air_single_fan_noi->item(row,15)->setText(noi->noi_exhaust_out_4k);
-                    ui->tableWidget_air_single_fan_noi->item(row,16)->setText(noi->noi_exhaust_out_8k);
-                    ui->tableWidget_air_single_fan_noi->item(row,17)->setText(noi->noi_exhaust_out_total);
-                }
-                else if(origin_type != noi->type && noi->type == "单风机")
-                {
-                    //ui->tableWidget_air_single_fan_noi->
-                }
+                ui->tableWidget_air_noi_single_fan->item(row,9)->setText(noi->noi_send_out_63);
+                ui->tableWidget_air_noi_single_fan->item(row,10)->setText(noi->noi_send_out_125);
+                ui->tableWidget_air_noi_single_fan->item(row,11)->setText(noi->noi_send_out_250);
+                ui->tableWidget_air_noi_single_fan->item(row,12)->setText(noi->noi_send_out_500);
+                ui->tableWidget_air_noi_single_fan->item(row,13)->setText(noi->noi_send_out_1k);
+                ui->tableWidget_air_noi_single_fan->item(row,14)->setText(noi->noi_send_out_2k);
+                ui->tableWidget_air_noi_single_fan->item(row,15)->setText(noi->noi_send_out_4k);
+                ui->tableWidget_air_noi_single_fan->item(row,16)->setText(noi->noi_send_out_8k);
+                ui->tableWidget_air_noi_single_fan->item(row,17)->setText(noi->noi_send_out_total);
             }
             noi->table_id = table_id;
             componentManager.updateRevisedComponent(noi->table_id, QSharedPointer<Aircondition_noise>(new Aircondition_noise(*noi)),"空调器");
@@ -1758,27 +1547,289 @@ void Widget::on_pushButton_air_noi_revise_clicked()
     }
 }
 
-void Widget::on_pushButton_air_single_fan_table_clicked()
-{
-    ui->stackedWidget_air_table->setCurrentWidget(ui->page_single_fan);
+#pragma endregion}
+/**********空调器噪音(单风机)**********/
 
-    ui->pushButton_air_single_fan_table->setStyleSheet("QPushButton { background-color: #E0EEF9; }");
-    ui->pushButton_air_double_fan_table->setStyleSheet("QPushButton { background-color: white; }");
+/**********空调器噪音(双风机)**********/
+#pragma region "stack_air_noi_double"{
+//初始化表格
+void Widget::initTableWidget_air_noi_double()
+{
+    int colCount = 19;
+
+    QStringList headerText;
+    headerText << "" << "序号" << "编号" << "型号" << "风量\n(m³/h)" << "静压\n(Pa)" << "品牌" << "类型"
+               << "噪音\n位置" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+               << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)" << "总值\ndB(A)" << "来源";
+
+    int columnWidths[] = {30, 40, 120, 120, 55, 55, 55, 80, 60, 55, 55, 55, 55, 55, 55, 55, 55, 55, 60};
+    initTableWidget(ui->tableWidget_air_noi_double_fan, headerText, columnWidths, colCount);
 }
 
-void Widget::on_pushButton_air_double_fan_table_clicked()
+void Widget::on_pushButton_air_noi_double_fan_add_clicked()
 {
-    ui->stackedWidget_air_table->setCurrentWidget(ui->page_double_fan);
+    QTableWidget *tableWidget = ui->tableWidget_air_noi_double_fan;
+    Dialog_aircondition_noise *dialog = new Dialog_aircondition_noise(this,-1,1);
+    std::unique_ptr<Aircondition_noise> noi;
 
-    ui->pushButton_air_double_fan_table->setStyleSheet("QPushButton { background-color: #E0EEF9; }");
-    ui->pushButton_air_single_fan_table->setStyleSheet("QPushButton { background-color: white; }");
+    int rowCount = tableWidget->rowCount(); //获取当前行数
+    if (dialog->exec() == QDialog::Accepted) {
+        noi = std::make_unique<Aircondition_noise>(std::move(*static_cast<Aircondition_noise*>(dialog->getNoi())));
+        noi->table_id = QString::number(tableWidget->rowCount() / 4 + 1);
+        if (noi != nullptr) {
+            QStringList data_send_in = {
+                noi->table_id,
+                noi->number,
+                noi->model,
+                noi->air_volume,
+                noi->static_pressure,
+                noi->brand,
+                "送风机",
+                "进口",
+                noi->noi_send_in_63,
+                noi->noi_send_in_125,
+                noi->noi_send_in_250,
+                noi->noi_send_in_500,
+                noi->noi_send_in_1k,
+                noi->noi_send_in_2k,
+                noi->noi_send_in_4k,
+                noi->noi_send_in_8k,
+                noi->noi_send_in_total,
+                "厂家"
+            };
+            QStringList data_send_out = {
+                noi->table_id,
+                noi->number,
+                noi->model,
+                noi->air_volume,
+                noi->static_pressure,
+                noi->brand,
+                "送风机",
+                "出口",
+                noi->noi_send_out_63,
+                noi->noi_send_out_125,
+                noi->noi_send_out_250,
+                noi->noi_send_out_500,
+                noi->noi_send_out_1k,
+                noi->noi_send_out_2k,
+                noi->noi_send_out_4k,
+                noi->noi_send_out_8k,
+                noi->noi_send_out_total,
+                "厂家"
+            };
+
+            QStringList data_exhaust_in = {
+                noi->table_id,
+                noi->number,
+                noi->model,
+                noi->air_volume,
+                noi->static_pressure,
+                noi->brand,
+                "排风机",
+                "进口",
+                noi->noi_exhaust_in_63,
+                noi->noi_exhaust_in_125,
+                noi->noi_exhaust_in_250,
+                noi->noi_exhaust_in_500,
+                noi->noi_exhaust_in_1k,
+                noi->noi_exhaust_in_2k,
+                noi->noi_exhaust_in_4k,
+                noi->noi_exhaust_in_8k,
+                noi->noi_exhaust_in_total,
+                "厂家"
+            };
+
+            QStringList data_exhaust_out = {
+                noi->table_id,
+                noi->number,
+                noi->model,
+                noi->air_volume,
+                noi->static_pressure,
+                noi->brand,
+                "排风机",
+                "出口",
+                noi->noi_exhaust_out_63,
+                noi->noi_exhaust_out_125,
+                noi->noi_exhaust_out_250,
+                noi->noi_exhaust_out_500,
+                noi->noi_exhaust_out_1k,
+                noi->noi_exhaust_out_2k,
+                noi->noi_exhaust_out_4k,
+                noi->noi_exhaust_out_8k,
+                noi->noi_exhaust_out_total,
+                "厂家"
+            };
+            // 使用通用函数添加行
+            addRowToTable(tableWidget, data_send_in);
+            addRowToTable(tableWidget, data_send_out);
+            addRowToTable(tableWidget, data_exhaust_in);
+            addRowToTable(tableWidget, data_exhaust_out);
+
+            componentManager.addComponent(QSharedPointer<Aircondition_noise>(noi.release()),"空调器");
+            for(int i = 0; i < tableWidget->columnCount(); i++)
+            {
+                if(i < 7)
+                {
+                    tableWidget->setSpan(rowCount, i, 4, 1);
+                }
+                if(i == 7 || i > 17)
+                {
+                    tableWidget->setSpan(rowCount, i, 2, 1);
+                    tableWidget->setSpan(rowCount + 2, i, 2, 1);
+                }
+            }
+        }
+    }
 }
 
+void Widget::on_pushButton_air_noi_double_fan_del_clicked()
+{
+    deleteRowFromTable(ui->tableWidget_air_noi_double_fan, 4, "空调器");
+}
+
+//修改按钮
+void Widget::on_pushButton_air_noi_double_fan_revise_clicked()
+{
+    int colCount = 19;
+    QString table_id = "";
+    for (int row = 0; row < ui->tableWidget_air_noi_double_fan->rowCount(); ++row) {
+        QWidget* widget = ui->tableWidget_air_noi_double_fan->cellWidget(row, 0); // Assuming the checkbox is in the first column (index 0)
+        QCheckBox* checkBox = widget->findChild<QCheckBox*>(); // Find the checkbox within the widget
+        if (checkBox && checkBox->isChecked()) {
+            Aircondition_noise *noi = new Aircondition_noise();
+            noi->type = "双风机";
+            table_id = ui->tableWidget_air_noi_double_fan->item(row - 3,1)->text();
+            noi->number = ui->tableWidget_air_noi_double_fan->item(row - 3,2)->text();
+            noi->model = ui->tableWidget_air_noi_double_fan->item(row - 3,2)->text();
+            noi->air_volume = ui->tableWidget_air_noi_double_fan->item(row - 3,4)->text();
+            noi->static_pressure = ui->tableWidget_air_noi_double_fan->item(row - 3,5)->text();
+            noi->brand = ui->tableWidget_air_noi_double_fan->item(row - 3,6)->text();
+
+            noi->noi_send_in_63 = ui->tableWidget_air_noi_double_fan->item(row - 3,9)->text();
+            noi->noi_send_in_125 = ui->tableWidget_air_noi_double_fan->item(row - 3,10)->text();
+            noi->noi_send_in_250 = ui->tableWidget_air_noi_double_fan->item(row - 3,11)->text();
+            noi->noi_send_in_500 = ui->tableWidget_air_noi_double_fan->item(row - 3,12)->text();
+            noi->noi_send_in_1k = ui->tableWidget_air_noi_double_fan->item(row - 3,13)->text();
+            noi->noi_send_in_2k = ui->tableWidget_air_noi_double_fan->item(row - 3,14)->text();
+            noi->noi_send_in_4k = ui->tableWidget_air_noi_double_fan->item(row - 3,15)->text();
+            noi->noi_send_in_8k = ui->tableWidget_air_noi_double_fan->item(row - 3,16)->text();
+            noi->noi_send_in_total = ui->tableWidget_air_noi_double_fan->item(row - 3,17)->text();
+
+            noi->noi_send_out_63 = ui->tableWidget_air_noi_double_fan->item(row - 2,9)->text();
+            noi->noi_send_out_125 = ui->tableWidget_air_noi_double_fan->item(row - 2,10)->text();
+            noi->noi_send_out_250 = ui->tableWidget_air_noi_double_fan->item(row - 2,11)->text();
+            noi->noi_send_out_500 = ui->tableWidget_air_noi_double_fan->item(row - 2,12)->text();
+            noi->noi_send_out_1k = ui->tableWidget_air_noi_double_fan->item(row - 2,13)->text();
+            noi->noi_send_out_2k = ui->tableWidget_air_noi_double_fan->item(row - 2,14)->text();
+            noi->noi_send_out_4k = ui->tableWidget_air_noi_double_fan->item(row - 2,15)->text();
+            noi->noi_send_out_8k = ui->tableWidget_air_noi_double_fan->item(row - 2,16)->text();
+            noi->noi_send_out_total = ui->tableWidget_air_noi_double_fan->item(row - 2,17)->text();
+
+            noi->noi_exhaust_in_63 = ui->tableWidget_air_noi_double_fan->item(row - 1,9)->text();
+            noi->noi_exhaust_in_125 = ui->tableWidget_air_noi_double_fan->item(row - 1,10)->text();
+            noi->noi_exhaust_in_250 = ui->tableWidget_air_noi_double_fan->item(row - 1,11)->text();
+            noi->noi_exhaust_in_500 = ui->tableWidget_air_noi_double_fan->item(row - 1,12)->text();
+            noi->noi_exhaust_in_1k = ui->tableWidget_air_noi_double_fan->item(row - 1,13)->text();
+            noi->noi_exhaust_in_2k = ui->tableWidget_air_noi_double_fan->item(row - 1,14)->text();
+            noi->noi_exhaust_in_4k = ui->tableWidget_air_noi_double_fan->item(row - 1,15)->text();
+            noi->noi_exhaust_in_8k = ui->tableWidget_air_noi_double_fan->item(row - 1,16)->text();
+            noi->noi_exhaust_in_total = ui->tableWidget_air_noi_double_fan->item(row - 1,17)->text();
+
+            noi->noi_exhaust_out_63 = ui->tableWidget_air_noi_double_fan->item(row,9)->text();
+            noi->noi_exhaust_out_125 = ui->tableWidget_air_noi_double_fan->item(row,10)->text();
+            noi->noi_exhaust_out_250 = ui->tableWidget_air_noi_double_fan->item(row,11)->text();
+            noi->noi_exhaust_out_500 = ui->tableWidget_air_noi_double_fan->item(row,12)->text();
+            noi->noi_exhaust_out_1k = ui->tableWidget_air_noi_double_fan->item(row,13)->text();
+            noi->noi_exhaust_out_2k = ui->tableWidget_air_noi_double_fan->item(row,14)->text();
+            noi->noi_exhaust_out_4k = ui->tableWidget_air_noi_double_fan->item(row,15)->text();
+            noi->noi_exhaust_out_8k = ui->tableWidget_air_noi_double_fan->item(row,16)->text();
+            noi->noi_exhaust_out_total = ui->tableWidget_air_noi_double_fan->item(row,17)->text();
+
+
+
+            // 创建模态对话框，并设置为模态
+            Dialog_aircondition_noise *airNoiseDialog = new Dialog_aircondition_noise(this,row, 1,*noi);
+            airNoiseDialog->setWindowModality(Qt::ApplicationModal);
+            airNoiseDialog->setModal(true);
+
+            // 显示对话框,等待用户操作
+            if (airNoiseDialog->exec() == QDialog::Accepted)
+            {
+                noi = static_cast<Aircondition_noise*>(airNoiseDialog->getNoi());
+                ui->tableWidget_air_noi_double_fan->item(row - 3,2)->setText(noi->number);
+                ui->tableWidget_air_noi_double_fan->item(row - 3,3)->setText(noi->brand);
+                ui->tableWidget_air_noi_double_fan->item(row - 3,4)->setText(noi->air_volume);
+                ui->tableWidget_air_noi_double_fan->item(row - 3,5)->setText(noi->static_pressure);
+                ui->tableWidget_air_noi_double_fan->item(row - 3,6)->setText(noi->model);
+
+                ui->tableWidget_air_noi_double_fan->item(row - 3,9)->setText(noi->noi_send_in_63);
+                ui->tableWidget_air_noi_double_fan->item(row - 3,10)->setText(noi->noi_send_in_125);
+                ui->tableWidget_air_noi_double_fan->item(row - 3,11)->setText(noi->noi_send_in_250);
+                ui->tableWidget_air_noi_double_fan->item(row - 3,12)->setText(noi->noi_send_in_500);
+                ui->tableWidget_air_noi_double_fan->item(row - 3,13)->setText(noi->noi_send_in_1k);
+                ui->tableWidget_air_noi_double_fan->item(row - 3,14)->setText(noi->noi_send_in_2k);
+                ui->tableWidget_air_noi_double_fan->item(row - 3,15)->setText(noi->noi_send_in_4k);
+                ui->tableWidget_air_noi_double_fan->item(row - 3,16)->setText(noi->noi_send_in_8k);
+                ui->tableWidget_air_noi_double_fan->item(row - 3,17)->setText(noi->noi_send_in_total);
+
+                ui->tableWidget_air_noi_double_fan->item(row - 2,2)->setText(noi->number);
+                ui->tableWidget_air_noi_double_fan->item(row - 2,3)->setText(noi->brand);
+                ui->tableWidget_air_noi_double_fan->item(row - 2,4)->setText(noi->air_volume);
+                ui->tableWidget_air_noi_double_fan->item(row - 2,5)->setText(noi->static_pressure);
+                ui->tableWidget_air_noi_double_fan->item(row - 2,6)->setText(noi->model);
+
+                ui->tableWidget_air_noi_double_fan->item(row - 2,9)->setText(noi->noi_send_out_63);
+                ui->tableWidget_air_noi_double_fan->item(row - 2,10)->setText(noi->noi_send_out_125);
+                ui->tableWidget_air_noi_double_fan->item(row - 2,11)->setText(noi->noi_send_out_250);
+                ui->tableWidget_air_noi_double_fan->item(row - 2,12)->setText(noi->noi_send_out_500);
+                ui->tableWidget_air_noi_double_fan->item(row - 2,13)->setText(noi->noi_send_out_1k);
+                ui->tableWidget_air_noi_double_fan->item(row - 2,14)->setText(noi->noi_send_out_2k);
+                ui->tableWidget_air_noi_double_fan->item(row - 2,15)->setText(noi->noi_send_out_4k);
+                ui->tableWidget_air_noi_double_fan->item(row - 2,16)->setText(noi->noi_send_out_8k);
+                ui->tableWidget_air_noi_double_fan->item(row - 2,17)->setText(noi->noi_send_out_total);
+
+                ui->tableWidget_air_noi_double_fan->item(row - 1,2)->setText(noi->number);
+                ui->tableWidget_air_noi_double_fan->item(row - 1,3)->setText(noi->brand);
+                ui->tableWidget_air_noi_double_fan->item(row - 1,4)->setText(noi->air_volume);
+                ui->tableWidget_air_noi_double_fan->item(row - 1,5)->setText(noi->static_pressure);
+                ui->tableWidget_air_noi_double_fan->item(row - 1,6)->setText(noi->model);
+
+                ui->tableWidget_air_noi_double_fan->item(row - 1,9)->setText(noi->noi_exhaust_in_63);
+                ui->tableWidget_air_noi_double_fan->item(row - 1,10)->setText(noi->noi_exhaust_in_125);
+                ui->tableWidget_air_noi_double_fan->item(row - 1,11)->setText(noi->noi_exhaust_in_250);
+                ui->tableWidget_air_noi_double_fan->item(row - 1,12)->setText(noi->noi_exhaust_in_500);
+                ui->tableWidget_air_noi_double_fan->item(row - 1,13)->setText(noi->noi_exhaust_in_1k);
+                ui->tableWidget_air_noi_double_fan->item(row - 1,14)->setText(noi->noi_exhaust_in_2k);
+                ui->tableWidget_air_noi_double_fan->item(row - 1,15)->setText(noi->noi_exhaust_in_4k);
+                ui->tableWidget_air_noi_double_fan->item(row - 1,16)->setText(noi->noi_exhaust_in_8k);
+                ui->tableWidget_air_noi_double_fan->item(row - 1,17)->setText(noi->noi_exhaust_in_total);
+
+                ui->tableWidget_air_noi_double_fan->item(row,2)->setText(noi->number);
+                ui->tableWidget_air_noi_double_fan->item(row,3)->setText(noi->model);
+                ui->tableWidget_air_noi_double_fan->item(row,4)->setText(noi->static_pressure);
+                ui->tableWidget_air_noi_double_fan->item(row,5)->setText(noi->air_volume);
+                ui->tableWidget_air_noi_double_fan->item(row,6)->setText(noi->brand);
+
+                ui->tableWidget_air_noi_double_fan->item(row,9)->setText(noi->noi_exhaust_out_63);
+                ui->tableWidget_air_noi_double_fan->item(row,10)->setText(noi->noi_exhaust_out_125);
+                ui->tableWidget_air_noi_double_fan->item(row,11)->setText(noi->noi_exhaust_out_250);
+                ui->tableWidget_air_noi_double_fan->item(row,12)->setText(noi->noi_exhaust_out_500);
+                ui->tableWidget_air_noi_double_fan->item(row,13)->setText(noi->noi_exhaust_out_1k);
+                ui->tableWidget_air_noi_double_fan->item(row,14)->setText(noi->noi_exhaust_out_2k);
+                ui->tableWidget_air_noi_double_fan->item(row,15)->setText(noi->noi_exhaust_out_4k);
+                ui->tableWidget_air_noi_double_fan->item(row,16)->setText(noi->noi_exhaust_out_8k);
+                ui->tableWidget_air_noi_double_fan->item(row,17)->setText(noi->noi_exhaust_out_total);
+            }
+            noi->table_id = table_id;
+            componentManager.updateRevisedComponent(noi->table_id, QSharedPointer<Aircondition_noise>(new Aircondition_noise(*noi)),"空调器");
+
+            delete noi;
+        }
+    }
+}
 
 #pragma endregion}
-/**********空调器噪音**********/
-
-
+/**********空调器噪音(双风机)**********/
 
 
 
@@ -1787,13 +1838,17 @@ void Widget::on_pushButton_air_double_fan_table_clicked()
 //初始化表格
 void Widget::initTableWidget_VAV_terminal()
 {
-    int colCount = 17;
+    int colCount = 18;
     QStringList headerText;
-    headerText<< "" << "序号" << "编号" << "型号" << "阀门开度" << "风量(m³/h)"  << "品牌" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 140, 110, 110, 120, 110, 80, 80, 80, 80, 80, 80, 80, 80, 95 ,90};
+    headerText<< "" << "序号" << "编号" << "型号" << "阀门\n开度" << "风量\n(m³/h)"  << "品牌" << "63Hz\n(dB)" << "125Hz\n(dB)"
+              << "250Hz\n(dB)" << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)"
+              << "总值\ndB(A)" << "来源" << "UUID";  //表头标题用QStringList来表示
+    int columnWidths[] = {30, 40, 120, 120, 60, 60, 80, 55, 55, 55, 55, 55, 55, 55, 55, 55 ,60, 0};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_VAV_terminal, headerText, columnWidths, colCount);
+
+    // 隐藏最后一列（假设隐藏列是最后一列）
+    ui->tableWidget_VAV_terminal->setColumnHidden(colCount - 1, true); // 让隐藏列不可见
 }
 
 void Widget::on_pushButton_VAV_terminal_add_clicked()
@@ -1822,7 +1877,7 @@ void Widget::on_pushButton_VAV_terminal_add_clicked()
                 noi->noi_4k,
                 noi->noi_8k,
                 noi->noi_total,
-                "厂家"
+                "厂家信息"
             };
 
             // 使用通用函数添加行
@@ -1884,9 +1939,10 @@ void Widget::initTableWidget_circular_damper()
 {
     int colCount = 16;
     QStringList headerText;
-    headerText<< "" << "序号" << "型号" << "阀门开度" << "风量(m³/h)" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 120, 110, 120, 110, 65, 65, 65, 65, 65, 65, 65, 65, 90, 70};
+    headerText<< "" << "序号" << "型号" << "阀门\n开度" << "风量\n(m³/h)" << "品牌" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+              << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)"
+              << "总值\ndB(A)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {30, 40, 120, 55, 55, 80, 55, 55, 55, 55, 55, 55, 55, 55, 55, 60};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_circular_damper, headerText, columnWidths, colCount);
 }
@@ -1977,9 +2033,10 @@ void Widget::initTableWidget_rect_damper()
 {
     int colCount = 16;
     QStringList headerText;
-    headerText<< "" << "序号" << "型号" << "阀门开度" << "风量(m³/h)" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 110, 130, 110, 110, 65, 65, 65, 65, 65, 65, 65, 65, 90, 70};
+    headerText<< "" << "序号" << "型号" << "阀门\n开度" << "风量\n(m³/h)" << "品牌" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+              << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)"
+              << "总值\ndB(A)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {30, 40, 120, 55, 55, 80, 55, 55, 55, 55, 55, 55, 55, 55, 55, 60};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_rect_damper, headerText, columnWidths, colCount);
 }
@@ -2073,26 +2130,29 @@ void Widget::initTableWidget_air_diff()
 {
     int colCount = 17;
     QStringList headerText;
-    headerText<< "" << "序号" << "布风器型号" << "散流器型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 250, 250, 130, 130, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90};
+    headerText<< "" << "序号" << "布风器型号" << "散流器型号" << "末端\n类型" << "末端\n尺寸" << "品牌" << "63Hz\n(dB)"
+              << "125Hz\n(dB)" << "250Hz\n(dB)" << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)"
+              << "8kHz\n(dB)" << "总值\ndB(A)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {30, 40, 120, 120, 50, 70, 80, 55, 55, 55, 55, 55, 55, 55, 55, 55, 60};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_air_diff, headerText, columnWidths, colCount);
 
     colCount = 16;
     QStringList headerText_atten;
-    headerText_atten<< "" << "序号" << "布风器型号" << "散流器型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-                    << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int atten_columnWidths[] = {40, 50, 230, 230, 130, 130, 80, 140, 80, 80, 80, 80, 80, 80, 80, 90};
+    headerText_atten<< "" << "序号" << "布风器型号" << "散流器型号" << "末端\n类型" << "末端\n尺寸" << "品牌" << "63Hz\n(dB)"
+                    << "125Hz\n(dB)" << "250Hz\n(dB)" << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)"
+                    << "8kHz\n(dB)" << "来源";  //表头标题用QStringList来表示
+    int atten_columnWidths[] = {30, 40, 120, 120, 50, 70, 80, 55, 55, 55, 55, 55, 55, 55, 55, 60};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_air_diff_terminal_atten, headerText_atten, atten_columnWidths, colCount);
 
     colCount = 16;
     QStringList headerText_refl;
-    headerText_refl<< "" << "序号" << "布风器型号" << "散流器型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int refl_columnWidths[] = {40, 50, 230, 230, 130, 130, 80, 140, 80, 80, 80, 80, 80, 80, 80, 90};
+    headerText_refl<< "" << "序号" << "布风器型号" << "散流器型号" << "末端\n类型" << "末端\n尺寸" << "品牌" << "63Hz\n(dB)"
+                   << "125Hz\n(dB)" << "250Hz\n(dB)" << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)"
+                   << "8kHz\n(dB)" << "来源";  //表头标题用QStringList来表示
+    int refl_columnWidths[] = {30, 40, 120, 120, 50, 70, 80, 55, 55, 55, 55, 55, 55, 55, 55, 60};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_air_diff_terminal_refl, headerText_refl, refl_columnWidths, colCount);
@@ -2435,26 +2495,29 @@ void Widget::initTableWidget_pump_tuyere()
 {
     int colCount = 16;
     QStringList headerText;
-    headerText<< "抽" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 250, 130, 130, 130,75, 75, 75, 75, 75, 75, 75, 75, 110 ,90};
+    headerText<< "" << "序号" << "型号" << "末端\n类型" << "末端\n尺寸" << "品牌" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+              << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)"
+              << "总值\ndB(A)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {30, 40, 120, 50, 70, 80, 55, 55, 55, 55, 55, 55, 55, 55, 55, 60};
 
     initTableWidget(ui->tableWidget_pump_tuyere, headerText, columnWidths, colCount);
 
     colCount = 15;
     QStringList headerText_atten;
-    headerText_atten<< "抽" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-                    << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int atten_columnWidths[] = {40, 50, 230, 130, 130, 140, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    headerText_atten<< "" << "序号" << "型号" << "末端\n类型" << "末端\n尺寸" << "品牌" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+                    << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)"
+                    << "来源";  //表头标题用QStringList来表示
+    int atten_columnWidths[] = {30, 40, 120, 50, 70, 80, 55, 55, 55, 55, 55, 55, 55, 55, 60};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_pump_tuyere_terminal_atten, headerText_atten, atten_columnWidths, colCount);
 
     colCount = 15;
     QStringList headerText_refl;
-    headerText_refl<< "抽" << "序号" << "型号" << "类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int refl_columnWidths[] = {40, 50, 230, 130, 130, 140, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    headerText_refl<< "" << "序号" << "型号" << "末端\n类型" << "末端\n尺寸" << "品牌" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+                   << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)"
+                   << "来源";  //表头标题用QStringList来表示
+    int refl_columnWidths[] = {30, 40, 120, 50, 70, 80, 55, 55, 55, 55, 55, 55, 55, 60};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_pump_tuyere_terminal_refl, headerText_refl, refl_columnWidths, colCount);
@@ -2464,26 +2527,29 @@ void Widget::initTableWidget_send_tuyere()
 {
     int colCount = 16;
     QStringList headerText;
-    headerText<< "送" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 250, 130, 130, 130,75, 75, 75, 75, 75, 75, 75, 75, 110 ,90};
+    headerText<< "" << "序号" << "型号" << "末端\n类型" << "末端\n尺寸" << "品牌" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+              << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)"
+              << "总值\ndB(A)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {30, 40, 120, 50, 70, 80, 55, 55, 55, 55, 55, 55, 55, 55, 55, 60};
 
     initTableWidget(ui->tableWidget_send_tuyere, headerText, columnWidths, colCount);
 
     colCount = 15;
     QStringList headerText_atten;
-    headerText_atten<< "抽" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-                    << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int atten_columnWidths[] = {40, 50, 230, 130, 130, 140, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    headerText_atten<< "" << "序号" << "型号" << "末端\n类型" << "末端\n尺寸" << "品牌" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+                    << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)"
+                    << "来源";  //表头标题用QStringList来表示
+    int atten_columnWidths[] = {30, 40, 120, 50, 70, 80, 55, 55, 55, 55, 55, 55, 55, 55, 60};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_send_tuyere_terminal_atten, headerText_atten, atten_columnWidths, colCount);
 
     colCount = 15;
     QStringList headerText_refl;
-    headerText_refl<< "抽" << "序号" << "型号" << "类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int refl_columnWidths[] = {40, 50, 230, 130, 130, 140, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    headerText_refl<< "" << "序号" << "型号" << "末端\n类型" << "末端\n尺寸" << "品牌" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+                   << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)"
+                   << "来源";  //表头标题用QStringList来表示
+    int refl_columnWidths[] = {30, 40, 120, 50, 70, 80, 55, 55, 55, 55, 55, 55, 55, 60};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_send_tuyere_terminal_refl, headerText_refl, refl_columnWidths, colCount);
@@ -2805,17 +2871,19 @@ void Widget::initTableWidget_staticBox_grille()
 {
     int colCount = 17;
     QStringList headerText;
-    headerText<< "" << "序号" << "静压箱型号" << "格栅型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 250, 250, 130, 130, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90};
+    headerText<< "" << "序号" << "静压箱型号" << "格栅型号" << "末端\n类型" << "末端\n尺寸" << "品牌" << "63Hz\n(dB)"
+              << "125Hz\n(dB)" << "250Hz\n(dB)" << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)"
+              << "8kHz\n(dB)" << "总值\ndB(A)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {30, 40, 120, 120, 50, 70, 80, 55, 55, 55, 55, 55, 55, 55, 55, 55, 60};
     initTableWidget(ui->tableWidget_staticBox_grille, headerText, columnWidths, colCount);
 
 
     colCount = 16;
     QStringList headerText_atten;
-    headerText_atten<< "" << "序号" << "静压箱型号" << "格栅型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-                    << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int atten_columnWidths[] = {40, 50, 230, 230, 130, 130, 140, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    headerText_atten<< "" << "序号" << "静压箱型号" << "格栅型号" << "末端\n类型" << "末端\n尺寸" << "品牌" << "63Hz\n(dB)"
+                    << "125Hz\n(dB)" << "250Hz\n(dB)" << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)"
+                    << "8kHz\n(dB)" << "来源";  //表头标题用QStringList来表示
+    int atten_columnWidths[] = {30, 40, 120, 120, 50, 70, 80, 55, 55, 55, 55, 55, 55, 55, 55, 60};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_staticBox_grille_terminal_atten, headerText_atten, atten_columnWidths, colCount);
@@ -2823,9 +2891,10 @@ void Widget::initTableWidget_staticBox_grille()
 
     colCount = 16;
     QStringList headerText_refl;
-    headerText_refl<< "" << "序号" << "静压箱型号" << "格栅型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int refl_columnWidths[] = {40, 50, 230, 230, 130, 130, 140, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    headerText_refl<< "" << "序号" << "静压箱型号" << "格栅型号" << "末端\n类型" << "末端\n尺寸" << "品牌" << "63Hz\n(dB)"
+                   << "125Hz\n(dB)" << "250Hz\n(dB)" << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)"
+                   << "8kHz\n(dB)" << "来源";  //表头标题用QStringList来表示
+    int refl_columnWidths[] = {30, 40, 120, 120, 50, 70, 80, 55, 55, 55, 55, 55, 55, 55, 60};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_staticBox_grille_terminal_refl, headerText_refl, refl_columnWidths, colCount);
@@ -3162,26 +3231,29 @@ void Widget::initTableWidget_disp_vent_terminal()
 {
     int colCount = 16;
     QStringList headerText;
-    headerText<< "" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 250, 130, 130, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90};
+    headerText<< "" << "序号" << "型号" << "末端\n类型" << "末端\n尺寸" << "品牌" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+              << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)"
+              << "总值\ndB(A)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {30, 40, 120, 50, 70, 80, 55, 55, 55, 55, 55, 55, 55, 55, 55, 60};
 
     initTableWidget(ui->tableWidget_disp_vent_terminal, headerText, columnWidths, colCount);
 
     colCount = 15;
     QStringList headerText_atten;
-    headerText_atten<< "" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-                    << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int atten_columnWidths[] = {40, 50, 230, 130, 130, 140, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    headerText_atten<< "" << "序号" << "型号" << "末端\n类型" << "末端\n尺寸" << "品牌" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+                    << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)"
+                    << "来源";  //表头标题用QStringList来表示
+    int atten_columnWidths[] = {30, 40, 120, 50, 70, 80, 55, 55, 55, 55, 55, 55, 55, 55, 60};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_disp_vent_terminal_atten, headerText_atten, atten_columnWidths, colCount);
 
     colCount = 15;
     QStringList headerText_refl;
-    headerText_refl<< "" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int refl_columnWidths[] = {40, 50, 230, 130, 130, 140, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    headerText_refl<< "" << "序号" << "型号" << "末端\n类型" << "末端\n尺寸" << "品牌" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+                   << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)"
+                   << "来源";  //表头标题用QStringList来表示
+    int refl_columnWidths[] = {30, 40, 120, 50, 70, 80, 55, 55, 55, 55, 55, 55, 55, 55, 60};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_disp_vent_terminal_refl, headerText_refl, refl_columnWidths, colCount);
@@ -3508,18 +3580,19 @@ void Widget::initTableWidget_other_send_terminal()
 {
     int colCount = 17;
     QStringList headerText;
-    headerText<< "" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "总值dB(A)" << "来源" << "备注";  //表头标题用QStringList来表示
-
-    int columnWidths[] = {40, 50, 250, 110, 110, 130, 75, 75, 75, 75, 75, 75, 75, 75, 110 ,90, 180};
+    headerText<< "" << "序号" << "型号" << "末端\n类型" << "末端\n尺寸" << "品牌" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+              << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)"
+              << "总值\ndB(A)" << "来源" << "备注";  //表头标题用QStringList来表示
+    int columnWidths[] = {30, 40, 120, 50, 70, 80, 55, 55, 55, 55, 55, 55, 55, 55, 55, 60, 120};
 
     initTableWidget(ui->tableWidget_other_send_terminal, headerText, columnWidths, colCount);
 
     colCount = 16;
     QStringList headerText_atten;
-    headerText_atten<< "" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-                    << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "备注";  //表头标题用QStringList来表示
-    int atten_columnWidths[] = {40, 50, 230, 110, 110, 140, 80, 80, 80, 80, 80, 80, 80, 80, 90, 180};
+    headerText_atten<< "" << "序号" << "型号" << "末端\n类型" << "末端\n尺寸" << "品牌" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+                    << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)"
+                    << "来源" << "备注";  //表头标题用QStringList来表示
+    int atten_columnWidths[] = {30, 40, 120, 50, 70, 80, 55, 55, 55, 55, 55, 55, 55, 55, 60, 120};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_other_send_terminal_atten, headerText_atten, atten_columnWidths, colCount);
@@ -3527,9 +3600,10 @@ void Widget::initTableWidget_other_send_terminal()
 
     colCount = 16;
     QStringList headerText_refl;
-    headerText_refl<< "" << "序号" << "型号" << "末端类型" << "末端尺寸" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源" << "备注";  //表头标题用QStringList来表示
-    int refl_columnWidths[] = {40, 50, 230, 110, 110, 140, 80, 80, 80, 80, 80, 80, 80, 80, 90, 180};
+    headerText_refl<< "" << "序号" << "型号" << "末端\n类型" << "末端\n尺寸" << "品牌" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+                   << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)"
+                   << "来源" << "备注";  //表头标题用QStringList来表示
+    int refl_columnWidths[] = {30, 40, 120, 50, 70, 80, 55, 55, 55, 55, 55, 55, 55, 55, 60, 120};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_other_send_terminal_refl, headerText_refl, refl_columnWidths, colCount);
@@ -3869,9 +3943,9 @@ void Widget::initTableWidget_static_box()
 {
     int colCount = 13;
     QStringList headerText;
-    headerText<< "" << "序号" << "型号" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 120, 100, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    headerText<< "" << "序号" << "型号" << "品牌" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+              << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {30, 40, 120, 80, 55, 55, 55, 55, 55, 55, 55, 55, 60};
 
     initTableWidget(ui->tableWidget_static_box, headerText, columnWidths, colCount);
 
@@ -3955,9 +4029,9 @@ void Widget::initTableWidegt_duct_with_multi_ranc()
 {
     int colCount = 13;
     QStringList headerText;
-    headerText<< "" << "序号" << "型号" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 120, 100, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    headerText<< "" << "序号" << "型号" << "品牌" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+              << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {30, 40, 120, 80, 55, 55, 55, 55, 55, 55, 55, 55, 60};
 
     initTableWidget(ui->tableWidget_duct_with_multi_ranc, headerText, columnWidths, colCount);
 }
@@ -4043,10 +4117,9 @@ void Widget::initTableWidegt_tee()
 {
     int colCount = 13;
     QStringList headerText;
-    headerText<< "" << "序号" << "型号" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-
-    int columnWidths[] = {40, 50, 120, 100, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    headerText<< "" << "序号" << "型号" << "品牌" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+              << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {30, 40, 120, 80, 55, 55, 55, 55, 55, 55, 55, 55, 60};
     initTableWidget(ui->tableWidget_tee, headerText, columnWidths, colCount);
 }
 
@@ -4135,10 +4208,9 @@ void Widget::initTableWidget_pipe()
     int colCount = 13;
 
     QStringList headerText;
-    headerText<< "" << "序号" << "型号" << "类型" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-
-    int columnWidths[] = {40, 50, 160, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    headerText<< "" << "序号" << "型号" << "类型" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+              << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {30, 40, 120, 70, 55, 55, 55, 55, 55, 55, 55, 55, 60};
 
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_pipe, headerText, columnWidths, colCount);
@@ -4226,9 +4298,9 @@ void Widget::initTableWidget_elbow()
 {
     int colCount = 13;
     QStringList headerText;
-    headerText<< "" << "序号" << "型号" << "类型" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 160, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    headerText<< "" << "序号" << "型号" << "类型" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+              << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {30, 40, 120, 70, 55, 55, 55, 55, 55, 55, 55, 55, 60};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_elbow, headerText, columnWidths, colCount);
 }
@@ -4312,9 +4384,9 @@ void Widget::initTableWidget_reducer()
     int colCount = 13;
 
     QStringList headerText;
-    headerText<< "" << "序号" << "型号" << "类型" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 50, 160, 130, 80, 80, 80, 80, 80, 80, 80, 80, 90};
+    headerText<< "" << "序号" << "型号" << "类型" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+              << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {30, 40, 120, 70, 55, 55, 55, 55, 55, 55, 55, 55, 60};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_reducer, headerText, columnWidths, colCount);
 }
@@ -4409,9 +4481,9 @@ void Widget::initTableWidget_circular_silencer()
 {
     int colCount = 13;
     QStringList headerText;
-    headerText<< "圆形" << "序号" << "型号"  << "品牌" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 40, 370, 120, 82, 82, 82, 82, 82, 82, 82, 82, 90};
+    headerText<< "" << "序号" << "型号" << "品牌" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+              << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {30, 40, 120, 80, 55, 55, 55, 55, 55, 55, 55, 55, 60};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_circular_silencer, headerText, columnWidths, colCount);
 }
@@ -4420,9 +4492,9 @@ void Widget::initTableWidget_rect_silencer()
 {
     int colCount = 13;
     QStringList headerText;
-    headerText<< "矩形" << "序号" << "型号" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 40, 370, 120, 82, 82, 82, 82, 82, 82, 82, 82, 90};
+    headerText<< "" << "序号" << "型号" << "品牌" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+              << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {30, 40, 120, 80, 55, 55, 55, 55, 55, 55, 55, 55, 60};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_rect_silencer, headerText, columnWidths, colCount);
 }
@@ -4431,9 +4503,9 @@ void Widget::initTableWidget_circular_silencerEb()
 {
     int colCount = 13;
     QStringList headerText;
-    headerText<< "圆弯" << "序号" << "型号" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 40, 370, 120, 82, 82, 82, 82, 82, 82, 82, 82, 90};
+    headerText<< "" << "序号" << "型号" << "品牌" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+              << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {30, 40, 120, 80, 55, 55, 55, 55, 55, 55, 55, 55, 60};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_circular_silencerEb, headerText, columnWidths, colCount);
 }
@@ -4442,9 +4514,9 @@ void Widget::initTableWidget_rect_silencerEb()
 {
     int colCount = 13;
     QStringList headerText;
-    headerText<< "矩弯" << "序号" << "型号" << "品牌" << "63Hz" << "125Hz" << "250Hz"
-              << "500Hz" << "1kHz" << "2kHz" << "4kHz" << "8kHz" << "来源";  //表头标题用QStringList来表示
-    int columnWidths[] = {40, 40, 370, 120, 82, 82, 82, 82, 82, 82, 82, 82, 90};
+    headerText<< "" << "序号" << "型号" << "品牌" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
+              << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)" << "来源";  //表头标题用QStringList来表示
+    int columnWidths[] = {30, 40, 120, 80, 55, 55, 55, 55, 55, 55, 55, 55, 60};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_rect_silencerEb, headerText, columnWidths, colCount);
 }
@@ -4455,8 +4527,6 @@ void Widget::on_pushButton_silencer_add_clicked()
     QTableWidget *tableWidget = nullptr;
     Dialog_silencer *dialog = nullptr;
     std::unique_ptr<Silencer_atten> noi;
-    const char *addButtonSlot = SLOT(onAddButtonElbowClicked());
-    const char *delButtonSlot = SLOT(onDelButtonElbowClicked());
 
     if(ui->stackedWidget_silencer_table->currentWidget() == ui->page_circular_silencer)
     {
@@ -5787,9 +5857,13 @@ void Widget::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWid
     {
         ui->stackedWidget->setCurrentWidget(ui->page_fanCoil_noi);
     }
-    else if(current == item_aircondition_noise) //风机盘管噪音
+    else if(current == item_aircondition_noise_single_fan) //风机盘管噪音
     {
-        ui->stackedWidget->setCurrentWidget(ui->page_air_noi);
+        ui->stackedWidget->setCurrentWidget(ui->page_air_noi_single_fan);
+    }
+    else if(current == item_aircondition_noise_double_fan) //风机盘管噪音
+    {
+        ui->stackedWidget->setCurrentWidget(ui->page_air_noi_double_fan);
     }
     else if(current == item_VAV_terminal)   //变风量末端噪音
     {

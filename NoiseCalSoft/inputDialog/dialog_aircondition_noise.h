@@ -20,6 +20,7 @@ public:
     Dialog_aircondition_noise(const QString& name, QWidget *parent = nullptr, int editRow = -1, const Aircondition_noise& data = Aircondition_noise()){}
     ~Dialog_aircondition_noise();
     void* getNoi() override;
+    void hideLayoutWidgets(QLayout* layout);
 
 private slots:
     void on_pushButton_confirm_clicked();

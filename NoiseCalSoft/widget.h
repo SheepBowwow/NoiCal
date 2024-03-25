@@ -68,7 +68,8 @@ public:
     void initTableWidget_circular_damper();
     void initTableWidget_rect_damper();
     void initTableWidget_pipe();
-    void initTableWidget_air_noi();
+    void initTableWidget_air_noi_single();
+    void initTableWidget_air_noi_double();
     void initTableWidget_reducer();
     void initTableWidget_elbow();
     void initTableWidget_system_list();
@@ -137,8 +138,6 @@ private slots:
 
     void on_pushButton_pipe_revise_clicked();
 
-    void on_pushButton_air_noi_revise_clicked();
-
     void on_pushButton_reducer_revise_clicked();
 
     void on_pushButton_elbow_revise_clicked();
@@ -196,10 +195,6 @@ private slots:
     void on_pushButton_fanCoil_noi_add_clicked();
 
     void on_pushButton_fanCoil_noi_del_clicked();
-
-    void on_pushButton_air_noi_add_clicked();
-
-    void on_pushButton_air_noi_del_clicked();
 
     void on_pushButton_VAV_terminal_add_clicked();
 
@@ -346,11 +341,19 @@ private slots:
 
     void on_pushButton_drawing_list_del_clicked();
 
-    void on_pushButton_air_single_fan_table_clicked();
-
-    void on_pushButton_air_double_fan_table_clicked();
-
     void on_pushButton_project_attachment_add_clicked();
+
+    void on_pushButton_air_noi_single_fan_add_clicked();
+
+    void on_pushButton_air_noi_double_fan_add_clicked();
+
+    void on_pushButton_air_noi_single_fan_del_clicked();
+
+    void on_pushButton_air_noi_double_fan_del_clicked();
+
+    void on_pushButton_air_noi_double_fan_revise_clicked();
+
+    void on_pushButton_air_noi_single_fan_revise_clicked();
 
     void on_pushButton_fanNoi_input_clicked();
 
@@ -457,7 +460,8 @@ private:
     QTreeWidgetItem *item_sound_sorce_noise;   //1音源噪音
     QTreeWidgetItem *item_fan_noise;   //1.1风机噪音 1                                                  1
     QTreeWidgetItem *item_fan_coil_noise;   //1.2风机盘管噪音                                             1
-    QTreeWidgetItem *item_aircondition_noise;   //1.3空调器噪音
+    QTreeWidgetItem *item_aircondition_noise_single_fan;   //1.3空调器噪音(单风机)
+    QTreeWidgetItem *item_aircondition_noise_double_fan;   //1.3空调器噪音(双风机)
     QTreeWidgetItem *item_pipe_and_acce_airflow_noise;            //2.管路及附件气流噪音
     QTreeWidgetItem *item_valve_noise;                                  //2.1 阀门噪音
     QTreeWidgetItem *item_VAV_terminal;                                  //2.1.1 变风量末端              1

@@ -9,30 +9,51 @@ Dialog_aircondition_noise::Dialog_aircondition_noise(QWidget *parent, int editRo
 {
     ui->setupUi(this);
     setTopWidget(ui->widget_top);  // 设置顶部部件
-    ui->radioButton_single->setChecked(true);
 
     if(fan == 0)
     {
-        ui->radioButton_single->setChecked(true);
-        on_radioButton_single_clicked();
+        ui->label_title->setText("空调器(单风机)");
+        ui->label_title->adjustSize();
+        ui->label_exhaust->hide();
+        ui->label_exhaust_in->hide();
+        ui->label_exhaust_out->hide();
+
+        hideLayoutWidgets(ui->horizontalLayout_exhaust_in);
+        hideLayoutWidgets(ui->horizontalLayout_exhaust_out);
+
+        ui->widget_2->setFixedHeight(338);
+        ui->pushButton_confirm->move(540,410);
+        ui->widget_add_air_noise->setFixedHeight(451);
+        this->setFixedHeight(482);
     }
     else if(fan == 1)
     {
-        ui->radioButton_double->setChecked(true);
-        on_radioButton_double_clicked();
+        ui->label_title->setText("空调器(双风机)");
+        ui->label_title->adjustSize();
     }
 
     if(editRow != -1)
     {
         if(data.type == "单风机")
         {
-            ui->radioButton_single->setChecked(true);
-            on_radioButton_single_clicked();
+            ui->label_title->setText("空调器(单风机)");
+            ui->label_title->adjustSize();
+            ui->label_exhaust->hide();
+            ui->label_exhaust_in->hide();
+            ui->label_exhaust_out->hide();
+
+            hideLayoutWidgets(ui->horizontalLayout_exhaust_in);
+            hideLayoutWidgets(ui->horizontalLayout_exhaust_out);
+
+            ui->widget_2->setFixedHeight(338);
+            ui->pushButton_confirm->move(540,410);
+            ui->widget_add_air_noise->setFixedHeight(451);
+            this->setFixedHeight(482);
         }
         else if(data.type == "双风机")
         {
-            ui->radioButton_double->setChecked(true);
-            on_radioButton_double_clicked();
+            ui->label_title->setText("空调器(双风机)");
+            ui->label_title->adjustSize();
             ui->lineEdit_exhaust_in_63->setText(data.noi_exhaust_in_63);
             ui->lineEdit_exhaust_in_125->setText(data.noi_exhaust_in_125);
             ui->lineEdit_exhaust_in_250->setText(data.noi_exhaust_in_250);
@@ -129,16 +150,22 @@ Dialog_aircondition_noise::~Dialog_aircondition_noise()
     delete ui;
 }
 
+void Dialog_aircondition_noise::hideLayoutWidgets(QLayout* layout) {
+    if (!layout) return;
+    for (int i = 0; i < layout->count(); ++i) {
+        QLayoutItem* item = layout->itemAt(i);
+        if (item->widget()) {
+            item->widget()->hide();
+        } else if (item->layout()) {
+            // 递归隐藏子布局中的控件
+            hideLayoutWidgets(item->layout());
+        }
+    }
+}
+
 void Dialog_aircondition_noise::on_pushButton_confirm_clicked()
 {
     this->noi = new Aircondition_noise;
-
-    // 获取对应行的数据，将界面上的数据保存到对应行中
-    noi->number = ui->lineEdit_number->text();
-    if(ui->radioButton_single->isChecked())
-        noi->type = "单风机";
-    else if(ui->radioButton_double->isChecked())
-        noi->type = "双风机";
 
     noi->brand = ui->lineEdit_brand->text();
     noi->model = ui->lineEdit_model->text();
