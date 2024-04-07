@@ -13,7 +13,7 @@ DatabaseManager::~DatabaseManager() {
     db.close();
 }
 
-<<<<<<< HEAD
+
 QSet<QString> DatabaseManager::loadProjectIDs() {
     QSet<QString> projectIDs;
     if (db.isOpen()) {
@@ -27,14 +27,9 @@ QSet<QString> DatabaseManager::loadProjectIDs() {
         }
     }
     return projectIDs;
-=======
-void DatabaseManager::addComponentToDel(const QString &UUID)
-{
-    ComponentToDelByUUID.append(UUID);
 }
 
-QSqlDatabase& DatabaseManager::getDB()
+void DatabaseManager::addComponentToDel(const QString &UUID)
 {
-    return db;
->>>>>>> main
+    componentToDel.append(UUID);
 }
