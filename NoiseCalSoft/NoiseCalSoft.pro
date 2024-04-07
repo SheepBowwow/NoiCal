@@ -39,6 +39,7 @@ SOURCES += \
     inputDialog/dialog_vav_terminal.cpp \
     inputbasedialog.cpp \
     main.cpp \
+    project/projectmanager.cpp \
     roomCal/room_cal_basewidget.cpp \
     roomCal/room_cal_total.cpp \
     roomCal/roomcaltable.cpp \
@@ -77,6 +78,7 @@ HEADERS += \
     inputDialog/dialog_tee.h \
     inputDialog/dialog_vav_terminal.h \
     inputbasedialog.h \
+    project/projectmanager.h \
     roomCal/room_cal_basewidget.h \
     roomCal/room_cal_total.h \
     roomCal/roomcaltable.h \

@@ -1,30 +1,33 @@
+// DatabaseManager.h
 #ifndef DATABASEMANAGER_H
 #define DATABASEMANAGER_H
 
-#include <QCoreApplication>
 #include <QSqlDatabase>
+#include <QSqlError>
 #include <QSqlQuery>
 #include <QDebug>
-#include <QSqlError>
-#include <QDebug>
 
-
-class DatabaseManager
-{
+class DatabaseManager {
 public:
-    DatabaseManager(const QString& dbName);
+    static DatabaseManager& instance() {
+        static DatabaseManager instance("path_to_your_database.db"); // 使用实际的数据库路径
+        return instance;
+    }
 
-    DatabaseManager();
+    QSqlDatabase& getDB() {
+        return db;
+    }
 
-    ~DatabaseManager();
+    // 新增成员函数：从project_basicInfo表中加载projectID
+    QSet<QString> loadProjectIDs();
 
-    QSqlDatabase& getDB();
-
-    bool executeSqlQuery(QVector<QString>& data, const QString &sqlQuery);
-    bool queryKnownData(QVector<QString>& data, QString colName, QString tableName);
-    bool queryEightNoi(QMap<int,QString>& data, QString tableName, QString modelColName, QString modelName);
 private:
     QSqlDatabase db;
+    // 私有构造函数
+    DatabaseManager(const QString& dbName);
+    ~DatabaseManager();
+    DatabaseManager(const DatabaseManager&) = delete;
+    DatabaseManager& operator=(const DatabaseManager&) = delete;
 };
 
 #endif // DATABASEMANAGER_H

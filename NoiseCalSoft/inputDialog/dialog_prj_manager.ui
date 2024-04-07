@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>651</width>
-    <height>421</height>
+    <width>541</width>
+    <height>401</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>651</width>
+     <width>541</width>
      <height>31</height>
     </rect>
    </property>
@@ -36,7 +36,7 @@ background-color: rgb(157, 196, 229);
    <widget class="QPushButton" name="close">
     <property name="geometry">
      <rect>
-      <x>620</x>
+      <x>510</x>
       <y>5</y>
       <width>21</width>
       <height>21</height>
@@ -55,8 +55,8 @@ background-color: rgb(157, 196, 229);
     <rect>
      <x>0</x>
      <y>30</y>
-     <width>651</width>
-     <height>391</height>
+     <width>541</width>
+     <height>371</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -69,7 +69,7 @@ border: 1px solid #000000;
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>1</x>
       <y>10</y>
       <width>169</width>
       <height>43</height>
@@ -141,9 +141,9 @@ color : rgb(105, 105, 105);
    <widget class="QGroupBox" name="groupBox_create_prj">
     <property name="geometry">
      <rect>
-      <x>30</x>
+      <x>20</x>
       <y>220</y>
-      <width>571</width>
+      <width>491</width>
       <height>131</height>
      </rect>
     </property>
@@ -178,9 +178,9 @@ font-family: '黑体';
     <widget class="QLabel" name="label_4">
      <property name="geometry">
       <rect>
-       <x>80</x>
+       <x>60</x>
        <y>30</y>
-       <width>51</width>
+       <width>71</width>
        <height>31</height>
       </rect>
      </property>
@@ -191,16 +191,16 @@ font-family: '黑体';
       </font>
      </property>
      <property name="text">
-      <string>船号</string>
+      <string>项目编号</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit_prj_num">
+    <widget class="QLineEdit" name="lineEdit_prj_ID">
      <property name="geometry">
       <rect>
-       <x>220</x>
+       <x>140</x>
        <y>30</y>
        <width>331</width>
        <height>31</height>
@@ -215,7 +215,7 @@ font-family: '黑体';
     <widget class="QPushButton" name="pushButton_create_prj">
      <property name="geometry">
       <rect>
-       <x>480</x>
+       <x>400</x>
        <y>80</y>
        <width>71</width>
        <height>31</height>
@@ -251,9 +251,9 @@ color: white;
    <widget class="QGroupBox" name="groupBox_prj_manage">
     <property name="geometry">
      <rect>
-      <x>30</x>
+      <x>20</x>
       <y>70</y>
-      <width>571</width>
+      <width>491</width>
       <height>131</height>
      </rect>
     </property>
@@ -306,10 +306,10 @@ font-family: '黑体';
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QComboBox" name="comboBox">
+    <widget class="QComboBox" name="comboBox_prj_num">
      <property name="geometry">
       <rect>
-       <x>220</x>
+       <x>140</x>
        <y>30</y>
        <width>331</width>
        <height>31</height>
@@ -327,7 +327,7 @@ font-family: '黑体';
     <widget class="QPushButton" name="pushButton_5">
      <property name="geometry">
       <rect>
-       <x>480</x>
+       <x>400</x>
        <y>80</y>
        <width>71</width>
        <height>31</height>
@@ -363,7 +363,7 @@ color: white;
    <widget class="QPushButton" name="pushButton_6">
     <property name="geometry">
      <rect>
-      <x>530</x>
+      <x>450</x>
       <y>10</y>
       <width>71</width>
       <height>31</height>

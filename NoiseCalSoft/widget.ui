@@ -37,7 +37,6 @@
    <property name="font">
     <font>
      <family>黑体</family>
-     <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
@@ -69,7 +68,6 @@
      <font>
       <family>Microsoft YaHei</family>
       <pointsize>10</pointsize>
-      <weight>75</weight>
       <italic>false</italic>
       <bold>true</bold>
       <underline>true</underline>
@@ -192,7 +190,6 @@
      <font>
       <family>黑体</family>
       <pointsize>12</pointsize>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -225,7 +222,6 @@
      <font>
       <family>黑体</family>
       <pointsize>12</pointsize>
-      <weight>50</weight>
       <bold>false</bold>
      </font>
     </property>
@@ -273,7 +269,6 @@
      <font>
       <family>Microsoft YaHei</family>
       <pointsize>11</pointsize>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -344,7 +339,6 @@
      <font>
       <family>Microsoft YaHei</family>
       <pointsize>11</pointsize>
-      <weight>50</weight>
       <bold>false</bold>
      </font>
     </property>
@@ -396,7 +390,6 @@
      <font>
       <family>Microsoft YaHei</family>
       <pointsize>11</pointsize>
-      <weight>50</weight>
       <bold>false</bold>
      </font>
     </property>
@@ -448,7 +441,6 @@
      <font>
       <family>Microsoft YaHei</family>
       <pointsize>11</pointsize>
-      <weight>50</weight>
       <bold>false</bold>
      </font>
     </property>
@@ -500,7 +492,6 @@
      <font>
       <family>Microsoft YaHei</family>
       <pointsize>11</pointsize>
-      <weight>50</weight>
       <bold>false</bold>
      </font>
     </property>
@@ -521,7 +512,6 @@
      <font>
       <family>Microsoft YaHei</family>
       <pointsize>20</pointsize>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -604,7 +594,7 @@ font-size: 13px;
 }</string>
    </property>
    <property name="currentIndex">
-    <number>3</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="page_login">
     <layout class="QGridLayout" name="gridLayout" rowstretch="2,5,4">
@@ -672,7 +662,6 @@ font-size: 13px;
             <font>
              <family>Microsoft YaHei</family>
              <pointsize>14</pointsize>
-             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -737,7 +726,6 @@ font-size: 13px;
               <font>
                <family>Microsoft YaHei</family>
                <pointsize>16</pointsize>
-               <weight>75</weight>
                <bold>true</bold>
               </font>
              </property>
@@ -774,7 +762,6 @@ font-size: 13px;
               <font>
                <family>Microsoft YaHei</family>
                <pointsize>16</pointsize>
-               <weight>75</weight>
                <bold>true</bold>
               </font>
              </property>
@@ -852,7 +839,6 @@ font-size: 13px;
             <font>
              <family>Microsoft YaHei</family>
              <pointsize>10</pointsize>
-             <weight>75</weight>
              <bold>true</bold>
              <underline>true</underline>
             </font>
@@ -907,7 +893,6 @@ font-size: 13px;
             <font>
              <family>Microsoft YaHei</family>
              <pointsize>-1</pointsize>
-             <weight>75</weight>
              <italic>false</italic>
              <bold>true</bold>
             </font>
@@ -1096,11 +1081,11 @@ border: 1px solid #000000;
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(240, 240, 240);
+       <string notr="true">background-color: white;
 border: 1px solid #9C9C9C;</string>
       </property>
       <property name="readOnly">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QLineEdit" name="lineEdit_shipyard">
@@ -1119,11 +1104,11 @@ border: 1px solid #9C9C9C;</string>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(240, 240, 240);
+       <string notr="true">background-color: white;
 border: 1px solid #9C9C9C;</string>
       </property>
       <property name="readOnly">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QLineEdit" name="lineEdit_principal">
@@ -1142,11 +1127,11 @@ border: 1px solid #9C9C9C;</string>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(240, 240, 240);
+       <string notr="true">background-color: white;
 border: 1px solid #9C9C9C;</string>
       </property>
       <property name="readOnly">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QLineEdit" name="lineEdit_prj_name">
@@ -1165,11 +1150,11 @@ border: 1px solid #9C9C9C;</string>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(240, 240, 240);
+       <string notr="true">background-color: white;
 border: 1px solid #9C9C9C;</string>
       </property>
       <property name="readOnly">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QLabel" name="label_8">
@@ -1210,11 +1195,11 @@ border: 1px solid #9C9C9C;</string>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(240, 240, 240);
+       <string notr="true">background-color: white;
 border: 1px solid #9C9C9C;</string>
       </property>
       <property name="readOnly">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QLabel" name="label_9">
@@ -1327,7 +1312,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -1458,7 +1442,7 @@ color: white;
         <x>140</x>
         <y>360</y>
         <width>251</width>
-        <height>161</height>
+        <height>221</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -1549,7 +1533,6 @@ border: 1px solid #000000;
        <font>
         <family>Microsoft YaHei</family>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -1669,7 +1652,7 @@ QTableWidget::item:selected
      <widget class="QPushButton" name="pushButton_noi_limit_del">
       <property name="geometry">
        <rect>
-        <x>500</x>
+        <x>450</x>
         <y>10</y>
         <width>51</width>
         <height>31</height>
@@ -1736,6 +1719,41 @@ color: white;
        <string>新增</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="pushButton_noi_limit_save">
+      <property name="geometry">
+       <rect>
+        <x>510</x>
+        <y>10</y>
+        <width>51</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+      </property>
+      <property name="text">
+       <string>保存</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="widget_drawing_list_table" native="true">
      <property name="geometry">
@@ -1765,7 +1783,6 @@ border: 1px solid #000000;
        <font>
         <family>Microsoft YaHei</family>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -1844,7 +1861,7 @@ QTableWidget::item:selected
      <widget class="QPushButton" name="pushButton_drawing_list_del">
       <property name="geometry">
        <rect>
-        <x>500</x>
+        <x>450</x>
         <y>10</y>
         <width>51</width>
         <height>31</height>
@@ -1911,6 +1928,41 @@ color: white;
        <string>新增</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="pushButton_drawing_list_save">
+      <property name="geometry">
+       <rect>
+        <x>510</x>
+        <y>10</y>
+        <width>51</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+      </property>
+      <property name="text">
+       <string>保存</string>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_noise_src">
@@ -1970,7 +2022,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -2308,7 +2359,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -2640,7 +2690,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -2979,7 +3028,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -3311,7 +3359,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -3655,7 +3702,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -3987,7 +4033,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -4319,7 +4364,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -4651,7 +4695,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -4683,7 +4726,6 @@ color : rgb(105, 105, 105);
       <property name="font">
        <font>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -4706,7 +4748,6 @@ color : rgb(105, 105, 105);
       <property name="font">
        <font>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -5124,7 +5165,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -5534,7 +5574,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -5866,7 +5905,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -6198,7 +6236,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -6530,7 +6567,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -6862,7 +6898,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -7194,7 +7229,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -7526,7 +7560,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -7858,7 +7891,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -8112,7 +8144,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -8145,7 +8176,6 @@ color : rgb(105, 105, 105);
        <font>
         <family>黑体</family>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -8502,7 +8532,6 @@ QTableWidget::item:selected
        <font>
         <family>黑体</family>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -8526,7 +8555,6 @@ QTableWidget::item:selected
        <font>
         <family>黑体</family>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -8550,7 +8578,6 @@ QTableWidget::item:selected
        <font>
         <family>黑体</family>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -8873,7 +8900,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -9092,7 +9118,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -9130,7 +9155,6 @@ color : rgb(105, 105, 105);
       <property name="font">
        <font>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -9153,7 +9177,6 @@ color : rgb(105, 105, 105);
       <property name="font">
        <font>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -9534,7 +9557,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -9909,7 +9931,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -10206,7 +10227,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -10503,7 +10523,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -10722,7 +10741,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -10754,7 +10772,6 @@ color : rgb(105, 105, 105);
       <property name="font">
        <font>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -10777,7 +10794,6 @@ color : rgb(105, 105, 105);
       <property name="font">
        <font>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -11158,7 +11174,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -11533,7 +11548,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -11830,7 +11844,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -12049,7 +12062,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -12144,7 +12156,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -12239,7 +12250,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -12347,7 +12357,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -12442,7 +12451,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -12537,7 +12545,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -12628,7 +12635,6 @@ border: 1px solid #000000;
        <font>
         <family>Microsoft YaHei</family>
         <pointsize>15</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -12931,7 +12937,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -13017,7 +13022,6 @@ border: 1px solid #000000;
        <font>
         <family>Microsoft YaHei</family>
         <pointsize>15</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -13223,7 +13227,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -13377,7 +13380,6 @@ border: 1px solid #000000;
        <font>
         <family>Microsoft YaHei</family>
         <pointsize>15</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -13442,7 +13444,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -13519,7 +13520,6 @@ border: 1px solid #000000;
        <font>
         <family>Microsoft YaHei</family>
         <pointsize>15</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -13644,7 +13644,6 @@ border: 1px solid #000000;
        <font>
         <family>Microsoft YaHei</family>
         <pointsize>15</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -13779,7 +13778,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -13899,7 +13897,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -14087,7 +14084,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -14247,7 +14243,6 @@ border: 1px solid #000000;
        <font>
         <family>Microsoft YaHei</family>
         <pointsize>15</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -14382,7 +14377,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -14502,7 +14496,6 @@ background-color : rgb(105, 105, 105);
           <font>
            <family>Microsoft YaHei</family>
            <pointsize>24</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
