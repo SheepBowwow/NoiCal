@@ -50,7 +50,7 @@ font-family: '黑体';
 }</string>
    </property>
    <property name="currentIndex">
-    <number>6</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="page_fan">
     <property name="minimumSize">

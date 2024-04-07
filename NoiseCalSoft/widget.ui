@@ -594,7 +594,11 @@ font-size: 13px;
 }</string>
    </property>
    <property name="currentIndex">
+<<<<<<< HEAD
     <number>0</number>
+=======
+    <number>1</number>
+>>>>>>> main
    </property>
    <widget class="QWidget" name="page_login">
     <layout class="QGridLayout" name="gridLayout" rowstretch="2,5,4">
@@ -1442,7 +1446,11 @@ color: white;
         <x>140</x>
         <y>360</y>
         <width>251</width>
+<<<<<<< HEAD
         <height>221</height>
+=======
+        <height>201</height>
+>>>>>>> main
        </rect>
       </property>
       <property name="styleSheet">
@@ -1929,6 +1937,7 @@ color: white;
       </property>
      </widget>
      <widget class="QPushButton" name="pushButton_drawing_list_save">
+<<<<<<< HEAD
       <property name="geometry">
        <rect>
         <x>510</x>
@@ -1982,10 +1991,13 @@ border: 1px solid #000000;
 }</string>
      </property>
      <widget class="QWidget" name="layoutWidget_2">
+=======
+>>>>>>> main
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>510</x>
         <y>10</y>
+<<<<<<< HEAD
         <width>108</width>
         <height>54</height>
        </rect>
@@ -2046,6 +2058,8 @@ color : rgb(105, 105, 105);
        <rect>
         <x>1120</x>
         <y>20</y>
+=======
+>>>>>>> main
         <width>51</width>
         <height>31</height>
        </rect>
@@ -2073,6 +2087,7 @@ color: white;
 }</string>
       </property>
       <property name="text">
+<<<<<<< HEAD
        <string>新增</string>
       </property>
      </widget>
@@ -12001,10 +12016,32 @@ color: white;
       </property>
       <property name="text">
        <string>删除</string>
+=======
+       <string>保存</string>
+>>>>>>> main
       </property>
      </widget>
     </widget>
    </widget>
+   <widget class="QWidget" name="page_fan"/>
+   <widget class="QWidget" name="page_fanCoil"/>
+   <widget class="QWidget" name="page_air_noi_single_fan"/>
+   <widget class="QWidget" name="page_air_noi_double_fan"/>
+   <widget class="QWidget" name="page_VAV_terminal"/>
+   <widget class="QWidget" name="page_circular_damper"/>
+   <widget class="QWidget" name="page_rect_damper"/>
+   <widget class="QWidget" name="page_air_diff"/>
+   <widget class="QWidget" name="page_pump_send"/>
+   <widget class="QWidget" name="page_staticBox_grille"/>
+   <widget class="QWidget" name="page_disp_vent_terminal"/>
+   <widget class="QWidget" name="page_other_send_terminal"/>
+   <widget class="QWidget" name="page_static_box"/>
+   <widget class="QWidget" name="page_duct_with_multi_ranc"/>
+   <widget class="QWidget" name="page_tee"/>
+   <widget class="QWidget" name="page_pipe"/>
+   <widget class="QWidget" name="page_elbow"/>
+   <widget class="QWidget" name="page_reducer"/>
+   <widget class="QWidget" name="page_silencer"/>
    <widget class="QWidget" name="page_room_less425">
     <widget class="QWidget" name="widget_room_less425" native="true">
      <property name="geometry">
@@ -13743,7 +13780,7 @@ color: white;
         <x>10</x>
         <y>10</y>
         <width>188</width>
-        <height>54</height>
+        <height>45</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_53">

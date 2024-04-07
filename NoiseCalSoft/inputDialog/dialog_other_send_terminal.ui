@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>651</width>
-    <height>661</height>
+    <width>611</width>
+    <height>851</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -31,39 +31,156 @@ font-family: 'Microsoft YaHei';
 font-size: 13px;
 }</string>
   </property>
-  <widget class="QWidget" name="widget_static_box_pore" native="true">
+  <widget class="QWidget" name="widget_disp_vent_terminal" native="true">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>30</y>
-     <width>651</width>
-     <height>631</height>
+     <width>611</width>
+     <height>821</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">#widget_static_box_pore
+    <string notr="true">#widget_disp_vent_terminal
 {
 border: 1px solid #000000;
 }</string>
    </property>
+   <widget class="QWidget" name="layoutWidget_15">
+    <property name="geometry">
+     <rect>
+      <x>1</x>
+      <y>10</y>
+      <width>221</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_28">
+     <item>
+      <widget class="QLabel" name="label_36">
+       <property name="minimumSize">
+        <size>
+         <width>20</width>
+         <height>41</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>20</width>
+         <height>41</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel { 
+border: none; 
+background-color : rgb(105, 105, 105);
+}</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_37">
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei</family>
+         <pointsize>24</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel { 
+border: none; 
+color : rgb(105, 105, 105);
+}</string>
+       </property>
+       <property name="text">
+        <string>其他送风末端</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>590</y>
+      <width>611</width>
+      <height>231</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: 1px solid #000000;</string>
+    </property>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>10</y>
+       <width>321</width>
+       <height>211</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/images/image/refl.png);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_22">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>171</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>末端反射衰减经验公式</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
    <widget class="QWidget" name="widget_2" native="true">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>0</x>
       <y>60</y>
       <width>611</width>
-      <height>521</height>
+      <height>531</height>
      </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>74</width>
+      <height>0</height>
+     </size>
     </property>
     <property name="font">
      <font>
-      <family>黑体</family>
+      <family>Microsoft YaHei</family>
      </font>
     </property>
     <property name="styleSheet">
      <string notr="true">#widget_2
 {
-border: 1px solid #DCDCDC;
+border: 1px solid #000000;
 }
 
 QLabel
@@ -75,13 +192,23 @@ font-size: 16px;
 QLineEdit
 {
 font-family: '黑体';
+}
+
+QRadioButton
+{
+font-family: '黑体';
+}
+
+QPushButton
+{
+font-family: '黑体';
 }</string>
     </property>
     <widget class="QLabel" name="label_4">
      <property name="geometry">
       <rect>
-       <x>310</x>
-       <y>10</y>
+       <x>240</x>
+       <y>40</y>
        <width>41</width>
        <height>31</height>
       </rect>
@@ -96,46 +223,11 @@ font-family: '黑体';
       <string>品牌</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit_brand">
-     <property name="geometry">
-      <rect>
-       <x>350</x>
-       <y>10</y>
-       <width>101</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>黑体</family>
-       <pointsize>-1</pointsize>
-      </font>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="lineEdit_model">
-     <property name="geometry">
-      <rect>
-       <x>50</x>
-       <y>10</y>
-       <width>241</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>黑体</family>
-       <pointsize>-1</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
     <widget class="QLabel" name="label_5">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>10</y>
+       <y>40</y>
        <width>41</width>
        <height>31</height>
       </rect>
@@ -150,13 +242,48 @@ font-family: '黑体';
       <string>型号</string>
      </property>
     </widget>
+    <widget class="QLineEdit" name="lineEdit_brand">
+     <property name="geometry">
+      <rect>
+       <x>290</x>
+       <y>40</y>
+       <width>101</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_38">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>372</y>
+       <width>111</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>末端反射衰减 :</string>
+     </property>
+    </widget>
     <widget class="QLabel" name="label_6">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>50</y>
-       <width>41</width>
-       <height>31</height>
+       <y>151</y>
+       <width>81</width>
+       <height>41</height>
       </rect>
      </property>
      <property name="font">
@@ -166,33 +293,509 @@ font-family: '黑体';
       </font>
      </property>
      <property name="text">
-      <string>备注</string>
+      <string>气流噪音 :</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit_remark">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
-       <x>50</x>
-       <y>50</y>
-       <width>401</width>
-       <height>31</height>
+       <x>11</x>
+       <y>301</y>
+       <width>501</width>
+       <height>72</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <family>黑体</family>
-       <pointsize>-1</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_10">
+        <item>
+         <widget class="QLabel" name="label_15">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>63Hz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_63_atten">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_11">
+        <item>
+         <widget class="QLabel" name="label_16">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>125Hz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_125_atten">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_12">
+        <item>
+         <widget class="QLabel" name="label_17">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>250Hz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_250_atten">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_13">
+        <item>
+         <widget class="QLabel" name="label_18">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>500Hz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_500_atten">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_14">
+        <item>
+         <widget class="QLabel" name="label_19">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>1kHz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_1k_atten">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_15">
+        <property name="spacing">
+         <number>6</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="label_20">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>2kHz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_2k_atten">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_16">
+        <item>
+         <widget class="QLabel" name="label_1">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>4kHz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_4k_atten">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_17">
+        <item>
+         <widget class="QLabel" name="label_21">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>8kHz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_8k_atten">
+          <property name="minimumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
     </widget>
     <widget class="QWidget" name="layoutWidget_2">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>430</y>
+       <x>11</x>
+       <y>410</y>
        <width>501</width>
        <height>72</height>
       </rect>
@@ -252,7 +855,7 @@ font-family: '黑体';
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -312,7 +915,7 @@ font-family: '黑体';
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -372,7 +975,7 @@ font-family: '黑体';
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -432,7 +1035,7 @@ font-family: '黑体';
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -441,7 +1044,7 @@ font-family: '黑体';
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_22">
         <item>
-         <widget class="QLabel" name="label_34">
+         <widget class="QLabel" name="label_32">
           <property name="minimumSize">
            <size>
             <width>51</width>
@@ -492,7 +1095,7 @@ font-family: '黑体';
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -504,7 +1107,7 @@ font-family: '黑体';
          <number>6</number>
         </property>
         <item>
-         <widget class="QLabel" name="label_35">
+         <widget class="QLabel" name="label_33">
           <property name="minimumSize">
            <size>
             <width>51</width>
@@ -555,7 +1158,7 @@ font-family: '黑体';
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -615,7 +1218,7 @@ font-family: '黑体';
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -624,7 +1227,7 @@ font-family: '黑体';
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_25">
         <item>
-         <widget class="QLabel" name="label_36">
+         <widget class="QLabel" name="label_39">
           <property name="minimumSize">
            <size>
             <width>51</width>
@@ -675,7 +1278,7 @@ font-family: '黑体';
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -683,105 +1286,10 @@ font-family: '黑体';
       </item>
      </layout>
     </widget>
-    <widget class="QLabel" name="label_13">
+    <widget class="QWidget" name="layoutWidget_3">
      <property name="geometry">
       <rect>
-       <x>9</x>
-       <y>268</y>
-       <width>81</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>黑体</family>
-       <pointsize>-1</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>末端衰减 :</string>
-     </property>
-    </widget>
-    <widget class="QWidget" name="widget_7" native="true">
-     <property name="geometry">
-      <rect>
-       <x>119</x>
-       <y>395</y>
-       <width>181</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">#widget_7
-{
-border: 1px solid #DCDCDC;
-}</string>
-     </property>
-     <widget class="QRadioButton" name="radioButton_known">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>-1</y>
-        <width>81</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>10</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>厂家信息</string>
-      </property>
-     </widget>
-     <widget class="QRadioButton" name="radioButton_formula">
-      <property name="geometry">
-       <rect>
-        <x>100</x>
-        <y>0</y>
-        <width>81</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>10</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>经验公式</string>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QRadioButton" name="radioButton_known_3">
-     <property name="geometry">
-      <rect>
-       <x>89</x>
-       <y>276</y>
-       <width>81</width>
-       <height>30</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>黑体</family>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>厂家信息</string>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-    </widget>
-    <widget class="QWidget" name="layoutWidget">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
+       <x>11</x>
        <y>188</y>
        <width>581</width>
        <height>72</height>
@@ -842,7 +1350,7 @@ border: 1px solid #DCDCDC;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -902,7 +1410,7 @@ border: 1px solid #DCDCDC;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -962,7 +1470,7 @@ border: 1px solid #DCDCDC;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -1022,7 +1530,7 @@ border: 1px solid #DCDCDC;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -1082,7 +1590,7 @@ border: 1px solid #DCDCDC;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -1145,7 +1653,7 @@ border: 1px solid #DCDCDC;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -1205,7 +1713,7 @@ border: 1px solid #DCDCDC;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -1265,7 +1773,7 @@ border: 1px solid #DCDCDC;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -1333,13 +1841,48 @@ border: 1px solid #DCDCDC;
       </item>
      </layout>
     </widget>
+    <widget class="QLabel" name="label_13">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>263</y>
+       <width>81</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>末端衰减 :</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_model">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>40</y>
+       <width>161</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+    </widget>
     <widget class="QStackedWidget" name="stackedWidget_input">
      <property name="geometry">
       <rect>
-       <x>170</x>
+       <x>270</x>
        <y>120</y>
-       <width>341</width>
-       <height>41</height>
+       <width>291</width>
+       <height>31</height>
       </rect>
      </property>
      <property name="font">
@@ -1351,13 +1894,13 @@ border: 1px solid #DCDCDC;
       <string notr="true">background-color: rgb(255, 255, 255);</string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="page_rect">
       <widget class="QLineEdit" name="lineEdit_width">
        <property name="geometry">
         <rect>
-         <x>240</x>
+         <x>220</x>
          <y>0</y>
          <width>71</width>
          <height>31</height>
@@ -1392,7 +1935,7 @@ border: 1px solid #DCDCDC;
       <widget class="QLabel" name="label_27">
        <property name="geometry">
         <rect>
-         <x>170</x>
+         <x>160</x>
          <y>0</y>
          <width>61</width>
          <height>31</height>
@@ -1411,7 +1954,7 @@ border: 1px solid #DCDCDC;
       <widget class="QLineEdit" name="lineEdit_length">
        <property name="geometry">
         <rect>
-         <x>80</x>
+         <x>70</x>
          <y>0</y>
          <width>71</width>
          <height>31</height>
@@ -1448,7 +1991,7 @@ border: 1px solid #DCDCDC;
       <widget class="QLineEdit" name="lineEdit_diameter">
        <property name="geometry">
         <rect>
-         <x>100</x>
+         <x>90</x>
          <y>0</y>
          <width>71</width>
          <height>31</height>
@@ -1463,565 +2006,10 @@ border: 1px solid #DCDCDC;
       </widget>
      </widget>
     </widget>
-    <widget class="QLabel" name="label_37">
-     <property name="geometry">
-      <rect>
-       <x>9</x>
-       <y>389</y>
-       <width>111</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>黑体</family>
-       <pointsize>-1</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>末端反射衰减 :</string>
-     </property>
-    </widget>
-    <widget class="QWidget" name="layoutWidget_3">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>309</y>
-       <width>501</width>
-       <height>72</height>
-      </rect>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_10">
-        <item>
-         <widget class="QLabel" name="label_15">
-          <property name="minimumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>63Hz</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="lineEdit_63_atten">
-          <property name="minimumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_11">
-        <item>
-         <widget class="QLabel" name="label_16">
-          <property name="minimumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>125Hz</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="lineEdit_125_atten">
-          <property name="minimumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_12">
-        <item>
-         <widget class="QLabel" name="label_17">
-          <property name="minimumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>250Hz</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="lineEdit_250_atten">
-          <property name="minimumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_13">
-        <item>
-         <widget class="QLabel" name="label_18">
-          <property name="minimumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>500Hz</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="lineEdit_500_atten">
-          <property name="minimumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_14">
-        <item>
-         <widget class="QLabel" name="label_19">
-          <property name="minimumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>1kHz</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="lineEdit_1k_atten">
-          <property name="minimumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_15">
-        <property name="spacing">
-         <number>6</number>
-        </property>
-        <item>
-         <widget class="QLabel" name="label_20">
-          <property name="minimumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>2kHz</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="lineEdit_2k_atten">
-          <property name="minimumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_16">
-        <item>
-         <widget class="QLabel" name="label_1">
-          <property name="minimumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>4kHz</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="lineEdit_4k_atten">
-          <property name="minimumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_17">
-        <item>
-         <widget class="QLabel" name="label_21">
-          <property name="minimumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>8kHz</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="lineEdit_8k_atten">
-          <property name="minimumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>51</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QLabel" name="label_22">
-     <property name="geometry">
-      <rect>
-       <x>9</x>
-       <y>148</y>
-       <width>81</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>黑体</family>
-       <pointsize>-1</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>气流噪音 :</string>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="radioButton_known_2">
-     <property name="geometry">
-      <rect>
-       <x>89</x>
-       <y>155</y>
-       <width>81</width>
-       <height>30</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>黑体</family>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>厂家信息</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
     <widget class="QWidget" name="widget_8" native="true">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>100</x>
        <y>120</y>
        <width>151</width>
        <height>31</height>
@@ -2075,11 +2063,11 @@ border: 1px solid #DCDCDC;
       </property>
      </widget>
     </widget>
-    <widget class="QLabel" name="label_38">
+    <widget class="QLabel" name="label_40">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>87</y>
+       <y>120</y>
        <width>81</width>
        <height>31</height>
       </rect>
@@ -2091,46 +2079,26 @@ border: 1px solid #DCDCDC;
       </font>
      </property>
      <property name="text">
-      <string>末端尺寸 :</string>
+      <string>末端尺寸:</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="pushButton_confirm">
      <property name="geometry">
       <rect>
-       <x>310</x>
-       <y>396</y>
-       <width>111</width>
+       <x>490</x>
+       <y>490</y>
+       <width>71</width>
        <height>31</height>
       </rect>
      </property>
      <property name="font">
       <font>
        <family>黑体</family>
-       <pointsize>11</pointsize>
+       <pointsize>12</pointsize>
       </font>
      </property>
-     <property name="text">
-      <string>查看计算公式</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QPushButton" name="pushButton_confirm">
-    <property name="geometry">
-     <rect>
-      <x>560</x>
-      <y>590</y>
-      <width>71</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>黑体</family>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton
+     <property name="styleSheet">
+      <string notr="true">QPushButton
 {
 	color:#ffffff; /*文字颜色*/
     background-color: #00ACB9;/*背景色*/
@@ -2144,70 +2112,206 @@ QPushButton:hover
 background-color: rgb(0,142,153);
 color: white;
 }</string>
-    </property>
-    <property name="text">
-     <string>确认</string>
-    </property>
-   </widget>
-   <widget class="QWidget" name="layoutWidget_13">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>231</width>
-      <height>45</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_26">
+     </property>
+     <property name="text">
+      <string>确认</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_41">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>81</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 1px solid #000000;</string>
+     </property>
+     <property name="text">
+      <string>厂家信息</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_42">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>263</y>
+       <width>41</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>来源</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="comboBox_refl_data_source">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>377</y>
+       <width>91</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
      <item>
-      <widget class="QLabel" name="label_32">
-       <property name="minimumSize">
-        <size>
-         <width>20</width>
-         <height>41</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>20</width>
-         <height>41</height>
-        </size>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLabel { 
-border: none; 
-background-color : rgb(105, 105, 105);
-}</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
+      <property name="text">
+       <string>厂家信息</string>
+      </property>
      </item>
      <item>
-      <widget class="QLabel" name="label_33">
-       <property name="font">
-        <font>
-         <family>Microsoft YaHei</family>
-         <pointsize>24</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLabel { 
-border: none; 
-color : rgb(105, 105, 105);
-}</string>
-       </property>
-       <property name="text">
-        <string>其他送风末端</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignBottom|Qt::AlignHCenter</set>
-       </property>
-      </widget>
+      <property name="text">
+       <string>设计预估</string>
+      </property>
      </item>
-    </layout>
+    </widget>
+    <widget class="QComboBox" name="comboBox_noi_data_source">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>157</y>
+       <width>91</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+     <item>
+      <property name="text">
+       <string>厂家信息</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>设计预估</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QComboBox" name="comboBox_atten_data_source">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>267</y>
+       <width>91</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+     <item>
+      <property name="text">
+       <string>厂家信息</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>设计预估</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QLabel" name="label_43">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>153</y>
+       <width>41</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>来源</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_44">
+     <property name="geometry">
+      <rect>
+       <x>130</x>
+       <y>373</y>
+       <width>41</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>来源</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_remark">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>80</y>
+       <width>331</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_24">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>80</y>
+       <width>41</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>备注</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QWidget" name="widget_top" native="true">
@@ -2215,7 +2319,7 @@ color : rgb(105, 105, 105);
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>651</width>
+     <width>611</width>
      <height>31</height>
     </rect>
    </property>
@@ -2230,7 +2334,7 @@ background-color: rgb(157, 196, 229);
    <widget class="QPushButton" name="close">
     <property name="geometry">
      <rect>
-      <x>620</x>
+      <x>580</x>
       <y>5</y>
       <width>21</width>
       <height>21</height>

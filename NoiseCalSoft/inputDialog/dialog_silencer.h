@@ -6,9 +6,18 @@
 #include <QMap>
 #include <QObject>
 #include <QMouseEvent>
+#include <QLineEdit>
 #include "Component/ComponentStructs.h"
 namespace Ui {
 class Dialog_silencer;
+}
+
+namespace silencer_type_name
+{
+const char* const CIRCLE = "圆形消音器";
+const char* const RECT = "矩形消音器";
+const char* const CIRCLE_ELBOW = "圆形消音弯头";
+const char* const RECT_ELBOW = "矩形消音弯头";
 }
 
 class Dialog_silencer : public InputBaseDialog
@@ -16,11 +25,9 @@ class Dialog_silencer : public InputBaseDialog
     Q_OBJECT
 
 public:
-    explicit Dialog_silencer(QString type, QWidget *parent = nullptr, int editRow = -1, const Silencer_atten& data = Silencer_atten());
-    Dialog_silencer(QWidget *parent = nullptr, int editRow = -1, const Silencer_atten& data = Silencer_atten()){}
+    explicit Dialog_silencer(QString type, QWidget *parent = nullptr, int editRow = -1, const Silencer& data = Silencer());
+    Dialog_silencer(QWidget *parent = nullptr, int editRow = -1, const Silencer& data = Silencer()){}
     ~Dialog_silencer();
-    void setModelComboBoxItems();
-    void* getNoi() override;
 
 private slots:
     void on_close_clicked();
@@ -29,12 +36,16 @@ private slots:
 
 private:
     Ui::Dialog_silencer *ui;
-    QVector<QString> roundSilencerModel;      //圆形消音器
-    QVector<QString> rectSilencerModel;      //方形消音器
-    QVector<QString> pipeSilencerModel;      //消音管
-    QMap<int,QString> eightNoi;     //八个分频的噪音,用于数据库获取数据
     int editRow;    //当前修改行，如果是新建就为-1
-    Silencer_atten* noi;     //噪音结构体
+    Silencer* component;     //噪音结构体
+    array<QLineEdit*,8> atten_lineEdits;
+    QString table_id{-1};
+    QString UUID{QString()};
+
+    // InputBaseDialog interface
+public:
+    QList<QStringList> getComponentDataAsStringList() const override;
+    void* getComponent() override;
 };
 
 #endif // DIALOG_SILENCER_H

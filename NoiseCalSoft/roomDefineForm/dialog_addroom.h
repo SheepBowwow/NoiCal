@@ -26,7 +26,7 @@ public:
     QString getlimit();
     QString getroomcalclass();
 
-    virtual void * getNoi() override;
+
 
 signals:
     void dialogsent(QString name,int num, QString jiaban, QString limit);
@@ -40,6 +40,12 @@ private slots:
 
 private:
     Ui::Dialog_addroom *ui;
+    virtual void * getComponent() override {};
+
+
+    // InputBaseDialog interface
+public:
+    QList<QStringList> getComponentDataAsStringList() const override {};
 };
 
 #endif // DIALOG_ADDROOM_H

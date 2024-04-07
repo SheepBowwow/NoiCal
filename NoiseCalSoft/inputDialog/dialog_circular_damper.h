@@ -6,6 +6,7 @@
 #include <QMap>
 #include <QObject>
 #include <QMouseEvent>
+#include <QLineEdit>>
 #include "Component/ComponentStructs.h"
 
 namespace Ui {
@@ -17,10 +18,10 @@ class Dialog_circular_damper : public InputBaseDialog
     Q_OBJECT
 
 public:
-    explicit Dialog_circular_damper(QWidget *parent = nullptr, int editRow = -1, const Circular_damper_noi& data = Circular_damper_noi());
-    Dialog_circular_damper(const QString &name, QWidget *parent = nullptr, int editRow = -1, const Circular_damper_noi& data = Circular_damper_noi()){}
+    explicit Dialog_circular_damper(QWidget *parent = nullptr, int editRow = -1, const Circular_damper& data = Circular_damper());
+    Dialog_circular_damper(const QString &name, QWidget *parent = nullptr, int editRow = -1, const Circular_damper& data = Circular_damper()){}
     ~Dialog_circular_damper();
-    void* getNoi() override;
+
 
 private slots:
 
@@ -28,19 +29,20 @@ private slots:
 
     void on_pushButton_confirm_clicked();
 
-    void calNoise();
-
-    void on_radioButton_known_clicked();
-
-    void on_radioButton_formula_clicked();
-
     void calTotalNoise();
 
 private:
     Ui::Dialog_circular_damper *ui;
-    QMap<int,QVector<int>> fixNumber;
     int editRow;    //当前修改行，如果是新建就为-1
-    Circular_damper_noi* noi;     //噪音结构体
+    Circular_damper* component;
+    array<QLineEdit*,9> noi_lineEdits;
+    QString table_id{-1};
+    QString UUID{QString()};
+
+    // InputBaseDialog interface
+public:
+    QList<QStringList> getComponentDataAsStringList() const override;
+    void* getComponent() override;
 };
 
 #endif // DIALOG_CIRCULAR_DAMPER_H

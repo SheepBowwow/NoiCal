@@ -18,11 +18,6 @@ dialog_add_system::~dialog_add_system()
     delete ui;
 }
 
-void *dialog_add_system::getNoi()
-{
-
-}
-
 void dialog_add_system::setvalues(int type_index, QString number, QString model)
 {
     ui->comboBox_type->setCurrentIndex(type_index);
@@ -80,48 +75,48 @@ void dialog_add_system::on_close_clicked()
 
 void dialog_add_system::on_comboBox_type_currentTextChanged(const QString &arg1)
 {
-    if(arg1 == "空调器")
-    {
-        ui->comboBox_number->clear();
-        ui->comboBox_number->addItem("请选择设备编号");
-        QVector<QString> airconditionNumbers = componentManager.getAirconditionNumbers();
-        for(const QString &number: airconditionNumbers)
-        {
-            ui->comboBox_number->addItem(number);
-        }
-    }
-    else if(arg1 == "独立排风机")
-    {
-        ui->comboBox_number->clear();
-        ui->comboBox_number->addItem("请选择设备编号");
-        QVector<QString> fanNumbers = componentManager.getFanNumbers();
-        for(const QString &number : fanNumbers)
-        {
-            ui->comboBox_number->addItem(number);
-        }
-    }
-    else if(arg1 == "公共区域风机盘管")
-    {
-        ui->comboBox_number->clear();
-        ui->comboBox_number->addItem("请选择设备编号");
-        QVector<QString> fanCoilNumbers = componentManager.getFanCoilNumbers();
-        for(const QString &number: fanCoilNumbers)
-        {
-            ui->comboBox_number->addItem(number);
-        }
-    }
+//    if(arg1 == "空调器")
+//    {
+//        ui->comboBox_number->clear();
+//        ui->comboBox_number->addItem("请选择设备编号");
+//        QVector<QString> airconditionNumbers = componentManager.getAirconditionNumbers();
+//        for(const QString &number: airconditionNumbers)
+//        {
+//            ui->comboBox_number->addItem(number);
+//        }
+//    }
+//    else if(arg1 == "独立排风机")
+//    {
+//        ui->comboBox_number->clear();
+//        ui->comboBox_number->addItem("请选择设备编号");
+//        QVector<QString> fanNumbers = componentManager.getFanNumbers();
+//        for(const QString &number : fanNumbers)
+//        {
+//            ui->comboBox_number->addItem(number);
+//        }
+//    }
+//    else if(arg1 == "公共区域风机盘管")
+//    {
+//        ui->comboBox_number->clear();
+//        ui->comboBox_number->addItem("请选择设备编号");
+//        QVector<QString> fanCoilNumbers = componentManager.getFanCoilNumbers();
+//        for(const QString &number: fanCoilNumbers)
+//        {
+//            ui->comboBox_number->addItem(number);
+//        }
+//    }
 }
 
 
 void dialog_add_system::on_comboBox_number_currentTextChanged(const QString &arg1)
 {
-    if(ui->comboBox_type->currentText() == "公共区域风机盘管" && ui->comboBox_number->currentText() != "请选择设备编号")
-    {
-        ui->lineEdit_model->setText(ui->comboBox_number->currentText());
-        return;
-    }
+//    if(ui->comboBox_type->currentText() == "公共区域风机盘管" && ui->comboBox_number->currentText() != "请选择设备编号")
+//    {
+//        ui->lineEdit_model->setText(ui->comboBox_number->currentText());
+//        return;
+//    }
 
-    QString model = componentManager.getModelByNumber(arg1);
-    ui->lineEdit_model->setText(model);
+//    QString model = componentManager.getModelByNumber(arg1);
+//    ui->lineEdit_model->setText(model);
 }
 

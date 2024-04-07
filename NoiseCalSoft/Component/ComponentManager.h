@@ -10,6 +10,7 @@
 #include "Component/ComponentStructs.h"
 #include <string>
 #include <regex>
+#include <QTableWidget>
 
 class ComponentManager
 {
@@ -19,48 +20,27 @@ public:
         return instance;
     }
 
-    void addComponent(QSharedPointer<ComponentBase> component, QString type);
-    void updateRevisedComponent(QString preName ,QSharedPointer<ComponentBase> component, QString type);
+    // 添加组件
+    void addComponent(const QSharedPointer<ComponentBase>& component);
+    // 删除组件
+    bool removeComponent(const QString& uuid);
+    // 查找组件
+    QSharedPointer<ComponentBase> findComponent(const QString& uuid) const;
 
-    void del_and_updateTableID(int deleteID, QString containerName);
+    // 获取特定类型的所有组件
+    QList<QSharedPointer<ComponentBase>> getComponentsByType(const QString& type) const;
 
-    QVector<QString> getAirconditionNumbers();
-    QVector<QString> getFanNumbers();
-    QVector<QString> getFanCoilNumbers();
-
-    QString getModelByNumber(QString number);
-    ComponentBase* getComponentByNumber(QString number);
-    ComponentBase* getComponentByModel(QString model, QString type);
-    QList<const ComponentBase*> getComponents(QString type);
+    // 修改组件
+    bool updateComponent(const QString& uuid, const QSharedPointer<ComponentBase>& newComponent);
 
 private:
     // 禁止通过构造函数和复制构造函数创建实例
-    ComponentManager();
+    ComponentManager() {};
     ComponentManager(const ComponentManager&) = delete;
     ComponentManager& operator=(const ComponentManager&) = delete;
 
-    // 列表存储各种部件
-    QList<QSharedPointer<AirDiff_noise>> airDiffs;
-    QList<QSharedPointer<Aircondition_noise>> airConditions;
-    QList<QSharedPointer<Circular_damper_noi>> circularDampers;
-    QList<QSharedPointer<Disp_vent_terminal_noise>> dispVentTerminals;
-    QList<QSharedPointer<Multi_ranc_atten>> multiRancs;
-    QList<QSharedPointer<Elbow_atten>> elbows;
-    QList<QSharedPointer<Fan_noise>> fans;
-    QList<QSharedPointer<FanCoil_noise>> fanCoils;
-    QList<QSharedPointer<Other_send_terminal_noise>> otherSendTerminals;
-    QList<QSharedPointer<Pipe_atten>> pipes;
-    QList<QSharedPointer<PumpSend_noise>> pumpSends;
-    QList<QSharedPointer<Rect_damper_noi>> rectDampers;
-    QList<QSharedPointer<Reducer_atten>> reducers;
-    QList<QSharedPointer<StaticBox_grille_noise>> staticBoxGrilles;
-    QList<QSharedPointer<Silencer_atten>> silencers;
-    QList<QSharedPointer<Static_box>> staticboxs;
-    QList<QSharedPointer<Tee_atten>> tees;
-    QList<QSharedPointer<VAV_terminal_noise>> VAVTerminals;
-
-    template<typename T>
-    void del_and_updateTableIDBase(QList<QSharedPointer<T>> list, int deleteID, QString containerName);
+    QHash<QString, QSharedPointer<ComponentBase>> components;   //用来存放所有部件的hash, key: UUID, value: Component
+    QHash<QString, QList<QSharedPointer<ComponentBase>>> componentsByType;  //不同种类的容器
 };
 
 #endif // COMPONENTMANAGER_H

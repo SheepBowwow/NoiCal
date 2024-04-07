@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>651</width>
-    <height>331</height>
+    <width>581</width>
+    <height>311</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,8 +36,8 @@ font-size: 13px;
     <rect>
      <x>0</x>
      <y>30</y>
-     <width>651</width>
-     <height>301</height>
+     <width>581</width>
+     <height>281</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -49,16 +49,16 @@ border: 1px solid #000000;
    <widget class="QWidget" name="widget_2" native="true">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>70</y>
-      <width>621</width>
-      <height>171</height>
+      <x>0</x>
+      <y>60</y>
+      <width>581</width>
+      <height>221</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">#widget_2
 {
-border: 1px solid #DCDCDC;
+border: 1px solid #000000;
 }
 
 QLabel
@@ -85,8 +85,8 @@ font-family: '黑体';
     <widget class="QLabel" name="label_4">
      <property name="geometry">
       <rect>
-       <x>410</x>
-       <y>10</y>
+       <x>270</x>
+       <y>40</y>
        <width>41</width>
        <height>31</height>
       </rect>
@@ -105,7 +105,7 @@ font-family: '黑体';
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>10</y>
+       <y>40</y>
        <width>41</width>
        <height>31</height>
       </rect>
@@ -123,8 +123,8 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_brand">
      <property name="geometry">
       <rect>
-       <x>450</x>
-       <y>10</y>
+       <x>310</x>
+       <y>40</y>
        <width>91</width>
        <height>31</height>
       </rect>
@@ -136,30 +136,11 @@ font-family: '黑体';
       </font>
      </property>
     </widget>
-    <widget class="QComboBox" name="comboBox_model">
-     <property name="geometry">
-      <rect>
-       <x>60</x>
-       <y>10</y>
-       <width>331</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Microsoft YaHei</family>
-       <pointsize>-1</pointsize>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">outline:none;</string>
-     </property>
-    </widget>
     <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
-       <x>12</x>
-       <y>62</y>
+       <x>20</x>
+       <y>92</y>
        <width>531</width>
        <height>72</height>
       </rect>
@@ -578,24 +559,39 @@ font-family: '黑体';
       </item>
      </layout>
     </widget>
-   </widget>
-   <widget class="QPushButton" name="pushButton_confirm">
-    <property name="geometry">
-     <rect>
-      <x>560</x>
-      <y>250</y>
-      <width>71</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>黑体</family>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton
+    <widget class="QLineEdit" name="lineEdit_model">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>40</y>
+       <width>191</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_confirm">
+     <property name="geometry">
+      <rect>
+       <x>490</x>
+       <y>180</y>
+       <width>71</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton
 {
 	color:#ffffff; /*文字颜色*/
     background-color: #00ACB9;/*背景色*/
@@ -609,274 +605,135 @@ QPushButton:hover
 background-color: rgb(0,142,153);
 color: white;
 }</string>
-    </property>
-    <property name="text">
-     <string>确认</string>
-    </property>
+     </property>
+     <property name="text">
+      <string>确认</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>71</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 1px solid #000000;</string>
+     </property>
+     <property name="text">
+      <string>厂家信息</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="comboBox_data_source">
+     <property name="geometry">
+      <rect>
+       <x>460</x>
+       <y>41</y>
+       <width>81</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>厂家信息</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>设计预估</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QLabel" name="label_29">
+     <property name="geometry">
+      <rect>
+       <x>420</x>
+       <y>40</y>
+       <width>41</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>来源</string>
+     </property>
+    </widget>
    </widget>
-   <widget class="QStackedWidget" name="stackedWidget_title">
+   <widget class="QWidget" name="layoutWidget_25">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>1</x>
       <y>10</y>
-      <width>261</width>
-      <height>51</height>
+      <width>91</width>
+      <height>45</height>
      </rect>
     </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 255, 255);</string>
-    </property>
-    <property name="currentIndex">
-     <number>3</number>
-    </property>
-    <widget class="QWidget" name="page_cs">
-     <widget class="QWidget" name="layoutWidget_22">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>191</width>
-        <height>45</height>
-       </rect>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_35">
-       <item>
-        <widget class="QLabel" name="label_50">
-         <property name="minimumSize">
-          <size>
-           <width>20</width>
-           <height>41</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>20</width>
-           <height>41</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel { 
+    <layout class="QHBoxLayout" name="horizontalLayout_38">
+     <item>
+      <widget class="QLabel" name="label_56">
+       <property name="minimumSize">
+        <size>
+         <width>20</width>
+         <height>41</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>20</width>
+         <height>41</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel { 
 border: none; 
 background-color : rgb(105, 105, 105);
 }</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_51">
-         <property name="font">
-          <font>
-           <family>Microsoft YaHei</family>
-           <pointsize>24</pointsize>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel { 
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_title">
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei</family>
+         <pointsize>24</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel { 
 border: none; 
 color : rgb(105, 105, 105);
 }</string>
-         </property>
-         <property name="text">
-          <string>圆形消音器</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="page_rs">
-     <widget class="QWidget" name="layoutWidget_23">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>191</width>
-        <height>45</height>
-       </rect>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_36">
-       <item>
-        <widget class="QLabel" name="label_52">
-         <property name="minimumSize">
-          <size>
-           <width>20</width>
-           <height>41</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>20</width>
-           <height>41</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel { 
-border: none; 
-background-color : rgb(105, 105, 105);
-}</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_53">
-         <property name="font">
-          <font>
-           <family>Microsoft YaHei</family>
-           <pointsize>24</pointsize>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel { 
-border: none; 
-color : rgb(105, 105, 105);
-}</string>
-         </property>
-         <property name="text">
-          <string>矩形消音器</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="page_cse">
-     <widget class="QWidget" name="layoutWidget_24">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>220</width>
-        <height>45</height>
-       </rect>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_37">
-       <item>
-        <widget class="QLabel" name="label_54">
-         <property name="minimumSize">
-          <size>
-           <width>20</width>
-           <height>41</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>20</width>
-           <height>41</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel { 
-border: none; 
-background-color : rgb(105, 105, 105);
-}</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_55">
-         <property name="font">
-          <font>
-           <family>Microsoft YaHei</family>
-           <pointsize>24</pointsize>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel { 
-border: none; 
-color : rgb(105, 105, 105);
-}</string>
-         </property>
-         <property name="text">
-          <string>圆形消音弯头</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="page_rse">
-     <widget class="QWidget" name="layoutWidget_25">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>221</width>
-        <height>45</height>
-       </rect>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_38">
-       <item>
-        <widget class="QLabel" name="label_56">
-         <property name="minimumSize">
-          <size>
-           <width>20</width>
-           <height>41</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>20</width>
-           <height>41</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel { 
-border: none; 
-background-color : rgb(105, 105, 105);
-}</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_57">
-         <property name="font">
-          <font>
-           <family>Microsoft YaHei</family>
-           <pointsize>24</pointsize>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel { 
-border: none; 
-color : rgb(105, 105, 105);
-}</string>
-         </property>
-         <property name="text">
-          <string>矩形消音弯头</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </widget>
+       </property>
+       <property name="text">
+        <string>标题</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QWidget" name="widget_top" native="true">
@@ -884,7 +741,7 @@ color : rgb(105, 105, 105);
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>651</width>
+     <width>581</width>
      <height>31</height>
     </rect>
    </property>
@@ -899,7 +756,7 @@ background-color: rgb(157, 196, 229);
    <widget class="QPushButton" name="close">
     <property name="geometry">
      <rect>
-      <x>620</x>
+      <x>550</x>
       <y>5</y>
       <width>21</width>
       <height>21</height>

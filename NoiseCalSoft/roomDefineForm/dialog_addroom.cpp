@@ -10,7 +10,7 @@ Dialog_addroom::Dialog_addroom(QWidget *parent) :
     setWindowFlag(Qt::FramelessWindowHint);  // 写在窗口类构造函数里，隐藏边框
     setTopWidget(ui->widget_top);
 
-    for(const Room& room : rooms)
+    for(auto& room : rooms)
     {
         ui->comboBox->addItem(room.name);
     }
@@ -66,14 +66,9 @@ QString Dialog_addroom::getroomcalclass()
     return ui->lineEdit_roomcalclass->text();
 }
 
-void *Dialog_addroom::getNoi()
-{
-
-}
-
 void Dialog_addroom::on_pushButton_clicked()
 {
-    emit accept();
+    accept();
     QString name=ui->lineEdit_roomid->text();
     int num=ui->lineEdit_pipe->text().toInt();
     QString jiaban = ui->lineEdit_jiaban->text();
@@ -92,7 +87,7 @@ void Dialog_addroom::on_comboBox_currentTextChanged(const QString &arg1)
 {
     Room matchedRoom;
     // 假设rooms是QList<Room>，且已经在类中定义和填充了数据
-    for(const Room &room : rooms) {
+    for(const Room &room : std::as_const(rooms)) {
         if(room.name == arg1) {
             // 找到匹配的Room，可以根据需要保存或使用它
             matchedRoom = room; // 使用局部变量保存找到的Room

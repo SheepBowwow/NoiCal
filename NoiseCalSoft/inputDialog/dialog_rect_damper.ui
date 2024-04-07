@@ -87,16 +87,16 @@ border: 1px solid #000000;
    <widget class="QWidget" name="widget_2" native="true">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>0</x>
       <y>60</y>
-      <width>621</width>
-      <height>171</height>
+      <width>651</width>
+      <height>241</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">#widget_2
 {
-border: 1px solid #DCDCDC;
+border: 1px solid #000000;
 }
 
 QLabel
@@ -123,9 +123,9 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_brand">
      <property name="geometry">
       <rect>
-       <x>360</x>
-       <y>50</y>
-       <width>91</width>
+       <x>270</x>
+       <y>40</y>
+       <width>111</width>
        <height>31</height>
       </rect>
      </property>
@@ -133,8 +133,8 @@ font-family: '黑体';
     <widget class="QLabel" name="label_4">
      <property name="geometry">
       <rect>
-       <x>280</x>
-       <y>50</y>
+       <x>220</x>
+       <y>40</y>
        <width>41</width>
        <height>31</height>
       </rect>
@@ -152,8 +152,8 @@ font-family: '黑体';
     <widget class="QLabel" name="label_5">
      <property name="geometry">
       <rect>
-       <x>280</x>
-       <y>10</y>
+       <x>430</x>
+       <y>80</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -171,18 +171,53 @@ font-family: '黑体';
     <widget class="QComboBox" name="comboBox_angle">
      <property name="geometry">
       <rect>
-       <x>360</x>
-       <y>10</y>
-       <width>91</width>
+       <x>510</x>
+       <y>80</y>
+       <width>61</width>
        <height>31</height>
       </rect>
      </property>
+     <item>
+      <property name="text">
+       <string>0°</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>15°</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>30°</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>45°</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>60°</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>75°</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>90°</string>
+      </property>
+     </item>
     </widget>
     <widget class="QLabel" name="label_16">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>50</y>
+       <x>260</x>
+       <y>80</y>
        <width>81</width>
        <height>31</height>
       </rect>
@@ -200,125 +235,18 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_air_volume">
      <property name="geometry">
       <rect>
-       <x>110</x>
-       <y>50</y>
-       <width>141</width>
+       <x>350</x>
+       <y>80</y>
+       <width>71</width>
        <height>31</height>
       </rect>
      </property>
-    </widget>
-    <widget class="QStackedWidget" name="stackedWidget_input">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>241</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: rgb(255, 255, 255);</string>
-     </property>
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
-     <widget class="QWidget" name="page_formula">
-      <widget class="QLabel" name="label_13">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>61</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <family>黑体</family>
-         <pointsize>-1</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>长(mm)</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_length">
-       <property name="geometry">
-        <rect>
-         <x>60</x>
-         <y>0</y>
-         <width>51</width>
-         <height>31</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_width">
-       <property name="geometry">
-        <rect>
-         <x>190</x>
-         <y>0</y>
-         <width>51</width>
-         <height>31</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_18">
-       <property name="geometry">
-        <rect>
-         <x>127</x>
-         <y>0</y>
-         <width>61</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <family>黑体</family>
-         <pointsize>-1</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>宽(mm)</string>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="page_known">
-      <widget class="QLabel" name="label_17">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>31</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <family>黑体</family>
-         <pointsize>-1</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>型号</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_model">
-       <property name="geometry">
-        <rect>
-         <x>100</x>
-         <y>0</y>
-         <width>121</width>
-         <height>31</height>
-        </rect>
-       </property>
-      </widget>
-     </widget>
     </widget>
     <widget class="QWidget" name="layoutWidget_3">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>90</y>
+       <x>40</x>
+       <y>120</y>
        <width>561</width>
        <height>72</height>
       </rect>
@@ -791,24 +719,52 @@ font-family: '黑体';
       </item>
      </layout>
     </widget>
-   </widget>
-   <widget class="QPushButton" name="pushButton_confirm">
-    <property name="geometry">
-     <rect>
-      <x>560</x>
-      <y>250</y>
-      <width>71</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>黑体</family>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton
+    <widget class="QLabel" name="label_17">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>40</y>
+       <width>31</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>型号</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_model">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>40</y>
+       <width>121</width>
+       <height>31</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_confirm">
+     <property name="geometry">
+      <rect>
+       <x>530</x>
+       <y>200</y>
+       <width>71</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton
 {
 	color:#ffffff; /*文字颜色*/
     background-color: #00ACB9;/*背景色*/
@@ -822,15 +778,138 @@ QPushButton:hover
 background-color: rgb(0,142,153);
 color: white;
 }</string>
-    </property>
-    <property name="text">
-     <string>确认</string>
-    </property>
+     </property>
+     <property name="text">
+      <string>确认</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_7">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>81</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 1px solid #000000;</string>
+     </property>
+     <property name="text">
+      <string>厂家信息</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="comboBox_data_source">
+     <property name="geometry">
+      <rect>
+       <x>450</x>
+       <y>40</y>
+       <width>121</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>厂家信息</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>设计预估</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QLabel" name="label_8">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>40</y>
+       <width>41</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>来源</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_18">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>80</y>
+       <width>51</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>长(mm)</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_length">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>80</y>
+       <width>51</width>
+       <height>31</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_width">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>80</y>
+       <width>51</width>
+       <height>31</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_19">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>80</y>
+       <width>51</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>宽(mm)</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="layoutWidget_7">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>1</x>
       <y>10</y>
       <width>191</width>
       <height>45</height>
@@ -887,62 +966,8 @@ color : rgb(105, 105, 105);
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="widget_7" native="true">
-    <property name="geometry">
-     <rect>
-      <x>450</x>
-      <y>20</y>
-      <width>181</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">#widget_7
-{
-border: 1px solid #DCDCDC;
-}</string>
-    </property>
-    <widget class="QRadioButton" name="radioButton_known">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>-1</y>
-       <width>81</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>黑体</family>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>厂家信息</string>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="radioButton_formula">
-     <property name="geometry">
-      <rect>
-       <x>100</x>
-       <y>0</y>
-       <width>81</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>黑体</family>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>经验公式</string>
-     </property>
-    </widget>
-   </widget>
   </widget>
-  <widget class="QStackedWidget" name="stackedWidget_descri">
+  <widget class="QWidget" name="widget" native="true">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -951,63 +976,48 @@ border: 1px solid #DCDCDC;
      <height>231</height>
     </rect>
    </property>
-   <property name="minimumSize">
-    <size>
-     <width>651</width>
-     <height>231</height>
-    </size>
-   </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgb(255, 255, 255);</string>
+    <string notr="true">border: 1px solid #000000;</string>
    </property>
-   <property name="currentIndex">
-    <number>0</number>
-   </property>
-   <widget class="QWidget" name="page_descri">
-    <widget class="QWidget" name="widget_6" native="true">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>651</width>
-       <height>231</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>651</width>
-       <height>231</height>
-      </size>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">#widget_6
-{
-border: 1px solid #DCDCDC;
-}</string>
-     </property>
-     <widget class="QLabel" name="label">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>20</y>
-        <width>521</width>
-        <height>161</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">border-image: url(:/images/image/damper_desci.png);</string>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>40</y>
+      <width>521</width>
+      <height>161</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(:/images/image/damper_desci.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
    </widget>
-   <widget class="QWidget" name="page_white"/>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>黑体</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>经验公式</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
   </widget>
-  <zorder>widget_top</zorder>
-  <zorder>stackedWidget_descri</zorder>
-  <zorder>widget_terminal</zorder>
  </widget>
  <resources/>
  <connections/>

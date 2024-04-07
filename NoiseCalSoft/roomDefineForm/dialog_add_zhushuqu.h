@@ -17,7 +17,6 @@ public:
     ~Dialog_add_zhushuqu();
     void setlabeltext(QString text);   //
     QString getname();
-    virtual void * getNoi() override;
 
 private slots:
     void on_close_clicked();
@@ -26,6 +25,11 @@ private slots:
 
 private:
     Ui::Dialog_add_zhushuqu *ui;
+    virtual void* getComponent() override {};
+
+    // InputBaseDialog interface
+public:
+    QList<QStringList> getComponentDataAsStringList() const override {};
 };
 
 #endif // DIALOG_ADD_ZHUSHUQU_H
