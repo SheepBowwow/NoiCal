@@ -75,11 +75,9 @@ private slots:
 
     void on_pushButton_prj_revise_clicked();
 
-    void on_pushButton_prj_save_clicked();
+    void on_pushButton_prj_info_save_clicked();
 
     void on_tableWidget_noi_limit_itemChanged(QTableWidgetItem *item);
-
-    void onCreateProjectClicked(QString projectName);
 
     void on_pushButton_noi_limit_add_clicked();
 
@@ -200,6 +198,12 @@ private slots:
 //    void on_pushButton_silencer_input_clicked();
 
 //    void on_pushButton_silencer_output_clicked();
+
+    void on_pushButton_drawing_list_save_clicked();
+
+    void on_pushButton_noi_limit_save_clicked();
+
+    void on_pushButton_project_attachment_del_clicked();
 
 private:
     Ui::Widget *ui;

@@ -44,6 +44,7 @@
 #include <string>
 #include <regex>
 #include <QDateTime>
+#include "project/projectmanager.h"
 
 WordEngine* wordEngine = new WordEngine();
 
@@ -52,6 +53,9 @@ Widget::Widget(QWidget *parent)
     , ui(new Ui::Widget)
 {
     ui->setupUi(this);
+
+    ProjectManager::getInstance();
+    DatabaseManager::getInstance();
 
     ui->stackedWidget->setCurrentWidget(ui->page_login);
     this->initTableWidget_noi_limit();
@@ -166,7 +170,7 @@ void Widget::setTable()
 void Widget::initializeTreeWidget()
 {
     ui->treeWidget->clear();    //先清空
-    item_prj = new QTreeWidgetItem(QStringList("工程-" + project.prj_name));  //工程名
+    item_prj = new QTreeWidgetItem(QStringList("工程-" + ProjectManager::getInstance().getPrjID()));  //工程名
     ui->treeWidget->setHeaderItem(item_prj);
     item_prj_info = new QTreeWidgetItem(QStringList("1.项目信息"));   //工程信息
 
@@ -260,22 +264,14 @@ void Widget::on_pushButto_prj_manage_clicked()
 {
     Dialog_prj_manager *dialog = new Dialog_prj_manager(this);
 
-    // 连接新的信号和槽
-    connect(dialog, SIGNAL(createProjectClicked(QString)), this, SLOT(onCreateProjectClicked(QString)));
-
     if(ui->stackedWidget->currentWidget() != ui->page_prj_info)
         ui->stackedWidget->setCurrentWidget(ui->page_prj_info);
 
     if (dialog->exec() == QDialog::Accepted)
     {
-        // 如果对话框返回 Accepted，可以在这里执行一些操作
+        ui->lineEdit_prj_ID->setText(ProjectManager::getInstance().getPrjID());
+        initializeTreeWidget();
     }
-}
-
-void Widget::onCreateProjectClicked(QString projectName)
-{
-    ui->lineEdit_boat_num->setText(projectName);
-    initializeTreeWidget();
 }
 
 void Widget::on_pushButton_noi_limit_add_clicked()
@@ -431,32 +427,69 @@ void Widget::on_pushButton_drawing_list_del_clicked()
 
 void Widget::on_pushButton_prj_revise_clicked()
 {
-    ui->lineEdit_boat_num->setReadOnly(false);
-    ui->lineEdit_shipyard->setReadOnly(false);
-    ui->lineEdit_principal->setReadOnly(false);
-    ui->lineEdit_prj_num->setReadOnly(false);
-    ui->lineEdit_prj_name->setReadOnly(false);
+    QList<QLineEdit*> lineEdits = {ui->lineEdit_prj_ID, ui->lineEdit_prj_name, ui->lineEdit_ship_num, ui->lineEdit_shipyard,
+                                  ui->lineEdit_prj_manager};
 
-    ui->lineEdit_boat_num->setStyleSheet("#QLineEdit{}");
-    ui->lineEdit_shipyard->setStyleSheet("#QLineEdit{}");
-    ui->lineEdit_principal->setStyleSheet("#QLineEdit{}");
-    ui->lineEdit_prj_num->setStyleSheet("#QLineEdit{}");
-    ui->lineEdit_prj_name->setStyleSheet("#QLineEdit{}");
+    for(auto& lineEdit: lineEdits)
+    {
+        lineEdit->setReadOnly(false);
+        lineEdit->setStyleSheet("QLineEdit{background-color: white; border: 1px solid #9C9C9C;}");
+    }
 }
 
-void Widget::on_pushButton_prj_save_clicked()
+void Widget::on_pushButton_prj_info_save_clicked()
 {
-    ui->lineEdit_boat_num->setReadOnly(true);
-    ui->lineEdit_shipyard->setReadOnly(true);
-    ui->lineEdit_principal->setReadOnly(true);
-    ui->lineEdit_prj_num->setReadOnly(true);
-    ui->lineEdit_prj_name->setReadOnly(true);
+    QList<QLineEdit*> lineEdits = {ui->lineEdit_prj_ID, ui->lineEdit_prj_name, ui->lineEdit_ship_num, ui->lineEdit_shipyard,
+                                  ui->lineEdit_prj_manager};
 
-    ui->lineEdit_boat_num->setStyleSheet("#lineEdit_boat_num{background-color: rgb(240, 240, 240); border: 1px solid #9C9C9C;}");
-    ui->lineEdit_shipyard->setStyleSheet("#lineEdit_shipyard{background-color: rgb(240, 240, 240); border: 1px solid #9C9C9C;}");
-    ui->lineEdit_principal->setStyleSheet("#lineEdit_principal{background-color: rgb(240, 240, 240); border: 1px solid #9C9C9C;}");
-    ui->lineEdit_prj_num->setStyleSheet("#lineEdit_prj_num{background-color: rgb(240, 240, 240); border: 1px solid #9C9C9C;}");
-    ui->lineEdit_prj_name->setStyleSheet("#lineEdit_prj_name{background-color: rgb(240, 240, 240); border: 1px solid #9C9C9C;}");
+    for(auto& lineEdit: lineEdits)
+    {
+        if(lineEdit->text().isEmpty())
+        {
+            QMessageBox::critical(this,"错误","存在未输入的信息");
+            return;
+        }
+    }
+
+    if(ui->lineEdit_prj_ID->text() != ProjectManager::getInstance().getPrjID())
+    {
+        QMessageBox msgBox;
+        msgBox.setWindowTitle("修改项目编号警告");
+        msgBox.setText("是否修改项目编号\n" + ProjectManager::getInstance().getPrjID() + " -> " + ui->lineEdit_prj_ID->text());
+        msgBox.setIcon(QMessageBox::Warning);
+        QPushButton *yesButton = msgBox.addButton("确认", QMessageBox::YesRole);
+        QPushButton *noButton = msgBox.addButton("取消", QMessageBox::NoRole);
+        msgBox.exec();
+
+        if (msgBox.clickedButton() == yesButton)
+        {
+            if(DatabaseManager::getInstance().isProjectExist(ui->lineEdit_prj_ID->text()))
+            {
+                QMessageBox::critical(this,"项目编号修改错误","项目 \"" + ui->lineEdit_prj_ID->text() + "\" 已经存在");
+                return;
+            }
+            DatabaseManager::getInstance().updateProjectIDInDatabase(ProjectManager::getInstance().getPrjID(), ui->lineEdit_prj_ID->text());
+        }
+        else if(msgBox.clickedButton() == noButton)
+        {
+            ui->lineEdit_prj_ID->setText(ProjectManager::getInstance().getPrjID());
+            return;
+        }
+    }
+
+    for(auto& lineEdit: lineEdits)
+    {
+        lineEdit->setReadOnly(true);
+        lineEdit->setStyleSheet("QLineEdit{background-color: rgb(240, 240, 240); border: 1px solid #9C9C9C;}");
+    }
+
+    ProjectInfo prjInfo(ui->lineEdit_prj_ID->text(),
+                        ui->lineEdit_prj_name->text(),
+                        ui->lineEdit_ship_num->text(),
+                        ui->lineEdit_shipyard->text(),
+                        ui->lineEdit_prj_manager->text(),
+                        ProjectManager::getInstance().getClassSoc());
+    ProjectManager::getInstance().setPrjInfo(prjInfo);
 }
 
 //初始化表格
@@ -483,8 +516,6 @@ void Widget::on_pushButton_project_attachment_add_clicked()
 
         // 保存文件名（包括后缀）
         fileName = fileInfo.fileName();
-
-        projectAttachmentMap[fileName] = filePath;
     }
 
     QTableWidget *tableWidget = ui->tableWidget_project_attachment;
@@ -496,6 +527,13 @@ void Widget::on_pushButton_project_attachment_add_clicked()
 
     int rowCount = tableWidget->rowCount();
     tableWidget->setRowCount(rowCount + 1);
+
+    ProjectAttachment attach{QString::number(rowCount + 1), fileName, filePath};
+    if(!ProjectManager::getInstance().insertAttachmentToList(attach))
+    {
+        qDebug() << "插入失败";
+        return;
+    }
 
     for (int i = 0; i < data.size() + 1; ++i) {
         if (i == 0) {
@@ -521,17 +559,110 @@ void Widget::on_pushButton_project_attachment_add_clicked()
             label->setTextFormat(Qt::RichText);
             label->setCursor(Qt::PointingHandCursor); // 设置鼠标悬停时为手形光标
             label->setAlignment(Qt::AlignCenter);
+            // 存储fileName作为自定义属性
+            label->setProperty("fileName", fileName);
             tableWidget->setCellWidget(rowCount, 2, label);
 
-            connect(label, &QLabel::linkActivated, [=](const QString &link){
+            connect(label, &QLabel::linkActivated, [localFilePath=filePath](const QString &link){
                 // 处理点击事件，例如打开链接
-                QString localFilePath = projectAttachmentMap[fileName]; // 假设这是你的本地文件路径
                 QUrl fileUrl = QUrl::fromLocalFile(localFilePath);
                 QDesktopServices::openUrl(fileUrl);
             });
         }
     }
 
+}
+
+void Widget::on_pushButton_project_attachment_del_clicked()
+{
+    // 获取选中的行索引
+    QList<int> selectedRows;
+    QList<QString> selectedNames;
+    for (int row = 0; row < ui->tableWidget_project_attachment->rowCount(); ++row) {
+        QWidget* widget = ui->tableWidget_project_attachment->cellWidget(row, 0); // Assuming the checkbox is in the first column (index 0)
+        QCheckBox* checkBox = widget->findChild<QCheckBox*>(); // Find the checkbox within the widget
+
+        if (checkBox && checkBox->isChecked()) {
+            selectedRows.append(row);
+            QLabel *label = qobject_cast<QLabel*>(ui->tableWidget_project_attachment->cellWidget(row, 2));
+            if (label) {
+                QString retrievedFileName = label->property("fileName").toString();
+                // 现在你有了fileName，可以根据需要使用它
+                selectedNames.append(retrievedFileName);
+            }
+        }
+    }
+
+    // 弹窗确认
+    QString confirmationMessage = "确认删除以下行吗？\n";
+    for (int i = 0; i < selectedRows.size(); ++i)
+    {
+        int row = selectedRows[i];
+        confirmationMessage += QString::number(row + 1) + "\n"; // 从1开始计数
+    }
+
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("确认删除");
+    msgBox.setText(confirmationMessage);
+    msgBox.setIcon(QMessageBox::Warning);
+    QPushButton *yesButton = msgBox.addButton("确认", QMessageBox::YesRole);
+    QPushButton *noButton = msgBox.addButton("取消", QMessageBox::NoRole);
+    msgBox.exec();
+
+    if (msgBox.clickedButton() == yesButton)
+    {
+        for (int i = selectedRows.size() - 1; i >= 0; --i)
+        {
+            int row = selectedRows[i];
+            ui->tableWidget_project_attachment->removeRow(row);
+        }
+
+        for (const QString& name : selectedNames)
+        {
+            ProjectManager::getInstance().removeAttachmentInList(name);
+        }
+
+
+        // 重新编号
+        for (int row = 0; row < ui->tableWidget_project_attachment->rowCount(); ++row) {
+            QTableWidgetItem* item = new QTableWidgetItem(QString::number(row + 1));
+            ui->tableWidget_project_attachment->setItem(row, 1, item); // Assuming the sequence numbers are in the second column (index 1)
+            item->setTextAlignment(Qt::AlignCenter);
+            item->setFlags(Qt::ItemIsEditable);
+        }
+    }
+}
+
+/**
+ * @brief 保存参考图纸清单
+ */
+void Widget::on_pushButton_drawing_list_save_clicked()
+{
+    QList<Drawing> drawings; // 创建一个Drawing的列表用来存储所有行的数据
+
+    // 遍历每一行
+    for (int row = 0; row < ui->tableWidget_drawing_list->rowCount(); ++row) {
+        QTableWidgetItem* tableIDItem = ui->tableWidget_drawing_list->item(row, 1);
+        QTableWidgetItem* drawingNumItem = ui->tableWidget_drawing_list->item(row, 2);
+        QTableWidgetItem* drawingNameItem = ui->tableWidget_drawing_list->item(row, 3);
+
+        // 检查是否有空字段
+        if (!drawingNumItem || drawingNumItem->text().isEmpty() ||
+            !drawingNameItem || drawingNameItem->text().isEmpty()) {
+            QMessageBox::critical(this, tr("空字段错误"),
+                                 tr("第%1行中发现空字段，请检查并填写完整。").arg(row + 1));
+            return; // 直接退出函数
+        }
+
+        // 无空字段，添加Drawing到列表
+        Drawing drawing;
+        drawing.tableID = tableIDItem->text();
+        drawing.drawingNum = drawingNumItem->text();
+        drawing.drawingName = drawingNameItem->text();
+        drawings.append(drawing);
+    }
+
+    ProjectManager::getInstance().setDrawings(drawings);
 }
 
 void Widget::initTableWidget_noi_limit()
@@ -562,6 +693,45 @@ void Widget::initTableWidget_drawing_list()
     int columnWidths[] = {1, 2, 9, 9};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_drawing_list, headerText, columnWidths, colCount);
+}
+
+void Widget::on_pushButton_noi_limit_save_clicked()
+{
+    if(ui->lineEdit_class_soc->text().isEmpty())
+    {
+        QMessageBox::critical(this, "空字段错误", "船级社不能为空");
+        return;
+    }
+
+    QList<NoiseLimit> noiseLimits; // 创建一个Drawing的列表用来存储所有行的数据
+
+    // 遍历每一行
+    for (int row = 0; row < ui->tableWidget_noi_limit->rowCount(); ++row) {
+        QTableWidgetItem* tableIDItem = ui->tableWidget_noi_limit->item(row, 1);
+        QTableWidgetItem* roomTypeItem = ui->tableWidget_noi_limit->item(row, 2);
+        QTableWidgetItem* noiseLimitItem = ui->tableWidget_noi_limit->item(row, 3);
+        QTableWidgetItem* premisesTypeItem = ui->tableWidget_noi_limit->item(row, 4);
+
+        // 检查是否有空字段
+        if (!roomTypeItem || roomTypeItem->text().isEmpty() ||
+            !noiseLimitItem || noiseLimitItem->text().isEmpty() ||
+            !premisesTypeItem || premisesTypeItem->text().isEmpty()) {
+            QMessageBox::critical(this, tr("空字段错误"),
+                                 tr("第%1行中发现空字段，请检查并填写完整。").arg(row + 1));
+            return; // 直接退出函数
+        }
+
+        // 无空字段，创建NoiseLimit对象并添加到列表
+        NoiseLimit noiseLimit;
+        noiseLimit.tableID = tableIDItem->text();
+        noiseLimit.roomType = roomTypeItem->text();
+        noiseLimit.noiseLimit = noiseLimitItem->text();
+        noiseLimit.premissType = premisesTypeItem->text();
+        noiseLimits.append(noiseLimit);
+    }
+
+    ProjectManager::getInstance().setNoiseLimits(noiseLimits);
+    ProjectManager::getInstance().setClassSoc(ui->lineEdit_class_soc->text());
 }
 
 //当表格item改变，rooms跟着改变
@@ -2185,3 +2355,4 @@ void Widget::LoadExeclData_noisourse(QTableWidget *table,int spancolfirst,int sp
 
 #pragma end}
 /******************导入导出表格********************/
+

@@ -981,7 +981,7 @@ border: 1px solid #000000;
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>60</y>
+        <y>190</y>
         <width>71</width>
         <height>31</height>
        </rect>
@@ -996,14 +996,14 @@ border: 1px solid #000000;
        <string>船号</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="label_5">
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>120</y>
+        <y>250</y>
         <width>71</width>
         <height>31</height>
        </rect>
@@ -1018,14 +1018,14 @@ border: 1px solid #000000;
        <string>船厂</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="label_6">
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>180</y>
+        <y>310</y>
         <width>71</width>
         <height>31</height>
        </rect>
@@ -1040,14 +1040,14 @@ border: 1px solid #000000;
        <string>负责人</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="label_7">
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>300</y>
+        <y>130</y>
         <width>71</width>
         <height>31</height>
        </rect>
@@ -1062,14 +1062,14 @@ border: 1px solid #000000;
        <string>项目名称</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_boat_num">
+     <widget class="QLineEdit" name="lineEdit_ship_num">
       <property name="geometry">
        <rect>
         <x>140</x>
-        <y>60</y>
+        <y>190</y>
         <width>251</width>
         <height>31</height>
        </rect>
@@ -1092,7 +1092,7 @@ border: 1px solid #9C9C9C;</string>
       <property name="geometry">
        <rect>
         <x>140</x>
-        <y>120</y>
+        <y>250</y>
         <width>251</width>
         <height>31</height>
        </rect>
@@ -1111,11 +1111,11 @@ border: 1px solid #9C9C9C;</string>
        <bool>false</bool>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_principal">
+     <widget class="QLineEdit" name="lineEdit_prj_manager">
       <property name="geometry">
        <rect>
         <x>140</x>
-        <y>180</y>
+        <y>310</y>
         <width>251</width>
         <height>31</height>
        </rect>
@@ -1138,7 +1138,7 @@ border: 1px solid #9C9C9C;</string>
       <property name="geometry">
        <rect>
         <x>140</x>
-        <y>300</y>
+        <y>130</y>
         <width>251</width>
         <height>31</height>
        </rect>
@@ -1161,7 +1161,7 @@ border: 1px solid #9C9C9C;</string>
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>240</y>
+        <y>70</y>
         <width>71</width>
         <height>31</height>
        </rect>
@@ -1176,14 +1176,14 @@ border: 1px solid #9C9C9C;</string>
        <string>项目编号</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_prj_num">
+     <widget class="QLineEdit" name="lineEdit_prj_ID">
       <property name="geometry">
        <rect>
         <x>140</x>
-        <y>240</y>
+        <y>70</y>
         <width>251</width>
         <height>31</height>
        </rect>
@@ -1206,7 +1206,7 @@ border: 1px solid #9C9C9C;</string>
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>360</y>
+        <y>370</y>
         <width>71</width>
         <height>31</height>
        </rect>
@@ -1221,7 +1221,7 @@ border: 1px solid #9C9C9C;</string>
        <string>项目附件</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
      <widget class="QPushButton" name="pushButton_prj_revise">
@@ -1331,7 +1331,7 @@ color : rgb(105, 105, 105);
        </item>
       </layout>
      </widget>
-     <widget class="QPushButton" name="pushButton_prj_save">
+     <widget class="QPushButton" name="pushButton_prj_info_save">
       <property name="geometry">
        <rect>
         <x>340</x>
@@ -1370,7 +1370,7 @@ color: white;
       <property name="geometry">
        <rect>
         <x>410</x>
-        <y>360</y>
+        <y>370</y>
         <width>51</width>
         <height>31</height>
        </rect>
@@ -1405,7 +1405,7 @@ color: white;
       <property name="geometry">
        <rect>
         <x>410</x>
-        <y>410</y>
+        <y>420</y>
         <width>51</width>
         <height>31</height>
        </rect>
@@ -1440,7 +1440,7 @@ color: white;
       <property name="geometry">
        <rect>
         <x>140</x>
-        <y>360</y>
+        <y>370</y>
         <width>251</width>
         <height>201</height>
        </rect>
@@ -1559,7 +1559,7 @@ border: 1px solid #000000;
        <string>船级社</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit">
+     <widget class="QLineEdit" name="lineEdit_class_soc">
       <property name="geometry">
        <rect>
         <x>190</x>
@@ -4627,20 +4627,30 @@ color: white;
      <height>16777215</height>
     </size>
    </property>
+   <property name="font">
+    <font>
+     <family>黑体</family>
+     <pointsize>-1</pointsize>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
    <property name="focusPolicy">
     <enum>Qt::NoFocus</enum>
    </property>
    <property name="styleSheet">
     <string notr="true">QTreeWidget
 {
-background-color: #9DC6E6;
+    background-color: #9DC6E6;
+    font: 14px &quot;黑体&quot;;
 }
+
 QHeaderView::section {
-        background-color: #9DC6E6; /* 设置背景颜色 */
-        color: black; /* 设置文字颜色 */
-        border: none;
-                font:12px;
-} </string>
+    background-color: #9DC6E6; /* 设置背景颜色 */
+    color: black; /* 设置文字颜色 */
+    border: none;
+    font: 14px &quot;黑体&quot;;
+}</string>
    </property>
    <property name="headerHidden">
     <bool>false</bool>
@@ -4652,6 +4662,75 @@ QHeaderView::section {
    </column>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit_user</tabstop>
+  <tabstop>lineEdit_pwd</tabstop>
+  <tabstop>lineEdit_prj_ID</tabstop>
+  <tabstop>lineEdit_prj_name</tabstop>
+  <tabstop>lineEdit_ship_num</tabstop>
+  <tabstop>lineEdit_shipyard</tabstop>
+  <tabstop>lineEdit_prj_manager</tabstop>
+  <tabstop>pushButton_auth_manage</tabstop>
+  <tabstop>min</tabstop>
+  <tabstop>tableWidget_project_attachment</tabstop>
+  <tabstop>max</tabstop>
+  <tabstop>pushButton_start</tabstop>
+  <tabstop>pushButto_prj_manage</tabstop>
+  <tabstop>pushButton_input</tabstop>
+  <tabstop>pushButton_cal</tabstop>
+  <tabstop>lineEdit_cur_user</tabstop>
+  <tabstop>close</tabstop>
+  <tabstop>pushButton_prj_revise</tabstop>
+  <tabstop>pushButton_prj_info_save</tabstop>
+  <tabstop>pushButton_project_attachment_add</tabstop>
+  <tabstop>pushButton_project_attachment_del</tabstop>
+  <tabstop>pushButton_output</tabstop>
+  <tabstop>lineEdit_class_soc</tabstop>
+  <tabstop>tableWidget_noi_limit</tabstop>
+  <tabstop>pushButton_noi_limit_del</tabstop>
+  <tabstop>pushButton_noi_limit_add</tabstop>
+  <tabstop>pushButton_noi_limit_save</tabstop>
+  <tabstop>tableWidget_drawing_list</tabstop>
+  <tabstop>pushButton_drawing_list_del</tabstop>
+  <tabstop>pushButton_drawing_list_add</tabstop>
+  <tabstop>pushButton_drawing_list_save</tabstop>
+  <tabstop>lineEdit_boat_name</tabstop>
+  <tabstop>lineEdit_drawing_name</tabstop>
+  <tabstop>lineEdit_drawing_number</tabstop>
+  <tabstop>pushButton_cover_entry</tabstop>
+  <tabstop>pushButton_cover_clear</tabstop>
+  <tabstop>lineEdit_image_boat_name</tabstop>
+  <tabstop>lineEdit_image_drawing_name</tabstop>
+  <tabstop>lineEdit_image_drawing_number</tabstop>
+  <tabstop>pushButton_choose_report_filePath</tabstop>
+  <tabstop>lineEdit_header_project_name</tabstop>
+  <tabstop>lineEdit_header_drawing_name</tabstop>
+  <tabstop>lineEdit_header_designer_name</tabstop>
+  <tabstop>pushButton_dictionary_entry</tabstop>
+  <tabstop>pushButton_dictionary_clear</tabstop>
+  <tabstop>lineEdit_image_header_project_name</tabstop>
+  <tabstop>lineEdit_image_header_drawing_name</tabstop>
+  <tabstop>lineEdit_image_header_designer_name</tabstop>
+  <tabstop>plainTextEdit_project_overview</tabstop>
+  <tabstop>plainTextEdit_project_overview_image</tabstop>
+  <tabstop>plainTextEdit_noise_require_2</tabstop>
+  <tabstop>pushButton_project_overview_clear</tabstop>
+  <tabstop>pushButton_project_overview_entry</tabstop>
+  <tabstop>plainTextEdit_noise_require</tabstop>
+  <tabstop>pushButton_noise_require_entry</tabstop>
+  <tabstop>pushButton_noise_require_clear</tabstop>
+  <tabstop>plainTextEdit_noise_require_image</tabstop>
+  <tabstop>tableWidget_noise_require</tabstop>
+  <tabstop>pushButton_noise_require_table_entry</tabstop>
+  <tabstop>tableWidget_system_list</tabstop>
+  <tabstop>pushButton_system_list_entry</tabstop>
+  <tabstop>pushButton_choose_basis_entry</tabstop>
+  <tabstop>pushButton_choose_basis_clear</tabstop>
+  <tabstop>plainTextEdit_report_choose_basis</tabstop>
+  <tabstop>plainTextEdit_report_choose_basis_image</tabstop>
+  <tabstop>tableWidget_report_cal_room</tabstop>
+  <tabstop>pushButton_report_cal_room_table_entry</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

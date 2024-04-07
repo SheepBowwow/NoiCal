@@ -38,6 +38,7 @@ SOURCES += \
     componentInpuTableWidget/widget_tee_inputtable.cpp \
     componentInpuTableWidget/widget_terminal_base_inputtable.cpp \
     componentInpuTableWidget/widget_vav_terminal_inputtable.cpp \
+    database/DatabaseOperations.cpp \
     databasemanager.cpp \
     globle_var.cpp \
     inputDialog/dialog_air_diff.cpp \
@@ -99,6 +100,7 @@ HEADERS += \
     componentInpuTableWidget/widget_tee_inputtable.h \
     componentInpuTableWidget/widget_terminal_base_inputtable.h \
     componentInpuTableWidget/widget_vav_terminal_inputtable.h \
+    database/DatabaseOperations.h \
     databasemanager.h \
     global_constant.h \
     globle_var.h \

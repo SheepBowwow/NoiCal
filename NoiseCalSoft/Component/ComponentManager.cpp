@@ -1,12 +1,24 @@
 #include "ComponentManager.h"
 #include <QtGlobal>
 #include <QSharedPointer>
+#include "databasemanager.h"
 
 
 void ComponentManager::addComponent(const QSharedPointer<ComponentBase> &component)
 {
     components[component->UUID] = component;
     componentsByType[component->typeName()].append(component);
+
+    // 查找并尝试执行添加到数据库的函数
+    const auto& addFuncMap = DatabaseManager::getInstance().getComponentAddFuncMap();
+    // 然后在这个引用上调用 find()
+    auto addFunc = addFuncMap.find(component->typeName());
+    // 检查是否找到并尝试执行添加到数据库的函数
+    if (addFunc != addFuncMap.end() && addFunc.value()(*component)) {
+        qDebug() << component->typeName() << "added to database successfully.";
+    } else {
+        qDebug() << "Failed to add" << component->typeName() << "to database.";
+    }
 }
 
 bool ComponentManager::removeComponent(const QString &uuid)

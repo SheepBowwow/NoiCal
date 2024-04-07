@@ -20,8 +20,6 @@ protected:
     void mouseMoveEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
 
-signals:
-    void createProjectClicked(QString projectName);
 
 private slots:
     void on_close_clicked();

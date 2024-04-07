@@ -8,8 +8,6 @@ int main(int argc, char *argv[])
 
     QApplication a(argc, argv);
 
-    DBManager = new DatabaseManager(QString(QCoreApplication::applicationDirPath() + "\\database\\noise_calculation_system.db"));
-
     Widget w;
 
     //隐藏标题栏
