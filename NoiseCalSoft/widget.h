@@ -12,6 +12,7 @@
 #include <QAbstractItemView>
 #include <QMenu>
 #include "inputbasedialog.h"
+#include "componentInpuTableWidget/widget_base_inputtable.h"
 #include <QMouseEvent>
 #include <QMessageBox>
 
@@ -30,48 +31,14 @@ public:
     ~Widget();
     void initializeTreeWidget();
     void initTableWidget(QTableWidget *tableWidget, const QStringList &headerText, const int *columnWidths, int colCount);
-    void buttonToHeader(QTableWidget *tableWidget, QWidget *buttonWidget, const char *addButtonSlot, const char *delButtonSlot);
-    void addRowToTable(QTableWidget *tableWidget, const QStringList &data);
-    void deleteRowFromTable(QTableWidget *tableWidget, int deleteRowNum, QString componentName);
-    void deleteRowFromTable(QTableWidget *tableWidget_noise, QTableWidget *tableWidget_atten, QTableWidget *tableWidget_refl, QString componentName);
-    template <typename NoiType, typename DialogType>
-    void noiseRevision(QTableWidget *tableWidget, int row,NoiType *& noi, QVector<QString*>& items, int* cols,int table_id_col, QString& table_id,QString name = "");
-    template <typename NoiType, typename DialogType>
-    void noiseRevision(QTableWidget *currentTableWidget, QTableWidget *tableWidget_noise, QTableWidget *tableWidget_atten, QTableWidget *tableWidget_refl,
-                       int row,NoiType *& noi, QVector<QString*>& items_noise, QVector<QString*>& items_atten, QVector<QString*>& items_refl,
-                       int* cols_noise, int* cols_atten, int* cols_refl, int table_id_col, QString& table_id, QString name = "");
+    void addWidgetToPage(QWidget* targetPage, Widget_base_inputTable* widgetToAdd);
+    void setTable();
     double getNoiseLimitByName(const QString& name);
-    void mergeSimilarCellsInColumn(QTableWidget* tableWidget, int column, int startRow, int numRows, int rowsPerGroup = -1);
     void prj_TreeWidget();
     void input_TreeWidget();
     void initTableWidget_project_attachment();
     void initTableWidget_noi_limit();
     void initTableWidget_drawing_list();
-    void initTableWidget_fan_noi();
-    void initTableWidget_fanCoil_noi();
-    void initTableWidget_air_diff();
-    void initTableWidget_pump_send_tuyere();
-    void initTableWidget_pump_tuyere();
-    void initTableWidget_send_tuyere();
-    void initTableWidget_staticBox_grille();
-    void initTableWidget_VAV_terminal();
-    void initTableWidget_disp_vent_terminal();
-    void initTableWidget_static_box();
-    void initTableWidget_other_send_terminal();
-    void initTableWidget_silencer();
-    void initTableWidget_circular_silencer();
-    void initTableWidget_rect_silencer();
-    void initTableWidget_circular_silencerEb();
-    void initTableWidget_rect_silencerEb();
-    void initTableWidegt_tee();
-    void initTableWidegt_duct_with_multi_ranc();
-    void initTableWidget_circular_damper();
-    void initTableWidget_rect_damper();
-    void initTableWidget_pipe();
-    void initTableWidget_air_noi_single();
-    void initTableWidget_air_noi_double();
-    void initTableWidget_reducer();
-    void initTableWidget_elbow();
     void initTableWidget_system_list();
     void initTableWidget_report_cal_room();
     void initRightButtonMenu();
@@ -96,8 +63,6 @@ private slots:
 
     void on_pushButton_input_clicked();
 
-    void on_pushButton_fanNoi_revise_clicked();
-
     void on_min_clicked();
 
     void on_max_clicked();
@@ -108,198 +73,13 @@ private slots:
 
     void on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
 
-    void on_pushButton_fanCoil_noi_revise_clicked();
-
-    void on_pushButton_air_diff_revise_clicked();
-
-    void on_pushButton_staticBox_grille_revise_clicked();
-
-    void on_pushButton_VAV_terminal_revise_clicked();
-
-    void on_pushButton_disp_vent_terminal_revise_clicked();
-
-    void on_pushButton_static_box_revise_clicked();
-
-    void on_pushButton_other_send_terminal_revise_clicked();
-
-    void on_pushButton_tee_revise_clicked();
-
-    void on_pushButton_duct_with_multi_ranc_revise_clicked();
-
-    void on_pushButton_circular_damper_revise_clicked();
-
-    void on_pushButton_rect_damper_revise_clicked();
-
-    void on_pushButton_pipe_revise_clicked();
-
-    void on_pushButton_reducer_revise_clicked();
-
-    void on_pushButton_elbow_revise_clicked();
-
-    void on_pushButton_pump_table_clicked();
-
-    void on_pushButton_send_table_clicked();
-
-    void on_tableWidget_pump_tuyere_itemDoubleClicked(QTableWidgetItem *item);
-
-    void on_tableWidget_send_tuyere_itemDoubleClicked(QTableWidgetItem *item);
-
-    void on_pushButton_circular_silencer_table_clicked();
-
-    void on_pushButton_rect_silencer_table_clicked();
-
-    void on_pushButton_circular_silencerEb_table_clicked();
-
-    void on_pushButton_rect_silencerEb_table_clicked();
-
     void on_pushButton_prj_revise_clicked();
 
     void on_pushButton_prj_save_clicked();
 
     void on_tableWidget_noi_limit_itemChanged(QTableWidgetItem *item);
 
-    void on_pushButton_air_diff_terminal_atten_revise_clicked();
-
-    void on_pushButton_air_diff_terminal_refl_revise_clicked();
-
-    void on_pushButton_pump_terminal_atten_table_clicked();
-
-    void on_pushButton_send_terminal_atten_table_clicked();
-
-    void on_pushButton_send_terminal_refl_table_clicked();
-
-    void on_pushButton_pump_terminal_refl_table_clicked();
-
-    void on_pushButton_staticBox_grille_terminal_atten_revise_clicked();
-
-    void on_pushButton_staticBox_grille_terminal_refl_revise_clicked();
-
-    void on_pushButton_disp_vent_terminal_atten_revise_clicked();
-
-    void on_pushButton_disp_vent_terminal_refl_revise_clicked();
-
-    void on_pushButton_other_send_terminal_atten_revise_clicked();
-
-    void on_pushButton_other_send_terminal_refl_revise_clicked();
-
-    void on_pushButton_fanNoi_del_clicked();
-
-    void on_pushButton_fanNoi_add_clicked();
-
-    void on_pushButton_fanCoil_noi_add_clicked();
-
-    void on_pushButton_fanCoil_noi_del_clicked();
-
-    void on_pushButton_VAV_terminal_add_clicked();
-
-    void on_pushButton_VAV_terminal_del_clicked();
-
-    void on_pushButton_circular_damper_add_clicked();
-
-    void on_pushButton_circular_damper_del_clicked();
-
-    void on_pushButton_rect_damper_add_clicked();
-
-    void on_pushButton_rect_damper_del_clicked();
-
-    void on_pushButton_air_diff_add_clicked();
-
-    void on_pushButton_air_diff_del_clicked();
-
-    void on_pushButton_pump_send_add_clicked();
-
-    void on_pushButton_pump_send_del_clicked();
-
-    void on_pushButton_air_diff_terminal_atten_add_clicked();
-
-    void on_pushButton_air_diff_terminal_atten_del_clicked();
-
-
-    void on_pushButton_air_diff_terminal_refl_add_clicked();
-
-    void on_pushButton_air_diff_terminal_refl_del_clicked();
-
-    void on_pushButton_pump_send_terminal_atten_add_clicked();
-
-    void on_pushButton_pump_send_terminal_atten_del_clicked();
-
-    void on_pushButton_pump_send_terminal_refl_del_clicked();
-
-    void on_pushButton_staticBox_grille_terminal_atten_add_clicked();
-
-    void on_pushButton_staticBox_grille_terminal_atten_del_clicked();
-
-    void on_pushButton_staticBox_grille_terminal_refl_add_clicked();
-
-    void on_pushButton_staticBox_grille_terminal_refl_del_clicked();
-
-    void on_pushButton_staticBox_grille_add_clicked();
-
-    void on_pushButton_staticBox_grille_del_clicked();
-
-    void on_pushButton_disp_vent_terminal_add_clicked();
-
-    void on_pushButton_disp_vent_terminal_del_clicked();
-
-    void on_pushButton_disp_vent_terminal_atten_add_clicked();
-
-    void on_pushButton_disp_vent_terminal_atten_del_clicked();
-
-    void on_pushButton_disp_vent_terminal_refl_add_clicked();
-
-    void on_pushButton_disp_vent_terminal_refl_del_clicked();
-
-    void on_pushButton_other_send_terminal_add_clicked();
-
-    void on_pushButton_other_send_terminal_del_clicked();
-
-    void on_pushButton_other_send_terminal_atten_add_clicked();
-
-    void on_pushButton_other_send_terminal_atten_del_clicked();
-
-    void on_pushButton_other_send_terminal_refl_add_clicked();
-
-    void on_pushButton_other_send_terminal_refl_del_clicked();
-
-    void on_pushButton_pump_send_terminal_refl_add_clicked();
-
-    void on_pushButton_static_box_add_clicked();
-
-    void on_pushButton_static_box_del_clicked();
-
-    void on_pushButton_duct_with_multi_ranc_add_clicked();
-
-    void on_pushButton_duct_with_multi_ranc_del_clicked();
-
-    void on_pushButton_tee_add_clicked();
-
-    void on_pushButton_tee_del_clicked();
-
-    void on_pushButton_pipe_add_clicked();
-
-    void on_pushButton_pipe_del_clicked();
-
-    void on_pushButton_elbow_add_clicked();
-
-    void on_pushButton_elbow_del_clicked();
-
-    void on_pushButton_reducer_add_clicked();
-
-    void on_pushButton_reducer_del_clicked();
-
-    void on_pushButton_silencer_add_clicked();
-
-    void on_pushButton_silencer_del_clicked();
-
     void onCreateProjectClicked(QString projectName);
-
-    void on_pushButton_pump_send_revise_clicked();
-
-    void on_pushButton_pump_send_terminal_refl_revise_clicked();
-
-    void on_pushButton_pump_send_terminal_atten_revise_clicked();
-
-    void on_pushButton_silencer_revise_clicked();
 
     void on_pushButton_noi_limit_add_clicked();
 
@@ -337,98 +117,89 @@ private slots:
 
     void on_pushButton_project_attachment_add_clicked();
 
-    void on_pushButton_air_noi_single_fan_add_clicked();
-
-    void on_pushButton_air_noi_double_fan_add_clicked();
-
-    void on_pushButton_air_noi_single_fan_del_clicked();
-
-    void on_pushButton_air_noi_double_fan_del_clicked();
-
-    void on_pushButton_air_noi_double_fan_revise_clicked();
-
-    void on_pushButton_air_noi_single_fan_revise_clicked();
-
     void LoadExeclData_noisourse(QTableWidget *table,int spancolfirst,int spancollast);
+
     void SaveExeclData_noisourse(QTableWidget *table,QString component_name,int mergeCellfirst,int mergeCelllast);
+
     void LoadExeclData(QTableWidget *table);
+
     void SaveExeclData(QTableWidget *table,QString component_name);
 
-    void on_pushButton_fanNoi_input_clicked();
+//    void on_pushButton_fanNoi_input_clicked();
 
-    void on_pushButton_fanNoi_output_clicked();
+//    void on_pushButton_fanNoi_output_clicked();
 
-    void on_pushButton_fanCoil_noi_input_clicked();
+//    void on_pushButton_fanCoil_noi_input_clicked();
 
-    void on_pushButton_fanCoil_noi_output_clicked();
+//    void on_pushButton_fanCoil_noi_output_clicked();
 
-    void on_pushButton_air_noi_single_fan_input_clicked();
+//    void on_pushButton_air_noi_single_fan_input_clicked();
 
-    void on_pushButton_air_noi_single_fan_output_clicked();
+//    void on_pushButton_air_noi_single_fan_output_clicked();
 
-    void on_pushButton_air_noi_double_fan_input_clicked();
+//    void on_pushButton_air_noi_double_fan_input_clicked();
 
-    void on_pushButton_air_noi_double_fan_output_clicked();
+//    void on_pushButton_air_noi_double_fan_output_clicked();
 
-    void on_pushButton_VAV_terminal_input_clicked();
+//    void on_pushButton_VAV_terminal_input_clicked();
 
-    void on_pushButton_VAV_terminal_output_clicked();
+//    void on_pushButton_VAV_terminal_output_clicked();
 
-    void on_pushButton_circular_damper_input_clicked();
+//    void on_pushButton_circular_damper_input_clicked();
 
-    void on_pushButton_circular_damper_output_clicked();
+//    void on_pushButton_circular_damper_output_clicked();
 
-    void on_pushButton_rect_damper_input_clicked();
+//    void on_pushButton_rect_damper_input_clicked();
 
-    void on_pushButton_rect_damper_output_clicked();
+//    void on_pushButton_rect_damper_output_clicked();
 
-    void on_pushButton_air_diff_input_clicked();
+//    void on_pushButton_air_diff_input_clicked();
 
-    void on_pushButton_air_diff_output_clicked();
+//    void on_pushButton_air_diff_output_clicked();
 
-    void on_pushButton_pump_send_input_clicked();
+//    void on_pushButton_pump_send_input_clicked();
 
-    void on_pushButton_pump_send_output_clicked();
+//    void on_pushButton_pump_send_output_clicked();
 
-    void on_pushButton_staticBox_grille_input_clicked();
+//    void on_pushButton_staticBox_grille_input_clicked();
 
-    void on_pushButton_staticBox_grille_output_clicked();
+//    void on_pushButton_staticBox_grille_output_clicked();
 
-    void on_pushButton_disp_vent_terminal_input_clicked();
+//    void on_pushButton_disp_vent_terminal_input_clicked();
 
-    void on_pushButton_disp_vent_terminal_output_clicked();
+//    void on_pushButton_disp_vent_terminal_output_clicked();
 
-    void on_pushButton_other_send_terminal_input_clicked();
+//    void on_pushButton_other_send_terminal_input_clicked();
 
-    void on_pushButton_other_send_terminal_output_clicked();
+//    void on_pushButton_other_send_terminal_output_clicked();
 
-    void on_pushButton_static_box_input_clicked();
+//    void on_pushButton_static_box_input_clicked();
 
-    void on_pushButton_static_box_output_clicked();
+//    void on_pushButton_static_box_output_clicked();
 
-    void on_pushButton_duct_with_multi_ranc_input_clicked();
+//    void on_pushButton_duct_with_multi_ranc_input_clicked();
 
-    void on_pushButton_duct_with_multi_ranc_output_clicked();
+//    void on_pushButton_duct_with_multi_ranc_output_clicked();
 
-    void on_pushButton_tee_input_clicked();
+//    void on_pushButton_tee_input_clicked();
 
-    void on_pushButton_tee_output_clicked();
+//    void on_pushButton_tee_output_clicked();
 
-    void on_pushButton_pipe_input_clicked();
+//    void on_pushButton_pipe_input_clicked();
 
-    void on_pushButton_pipe_output_clicked();
+//    void on_pushButton_pipe_output_clicked();
 
-    void on_pushButton_elbow_input_clicked();
+//    void on_pushButton_elbow_input_clicked();
 
-    void on_pushButton_elbow_output_clicked();
+//    void on_pushButton_elbow_output_clicked();
 
-    void on_pushButton_reducer_input_clicked();
+//    void on_pushButton_reducer_input_clicked();
 
-    void on_pushButton_reducer_output_clicked();
+//    void on_pushButton_reducer_output_clicked();
 
-    void on_pushButton_silencer_input_clicked();
+//    void on_pushButton_silencer_input_clicked();
 
-    void on_pushButton_silencer_output_clicked();
+//    void on_pushButton_silencer_output_clicked();
 
 private:
     Ui::Widget *ui;

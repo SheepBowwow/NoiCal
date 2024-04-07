@@ -13,7 +13,8 @@ public:
     explicit InputBaseDialog(QWidget *parent = nullptr, QWidget *topWidget = nullptr);
     virtual ~InputBaseDialog();
     void setTopWidget(QWidget *topWidget);
-    virtual void* getNoi() = 0; // 基类的 getNoi 声明为纯虚函数
+    virtual void* getComponent() = 0; // 基类的 getComponent 声明为纯虚函数
+    virtual QList<QStringList> getComponentDataAsStringList() const = 0; // 基类的 getComponentData 声明为纯虚函数
 
 protected:
     void mousePressEvent(QMouseEvent *e);

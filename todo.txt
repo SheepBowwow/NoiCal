@@ -1,0 +1,3 @@
+改完dialog_static_box
+
+接下去改widget_static_box_inputTable

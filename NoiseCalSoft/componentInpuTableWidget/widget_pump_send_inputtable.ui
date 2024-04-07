@@ -1,0 +1,840 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Widget_Pump_Send_inputTable</class>
+ <widget class="QWidget" name="Widget_Pump_Send_inputTable">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1183</width>
+    <height>679</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">#Widget_Pump_Send_inputTable
+{
+	border: 1px solid #000000;
+	background-color: rgb(255, 255, 255);
+}</string>
+  </property>
+  <widget class="QPushButton" name="pushButton_send">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>10</y>
+     <width>81</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string>送风头</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_add">
+   <property name="geometry">
+    <rect>
+     <x>1120</x>
+     <y>20</y>
+     <width>51</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>黑体</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+   </property>
+   <property name="text">
+    <string>新增</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_del">
+   <property name="geometry">
+    <rect>
+     <x>1000</x>
+     <y>20</y>
+     <width>51</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>黑体</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+   </property>
+   <property name="text">
+    <string>删除</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_revise">
+   <property name="geometry">
+    <rect>
+     <x>1060</x>
+     <y>20</y>
+     <width>51</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>黑体</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+   </property>
+   <property name="text">
+    <string>修改</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_pump">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>10</y>
+     <width>81</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="baseSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton { background-color: #E0EEF9; }</string>
+   </property>
+   <property name="text">
+    <string>抽风头</string>
+   </property>
+  </widget>
+  <widget class="QStackedWidget" name="stackedWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>60</y>
+     <width>1161</width>
+     <height>611</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>1</number>
+   </property>
+   <widget class="QWidget" name="page_noi">
+    <widget class="QStackedWidget" name="stackedWidget_noi">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>1161</width>
+       <height>611</height>
+      </rect>
+     </property>
+     <widget class="QWidget" name="page_noi_pump">
+      <widget class="QTableWidget" name="tableWidget_noi_pump">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>1161</width>
+         <height>611</height>
+        </rect>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">/*设置标题(包括垂直+水平的)*/
+QHeaderView
+{							
+	
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
+	/*border: 1px solid #B4B4B4;*/
+	border:none;
+    /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
+    /*background: #9DC6E6;*/				/*背景浅蓝色*/ 
+	min-height:30px;
+	text-align: center;	       
+}
+
+
+/*设置标题(水平的)*/
+QHeaderView::section:horizontal { 					
+        border: 1px solid #AFAFAF; 			/*间隔颜色*/
+	    border-bottom: 2px solid #999999; 							
+        color: black;
+        background: #9DC6E6;
+}
+
+/*设置鼠标停留状态*/
+QHeaderView::section:horizontal:hover 
+{			
+        color: black;							/*字体白色*/
+        background: #82AFC9;				/*背景深蓝色*/
+}
+
+/*设置鼠标按下状态*/
+QHeaderView::section:horizontal:pressed 
+{			
+        color: black;
+        background: #82AFC9;
+		border-bottom: 3px solid #037BFC;				
+}
+
+
+QTableWidget 
+{
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
+		color : black;				
+        border: 1px solid #000000;		
+        background: white;
+        gridline-color: #E0E0E0;	
+        text-align: center;	
+        outline:0px;			/*禁止焦点*/
+}
+
+/*设置选中的视图项*/
+QTableWidget::item:selected
+{				    
+		border: 2px solid #0398FC;	
+        color : black;				
+}</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="page_noi_send">
+      <widget class="QTableWidget" name="tableWidget_noi_send">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>1161</width>
+         <height>611</height>
+        </rect>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">/*设置标题(包括垂直+水平的)*/
+QHeaderView
+{							
+	
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
+	/*border: 1px solid #B4B4B4;*/
+	border:none;
+    /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
+    /*background: #9DC6E6;*/				/*背景浅蓝色*/ 
+	min-height:30px;
+	text-align: center;	       
+}
+
+
+/*设置标题(水平的)*/
+QHeaderView::section:horizontal { 					
+        border: 1px solid #AFAFAF; 			/*间隔颜色*/
+	    border-bottom: 2px solid #999999; 							
+        color: black;
+        background: #9DC6E6;
+}
+
+/*设置鼠标停留状态*/
+QHeaderView::section:horizontal:hover 
+{			
+        color: black;							/*字体白色*/
+        background: #82AFC9;				/*背景深蓝色*/
+}
+
+/*设置鼠标按下状态*/
+QHeaderView::section:horizontal:pressed 
+{			
+        color: black;
+        background: #82AFC9;
+		border-bottom: 3px solid #037BFC;				
+}
+
+
+QTableWidget 
+{
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
+		color : black;				
+        border: 1px solid #000000;		
+        background: white;
+        gridline-color: #E0E0E0;	
+        text-align: center;	
+        outline:0px;			/*禁止焦点*/
+}
+
+/*设置选中的视图项*/
+QTableWidget::item:selected
+{				    
+		border: 2px solid #0398FC;	
+        color : black;				
+}</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="page_atten">
+    <widget class="QStackedWidget" name="stackedWidget_atten">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>1161</width>
+       <height>611</height>
+      </rect>
+     </property>
+     <widget class="QWidget" name="page_atten_pump">
+      <widget class="QTableWidget" name="tableWidget_atten_pump">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>1161</width>
+         <height>611</height>
+        </rect>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">/*设置标题(包括垂直+水平的)*/
+QHeaderView
+{							
+	
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
+	/*border: 1px solid #B4B4B4;*/
+	border:none;
+    /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
+    /*background: #9DC6E6;*/				/*背景浅蓝色*/ 
+	min-height:30px;
+	text-align: center;	       
+}
+
+
+/*设置标题(水平的)*/
+QHeaderView::section:horizontal { 					
+        border: 1px solid #AFAFAF; 			/*间隔颜色*/
+	    border-bottom: 2px solid #999999; 							
+        color: black;
+        background: #9DC6E6;
+}
+
+/*设置鼠标停留状态*/
+QHeaderView::section:horizontal:hover 
+{			
+        color: black;							/*字体白色*/
+        background: #82AFC9;				/*背景深蓝色*/
+}
+
+/*设置鼠标按下状态*/
+QHeaderView::section:horizontal:pressed 
+{			
+        color: black;
+        background: #82AFC9;
+		border-bottom: 3px solid #037BFC;				
+}
+
+
+QTableWidget 
+{
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
+		color : black;				
+        border: 1px solid #000000;		
+        background: white;
+        gridline-color: #E0E0E0;	
+        text-align: center;	
+        outline:0px;			/*禁止焦点*/
+}
+
+/*设置选中的视图项*/
+QTableWidget::item:selected
+{				    
+		border: 2px solid #0398FC;	
+        color : black;				
+}</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="page_atten_send">
+      <widget class="QTableWidget" name="tableWidget_atten_send">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>1161</width>
+         <height>611</height>
+        </rect>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">/*设置标题(包括垂直+水平的)*/
+QHeaderView
+{							
+	
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
+	/*border: 1px solid #B4B4B4;*/
+	border:none;
+    /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
+    /*background: #9DC6E6;*/				/*背景浅蓝色*/ 
+	min-height:30px;
+	text-align: center;	       
+}
+
+
+/*设置标题(水平的)*/
+QHeaderView::section:horizontal { 					
+        border: 1px solid #AFAFAF; 			/*间隔颜色*/
+	    border-bottom: 2px solid #999999; 							
+        color: black;
+        background: #9DC6E6;
+}
+
+/*设置鼠标停留状态*/
+QHeaderView::section:horizontal:hover 
+{			
+        color: black;							/*字体白色*/
+        background: #82AFC9;				/*背景深蓝色*/
+}
+
+/*设置鼠标按下状态*/
+QHeaderView::section:horizontal:pressed 
+{			
+        color: black;
+        background: #82AFC9;
+		border-bottom: 3px solid #037BFC;				
+}
+
+
+QTableWidget 
+{
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
+		color : black;				
+        border: 1px solid #000000;		
+        background: white;
+        gridline-color: #E0E0E0;	
+        text-align: center;	
+        outline:0px;			/*禁止焦点*/
+}
+
+/*设置选中的视图项*/
+QTableWidget::item:selected
+{				    
+		border: 2px solid #0398FC;	
+        color : black;				
+}</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="page_refl">
+    <widget class="QStackedWidget" name="stackedWidget_refl">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>1161</width>
+       <height>611</height>
+      </rect>
+     </property>
+     <widget class="QWidget" name="page_refl_pump">
+      <widget class="QTableWidget" name="tableWidget_refl_pump">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>1161</width>
+         <height>611</height>
+        </rect>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">/*设置标题(包括垂直+水平的)*/
+QHeaderView
+{							
+	
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
+	/*border: 1px solid #B4B4B4;*/
+	border:none;
+    /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
+    /*background: #9DC6E6;*/				/*背景浅蓝色*/ 
+	min-height:30px;
+	text-align: center;	       
+}
+
+
+/*设置标题(水平的)*/
+QHeaderView::section:horizontal { 					
+        border: 1px solid #AFAFAF; 			/*间隔颜色*/
+	    border-bottom: 2px solid #999999; 							
+        color: black;
+        background: #9DC6E6;
+}
+
+/*设置鼠标停留状态*/
+QHeaderView::section:horizontal:hover 
+{			
+        color: black;							/*字体白色*/
+        background: #82AFC9;				/*背景深蓝色*/
+}
+
+/*设置鼠标按下状态*/
+QHeaderView::section:horizontal:pressed 
+{			
+        color: black;
+        background: #82AFC9;
+		border-bottom: 3px solid #037BFC;				
+}
+
+
+QTableWidget 
+{
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
+		color : black;				
+        border: 1px solid #000000;		
+        background: white;
+        gridline-color: #E0E0E0;	
+        text-align: center;	
+        outline:0px;			/*禁止焦点*/
+}
+
+/*设置选中的视图项*/
+QTableWidget::item:selected
+{				    
+		border: 2px solid #0398FC;	
+        color : black;				
+}</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="page_refl_send">
+      <widget class="QTableWidget" name="tableWidget_refl_send">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>1161</width>
+         <height>611</height>
+        </rect>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">/*设置标题(包括垂直+水平的)*/
+QHeaderView
+{							
+	
+	font-size: 15px;				/*字大小*/
+	font-family: '黑体';
+	/*border: 1px solid #B4B4B4;*/
+	border:none;
+    /*border-bottom: 2px solid #999999; */		/*下边框颜色*/
+    /*background: #9DC6E6;*/				/*背景浅蓝色*/ 
+	min-height:30px;
+	text-align: center;	       
+}
+
+
+/*设置标题(水平的)*/
+QHeaderView::section:horizontal { 					
+        border: 1px solid #AFAFAF; 			/*间隔颜色*/
+	    border-bottom: 2px solid #999999; 							
+        color: black;
+        background: #9DC6E6;
+}
+
+/*设置鼠标停留状态*/
+QHeaderView::section:horizontal:hover 
+{			
+        color: black;							/*字体白色*/
+        background: #82AFC9;				/*背景深蓝色*/
+}
+
+/*设置鼠标按下状态*/
+QHeaderView::section:horizontal:pressed 
+{			
+        color: black;
+        background: #82AFC9;
+		border-bottom: 3px solid #037BFC;				
+}
+
+
+QTableWidget 
+{
+		font-size: 14px;				/*10榜*/
+		font-family: '黑体';				
+		color : black;				
+        border: 1px solid #000000;		
+        background: white;
+        gridline-color: #E0E0E0;	
+        text-align: center;	
+        outline:0px;			/*禁止焦点*/
+}
+
+/*设置选中的视图项*/
+QTableWidget::item:selected
+{				    
+		border: 2px solid #0398FC;	
+        color : black;				
+}</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QWidget" name="layoutWidget_24">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>171</width>
+     <height>45</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_37">
+    <item>
+     <widget class="QLabel" name="label_54">
+      <property name="minimumSize">
+       <size>
+        <width>20</width>
+        <height>41</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>20</width>
+        <height>41</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel { 
+border: none; 
+background-color : rgb(105, 105, 105);
+}</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_55">
+      <property name="font">
+       <font>
+        <family>Microsoft YaHei</family>
+        <pointsize>24</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel { 
+border: none; 
+color : rgb(105, 105, 105);
+}</string>
+      </property>
+      <property name="text">
+       <string>抽/送风头</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QPushButton" name="pushButton_input">
+   <property name="geometry">
+    <rect>
+     <x>940</x>
+     <y>20</y>
+     <width>51</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>黑体</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+   </property>
+   <property name="text">
+    <string>导入</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_output">
+   <property name="geometry">
+    <rect>
+     <x>880</x>
+     <y>20</y>
+     <width>51</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>黑体</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+   </property>
+   <property name="text">
+    <string>导出</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

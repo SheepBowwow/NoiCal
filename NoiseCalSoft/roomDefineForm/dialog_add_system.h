@@ -15,7 +15,7 @@ class dialog_add_system : public InputBaseDialog
 public:
     explicit dialog_add_system(QWidget *parent = nullptr);
     ~dialog_add_system();
-    virtual void * getNoi() override;
+
 
     void setvalues(int,QString,QString);
     QString getType();
@@ -33,6 +33,12 @@ private slots:
 
 private:
     Ui::dialog_add_system *ui;
+    virtual void * getComponent() override {};
+
+
+    // InputBaseDialog interface
+public:
+    QList<QStringList> getComponentDataAsStringList() const override {};
 };
 
 #endif // DIALOG_ADD_SYSTEM_H

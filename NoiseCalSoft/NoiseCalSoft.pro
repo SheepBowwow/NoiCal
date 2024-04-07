@@ -16,16 +16,38 @@ QMAKE_CXXFLAGS += -Wno-unknown-pragmas
 
 SOURCES += \
     Component/ComponentManager.cpp \
+    calFunction/cal_function.cpp \
+    componentInpuTableWidget/widget_air_diff_inputtable.cpp \
+    componentInpuTableWidget/widget_aircondition_doublefan_inputtable.cpp \
+    componentInpuTableWidget/widget_aircondition_singlefan_inputtable.cpp \
+    componentInpuTableWidget/widget_base_inputtable.cpp \
+    componentInpuTableWidget/widget_circular_damper_inputtable.cpp \
+    componentInpuTableWidget/widget_disp_vent_terminal_inputtable.cpp \
+    componentInpuTableWidget/widget_elbow_inputtable.cpp \
+    componentInpuTableWidget/widget_fan_inputtable.cpp \
+    componentInpuTableWidget/widget_fancoil_inputtable.cpp \
+    componentInpuTableWidget/widget_multi_ranc_inputtable.cpp \
+    componentInpuTableWidget/widget_other_send_terminal_inputtable.cpp \
+    componentInpuTableWidget/widget_pipe_inputtable.cpp \
+    componentInpuTableWidget/widget_pump_send_inputtable.cpp \
+    componentInpuTableWidget/widget_rect_damper_inputtable.cpp \
+    componentInpuTableWidget/widget_reducer_inputtable.cpp \
+    componentInpuTableWidget/widget_silencer_inputtable.cpp \
+    componentInpuTableWidget/widget_static_box_grille_inputtable.cpp \
+    componentInpuTableWidget/widget_static_box_inputtable.cpp \
+    componentInpuTableWidget/widget_tee_inputtable.cpp \
+    componentInpuTableWidget/widget_terminal_base_inputtable.cpp \
+    componentInpuTableWidget/widget_vav_terminal_inputtable.cpp \
     databasemanager.cpp \
     globle_var.cpp \
     inputDialog/dialog_air_diff.cpp \
-    inputDialog/dialog_aircondition_noise.cpp \
+    inputDialog/dialog_aircondition.cpp \
     inputDialog/dialog_circular_damper.cpp \
     inputDialog/dialog_disp_vent_terminal.cpp \
     inputDialog/dialog_duct_with_multi_ranc.cpp \
     inputDialog/dialog_elbow.cpp \
-    inputDialog/dialog_fan_noise.cpp \
-    inputDialog/dialog_fancoil_noise.cpp \
+    inputDialog/dialog_fan.cpp \
+    inputDialog/dialog_fancoil.cpp \
     inputDialog/dialog_other_send_terminal.cpp \
     inputDialog/dialog_pipe.cpp \
     inputDialog/dialog_prj_manager.cpp \
@@ -54,17 +76,39 @@ SOURCES += \
 HEADERS += \
     Component/ComponentManager.h \
     Component/ComponentStructs.h \
+    calFunction/cal_function.h \
+    componentInpuTableWidget/widget_air_diff_inputtable.h \
+    componentInpuTableWidget/widget_aircondition_doublefan_inputtable.h \
+    componentInpuTableWidget/widget_aircondition_singlefan_inputtable.h \
+    componentInpuTableWidget/widget_base_inputtable.h \
+    componentInpuTableWidget/widget_circular_damper_inputtable.h \
+    componentInpuTableWidget/widget_disp_vent_terminal_inputtable.h \
+    componentInpuTableWidget/widget_elbow_inputtable.h \
+    componentInpuTableWidget/widget_fan_inputtable.h \
+    componentInpuTableWidget/widget_fancoil_inputtable.h \
+    componentInpuTableWidget/widget_multi_ranc_inputtable.h \
+    componentInpuTableWidget/widget_other_send_terminal_inputtable.h \
+    componentInpuTableWidget/widget_pipe_inputtable.h \
+    componentInpuTableWidget/widget_pump_send_inputtable.h \
+    componentInpuTableWidget/widget_rect_damper_inputtable.h \
+    componentInpuTableWidget/widget_reducer_inputtable.h \
+    componentInpuTableWidget/widget_silencer_inputtable.h \
+    componentInpuTableWidget/widget_static_box_grille_inputtable.h \
+    componentInpuTableWidget/widget_static_box_inputtable.h \
+    componentInpuTableWidget/widget_tee_inputtable.h \
+    componentInpuTableWidget/widget_terminal_base_inputtable.h \
+    componentInpuTableWidget/widget_vav_terminal_inputtable.h \
     databasemanager.h \
     global_constant.h \
     globle_var.h \
     inputDialog/dialog_air_diff.h \
-    inputDialog/dialog_aircondition_noise.h \
+    inputDialog/dialog_aircondition.h \
     inputDialog/dialog_circular_damper.h \
     inputDialog/dialog_disp_vent_terminal.h \
     inputDialog/dialog_duct_with_multi_ranc.h \
     inputDialog/dialog_elbow.h \
-    inputDialog/dialog_fan_noise.h \
-    inputDialog/dialog_fancoil_noise.h \
+    inputDialog/dialog_fan.h \
+    inputDialog/dialog_fancoil.h \
     inputDialog/dialog_other_send_terminal.h \
     inputDialog/dialog_pipe.h \
     inputDialog/dialog_prj_manager.h \
@@ -90,14 +134,18 @@ HEADERS += \
     wordEngine/wordengine.h
 
 FORMS += \
+    componentInpuTableWidget/widget_base_inputtable.ui \
+    componentInpuTableWidget/widget_pump_send_inputtable.ui \
+    componentInpuTableWidget/widget_silencer_inputtable.ui \
+    componentInpuTableWidget/widget_terminal_base_inputtable.ui \
     inputDialog/dialog_air_diff.ui \
-    inputDialog/dialog_aircondition_noise.ui \
+    inputDialog/dialog_aircondition.ui \
     inputDialog/dialog_circular_damper.ui \
     inputDialog/dialog_disp_vent_terminal.ui \
     inputDialog/dialog_duct_with_multi_ranc.ui \
     inputDialog/dialog_elbow.ui \
-    inputDialog/dialog_fan_noise.ui \
-    inputDialog/dialog_fancoil_noise.ui \
+    inputDialog/dialog_fan.ui \
+    inputDialog/dialog_fancoil.ui \
     inputDialog/dialog_other_send_terminal.ui \
     inputDialog/dialog_pipe.ui \
     inputDialog/dialog_prj_manager.ui \

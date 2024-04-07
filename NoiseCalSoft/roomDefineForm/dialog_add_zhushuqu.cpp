@@ -19,18 +19,15 @@ Dialog_add_zhushuqu::~Dialog_add_zhushuqu()
 void Dialog_add_zhushuqu::setlabeltext(QString text)
 {
     ui->label_title->setText(text);
-    ui->label->setText(text+": ");
+    ui->label_title->adjustSize();
+    ui->label->setText(text+":");
+    ui->label->adjustSize();
 }
 
 
 QString Dialog_add_zhushuqu::getname()
 {
     return ui->lineEdit->text();
-}
-
-void *Dialog_add_zhushuqu::getNoi()
-{
-
 }
 
 void Dialog_add_zhushuqu::on_close_clicked()

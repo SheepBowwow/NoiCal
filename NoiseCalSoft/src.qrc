@@ -36,6 +36,7 @@
         <file>image/reducer_descri.png</file>
         <file>image/static_box_descri.png</file>
         <file>image/tee_descri.png</file>
+        <file>image/pipe_descri.png</file>
     </qresource>
     <qresource prefix="/qt/etc">
         <file>qt.conf</file>

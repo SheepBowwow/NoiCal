@@ -20,11 +20,11 @@ public:
 
     QSqlDatabase& getDB();
 
-    bool executeSqlQuery(QVector<QString>& data, const QString &sqlQuery);
-    bool queryKnownData(QVector<QString>& data, QString colName, QString tableName);
-    bool queryEightNoi(QMap<int,QString>& data, QString tableName, QString modelColName, QString modelName);
+    void addComponentToDel(const QString& UUID);
 private:
     QSqlDatabase db;
+
+    QList<QString> ComponentToDelByUUID;
 };
 
 #endif // DATABASEMANAGER_H
