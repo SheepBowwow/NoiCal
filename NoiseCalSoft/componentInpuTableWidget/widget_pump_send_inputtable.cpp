@@ -90,14 +90,14 @@ void Widget_Pump_Send_inputTable::onAdd()
         tableWidget_noise = ui->tableWidget_noi_pump;
         tableWidget_atten = ui->tableWidget_atten_pump;
         tableWidget_refl = ui->tableWidget_refl_pump;
-        dialog = new Dialog_pump_send("抽风头",this);
+        dialog = new Dialog_pump_send("抽风头",nullptr);
     }
     else if(index == 1)
     {
         tableWidget_noise = ui->tableWidget_noi_send;
         tableWidget_atten = ui->tableWidget_atten_send;
         tableWidget_refl = ui->tableWidget_refl_send;
-        dialog = new Dialog_pump_send("送风头",this);
+        dialog = new Dialog_pump_send("送风头",nullptr);
     }
     else
     {

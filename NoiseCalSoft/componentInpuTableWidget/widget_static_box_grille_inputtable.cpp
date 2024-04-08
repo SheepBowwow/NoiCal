@@ -58,7 +58,7 @@ void Widget_static_box_grille_inputTable::onAdd()
     QTableWidget *tableWidget_noise = ui->tableWidget_noi;
     QTableWidget *tableWidget_atten = ui->tableWidget_atten;
     QTableWidget *tableWidget_refl = ui->tableWidget_refl;
-    Dialog_staticBox_grille *dialog = new Dialog_staticBox_grille(this);
+    Dialog_staticBox_grille *dialog = new Dialog_staticBox_grille(nullptr);
     QSharedPointer<StaticBox_grille> component;
 
     if (dialog->exec() == QDialog::Accepted) {

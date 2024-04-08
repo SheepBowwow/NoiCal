@@ -87,7 +87,7 @@ void Widget_fan_inputTable::onAdd()
     QTableWidget *tableWidget = ui->tableWidget;
     int rowCount = tableWidget->rowCount(); //获取当前行数
     QSharedPointer<Fan> component;
-    Dialog_fan *dialog = new Dialog_fan(this);
+    Dialog_fan *dialog = new Dialog_fan(nullptr);
 
     if (dialog->exec() == QDialog::Accepted) {
 

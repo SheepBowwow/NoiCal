@@ -31,7 +31,7 @@ void Widget_Multi_ranc_inputTable::initTableWidget()
 void Widget_Multi_ranc_inputTable::onAdd()
 {
     QTableWidget *tableWidget = ui->tableWidget;
-    Dialog_duct_with_multi_ranc *dialog = new Dialog_duct_with_multi_ranc(this);
+    Dialog_duct_with_multi_ranc *dialog = new Dialog_duct_with_multi_ranc(nullptr);
     QSharedPointer<Multi_ranc> component;
 
     if (dialog->exec() == QDialog::Accepted) {

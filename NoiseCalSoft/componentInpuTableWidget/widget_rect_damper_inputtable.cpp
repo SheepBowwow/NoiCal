@@ -31,7 +31,7 @@ void Widget_Rect_damper_inputTable::initTableWidget()
 void Widget_Rect_damper_inputTable::onAdd()
 {
     QTableWidget *tableWidget = ui->tableWidget;
-    Dialog_rect_damper *dialog = new Dialog_rect_damper(this);
+    Dialog_rect_damper *dialog = new Dialog_rect_damper(nullptr);
     QSharedPointer<Rect_damper> component;
 
     if (dialog->exec() == QDialog::Accepted) {

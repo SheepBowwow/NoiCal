@@ -14,7 +14,7 @@
    <string>Dialog</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">#Dialog_aircondition_noise
+   <string notr="true">#Dialog_aircondition
 {
 background-color:white;
 }
@@ -80,6 +80,16 @@ font-size: 16px;
 }
 
 QLineEdit
+{
+font-family: '黑体';
+}
+
+QRadioButton
+{
+font-family: '黑体';
+}
+
+QPushButton
 {
 font-family: '黑体';
 }</string>
@@ -2981,7 +2991,6 @@ color: white;
      <font>
       <family>Microsoft YaHei</family>
       <pointsize>24</pointsize>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -3079,6 +3088,7 @@ background-color: rgb(157, 196, 229);
   <tabstop>lineEdit_send_in_2k</tabstop>
   <tabstop>lineEdit_send_in_4k</tabstop>
   <tabstop>lineEdit_send_in_8k</tabstop>
+  <tabstop>lineEdit_send_in_total</tabstop>
   <tabstop>lineEdit_send_out_63</tabstop>
   <tabstop>lineEdit_send_out_125</tabstop>
   <tabstop>lineEdit_send_out_250</tabstop>
@@ -3098,6 +3108,7 @@ background-color: rgb(157, 196, 229);
   <tabstop>lineEdit_exhaust_in_2k</tabstop>
   <tabstop>lineEdit_exhaust_in_4k</tabstop>
   <tabstop>lineEdit_exhaust_in_8k</tabstop>
+  <tabstop>lineEdit_exhaust_in_total</tabstop>
   <tabstop>lineEdit_exhaust_out_63</tabstop>
   <tabstop>lineEdit_exhaust_out_125</tabstop>
   <tabstop>lineEdit_exhaust_out_250</tabstop>
@@ -3106,13 +3117,11 @@ background-color: rgb(157, 196, 229);
   <tabstop>lineEdit_exhaust_out_2k</tabstop>
   <tabstop>lineEdit_exhaust_out_4k</tabstop>
   <tabstop>lineEdit_exhaust_out_8k</tabstop>
-  <tabstop>lineEdit_send_out_total</tabstop>
   <tabstop>comboBox_data_source</tabstop>
-  <tabstop>lineEdit_send_in_total</tabstop>
-  <tabstop>close</tabstop>
   <tabstop>pushButton_confirm</tabstop>
+  <tabstop>lineEdit_send_out_total</tabstop>
   <tabstop>lineEdit_exhaust_out_total</tabstop>
-  <tabstop>lineEdit_exhaust_in_total</tabstop>
+  <tabstop>close</tabstop>
  </tabstops>
  <resources/>
  <connections/>

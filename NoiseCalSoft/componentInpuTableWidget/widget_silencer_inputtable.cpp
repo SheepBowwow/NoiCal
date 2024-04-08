@@ -44,7 +44,7 @@ void Widget_Silencer_inputTable::initTableWidget()
 void Widget_Silencer_inputTable::onAdd()
 {
     QTableWidget* tableWidget = ui->stackedWidget->currentWidget()->findChild<QTableWidget*>();
-    Dialog_silencer *dialog = new Dialog_silencer(silencer_type, this);
+    Dialog_silencer *dialog = new Dialog_silencer(silencer_type, nullptr);
     QSharedPointer<Silencer> component;
 
     if (dialog->exec() == QDialog::Accepted) {

@@ -31,7 +31,7 @@ void Widget_Reducer_inputTable::initTableWidget()
 void Widget_Reducer_inputTable::onAdd()
 {
     QTableWidget *tableWidget = ui->tableWidget;
-    Dialog_reducer *dialog = new Dialog_reducer(this);
+    Dialog_reducer *dialog = new Dialog_reducer(nullptr);
     QSharedPointer<Reducer> component;
 
     if (dialog->exec() == QDialog::Accepted) {

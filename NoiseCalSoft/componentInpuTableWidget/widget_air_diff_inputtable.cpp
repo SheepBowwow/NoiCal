@@ -57,7 +57,7 @@ void Widget_air_diff_inputTable::onAdd()
     QTableWidget *tableWidget_noise = ui->tableWidget_noi;
     QTableWidget *tableWidget_atten = ui->tableWidget_atten;
     QTableWidget *tableWidget_refl = ui->tableWidget_refl;
-    Dialog_air_diff *dialog = new Dialog_air_diff(this);
+    Dialog_air_diff *dialog = new Dialog_air_diff();
     QSharedPointer<AirDiff> component = nullptr;
 
     if (dialog->exec() == QDialog::Accepted) {

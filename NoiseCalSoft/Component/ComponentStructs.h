@@ -626,13 +626,13 @@ typedef struct Static_box : Branch
     Static_box(const QString& model, const QString& brand, const QString& table_id,
                const QString& UUID, const QString& data_source,
                const QString& q1, const QString& q, const array<QString, 8>& atten)
-        : Branch(model, brand, table_id, data_source, UUID, q1, q, atten) {}
+        : Branch(model, brand, table_id, UUID, data_source, q1, q, atten) {}
 
     // 构造函数，不包含atten数组参数
     Static_box(const QString& model, const QString& brand, const QString& table_id,
                const QString& UUID, const QString& data_source,
                const QString& q1, const QString& q)
-        : Branch(model, brand, table_id, data_source, UUID, q1, q) {}
+        : Branch(model, brand, table_id, UUID, data_source, q1, q) {}
 
     // ComponentBase interface
 public:
@@ -651,13 +651,13 @@ typedef struct Multi_ranc : Branch
     Multi_ranc(const QString& model, const QString& brand, const QString& table_id,
                const QString& UUID, const QString& data_source,
                const QString& q1, const QString& q, const array<QString, 8>& atten)
-        : Branch(model, brand, table_id, data_source, UUID, q1, q, atten) {}
+        : Branch(model, brand, table_id, UUID, data_source, q1, q, atten) {}
 
     // 构造函数，不包含atten数组参数
     Multi_ranc(const QString& model, const QString& brand, const QString& table_id,
                const QString& UUID, const QString& data_source,
                const QString& q1, const QString& q)
-        : Branch(model, brand, table_id, data_source, UUID, q1, q) {}
+        : Branch(model, brand, table_id, UUID, data_source, q1, q) {}
 
     // ComponentBase interface
 public:
@@ -675,13 +675,13 @@ typedef struct Tee : Branch
     Tee(const QString& model, const QString& brand, const QString& table_id,
         const QString& UUID, const QString& data_source,
         const QString& q1, const QString& q, const array<QString, 8>& atten)
-        : Branch(model, brand, table_id, data_source, UUID, q1, q, atten) {}
+        : Branch(model, brand, table_id, UUID, data_source, q1, q, atten) {}
 
     // 构造函数，不包含atten数组参数
     Tee(const QString& model, const QString& brand, const QString& table_id,
         const QString& UUID, const QString& data_source,
         const QString& q1, const QString& q)
-        : Branch(model, brand, table_id, data_source, UUID, q1, q) {}
+        : Branch(model, brand, table_id, UUID, data_source, q1, q) {}
 
     // ComponentBase interface
 public:

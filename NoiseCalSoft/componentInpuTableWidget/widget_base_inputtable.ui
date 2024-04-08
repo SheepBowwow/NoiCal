@@ -18,6 +18,23 @@
 {
 border: 1px solid #000000;
 background-color: white;
+}
+
+#Dialog_other_send_terminal
+{
+background-color:white;
+}
+
+QLineEdit 
+{
+font-family: '黑体';
+font-size: 13px;
+}
+
+QComboBox
+{
+font-family: '黑体';
+font-size: 14px;
 }</string>
   </property>
   <widget class="QWidget" name="widget" native="true">

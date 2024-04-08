@@ -32,7 +32,7 @@ void Widget_Pipe_inputTable::initTableWidget()
 void Widget_Pipe_inputTable::onAdd()
 {
     QTableWidget *tableWidget = ui->tableWidget;
-    Dialog_pipe *dialog = new Dialog_pipe(this);
+    Dialog_pipe *dialog = new Dialog_pipe(nullptr);
     QSharedPointer<Pipe> component;
 
     if (dialog->exec() == QDialog::Accepted) {
