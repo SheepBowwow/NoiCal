@@ -80,66 +80,6 @@ background-color: rgb(157, 196, 229);
 border: 1px solid #000000;
 }</string>
    </property>
-   <widget class="QWidget" name="layoutWidget_13">
-    <property name="geometry">
-     <rect>
-      <x>1</x>
-      <y>10</y>
-      <width>201</width>
-      <height>45</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_26">
-     <item>
-      <widget class="QLabel" name="label_32">
-       <property name="minimumSize">
-        <size>
-         <width>20</width>
-         <height>41</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>20</width>
-         <height>41</height>
-        </size>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLabel { 
-border: none; 
-background-color : rgb(105, 105, 105);
-}</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_33">
-       <property name="font">
-        <font>
-         <family>Microsoft YaHei</family>
-         <pointsize>24</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLabel { 
-border: none; 
-color : rgb(105, 105, 105);
-}</string>
-       </property>
-       <property name="text">
-        <string>风道多分支</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignBottom|Qt::AlignHCenter</set>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
    <widget class="QWidget" name="widget_2" native="true">
     <property name="geometry">
      <rect>
@@ -469,7 +409,7 @@ color: white;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -523,7 +463,7 @@ color: white;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -577,7 +517,7 @@ color: white;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -631,7 +571,7 @@ color: white;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -685,7 +625,7 @@ color: white;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -742,7 +682,7 @@ color: white;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -796,7 +736,7 @@ color: white;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -850,7 +790,7 @@ color: white;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -858,6 +798,66 @@ color: white;
       </item>
      </layout>
     </widget>
+   </widget>
+   <widget class="QLabel" name="label_32">
+    <property name="geometry">
+     <rect>
+      <x>2</x>
+      <y>12</y>
+      <width>20</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>20</width>
+      <height>41</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>20</width>
+      <height>41</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel { 
+border: none; 
+background-color : rgb(105, 105, 105);
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_33">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>11</y>
+      <width>160</width>
+      <height>43</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Microsoft YaHei</family>
+      <pointsize>24</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel { 
+border: none; 
+color : rgb(105, 105, 105);
+}</string>
+    </property>
+    <property name="text">
+     <string>风道多分支</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+    </property>
    </widget>
   </widget>
   <widget class="QWidget" name="widget" native="true">
