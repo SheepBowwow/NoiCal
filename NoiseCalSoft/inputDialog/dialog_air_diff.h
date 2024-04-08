@@ -27,6 +27,7 @@ private slots:
     void calTotalNoise();
 
     void on_pushButton_confirm_clicked();
+    bool check_lineedit();
 
     void on_close_clicked();
 
@@ -44,6 +45,8 @@ private:
     array<QLineEdit*,9> noi_lineEdits;
     array<QLineEdit*,8> atten_lineEdits;
     array<QLineEdit*,8> refl_lineEdits;
+    QString size;
+    QString shape;
 
     // InputBaseDialog interface
 public:

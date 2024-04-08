@@ -37,6 +37,10 @@ void Dialog_add_zhushuqu::on_close_clicked()
 
 void Dialog_add_zhushuqu::on_pushButton_clicked()
 {
+    if(ui->lineEdit->text().isEmpty()){
+        QMessageBox::information(this,"提示","内容未填写完整");
+        return;
+    }
     emit accept();
     close();
 }

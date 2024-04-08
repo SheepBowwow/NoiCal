@@ -121,6 +121,7 @@ background-color : rgb(105, 105, 105);
         <font>
          <family>Microsoft YaHei</family>
          <pointsize>24</pointsize>
+         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -474,6 +475,17 @@ font-family: '黑体';
    </widget>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit_roomid</tabstop>
+  <tabstop>lineEdit_roomname</tabstop>
+  <tabstop>lineEdit_jiaban</tabstop>
+  <tabstop>lineEdit_pipe</tabstop>
+  <tabstop>pushButton</tabstop>
+  <tabstop>lineEdit_roomcalclass</tabstop>
+  <tabstop>close</tabstop>
+  <tabstop>comboBox</tabstop>
+  <tabstop>lineEdit_limit</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

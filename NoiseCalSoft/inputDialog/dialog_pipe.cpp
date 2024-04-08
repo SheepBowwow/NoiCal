@@ -129,8 +129,7 @@ void Dialog_pipe::on_radioButton_rect_clicked()
 
 void Dialog_pipe::on_pushButton_confirm_clicked()
 {
-    QString pipe_shape;
-    QString size;
+
     array<QString,8> atten;
 
     for(size_t i = 0; i < atten.size(); i++)
@@ -149,6 +148,12 @@ void Dialog_pipe::on_pushButton_confirm_clicked()
         size = ui->lineEdit_length->text() + "x" + ui->lineEdit_width->text();
     }
 
+    /**点击确认前检查，数据是否填完整**/
+    if(check_lineedit()==false){
+        QMessageBox::information(this,"提示","内容未填写完整");
+        return;
+    }
+
     this->component = new Pipe(
                 ui->lineEdit_model->text(),
                 ui->lineEdit_brand->text(),
@@ -160,6 +165,25 @@ void Dialog_pipe::on_pushButton_confirm_clicked()
                 atten);
 
     this->accept(); // 关闭对话框
+}
+
+bool Dialog_pipe::check_lineedit()
+{
+    for(size_t i = 0; i < atten_lineEdits.size(); i++){
+        if(atten_lineEdits[i]->text().isEmpty())
+            return false;
+    }
+
+    if(ui->lineEdit_model->text().isEmpty()||
+       ui->lineEdit_brand->text().isEmpty())
+        return false;
+
+    if((pipe_shape == "圆形" && ui->lineEdit_diameter->text().isEmpty())||
+       (pipe_shape == "方形" && (ui->lineEdit_length->text().isEmpty()  ||
+         ui->lineEdit_width->text().isEmpty()))
+       )return false;
+
+    return true;
 }
 
 QList<QStringList> Dialog_pipe::getComponentDataAsStringList() const

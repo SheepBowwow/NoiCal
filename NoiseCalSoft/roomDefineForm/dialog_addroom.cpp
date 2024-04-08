@@ -68,11 +68,22 @@ QString Dialog_addroom::getroomcalclass()
 
 void Dialog_addroom::on_pushButton_clicked()
 {
-    accept();
     QString name=ui->lineEdit_roomid->text();
     int num=ui->lineEdit_pipe->text().toInt();
     QString jiaban = ui->lineEdit_jiaban->text();
     QString limit = ui->lineEdit_limit->text();
+
+    if(ui->lineEdit_pipe->text().isEmpty()||
+            ui->lineEdit_limit->text().isEmpty()||
+            ui->lineEdit_jiaban->text().isEmpty()||
+            ui->lineEdit_roomid->text().isEmpty()||
+            ui->lineEdit_roomname->text().isEmpty()||
+            ui->lineEdit_roomcalclass->text().isEmpty())
+    {
+        QMessageBox::information(this,"提示","内容未填写完整");
+        return;
+    }
+
     emit dialogsent(name,num, jiaban, limit);
     close();
 }

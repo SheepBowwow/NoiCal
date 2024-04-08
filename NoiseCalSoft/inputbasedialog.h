@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QMouseEvent>
 #include <QObject>
+#include <QMessageBox>
 
 class InputBaseDialog : public QDialog
 {

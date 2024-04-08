@@ -28,11 +28,14 @@ private:
     array<QLineEdit*,9> noi_lineEdits;
     array<QLineEdit*,8> atten_lineEdits;
     array<QLineEdit*,8> refl_lineEdits;
+    QString size;
+    QString shape;
     QString table_id{-1};
     QString UUID{QString()};
 
 private slots:
     void on_pushButton_confirm_clicked();
+    bool check_lineedit();
 
     void calTotalNoise();
 

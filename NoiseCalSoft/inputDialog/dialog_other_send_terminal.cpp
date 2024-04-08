@@ -130,8 +130,7 @@ void Dialog_other_send_terminal::on_pushButton_confirm_clicked()
         refl[i] = refl_lineEdits[i]->text();
     }
 
-    QString size;
-    QString shape;
+
     if(ui->radioButton_circle->isChecked())
     {
         size = ui->lineEdit_diameter->text();
@@ -141,6 +140,12 @@ void Dialog_other_send_terminal::on_pushButton_confirm_clicked()
     {
         size = ui->lineEdit_length->text() + "x" + ui->lineEdit_width->text();
         shape = "方形";
+    }
+
+    /**点击确认前检查，数据是否填完整**/
+    if(check_lineedit()==false){
+        QMessageBox::information(this,"提示","内容未填写完整");
+        return;
     }
 
     this->component = new Other_send_terminal(
@@ -160,6 +165,32 @@ void Dialog_other_send_terminal::on_pushButton_confirm_clicked()
 
 
     this->accept(); // 关闭对话框
+}
+
+bool Dialog_other_send_terminal::check_lineedit()
+{
+    for(size_t i = 0; i < noi_lineEdits.size(); i++){
+        if(noi_lineEdits[i]->text().isEmpty())
+            return false;
+    }
+    for(size_t i = 0; i < atten_lineEdits.size(); i++){
+        if(atten_lineEdits[i]->text().isEmpty())
+            return false;
+    }
+    for(size_t i = 0; i < refl_lineEdits.size(); i++){
+        if(refl_lineEdits[i]->text().isEmpty())
+            return false;
+    }
+    if(ui->lineEdit_model->text().isEmpty()||
+       ui->lineEdit_brand->text().isEmpty())
+        return false;
+
+    if((shape == "圆形" && ui->lineEdit_diameter->text().isEmpty())||
+       (shape == "方形" && (ui->lineEdit_length->text().isEmpty()  ||
+         ui->lineEdit_width->text().isEmpty()))
+       )return false;
+
+    return true;
 }
 
 void Dialog_other_send_terminal::on_radioButton_circle_clicked()

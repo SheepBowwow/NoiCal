@@ -57,6 +57,12 @@ void Dialog_silencer::on_pushButton_confirm_clicked()
         atten[i] = atten_lineEdits[i]->text();
     }
 
+    /**点击确认前检查，数据是否填完整**/
+    if(check_lineedit()==false){
+        QMessageBox::information(this,"提示","内容未填写完整");
+        return;
+    }
+
     this->component = new Silencer(
                 ui->lineEdit_model->text(),
                 ui->lineEdit_brand->text(),
@@ -67,6 +73,18 @@ void Dialog_silencer::on_pushButton_confirm_clicked()
                 atten);
 
     this->accept(); // 关闭对话框
+}
+
+bool Dialog_silencer::check_lineedit()
+{
+    for(size_t i = 0; i < atten_lineEdits.size(); i++){
+        if(atten_lineEdits[i]->text().isEmpty())
+            return false;
+    }
+    if(ui->lineEdit_model->text().isEmpty()||
+       ui->lineEdit_brand->text().isEmpty())
+        return false;
+    return true;
 }
 
 QList<QStringList> Dialog_silencer::getComponentDataAsStringList() const

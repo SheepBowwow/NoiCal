@@ -112,9 +112,7 @@ void* Dialog_reducer::getComponent()
 
 void Dialog_reducer::on_pushButton_confirm_clicked()
 {
-    QString reducer_type;
-    QString reducer_before_size;
-    QString reducer_after_size;
+
     array<QString,8> atten;
 
     for(size_t i = 0; i < atten.size(); i++)
@@ -142,9 +140,15 @@ void Dialog_reducer::on_pushButton_confirm_clicked()
     }
     else if(ui->radioButton_rect_to_rect->isChecked())
     {
-        reducer_type = "圆-方";
+        reducer_type = "方-方";
         reducer_before_size = ui->lineEdit_before_length->text() + "x" + ui->lineEdit_before_width->text();
         reducer_after_size = ui->lineEdit_after_length->text() + "x" + ui->lineEdit_after_width->text();
+    }
+
+    /**点击确认前检查，数据是否填完整**/
+    if(check_lineedit()==false){
+        QMessageBox::information(this,"提示","内容未填写完整");
+        return;
     }
 
     this->component = new Reducer(
@@ -159,6 +163,43 @@ void Dialog_reducer::on_pushButton_confirm_clicked()
                 atten);
 
     this->accept(); // 关闭对话框
+}
+
+bool Dialog_reducer::check_lineedit()
+{
+    for(size_t i = 0; i < atten_lineEdits.size(); i++) {
+        if(atten_lineEdits[i]->text().isEmpty())
+            return false;
+    }
+    if(ui->lineEdit_model->text().isEmpty()||
+       ui->lineEdit_brand->text().isEmpty())
+        return false;
+
+    if(reducer_type == "圆-圆")
+        if(ui->lineEdit_before_diameter->text().isEmpty()||
+           ui->lineEdit_after_diameter->text().isEmpty())
+            return false;
+
+    if(reducer_type == "圆-方")
+        if(ui->lineEdit_before_diameter->text().isEmpty()||
+            ui->lineEdit_after_length->text().isEmpty()||
+            ui->lineEdit_after_width->text().isEmpty())
+            return false;
+
+    if(reducer_type == "方-圆")
+        if(ui->lineEdit_before_length->text().isEmpty()||
+             ui->lineEdit_before_width->text().isEmpty()   ||
+            ui->lineEdit_after_diameter->text().isEmpty())
+            return false;
+
+    if(reducer_type == "方-方")
+        if(ui->lineEdit_before_length->text().isEmpty()||
+             ui->lineEdit_before_width->text().isEmpty()||
+             ui->lineEdit_after_length->text().isEmpty()||
+             ui->lineEdit_after_width->text().isEmpty())
+            return false;
+
+    return true;
 }
 
 

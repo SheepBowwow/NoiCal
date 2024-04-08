@@ -30,12 +30,15 @@ private slots:
     void on_radioButton_rect_clicked();
 
     void on_pushButton_confirm_clicked();
+    bool check_lineedit();
 
 private:
     Ui::Dialog_pipe *ui;
     int editRow;    //当前修改行，如果是新建就为-1
     Pipe* component;     //噪音结构体
     array<QLineEdit*,8> atten_lineEdits;
+    QString pipe_shape;
+    QString size;
     QString table_id{-1};
     QString UUID{QString()};
 

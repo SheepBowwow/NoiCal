@@ -27,6 +27,7 @@ private slots:
     void on_close_clicked();
 
     void on_pushButton_confirm_clicked();
+    bool check_lineedit();
 
     void on_radioButton_circle_to_circle_clicked();
 
@@ -41,6 +42,9 @@ private:
     int editRow;    //当前修改行，如果是新建就为-1
     Reducer* component;     //噪音结构体
     array<QLineEdit*,8> atten_lineEdits;
+    QString reducer_type;
+    QString reducer_before_size;
+    QString reducer_after_size;
     QString table_id{-1};
     QString UUID{QString()};
 

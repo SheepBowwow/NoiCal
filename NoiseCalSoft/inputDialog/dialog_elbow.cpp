@@ -70,8 +70,7 @@ void* Dialog_elbow::getComponent()
 
 void Dialog_elbow::on_pushButton_confirm_clicked()
 {
-    QString elbow_shape;
-    QString size;
+
     array<QString,8> atten;
 
     for(size_t i = 0; i < atten.size(); i++)
@@ -99,6 +98,12 @@ void Dialog_elbow::on_pushButton_confirm_clicked()
 
     }
 
+    /**点击确认前检查，数据是否填完整**/
+    if(check_lineedit()==false){
+        QMessageBox::information(this,"提示","内容未填写完整");
+        return;
+    }
+
     this->component = new Elbow(
                 ui->lineEdit_model->text(),
                 ui->lineEdit_brand->text(),
@@ -110,6 +115,21 @@ void Dialog_elbow::on_pushButton_confirm_clicked()
                 atten);
 
     this->accept(); // 关闭对话框
+}
+
+bool Dialog_elbow::check_lineedit()
+{
+    for(size_t i = 0; i < atten_lineEdits.size(); i++){
+        if(atten_lineEdits[i]->text().isEmpty())
+            return false;
+    }
+    if(ui->lineEdit_model->text().isEmpty() ||
+       ui->lineEdit_brand->text().isEmpty())
+        return false;
+    if((elbow_shape == "圆形" && ui->lineEdit_diameter->text().isEmpty()) ||
+       (elbow_shape == "方形" && ui->lineEdit_width->text().isEmpty()))
+        return false;
+    return true;
 }
 
 void Dialog_elbow::on_radioButton_circle_clicked()

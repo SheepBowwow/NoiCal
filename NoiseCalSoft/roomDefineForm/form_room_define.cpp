@@ -46,7 +46,7 @@ void Form_room_define::on_buttonadd_clicked()
         }
     }
 
-    dialog = new Dialog_addroom;
+    dialog = new Dialog_addroom(this);
 
     //弹窗点击确定，接收信号并发送提醒主界面改变
     connect(dialog,SIGNAL(dialogsent(QString,int,QString, QString)),this,SLOT(jieshou(QString,int,QString, QString)));
