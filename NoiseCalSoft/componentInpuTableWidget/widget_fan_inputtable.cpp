@@ -77,6 +77,25 @@ void Widget_fan_inputTable::mergeCells(int startRow)
     tableWidget->setCellWidget(startRow, 0, widget);
 }
 
+void Widget_fan_inputTable::loadComponentToTable()
+{
+    auto componentList = ComponentManager::getInstance().getComponentsByType(component_type_name::FAN);
+    for (const auto& component : componentList) {
+        // 假设你有一个能够将组件转换为QStringList的函数
+        if (auto fanComponent = dynamic_cast<Fan*>(component.data()))
+        {
+            auto lists = fanComponent->getComponentDataAsStringList();
+            int rowCount = ui->tableWidget->rowCount();
+
+            for (const auto& list : lists) {
+                addRowToTable(ui->tableWidget, list);
+            }
+
+            mergeCells(rowCount);
+        }
+    }
+}
+
 /**
  * @brief Widget_fan_inputTable::onAdd
  *
@@ -99,7 +118,7 @@ void Widget_fan_inputTable::onAdd()
         component->table_id = QString::number(tableWidget->rowCount() / 2 + 1);
         if (component != nullptr) {
 
-            auto lists = dialog->getComponentDataAsStringList();
+            auto lists = component->getComponentDataAsStringList();
 
             // 使用通用函数添加行
             addRowToTable(tableWidget, lists[0]);
@@ -135,13 +154,14 @@ void Widget_fan_inputTable::onDel()
  */
 void Widget_fan_inputTable::onRevise()
 {
-    for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
+    for (int row = 0; row < ui->tableWidget->rowCount(); row+=2) {
         QWidget* widget = ui->tableWidget->cellWidget(row, 0); // Assuming the checkbox is in the first column
         QCheckBox* checkBox = widget ? widget->findChild<QCheckBox*>() : nullptr;
         if (checkBox && checkBox->isChecked()) {
             QString uuid = ui->tableWidget->item(row, ui->tableWidget->columnCount() - 1)->text();
             QSharedPointer<Fan> component = componentManager.findComponent(uuid).dynamicCast<Fan>();
-
+            if(!component)
+                continue;
             Dialog_fan *dialog = new Dialog_fan(this, row, *component);
             if (dialog->exec() == QDialog::Accepted) {
                 QSharedPointer<Fan> newComponent = QSharedPointer<Fan>(static_cast<Fan*>(dialog->getComponent()));

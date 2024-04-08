@@ -33,6 +33,14 @@ public slots:
 private slots:
     void on_pushButton_pump_clicked();
     void on_pushButton_send_clicked();
+
+    // Widget_base_inputTable interface
+public:
+    void clearTableFuc() override;
+
+    // Widget_base_inputTable interface
+public:
+    void loadComponentToTable() override;
 };
 
 #endif // WIDGET_PUMP_SEND_INPUTTABLE_H

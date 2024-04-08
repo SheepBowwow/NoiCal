@@ -1050,7 +1050,7 @@ bool addOrUpdateReducerToDatabase(const ComponentBase& component, QSqlDatabase& 
     return true;
 }
 
-bool addSilencerToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update)
+bool addOrUpdateSilencerToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update)
 {
     // Check if the database is open
     if (!db.isOpen()) {

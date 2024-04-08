@@ -88,5 +88,18 @@ void Widget_VAV_terminal_inputTable::onInput()
 
 void Widget_VAV_terminal_inputTable::onOutput()
 {
+    
+}
 
+void Widget_VAV_terminal_inputTable::loadComponentToTable()
+{
+    auto componentList = ComponentManager::getInstance().getComponentsByType(component_type_name::VAV_TERMINAL);
+    for (const auto& component : componentList) {
+        if (auto vavComponent = dynamic_cast<VAV_terminal*>(component.data())) {
+            auto lists = vavComponent->getComponentDataAsStringList();
+            for (const auto& list : lists) {
+                addRowToTable(ui->tableWidget, list);
+            }
+        }
+    }
 }

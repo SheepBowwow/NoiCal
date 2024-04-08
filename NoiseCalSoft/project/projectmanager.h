@@ -21,6 +21,11 @@ struct ProjectInfo
     : prjID(id), prjName(name), shipNum(num), shipyard(yard), prjManager(manager), classSoc(soc)
     {
     }
+
+    // 检查ProjectInfo是否有效
+    bool isValid() const {
+        return !prjID.isEmpty(); // 这里我们仅以prjID非空为有效性判断依据，你可以根据需要调整
+    }
 };
 
 //项目附件
@@ -56,8 +61,9 @@ struct NoiseLimit
 };
 
 
-class ProjectManager
+class ProjectManager : public QObject
 {
+    Q_OBJECT
 public:
     // 删除或隐藏构造函数
     static ProjectManager& getInstance() {
@@ -73,13 +79,17 @@ public:
 
     void setPrjInfo(const ProjectInfo &newPrjInfo);
 
-    void setPrjID(const QString &prjID);
+    void setPrjID(const QString &prjID, bool initProject = true);
+
+    void delPrj(const QString &prjID);
 
     QString getPrjID() const;
 
     void setClassSoc(const QString &classSoc);
 
     QString getClassSoc() const;
+
+    void clearCurrentPrjData();     //用于切换项目用
 
     bool insertProjectIDToSet(const QString &prjID);
     bool insertAttachmentToList(const ProjectAttachment &attachment);
@@ -89,6 +99,24 @@ public:
     void clearAttachments();
     void clearDrawings();
     void clearNoiseLimits();
+
+    bool loadProjectInfo();
+    bool loadAttachments();
+    bool loadDrawings();
+    bool loadNoiseLimits();
+    bool switchProjectToDo();
+
+    QList<ProjectAttachment> getAttachments() const;
+
+    QList<Drawing> getDrawings() const;
+
+    QList<NoiseLimit> getNoiseLimits() const;
+
+    ProjectInfo getPrjInfo() const;
+
+signals:
+    void clearTable();
+    void loadBasicInfoDone();
 
 private:
     ProjectManager(); // 私有构造函数

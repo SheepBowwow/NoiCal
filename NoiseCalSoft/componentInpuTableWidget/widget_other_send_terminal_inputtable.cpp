@@ -99,8 +99,6 @@ void Widget_Other_send_terminal_inputTable::onRevise()
         QCheckBox* checkBox = widget ? qobject_cast<QCheckBox*>(widget) : nullptr;
         if(checkBox && checkBox->isChecked())
         {
-            // 获取UUID，假设它在最后一列
-            QString UUID = currentTableWidget->item(row, currentTableWidget->columnCount() - 1)->text();
             // 调用通用的修订函数，传入正确的类型参数
             componentRevision<Other_send_terminal, Dialog_other_send_terminal>(tableWidgets,currentTableWidget,row);
         }
@@ -115,4 +113,24 @@ void Widget_Other_send_terminal_inputTable::onInput()
 void Widget_Other_send_terminal_inputTable::onOutput()
 {
 
+}
+
+void Widget_Other_send_terminal_inputTable::loadComponentToTable()
+{
+    auto componentList = ComponentManager::getInstance().getComponentsByType(component_type_name::OTHER_SEND_TERMINAL);
+    for (const auto& component : componentList) {
+        // 使用dynamic_cast尝试将ComponentBase转换为AirDiff指针
+        if (auto otherSendComponent = dynamic_cast<Other_send_terminal*>(component.data())) {
+            // 获取组件数据
+            auto lists = otherSendComponent->getComponentDataAsStringList();
+
+            // 假定lists中的数据已经正确分组对应噪声、衰减、反射
+            if (lists.size() >= 3) {
+                // 添加数据到对应的表格
+                addRowToTable(ui->tableWidget_noi, lists[0]);
+                addRowToTable(ui->tableWidget_atten, lists[1]);
+                addRowToTable(ui->tableWidget_refl, lists[2]);
+            }
+        }
+    }
 }

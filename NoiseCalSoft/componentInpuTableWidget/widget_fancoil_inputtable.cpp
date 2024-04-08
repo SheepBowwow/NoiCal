@@ -54,6 +54,27 @@ void Widget_fanCoil_inputTable::mergeCells(int startRow)
     tableWidget->setCellWidget(startRow, 0, widget);
 }
 
+void Widget_fanCoil_inputTable::loadComponentToTable()
+{
+    // 从组件管理器获取所有的风机盘管组件
+    auto componentList = ComponentManager::getInstance().getComponentsByType(component_type_name::FANCOIL); // 请替换FanCoil的类型名称为实际的类型标识符
+    for (const auto& component : componentList) {
+        // 动态转换以确保组件类型正确
+        if(auto fanCoilComponent = dynamic_cast<FanCoil*>(component.data()))
+        {
+            auto lists = fanCoilComponent->getComponentDataAsStringList();
+            int rowCount = ui->tableWidget->rowCount();
+
+            for (const auto& list : lists) {
+                addRowToTable(ui->tableWidget, list);
+            }
+
+            // 根据需要合并单元格
+            mergeCells(rowCount);
+        }
+    }
+}
+
 void Widget_fanCoil_inputTable::initTableWidget()
 {
     int colCount = 19;

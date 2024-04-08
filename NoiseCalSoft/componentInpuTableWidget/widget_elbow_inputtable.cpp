@@ -83,5 +83,18 @@ void Widget_Elbow_inputTable::onInput()
 
 void Widget_Elbow_inputTable::onOutput()
 {
+    
+}
 
+void Widget_Elbow_inputTable::loadComponentToTable()
+{
+    auto componentList = ComponentManager::getInstance().getComponentsByType(component_type_name::ELBOW);
+    for (const auto& component : componentList) {
+        if (auto elbowComponent = dynamic_cast<Elbow*>(component.data())) {
+            auto lists = elbowComponent->getComponentDataAsStringList();
+            for (const auto& list : lists) {
+                addRowToTable(ui->tableWidget, list);
+            }
+        }
+    }
 }

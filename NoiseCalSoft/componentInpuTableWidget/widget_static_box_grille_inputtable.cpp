@@ -114,7 +114,28 @@ void Widget_static_box_grille_inputTable::onInput()
 
 void Widget_static_box_grille_inputTable::onOutput()
 {
+    
+}
 
+void Widget_static_box_grille_inputTable::loadComponentToTable()
+{
+    // 获取所有AirDiff组件
+    auto componentList = ComponentManager::getInstance().getComponentsByType(component_type_name::STATICBOX_GRILLE);
+    for (const auto& component : componentList) {
+        // 使用dynamic_cast尝试将ComponentBase转换为AirDiff指针
+        if (auto staticGrilleComponent = dynamic_cast<StaticBox_grille*>(component.data())) {
+            // 获取组件数据
+            auto lists = staticGrilleComponent->getComponentDataAsStringList();
+
+            // 假定lists中的数据已经正确分组对应噪声、衰减、反射
+            if (lists.size() >= 3) {
+                // 添加数据到对应的表格
+                addRowToTable(ui->tableWidget_noi, lists[0]);
+                addRowToTable(ui->tableWidget_atten, lists[1]);
+                addRowToTable(ui->tableWidget_refl, lists[2]);
+            }
+        }
+    }
 }
 
 

@@ -57,6 +57,9 @@ Widget::Widget(QWidget *parent)
     ProjectManager::getInstance();
     DatabaseManager::getInstance();
 
+    connect(&ProjectManager::getInstance(), &ProjectManager::clearTable, this, &Widget::clearTable);
+    connect(&ProjectManager::getInstance(), &ProjectManager::loadBasicInfoDone, this, &Widget::setBasicPageWhenSwitchPrj);
+
     ui->stackedWidget->setCurrentWidget(ui->page_login);
     this->initTableWidget_noi_limit();
     this->initTableWidget_drawing_list();
@@ -80,7 +83,7 @@ void Widget::initTableWidget(QTableWidget *tableWidget, const QStringList &heade
     tableWidget->setRowCount(0);
     tableWidget->setHorizontalHeaderLabels(headerText);
     tableWidget->verticalHeader()->setVisible(false);
-
+    tableWidget->setSelectionMode(QAbstractItemView::NoSelection);
     int totalWidth = 0;
     for (int i = 0; i < colCount; ++i)
     {
@@ -276,6 +279,11 @@ void Widget::on_pushButto_prj_manage_clicked()
 
 void Widget::on_pushButton_noi_limit_add_clicked()
 {
+    if(ProjectManager::getInstance().getPrjID().trimmed().isEmpty())
+    {
+        QMessageBox::critical(this, "错误", "当前未打开任何项目");
+        return;
+    }
     int rowCount = ui->tableWidget_noi_limit->rowCount();
     ui->tableWidget_noi_limit->setRowCount(rowCount + 1);
     // 处理复选框
@@ -359,6 +367,11 @@ void Widget::on_pushButton_noi_limit_del_clicked()
 
 void Widget::on_pushButton_drawing_list_add_clicked()
 {
+    if(ProjectManager::getInstance().getPrjID().trimmed().isEmpty())
+    {
+        QMessageBox::critical(this, "错误", "当前未打开任何项目");
+        return;
+    }
     int rowCount = ui->tableWidget_drawing_list->rowCount();
     ui->tableWidget_drawing_list->setRowCount(rowCount + 1);
     // 处理复选框
@@ -439,6 +452,11 @@ void Widget::on_pushButton_prj_revise_clicked()
 
 void Widget::on_pushButton_prj_info_save_clicked()
 {
+    if(ProjectManager::getInstance().getPrjID().trimmed().isEmpty())
+    {
+        QMessageBox::critical(this, "错误", "当前未打开任何项目");
+        return;
+    }
     QList<QLineEdit*> lineEdits = {ui->lineEdit_prj_ID, ui->lineEdit_prj_name, ui->lineEdit_ship_num, ui->lineEdit_shipyard,
                                   ui->lineEdit_prj_manager};
 
@@ -508,6 +526,11 @@ void Widget::initTableWidget_project_attachment()
 //项目附件添加
 void Widget::on_pushButton_project_attachment_add_clicked()
 {
+    if(ProjectManager::getInstance().getPrjID().trimmed().isEmpty())
+    {
+        QMessageBox::critical(this, "错误", "当前未打开任何项目");
+        return;
+    }
     // 打开文件选择对话框，让用户选择文件
     QString filePath = QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("All Files (*)"));
     QString fileName = "";
@@ -633,11 +656,165 @@ void Widget::on_pushButton_project_attachment_del_clicked()
     }
 }
 
+void Widget::setAttachmentTable()
+{
+    QList<ProjectAttachment> attachments = ProjectManager::getInstance().getAttachments();
+    QTableWidget *tableWidget = ui->tableWidget_project_attachment;
+
+    for (const auto &attach : attachments) {
+        int rowCount = tableWidget->rowCount();
+        tableWidget->setRowCount(rowCount + 1);
+
+        for (int col = 0; col < 3; ++col) {
+            if (col == 0) {
+                // 添加复选框
+                QCheckBox* checkBox = new QCheckBox();
+                QWidget* widget = new QWidget();
+                QHBoxLayout* layout = new QHBoxLayout(widget);
+                layout->addWidget(checkBox);
+                layout->setAlignment(Qt::AlignCenter);
+                layout->setContentsMargins(0, 0, 0, 0);
+                tableWidget->setCellWidget(rowCount, col, widget);
+            } else if (col == 1) {
+                QTableWidgetItem *item = new QTableWidgetItem(attach.tableID);
+                tableWidget->setItem(rowCount, col, item);
+                item->setTextAlignment(Qt::AlignCenter); // 将内容居中对齐
+                item->setFlags(item->flags() & ~Qt::ItemIsEditable); // 设置为只读
+            } else if (col == 2) {
+                QLabel *label = new QLabel("<a href='#'>" + attach.attachName + "</a>");
+                label->setTextFormat(Qt::RichText);
+                label->setCursor(Qt::PointingHandCursor); // 设置鼠标悬停时为手形光标
+                label->setAlignment(Qt::AlignCenter);
+                // 存储attachPath作为自定义属性
+                label->setProperty("attachPath", attach.attachPath);
+                tableWidget->setCellWidget(rowCount, col, label);
+
+                connect(label, &QLabel::linkActivated, [localFilePath=attach.attachPath](const QString &){
+                    // 处理点击事件，例如打开链接
+                    QUrl fileUrl = QUrl::fromLocalFile(localFilePath);
+                    QDesktopServices::openUrl(fileUrl);
+                });
+            }
+        }
+    }
+}
+
+void Widget::setDrawingTable()
+{
+    QList<Drawing> drawings = ProjectManager::getInstance().getDrawings();
+    // 遍历列表，填充表格
+    int rowCount = 0;
+    for (const Drawing &drawing : drawings) {
+        // 插入新行
+        ui->tableWidget_drawing_list->insertRow(rowCount);
+
+        // 添加复选框
+        QCheckBox* checkBox = new QCheckBox();
+        QWidget* widget = new QWidget();
+        QHBoxLayout* layout = new QHBoxLayout(widget);
+        layout->addWidget(checkBox);
+        layout->setAlignment(Qt::AlignCenter);
+        layout->setContentsMargins(0, 0, 0, 0);
+        ui->tableWidget_drawing_list->setCellWidget(rowCount, 0, widget);
+
+        // 设置序号，图号，图名
+        QTableWidgetItem *itemSerial = new QTableWidgetItem(drawing.tableID);
+        ui->tableWidget_drawing_list->setItem(rowCount, 1, itemSerial);
+        itemSerial->setTextAlignment(Qt::AlignCenter);
+
+        QTableWidgetItem *itemDrawingNum = new QTableWidgetItem(drawing.drawingNum);
+        ui->tableWidget_drawing_list->setItem(rowCount, 2, itemDrawingNum);
+        itemDrawingNum->setTextAlignment(Qt::AlignCenter);
+
+        QTableWidgetItem *itemDrawingName = new QTableWidgetItem(drawing.drawingName);
+        ui->tableWidget_drawing_list->setItem(rowCount, 3, itemDrawingName);
+        itemDrawingName->setTextAlignment(Qt::AlignCenter);
+
+        rowCount++;
+    }
+}
+
+void Widget::setNoiseLimit()
+{
+    QList<NoiseLimit> noiseLimits = ProjectManager::getInstance().getNoiseLimits();
+
+    // 遍历噪声限值列表，为每个项目添加表格行
+    int rowCount = 0;
+    foreach (const NoiseLimit &noiseLimit, noiseLimits) {
+        ui->tableWidget_noi_limit->insertRow(rowCount);
+
+        // 处理复选框
+        QCheckBox* checkBox = new QCheckBox();
+        QWidget* widget = new QWidget();
+        QHBoxLayout* layout = new QHBoxLayout(widget);
+        layout->addWidget(checkBox);
+        layout->setAlignment(Qt::AlignCenter);
+        layout->setContentsMargins(0, 0, 0, 0);
+        ui->tableWidget_noi_limit->setCellWidget(rowCount, 0, widget);
+
+        // 设置序号
+        QTableWidgetItem *itemTableID = new QTableWidgetItem(noiseLimit.tableID);
+        itemTableID->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget_noi_limit->setItem(rowCount, 1, itemTableID);
+
+        // 设置房间类型
+        QTableWidgetItem *itemRoomType = new QTableWidgetItem(noiseLimit.roomType);
+        itemRoomType->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget_noi_limit->setItem(rowCount, 2, itemRoomType);
+
+        // 设置噪声限值dB(A)
+        QTableWidgetItem *itemNoiseLimit = new QTableWidgetItem(noiseLimit.noiseLimit);
+        itemNoiseLimit->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget_noi_limit->setItem(rowCount, 3, itemNoiseLimit);
+
+        // 设置处所类型
+        QTableWidgetItem *itemPremissType = new QTableWidgetItem(noiseLimit.premissType);
+        itemPremissType->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget_noi_limit->setItem(rowCount, 4, itemPremissType);
+
+        rowCount++;
+    }
+}
+
+void Widget::setPrjBasicInfo()
+{
+    QList<QLineEdit*> lineEdits = {ui->lineEdit_prj_ID, ui->lineEdit_prj_name, ui->lineEdit_ship_num, ui->lineEdit_shipyard,
+                                  ui->lineEdit_prj_manager, ui->lineEdit_class_soc};
+
+    for(auto& lineEdit: lineEdits)
+    {
+        lineEdit->setReadOnly(true);
+        lineEdit->setStyleSheet("QLineEdit{background-color: rgb(240, 240, 240); border: 1px solid #9C9C9C;}");
+    }
+
+    ProjectInfo prjInfo = ProjectManager::getInstance().getPrjInfo();
+
+    ui->lineEdit_prj_ID->setText(prjInfo.prjID);
+    ui->lineEdit_prj_name->setText(prjInfo.prjName);
+    ui->lineEdit_ship_num->setText(prjInfo.shipNum);
+    ui->lineEdit_shipyard->setText(prjInfo.shipyard);
+    ui->lineEdit_prj_manager->setText(prjInfo.prjManager);
+    ui->lineEdit_class_soc->setText(prjInfo.classSoc);
+}
+
+void Widget::setBasicPageWhenSwitchPrj()
+{
+    setAttachmentTable();
+    setDrawingTable();
+    setNoiseLimit();
+    setPrjBasicInfo();
+}
+
 /**
  * @brief 保存参考图纸清单
  */
 void Widget::on_pushButton_drawing_list_save_clicked()
 {
+    if(ProjectManager::getInstance().getPrjID().trimmed().isEmpty())
+    {
+        QMessageBox::critical(this, "错误", "当前未打开任何项目");
+        return;
+    }
     QList<Drawing> drawings; // 创建一个Drawing的列表用来存储所有行的数据
 
     // 遍历每一行
@@ -662,7 +839,41 @@ void Widget::on_pushButton_drawing_list_save_clicked()
         drawings.append(drawing);
     }
 
+    // 遍历表格中的每一行和列，除了第一列
+    for (int row = 0; row < ui->tableWidget_drawing_list->rowCount(); ++row) {
+        for (int col = 1; col < ui->tableWidget_drawing_list->columnCount(); ++col) {
+            QTableWidgetItem* item = ui->tableWidget_drawing_list->item(row, col);
+            if (!item) {
+                item = new QTableWidgetItem();
+                ui->tableWidget_drawing_list->setItem(row, col, item);
+            }
+            // 设置背景色为灰色
+            item->setBackground(QBrush(QColor(240, 240, 240)));
+
+            // 如果你也想设置这些单元格为只读，可以取消以下注释
+            item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+        }
+    }
+
     ProjectManager::getInstance().setDrawings(drawings);
+}
+
+void Widget::on_pushButton_drawing_list_revise_clicked()
+{
+    // 遍历表格中的每一行和列，除了第一列
+    for (int row = 0; row < ui->tableWidget_drawing_list->rowCount(); ++row) {
+        for (int col = 1; col < ui->tableWidget_drawing_list->columnCount(); ++col) {
+            QTableWidgetItem* item = ui->tableWidget_drawing_list->item(row, col);
+            if (!item) {
+                item = new QTableWidgetItem();
+                ui->tableWidget_drawing_list->setItem(row, col, item);
+            }
+            item->setBackground(QBrush(Qt::white));
+
+            // 如果之前设置了只读，这里恢复为可编辑状态
+            item->setFlags(item->flags() | Qt::ItemIsEditable);
+        }
+    }
 }
 
 void Widget::initTableWidget_noi_limit()
@@ -697,12 +908,19 @@ void Widget::initTableWidget_drawing_list()
 
 void Widget::on_pushButton_noi_limit_save_clicked()
 {
+    if(ProjectManager::getInstance().getPrjID().trimmed().isEmpty())
+    {
+        QMessageBox::critical(this, "错误", "当前未打开任何项目");
+        return;
+    }
     if(ui->lineEdit_class_soc->text().isEmpty())
     {
         QMessageBox::critical(this, "空字段错误", "船级社不能为空");
         return;
     }
 
+    ui->lineEdit_class_soc->setReadOnly(true);
+    ui->lineEdit_class_soc->setStyleSheet("QLineEdit{background-color: rgb(240, 240, 240); border: 1px solid #9C9C9C;}");
     QList<NoiseLimit> noiseLimits; // 创建一个Drawing的列表用来存储所有行的数据
 
     // 遍历每一行
@@ -730,8 +948,46 @@ void Widget::on_pushButton_noi_limit_save_clicked()
         noiseLimits.append(noiseLimit);
     }
 
+    // 遍历表格中的每一行和列，除了第一列
+    for (int row = 0; row < ui->tableWidget_noi_limit->rowCount(); ++row) {
+        for (int col = 1; col < ui->tableWidget_noi_limit->columnCount(); ++col) {
+            QTableWidgetItem* item = ui->tableWidget_noi_limit->item(row, col);
+            if (!item) {
+                item = new QTableWidgetItem();
+                ui->tableWidget_noi_limit->setItem(row, col, item);
+            }
+            // 设置背景色为灰色
+            item->setBackground(QBrush(QColor(240, 240, 240)));
+
+            // 如果你也想设置这些单元格为只读，可以取消以下注释
+            item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+        }
+    }
+
     ProjectManager::getInstance().setNoiseLimits(noiseLimits);
     ProjectManager::getInstance().setClassSoc(ui->lineEdit_class_soc->text());
+}
+
+void Widget::on_pushButton_noi_limit_revise_clicked()
+{
+    ui->lineEdit_class_soc->setReadOnly(false);
+    ui->lineEdit_class_soc->setStyleSheet("QLineEdit{background-color: white; border: 1px solid #9C9C9C;}");
+
+    // 遍历表格中的每一行和列，除了第一列
+    for (int row = 0; row < ui->tableWidget_noi_limit->rowCount(); ++row) {
+        for (int col = 1; col < ui->tableWidget_noi_limit->columnCount(); ++col) {
+            QTableWidgetItem* item = ui->tableWidget_noi_limit->item(row, col);
+            if (!item) {
+                item = new QTableWidgetItem();
+                ui->tableWidget_noi_limit->setItem(row, col, item);
+            }
+            // 恢复单元格的背景色（清除之前设置的灰色背景）
+            item->setBackground(QBrush(Qt::white)); // 或者使用 item->setBackground(QBrush()); 来清除背景色
+
+            // 如果之前设置了只读，这里恢复为可编辑状态
+            item->setFlags(item->flags() | Qt::ItemIsEditable);
+        }
+    }
 }
 
 //当表格item改变，rooms跟着改变
@@ -776,6 +1032,11 @@ double Widget::getNoiseLimitByName(const QString& name)
 //输入模块按钮
 void Widget::on_pushButton_input_clicked()
 {
+    if(ProjectManager::getInstance().getPrjID().trimmed().isEmpty())
+    {
+        QMessageBox::critical(this, "错误", "当前未打开任何项目");
+        return;
+    }
     if(ui->stackedWidget->currentWidget() == ui->page_fan)
         return;
     ui->stackedWidget->setCurrentWidget(ui->page_fan);
@@ -785,6 +1046,52 @@ void Widget::on_pushButton_input_clicked()
 void Widget::on_pushButton_start_clicked()
 {
     this->on_pushButto_prj_manage_clicked();
+}
+
+/**
+ * @brief 用于清空界面
+ */
+void Widget::clearTable()
+{
+    // 定义一个Lambda表达式用于递归清空QTableWidgets和QLineEdits
+    std::function<void(QWidget*)> clearAllWidgets = [&](QWidget* parent) {
+        if (!parent) return;
+
+        // 创建一个队列用于广度优先搜索
+        QQueue<QWidget*> queue;
+        queue.enqueue(parent);
+
+        while (!queue.isEmpty()) {
+            QWidget* currentWidget = queue.dequeue();
+
+            // 尝试将当前控件转换为QTableWidget
+            QTableWidget *tableWidget = qobject_cast<QTableWidget*>(currentWidget);
+            if (tableWidget) {
+                // 如果转换成功，清空QTableWidget
+                tableWidget->setRowCount(0);
+                tableWidget->clearContents(); // 清空内容但保留列头
+            } else {
+                // 尝试将当前控件转换为QLineEdit
+                QLineEdit *lineEdit = qobject_cast<QLineEdit*>(currentWidget);
+                if (lineEdit) {
+                    // 如果转换成功，清空QLineEdit的内容
+                    lineEdit->clear();
+                } else {
+                    // 如果当前控件既不是QTableWidget也不是QLineEdit，将它的子控件加入队列
+                    const auto children = currentWidget->children();
+                    for (QObject *child : children) {
+                        QWidget *childWidget = qobject_cast<QWidget*>(child);
+                        if (childWidget) {
+                            queue.enqueue(childWidget);
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    // 使用定义的Lambda表达式从该窗口控件开始递归清空所有QTableWidget
+    clearAllWidgets(ui->page_prj_info);
 }
 
 #pragma endregion }
@@ -1533,6 +1840,12 @@ void Widget::on_close_clicked()//点击关闭按钮
 /**************树列表************/
 void Widget::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous)
 {
+    if(ProjectManager::getInstance().getPrjID().trimmed().isEmpty())
+    {
+        QMessageBox::critical(this, "错误", "当前未打开任何项目");
+        return;
+    }
+
     if(current == item_prj_info)     //工程信息
     {
         ui->stackedWidget->setCurrentWidget(ui->page_prj_info);

@@ -22,6 +22,9 @@ public slots:
     void onRevise() override;
     void onInput() override;
     void onOutput() override;
+    // Widget_base_inputTable interface
+public:
+    void loadComponentToTable() override;
 private:
     void mergeCells(int startRow);
 };

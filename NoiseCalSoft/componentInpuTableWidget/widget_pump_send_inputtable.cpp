@@ -1,6 +1,7 @@
 #include "widget_pump_send_inputtable.h"
 #include "ui_widget_pump_send_inputtable.h"
 #include "inputDialog/dialog_pump_send.h"
+#include <QQueue>
 
 Widget_Pump_Send_inputTable::Widget_Pump_Send_inputTable(QWidget *parent) :
     Widget_base_inputTable(parent),
@@ -168,8 +169,6 @@ void Widget_Pump_Send_inputTable::onRevise()
         QCheckBox* checkBox = widget ? qobject_cast<QCheckBox*>(widget) : nullptr;
         if(checkBox && checkBox->isChecked())
         {
-            // 获取UUID，假设它在最后一列
-            QString UUID = currentTableWidget->item(row, currentTableWidget->columnCount() - 1)->text();
             // 调用通用的修订函数，传入正确的类型参数
             componentRevision<PumpSend, Dialog_pump_send>(tableWidgets, currentTableWidget, row, typeName);
         }
@@ -205,6 +204,69 @@ void Widget_Pump_Send_inputTable::on_pushButton_send_clicked()
         child->setCurrentIndex(1);
         ui->pushButton_send->setStyleSheet("QPushButton { background-color: #E0EEF9; }");
         ui->pushButton_pump->setStyleSheet("QPushButton { background-color: white; }");
+    }
+}
+
+void Widget_Pump_Send_inputTable::clearTableFuc()
+{
+    // 定义一个Lambda表达式用于递归清空QTableWidgets
+    std::function<void(QWidget*)> clearAllTableWidgets = [&](QWidget* parent) {
+        if (!parent) return;
+
+        // 创建一个队列用于广度优先搜索
+        QQueue<QWidget*> queue;
+        queue.enqueue(parent);
+
+        while (!queue.isEmpty()) {
+            QWidget* currentWidget = queue.dequeue();
+
+            // 尝试将当前控件转换为QTableWidget
+            QTableWidget *tableWidget = qobject_cast<QTableWidget*>(currentWidget);
+            if (tableWidget) {
+                // 如果转换成功，清空QTableWidget
+                tableWidget->setRowCount(0);
+                tableWidget->clearContents(); // 清空内容但保留列头
+            } else {
+                // 如果当前控件不是QTableWidget，将它的子控件加入队列
+                const auto children = currentWidget->children();
+                for (QObject *child : children) {
+                    QWidget *childWidget = qobject_cast<QWidget*>(child);
+                    if (childWidget) {
+                        queue.enqueue(childWidget);
+                    }
+                }
+            }
+        }
+    };
+
+    // 使用定义的Lambda表达式从该窗口控件开始递归清空所有QTableWidget
+    clearAllTableWidgets(this);
+}
+
+void Widget_Pump_Send_inputTable::loadComponentToTable()
+{
+    // 从组件管理器获取所有可能相关的组件
+    auto componentList = ComponentManager::getInstance().getComponentsByType(component_type_name::PUMPSEND); // 假设"PumpSend"是通用类型标识符
+    for (const auto& component : componentList) {
+        if (auto specificComponent = dynamic_cast<PumpSend*>(component.data())) {
+            auto lists = specificComponent->getComponentDataAsStringList();
+            if (specificComponent->type_pump_or_send == "抽风头") {
+                // 假定lists中的数据已经正确分组对应噪声、衰减、反射
+                if (lists.size() >= 3) {
+                    // 添加数据到对应的表格
+                    addRowToTable(ui->tableWidget_noi_pump, lists[0]);
+                    addRowToTable(ui->tableWidget_atten_pump, lists[1]);
+                    addRowToTable(ui->tableWidget_refl_pump, lists[2]);
+                }
+            } else if (specificComponent->type_pump_or_send == "送风头") {
+                if (lists.size() >= 3) {
+                    // 添加数据到对应的表格
+                    addRowToTable(ui->tableWidget_noi_send, lists[0]);
+                    addRowToTable(ui->tableWidget_atten_send, lists[1]);
+                    addRowToTable(ui->tableWidget_refl_send, lists[2]);
+                }
+            }
+        }
     }
 }
 

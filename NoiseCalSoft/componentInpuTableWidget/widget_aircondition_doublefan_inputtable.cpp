@@ -60,6 +60,34 @@ void Widget_aircondition_doubleFan_inputTable::mergeCells(int startRow)
     tableWidget->setCellWidget(startRow, 0, widget);
 }
 
+void Widget_aircondition_doubleFan_inputTable::loadComponentToTable()
+{
+    // 首先清空表格
+    ui->tableWidget->setRowCount(0);
+
+    // 获取所有Aircondition组件
+    auto componentList = ComponentManager::getInstance().getComponentsByType(component_type_name::AIRCONDITION);
+    for (const auto& component : componentList) {
+        // 使用dynamic_cast尝试将ComponentBase转换为Aircondition指针
+        if (auto airconditionComponent = dynamic_cast<Aircondition*>(component.data())) {
+            // 确保fancount为2
+            if (airconditionComponent->fan_counts == 2) {
+                // 获取组件数据
+                auto lists = airconditionComponent->getComponentDataAsStringList();
+
+                // 添加数据到表格
+                int rowCount = ui->tableWidget->rowCount();
+                for (const auto& list : lists) {
+                    addRowToTable(ui->tableWidget, list);
+                }
+
+                // 合并单元格操作（根据你的逻辑合并）
+                mergeCells(rowCount);
+            }
+        }
+    }
+}
+
 void Widget_aircondition_doubleFan_inputTable::initTableWidget()
 {
     int colCount = 20;

@@ -82,5 +82,18 @@ void Widget_Reducer_inputTable::onInput()
 
 void Widget_Reducer_inputTable::onOutput()
 {
+    
+}
 
+void Widget_Reducer_inputTable::loadComponentToTable()
+{
+    auto componentList = ComponentManager::getInstance().getComponentsByType(component_type_name::REDUCER);
+    for (const auto& component : componentList) {
+        if (auto reducerComponent = dynamic_cast<Reducer*>(component.data())) {
+            auto lists = reducerComponent->getComponentDataAsStringList();
+            for (const auto& list : lists) {
+                addRowToTable(ui->tableWidget, list);
+            }
+        }
+    }
 }

@@ -39,6 +39,9 @@ public:
     void componentRevision(QVector<QTableWidget*> tableWidgets, QTableWidget *currentTableWidget, int row);
 
     virtual void initTableWidget() = 0;
+    virtual void clearTableFuc();
+    // 加载组件到表格的纯虚函数，需要在子类中实现
+    virtual void loadComponentToTable() = 0;
 
     void initialize() { initTableWidget(); };
 
@@ -49,6 +52,8 @@ public slots:
     virtual void onRevise() = 0;
     virtual void onInput() = 0;
     virtual void onOutput() = 0;
+    virtual void clearTable();
+    virtual void loadTable();
 
 protected:
     Ui::Widget_base_inputTable *ui;

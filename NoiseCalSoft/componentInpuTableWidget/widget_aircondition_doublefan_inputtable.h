@@ -25,6 +25,10 @@ public slots:
 
 private:
     void mergeCells(int startRow);
+
+    // Widget_base_inputTable interface
+public:
+    void loadComponentToTable() override;
 };
 
 #endif // WIDGET_AIRCONDITION_DOUBLEFAN_INPUTTABLE_H

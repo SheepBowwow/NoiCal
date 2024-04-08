@@ -67,8 +67,6 @@ void Widget_Rect_damper_inputTable::onRevise()
         QCheckBox* checkBox = widget ? qobject_cast<QCheckBox*>(widget) : nullptr;
         if(checkBox && checkBox->isChecked())
         {
-            // 获取UUID，假设它在最后一列
-            QString UUID = tableWidget->item(row, tableWidget->columnCount() - 1)->text();
             // 调用通用的修订函数，传入正确的类型参数
             componentRevision<Rect_damper, Dialog_rect_damper>(tableWidget, row);
         }
@@ -82,5 +80,18 @@ void Widget_Rect_damper_inputTable::onInput()
 
 void Widget_Rect_damper_inputTable::onOutput()
 {
+    
+}
 
+void Widget_Rect_damper_inputTable::loadComponentToTable()
+{
+    auto componentList = ComponentManager::getInstance().getComponentsByType(component_type_name::RECT_DAMPER);
+    for (const auto& component : componentList) {
+        if (auto damperComponent = dynamic_cast<Rect_damper*>(component.data())) {
+            auto lists = damperComponent->getComponentDataAsStringList();
+            for (const auto& list : lists) {
+                addRowToTable(ui->tableWidget, list);
+            }
+        }
+    }
 }

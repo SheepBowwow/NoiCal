@@ -114,5 +114,26 @@ void Widget_Disp_vent_terminal_inputTable::onInput()
 
 void Widget_Disp_vent_terminal_inputTable::onOutput()
 {
+    
+}
 
+void Widget_Disp_vent_terminal_inputTable::loadComponentToTable()
+{
+    // 从组件管理器获取所有的分散通风末端组件
+    auto componentList = ComponentManager::getInstance().getComponentsByType(component_type_name::DISP_VENT_TERMINAL);
+    for (const auto& component : componentList) {
+        // 动态转换以确保组件类型正确
+        if (auto dispVentTerminalComponent = dynamic_cast<Disp_vent_terminal*>(component.data())) {
+            // 直接从组件获取数据
+            auto lists = dispVentTerminalComponent->getComponentDataAsStringList();
+
+            // 检查lists是否有足够的数据填充到三个表格中
+            if (lists.size() >= 3) {
+                // 使用通用函数添加行到每个表格
+                addRowToTable(ui->tableWidget_noi, lists[0]);
+                addRowToTable(ui->tableWidget_atten, lists[1]);
+                addRowToTable(ui->tableWidget_refl, lists[2]);
+            }
+        }
+    }
 }

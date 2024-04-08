@@ -81,5 +81,18 @@ void Widget_Tee_inputTable::onInput()
 
 void Widget_Tee_inputTable::onOutput()
 {
+    
+}
 
+void Widget_Tee_inputTable::loadComponentToTable()
+{
+    auto componentList = ComponentManager::getInstance().getComponentsByType(component_type_name::TEE);
+    for (const auto& component : componentList) {
+        if (auto teeComponent = dynamic_cast<Tee*>(component.data())) {
+            auto lists = teeComponent->getComponentDataAsStringList();
+            for (const auto& list : lists) {
+                addRowToTable(ui->tableWidget, list);
+            }
+        }
+    }
 }

@@ -26,7 +26,7 @@ bool addOrUpdateTeeToDatabase(const ComponentBase& component, QSqlDatabase& db, 
 bool addOrUpdatePipeToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update = false);
 bool addOrUpdateElbowToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update = false);
 bool addOrUpdateReducerToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update = false);
-bool addSilencerToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update = false);
+bool addOrUpdateSilencerToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update = false);
 
 }
 

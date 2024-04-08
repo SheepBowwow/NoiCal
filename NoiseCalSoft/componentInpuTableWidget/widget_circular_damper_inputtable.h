@@ -22,6 +22,10 @@ public slots:
     void onRevise() override;
     void onInput() override;
     void onOutput() override;
+
+    // Widget_base_inputTable interface
+public:
+    void loadComponentToTable() override;
 };
 
 #endif // WIDGET_CIRCULAR_DAMPER_INPUTTABLE_H

@@ -24,6 +24,10 @@ public slots:
     void onOutput() override;
 private:
     void mergeCells(int startRow);
+
+    // Widget_base_inputTable interface
+public:
+    void loadComponentToTable() override;
 };
 
 #endif // WIDGET_FAN_INPUTTABLE_H

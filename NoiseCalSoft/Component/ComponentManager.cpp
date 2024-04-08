@@ -8,23 +8,18 @@
  * @param component
  * @param update
  */
-void ComponentManager::addComponent(const QSharedPointer<ComponentBase> &component, bool update)
+void ComponentManager::addComponent(const QSharedPointer<ComponentBase> &component, bool updateOrLoad)
 {
-    if(!DatabaseManager::getInstance().isProjectExist(ProjectManager::getInstance().getPrjID()))
-    {
-        qDebug() << "还未创建项目" << endl;
-        return;
-    }
-
     components[component->UUID] = component;
     componentsByType[component->typeName()].append(component);
 
-    if(!update)
+    if(!updateOrLoad)
     {
         // 查找并尝试执行添加到数据库的函数
         const auto& addFuncMap = DatabaseManager::getInstance().getComponentAddFuncMap();
         // 然后在这个引用上调用 find()
         auto addFunc = addFuncMap.find(component->typeName());
+        qDebug() << addFunc.key();
         // 检查是否找到并尝试执行添加到数据库的函数
         if (addFunc != addFuncMap.end() && addFunc.value()(*component)) {
             qDebug() << component->typeName() << "added to database successfully.";
@@ -82,4 +77,17 @@ bool ComponentManager::updateComponent(const QString &uuid, const QSharedPointer
     }
 
     return true;
+}
+
+void ComponentManager::clearCurrentPrjComponents()
+{
+    this->components.clear();
+    this->componentsByType.clear();
+}
+
+void ComponentManager::loadComponentToHash()
+{
+    DatabaseManager::getInstance().loadComponentsFromDatabase();
+
+    emit loadComponentsDone();
 }

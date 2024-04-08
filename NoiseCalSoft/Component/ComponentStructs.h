@@ -6,6 +6,9 @@
 #include <array>
 #include <memory>
 #include <QUuid>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QSqlRecord>
 
 using std::array;
 using std::unique_ptr;
@@ -41,6 +44,7 @@ public:
     QString data_source;    //来源
 
     virtual QString typeName() const = 0;
+    virtual QList<QStringList> getComponentDataAsStringList() const = 0;
 
     // 构造函数
     ComponentBase(const QString& model, const QString& brand, const QString& table_id,
@@ -60,6 +64,46 @@ public:
     {
         this->table_id = table_id;
     }
+
+    array<QString, 9> deserializeNoise(const QString& jsonString) {
+        array<QString, 9> noiseArray;
+        noiseArray.fill(""); // 使用空字符串初始化数组
+
+        QJsonDocument doc = QJsonDocument::fromJson(jsonString.toUtf8());
+        if (!doc.isNull() && doc.isArray()) {
+            QJsonArray jsonArray = doc.array();
+            int index = 0;
+            for (const auto& value : jsonArray) {
+                if (index >= noiseArray.size()) {
+                    break; // 防止数组越界
+                }
+                noiseArray[index] = value.toString();
+                ++index;
+            }
+        }
+
+        return noiseArray;
+    }
+
+    array<QString, 8> deserializeAtten(const QString& jsonString) {
+        array<QString, 8> attenArray;
+        attenArray.fill(""); // 使用空字符串初始化数组
+
+        QJsonDocument doc = QJsonDocument::fromJson(jsonString.toUtf8());
+        if (!doc.isNull() && doc.isArray()) {
+            QJsonArray jsonArray = doc.array();
+            int index = 0;
+            for (const auto& value : jsonArray) {
+                if (index >= attenArray.size()) {
+                    break; // 防止数组越界
+                }
+                attenArray[index] = value.toString();
+                ++index;
+            }
+        }
+
+        return attenArray;
+    }
 };
 
 class Terminal : public ComponentBase
@@ -76,6 +120,7 @@ public:
     QString refl_data_source;    //来源
 
     virtual QString typeName() const = 0;
+    virtual QList<QStringList> getComponentDataAsStringList() const = 0;
 
     Terminal() = default;
 
@@ -114,6 +159,8 @@ public:
     array<QString, 9> noi;  // 噪音
 
     virtual QString typeName() const = 0;
+    virtual QList<QStringList> getComponentDataAsStringList() const = 0;
+
     Valve() = default;
 
     Valve(const QString& model, const QString& brand, const QString& table_id,
@@ -145,6 +192,8 @@ public:
     array<QString, 8> atten;  //衰减
 
     virtual QString typeName() const = 0;
+    virtual QList<QStringList> getComponentDataAsStringList() const = 0;
+
     Branch() = default;
 
     // 构造函数，包含atten数组参数
@@ -177,6 +226,19 @@ typedef struct Fan : ComponentBase
     array<QString, 9> noi_in;      //送风机进口噪音
     array<QString, 9> noi_out;     //送风机出口噪音
 
+    Fan(const QSqlRecord& record) {
+        this->model = record.value("model").toString();
+        this->brand = record.value("brand").toString();
+        this->table_id = record.value("table_id").toString();
+        this->UUID = record.value("UUID").toString();
+        this->data_source = record.value("data_source").toString();
+        this->number = record.value("number").toString();
+        this->air_volume = record.value("air_volume").toString();
+        this->static_pressure = record.value("static_pressure").toString();
+        this->noi_in = deserializeNoise(record.value("noise_in_json").toString());
+        this->noi_out = deserializeNoise(record.value("noise_out_json").toString());
+    }
+
     // 构造函数，包含noi_in和noi_out数组参数
     Fan(const QString& model, const QString& brand, const QString& table_id,
         const QString& UUID, const QString& data_source, const QString& number,
@@ -208,6 +270,52 @@ public:
     QString typeName() const override{
         return component_type_name::FAN;
     }
+
+    // ComponentBase interface
+public:
+    QList<QStringList> getComponentDataAsStringList() const override
+    {
+        QList<QStringList> dataLists;
+        QStringList data_in = {
+            table_id,
+            number,
+            model,
+            brand,
+            air_volume,
+            static_pressure,
+            "进口",
+        };
+
+        for (const auto& noi_value : noi_in) {
+            data_in.push_back(noi_value);
+        }
+
+        data_in.push_back(data_source);
+        data_in.push_back(UUID);
+
+        QStringList data_out = {
+            table_id,
+            number,
+            model,
+            brand,
+            air_volume,
+            static_pressure,
+            "出口",
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : noi_out) {
+            data_out.push_back(noi_value);
+        }
+
+        data_out.push_back(data_source);
+        data_out.push_back(UUID);
+
+        dataLists.append(data_in);
+        dataLists.append(data_out);
+
+        return dataLists;
+    }
 }Fan;
 
 typedef struct FanCoil : ComponentBase
@@ -220,6 +328,26 @@ typedef struct FanCoil : ComponentBase
 
     // 默认构造函数
     FanCoil() = default;
+
+    FanCoil(const QSqlRecord& record) : ComponentBase() {
+        // Base class member variables
+        this->model = record.value("model").toString();
+        this->brand = record.value("brand").toString();
+        this->table_id = record.value("table_id").toString();
+        this->UUID = record.value("UUID").toString();
+        this->data_source = record.value("data_source").toString();
+
+        // FanCoil specific member variables
+        this->air_volume = record.value("air_volume").toString();
+        this->static_pressure = record.value("static_pressure").toString();
+
+        // Handle noise data (assuming `deserializeNoise` function exists)
+        QString noiseInJson = record.value("noise_in_json").toString();
+        this->noi_in = deserializeNoise(noiseInJson);
+
+        QString noiseOutJson = record.value("noise_out_json").toString();
+        this->noi_out = deserializeNoise(noiseOutJson);
+    }
 
     // 包含所有成员变量的构造函数
     FanCoil(const QString& model, const QString& brand, const QString& table_id,
@@ -248,6 +376,52 @@ public:
     QString typeName() const override{
         return component_type_name::FANCOIL;
     }
+
+    // ComponentBase interface
+public:
+    QList<QStringList> getComponentDataAsStringList() const override
+    {
+        QList<QStringList> dataLists;
+        QStringList data_in = {
+            table_id,
+            type,
+            model,
+            brand,
+            air_volume,
+            static_pressure,
+            "进口"
+        };
+
+        for (const auto& noi_value : noi_in) {
+            data_in.push_back(noi_value);
+        }
+
+        data_in.push_back(data_source);
+        data_in.push_back(UUID);
+
+        QStringList data_out = {
+            table_id,
+            type,
+            model,
+            brand,
+            air_volume,
+            static_pressure,
+            "出口"
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : noi_out) {
+            data_out.push_back(noi_value);
+        }
+
+        data_out.push_back(data_source);
+        data_out.push_back(UUID);
+
+        dataLists.append(data_in);
+        dataLists.append(data_out);
+
+        return dataLists;
+    }
 } FanCoil;
 
 typedef struct Aircondition : ComponentBase
@@ -269,6 +443,41 @@ typedef struct Aircondition : ComponentBase
 
     // 默认构造函数
     Aircondition() = default;
+
+    Aircondition(const QSqlRecord& record) : ComponentBase() {
+        // Base class member variables
+        this->model = record.value("model").toString();
+        this->brand = record.value("brand").toString();
+        this->table_id = record.value("table_id").toString();
+        this->UUID = record.value("UUID").toString();
+        this->data_source = record.value("data_source").toString();
+
+        // Aircondition specific member variables
+        this->fan_counts = record.value("fan_counts").toInt();
+        this->send_number = record.value("send_number").toString();
+        this->send_air_volume = record.value("send_air_volume").toString();
+        this->send_static_pressure = record.value("send_static_pressure").toString();
+        this->exhaust_number = record.value("exhaust_number").toString();
+        this->exhaust_air_volume = record.value("exhaust_air_volume").toString();
+        this->exhaust_static_pressure = record.value("exhaust_static_pressure").toString();
+
+        // Handle noise data (assuming `deserializeNoise` function exists)
+        QString noiseSendInJson = record.value("noise_send_in_json").toString();
+        this->noi_send_in = deserializeNoise(noiseSendInJson);
+
+        QString noiseSendOutJson = record.value("noise_send_out_json").toString();
+        this->noi_send_out = deserializeNoise(noiseSendOutJson);
+
+        QString noiseExhaustInJson = record.value("noise_exhaust_in_json").toString();
+        if (!noiseExhaustInJson.isEmpty()) {
+            this->noi_exhaust_in = deserializeNoise(noiseExhaustInJson);
+        }
+
+        QString noiseExhaustOutJson = record.value("noise_exhaust_out_json").toString();
+        if (!noiseExhaustOutJson.isEmpty()) {
+            this->noi_exhaust_out = deserializeNoise(noiseExhaustOutJson);
+        }
+    }
 
     // 包含所有成员变量的构造函数
     Aircondition(const QString& model, const QString& brand, const QString& table_id,
@@ -319,6 +528,95 @@ public:
     QString typeName() const override{
         return component_type_name::AIRCONDITION;
     }
+    // ComponentBase interface
+public:
+    QList<QStringList> getComponentDataAsStringList() const override
+    {
+        QList<QStringList> dataLists;
+
+        QStringList data_send_in = {
+            table_id,
+            send_number,
+            model,
+            brand,
+            send_air_volume,
+            send_static_pressure,
+            "送风机",
+            "进口",
+        };
+
+        for (const auto& noi_value : noi_send_in) {
+            data_send_in.push_back(noi_value);
+        }
+
+        data_send_in.push_back(data_source);
+        data_send_in.push_back(UUID);
+
+        QStringList data_send_out = {
+            table_id,
+            send_number,
+            model,
+            brand,
+            send_air_volume,
+            send_static_pressure,
+            "送风机",
+            "出口",
+        };
+
+        for (const auto& noi_value : noi_send_out) {
+            data_send_out.push_back(noi_value);
+        }
+
+        data_send_out.push_back(data_source);
+        data_send_out.push_back(UUID);
+
+        dataLists.append(data_send_in);
+        dataLists.append(data_send_out);
+
+        if(fan_counts == 2)
+        {
+            QStringList data_exhaust_in = {
+                table_id,
+                exhaust_number,
+                model,
+                brand,
+                exhaust_air_volume,
+                exhaust_static_pressure,
+                "排风机",
+                "进口",
+            };
+
+            for (const auto& noi_value : noi_exhaust_in) {
+                data_exhaust_in.push_back(noi_value);
+            }
+
+            data_exhaust_in.push_back(data_source);
+            data_exhaust_in.push_back(UUID);
+
+            QStringList data_exhaust_out = {
+                table_id,
+                exhaust_number,
+                model,
+                brand,
+                exhaust_air_volume,
+                exhaust_static_pressure,
+                "排风机",
+                "出口",
+            };
+
+            for (const auto& noi_value : noi_exhaust_out) {
+                data_exhaust_out.push_back(noi_value);
+            }
+
+            data_exhaust_out.push_back(data_source);
+            data_exhaust_out.push_back(UUID);
+
+            dataLists.append(data_exhaust_in);
+            dataLists.append(data_exhaust_out);
+        }
+
+        return dataLists;
+    }
 } Aircondition;
 
 typedef struct VAV_terminal : Valve
@@ -327,6 +625,24 @@ typedef struct VAV_terminal : Valve
 
     // 使用Valve的默认构造函数并初始化number
     VAV_terminal() = default;
+
+    VAV_terminal(const QSqlRecord& record) {
+        // Base class member variables (inherited from ComponentBase)
+        this->model = record.value("model").toString();
+        this->brand = record.value("brand").toString();
+        this->table_id = record.value("table_id").toString();
+        this->UUID = record.value("UUID").toString();
+        this->data_source = record.value("data_source").toString();
+
+        // VAV_terminal specific member variables
+        this->number = record.value("number").toString();
+        this->angle = record.value("valve_angle").toDouble(); // Assuming real is stored as double in QSqlRecord
+        this->air_volume = record.value("air_volume").toDouble(); // Assuming real is stored as double in QSqlRecord
+
+        // Handle noise data (assuming `deserializeNoise` function exists)
+        QString noiseJson = record.value("noise_json").toString();
+        this->noi = deserializeNoise(noiseJson);
+    }
 
     // 使用Valve的全部参数构造函数初始化基类部分，并初始化number
     VAV_terminal(const QString& model, const QString& brand, const QString& table_id,
@@ -348,6 +664,32 @@ public:
     QString typeName() const override{
         return component_type_name::VAV_TERMINAL;
     }
+
+    // ComponentBase interface
+public:
+    QList<QStringList> getComponentDataAsStringList() const override
+    {
+        QList<QStringList> dataLists;
+        QStringList data = {
+            table_id,
+            number,
+            model,
+            brand,
+            angle,
+            air_volume
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : noi) {
+            data.push_back(noi_value);
+        }
+
+        data.push_back(data_source);
+        data.push_back(UUID);
+
+        dataLists.append(data);
+        return dataLists;
+    }
 }VAV_terminal;
 
 typedef struct Circular_damper : Valve
@@ -356,6 +698,24 @@ typedef struct Circular_damper : Valve
     QString diameter;
 
     Circular_damper() : Valve() {}
+
+    Circular_damper(const QSqlRecord& record) {
+        // Base class member variables (inherited from ComponentBase)
+        this->model = record.value("model").toString();
+        this->brand = record.value("brand").toString();
+        this->table_id = record.value("table_id").toString();
+        this->UUID = record.value("UUID").toString();
+        this->data_source = record.value("data_source").toString();
+
+        // VAV_terminal specific member variables
+        this->diameter = record.value("size").toString();
+        this->angle = record.value("valve_angle").toDouble(); // Assuming real is stored as double in QSqlRecord
+        this->air_volume = record.value("air_volume").toDouble(); // Assuming real is stored as double in QSqlRecord
+
+        // Handle noise data (assuming `deserializeNoise` function exists)
+        QString noiseJson = record.value("noise_json").toString();
+        this->noi = deserializeNoise(noiseJson);
+    }
 
     // 使用Valve的全部参数构造函数初始化基类部分
     Circular_damper(const QString& model, const QString& brand, const QString& table_id,
@@ -380,6 +740,33 @@ public:
     QString typeName() const override{
         return component_type_name::CIRCULAR_DAMPER;
     }
+
+    // ComponentBase interface
+public:
+    QList<QStringList> getComponentDataAsStringList() const override
+    {
+        QList<QStringList> dataLists;
+        QStringList data = {
+            table_id,
+            model,
+            brand,
+            diameter,
+            air_volume,
+            angle,
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : noi) {
+            data.push_back(noi_value);
+        }
+
+        data.push_back(data_source);
+        data.push_back(UUID);
+
+        dataLists.append(data);
+
+        return dataLists;
+    }
 }Circular_damper;
 
 typedef struct Rect_damper : Valve
@@ -391,6 +778,24 @@ typedef struct Rect_damper : Valve
     QString size;
 
     Rect_damper() : Valve() {}
+
+    Rect_damper(const QSqlRecord& record) {
+        // Base class member variables (inherited from ComponentBase)
+        this->model = record.value("model").toString();
+        this->brand = record.value("brand").toString();
+        this->table_id = record.value("table_id").toString();
+        this->UUID = record.value("UUID").toString();
+        this->data_source = record.value("data_source").toString();
+
+        // VAV_terminal specific member variables
+        this->size = record.value("size").toString();
+        this->angle = record.value("valve_angle").toDouble(); // Assuming real is stored as double in QSqlRecord
+        this->air_volume = record.value("air_volume").toDouble(); // Assuming real is stored as double in QSqlRecord
+
+        // Handle noise data (assuming `deserializeNoise` function exists)
+        QString noiseJson = record.value("noise_json").toString();
+        this->noi = deserializeNoise(noiseJson);
+    }
 
     // 使用Valve的全部参数构造函数初始化基类部分
     Rect_damper(const QString& model, const QString& brand, const QString& table_id,
@@ -413,6 +818,33 @@ public:
     QString typeName() const override{
         return component_type_name::RECT_DAMPER;
     }
+
+    // ComponentBase interface
+public:
+    QList<QStringList> getComponentDataAsStringList() const override
+    {
+        QList<QStringList> dataLists;
+        QStringList data = {
+            table_id,
+            model,
+            brand,
+            length + "x" + width,
+            air_volume,
+            angle,
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : noi) {
+            data.push_back(noi_value);
+        }
+
+        data.push_back(data_source);
+        data.push_back(UUID);
+
+        dataLists.append(data);
+
+        return dataLists;
+    }
 }Rect_damper;
 
 typedef struct AirDiff : Terminal
@@ -424,6 +856,37 @@ typedef struct AirDiff : Terminal
 
     AirDiff() = default;
 
+    AirDiff(const QSqlRecord& record) {
+        // Base class member variables (inherited from ComponentBase)
+        this->table_id = record.value("table_id").toString();
+        this->UUID = record.value("UUID").toString();
+
+        // Terminal specific member variables
+        this->terminal_shape = record.value("terminal_shape").toString();
+        this->terminal_size = record.value("terminal_size").toString();
+        this->noi_data_source = record.value("noi_data_source").toString();
+        this->atten_data_source = record.value("atten_data_source").toString();
+        this->refl_data_source = record.value("refl_data_source").toString();
+
+        // Handle noise data (assuming `deserializeNoise` function exists)
+        QString noiseJson = record.value("noise_json").toString();
+        this->noi = deserializeNoise(noiseJson);
+
+        // Handle attenuation data (assuming `deserializeAttenuation` function exists)
+        QString attenJson = record.value("atten_json").toString();
+        this->atten = deserializeAtten(attenJson);
+
+        // Handle reflection data (assuming `deserializeReflection` function exists)
+        QString reflJson = record.value("refl_json").toString();
+        this->refl = deserializeAtten(reflJson);
+
+        // AirDiff specific member variables
+        this->air_distributor_model = record.value("air_distributor_model").toString();
+        this->air_distributor_brand = record.value("air_distributor_brand").toString();
+        this->diffuser_model = record.value("diffuser_model").toString();
+        this->diffuser_brand = record.value("diffuser_brand").toString();
+    }
+
     AirDiff(const QString& model, const QString& brand, const QString& table_id,
             const QString& UUID, const QString& noi_data_source,
             const QString& atten_data_source, const QString& refl_data_source,
@@ -432,7 +895,7 @@ typedef struct AirDiff : Terminal
             const array<QString, 8>& refl,
             const QString& air_distributor_model, const QString& air_distributor_brand,
             const QString& diffuser_model, const QString& diffuser_brand)
-        : Terminal(model, brand, table_id, noi_data_source, atten_data_source, refl_data_source, UUID,
+        : Terminal(model, brand, table_id, UUID, noi_data_source, atten_data_source, refl_data_source,
                    shape, terminal_size, noi, atten, refl),
           air_distributor_model(air_distributor_model),
           air_distributor_brand(air_distributor_brand),
@@ -448,7 +911,7 @@ typedef struct AirDiff : Terminal
             const QString& shape, const QString& terminal_size,
             const QString& air_distributor_model, const QString& air_distributor_brand,
             const QString& diffuser_model, const QString& diffuser_brand)
-        : Terminal(model, brand, table_id, noi_data_source, atten_data_source, refl_data_source, UUID,
+        : Terminal(model, brand, table_id, UUID, noi_data_source, atten_data_source, refl_data_source,
                    shape, terminal_size),
           air_distributor_model(air_distributor_model),
           air_distributor_brand(air_distributor_brand),
@@ -462,6 +925,72 @@ public:
     QString typeName() const override{
         return component_type_name::AIRDIFF;
     }
+    // ComponentBase interface
+public:
+    QList<QStringList> getComponentDataAsStringList() const override
+    {
+        QList<QStringList> dataLists;
+        QStringList data_noise = {
+            table_id,
+            air_distributor_model,
+            air_distributor_brand,
+            diffuser_model,
+            diffuser_brand,
+            terminal_shape,
+            terminal_size,
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : noi) {
+            data_noise.push_back(noi_value);
+        }
+
+        data_noise.push_back(noi_data_source);
+        data_noise.push_back(UUID);
+
+
+        QStringList data_atten = {
+            table_id,
+            air_distributor_model,
+            air_distributor_brand,
+            diffuser_model,
+            diffuser_brand,
+            terminal_shape,
+            terminal_size,
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : atten) {
+            data_atten.push_back(noi_value);
+        }
+
+        data_atten.push_back(atten_data_source);
+        data_atten.push_back(UUID);
+
+        QStringList data_refl = {
+            table_id,
+            air_distributor_model,
+            air_distributor_brand,
+            diffuser_model,
+            diffuser_brand,
+            terminal_shape,
+            terminal_size,
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : refl) {
+            data_refl.push_back(noi_value);
+        }
+
+        data_refl.push_back(refl_data_source);
+        data_refl.push_back(UUID);
+
+        dataLists.append(data_noise);
+        dataLists.append(data_atten);
+        dataLists.append(data_refl);
+
+        return dataLists;
+    }
 }AirDiff;
 
 typedef struct PumpSend : Terminal
@@ -470,6 +999,37 @@ typedef struct PumpSend : Terminal
 
     PumpSend() = default;
 
+    PumpSend(const QSqlRecord& record) {
+        // Base class member variables (inherited from ComponentBase)
+        this->model = record.value("model").toString();
+        this->brand = record.value("brand").toString();
+        this->table_id = record.value("table_id").toString();
+        this->UUID = record.value("UUID").toString();
+
+        // Terminal specific member variables
+        this->terminal_shape = record.value("terminal_shape").toString();
+        this->terminal_size = record.value("terminal_size").toString();
+        this->noi_data_source = record.value("noi_data_source").toString();
+        this->atten_data_source = record.value("atten_data_source").toString();
+        this->refl_data_source = record.value("refl_data_source").toString();
+
+
+        // Handle noise data (assuming `deserializeNoise` function exists)
+        QString noiseJson = record.value("noise_json").toString();
+        this->noi = deserializeNoise(noiseJson);
+
+        // Handle attenuation data (assuming `deserializeAttenuation` function exists)
+        QString attenJson = record.value("atten_json").toString();
+        this->atten = deserializeAtten(attenJson);
+
+        // Handle reflection data (assuming `deserializeReflection` function exists)
+        QString reflJson = record.value("refl_json").toString();
+        this->refl = deserializeAtten(reflJson);
+
+        // PumpSend specific member variable
+        this->type_pump_or_send = record.value("type_pump_or_send").toString();
+    }
+
     PumpSend(const QString& model, const QString& brand, const QString& table_id,
              const QString& UUID, const QString& noi_data_source,
              const QString& atten_data_source, const QString& refl_data_source,
@@ -477,7 +1037,7 @@ typedef struct PumpSend : Terminal
              const array<QString, 9>& noi, const array<QString, 8>& atten,
              const array<QString, 8>& refl,
              const QString& type)
-        : Terminal(model, brand, table_id, noi_data_source, atten_data_source, refl_data_source, UUID,
+        : Terminal(model, brand, table_id, UUID, noi_data_source, atten_data_source, refl_data_source,
                    shape, size, noi, atten, refl),
           type_pump_or_send(type)
     {
@@ -489,7 +1049,7 @@ typedef struct PumpSend : Terminal
              const QString& atten_data_source, const QString& refl_data_source,
              const QString& shape, const QString& size,
              const QString& type)
-        : Terminal(model, brand, table_id, noi_data_source, atten_data_source, refl_data_source, UUID,
+        : Terminal(model, brand, table_id, UUID, noi_data_source, atten_data_source, refl_data_source,
                    shape, size),
           type_pump_or_send(type)
     {
@@ -499,6 +1059,66 @@ typedef struct PumpSend : Terminal
 public:
     QString typeName() const override{
         return component_type_name::PUMPSEND;
+    }
+
+    // ComponentBase interface
+public:
+    QList<QStringList> getComponentDataAsStringList() const override
+    {
+        QList<QStringList> dataLists;
+        QStringList data_noise = {
+            table_id,
+            model,
+            brand,
+            terminal_shape,
+            terminal_size
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : noi) {
+            data_noise.append(noi_value);
+        }
+
+        data_noise.append(noi_data_source);
+        data_noise.append(UUID);
+
+        QStringList data_atten = {
+            table_id,
+            model,
+            brand,
+            terminal_shape,
+            terminal_size
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : atten) {
+            data_atten.append(noi_value);
+        }
+
+        data_atten.append(atten_data_source);
+        data_atten.append(UUID);
+
+        QStringList data_refl = {
+            table_id,
+            model,
+            brand,
+            terminal_shape,
+            terminal_size
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : refl) {
+            data_refl.push_back(noi_value);
+        }
+
+        data_refl.push_back(refl_data_source);
+        data_refl.push_back(UUID);
+
+        dataLists.append(data_noise);
+        dataLists.append(data_atten);
+        dataLists.append(data_refl);
+
+        return dataLists;
     }
 }PumpSend;
 
@@ -511,6 +1131,37 @@ typedef struct StaticBox_grille : Terminal
 
     StaticBox_grille() = default;
 
+    StaticBox_grille(const QSqlRecord& record) {
+        // Base class member variables (inherited from ComponentBase)
+        this->table_id = record.value("table_id").toString();
+        this->UUID = record.value("UUID").toString();
+
+        // Terminal specific member variables
+        this->terminal_shape = record.value("terminal_shape").toString();
+        this->terminal_size = record.value("terminal_size").toString();
+        this->noi_data_source = record.value("noi_data_source").toString();
+        this->atten_data_source = record.value("atten_data_source").toString();
+        this->refl_data_source = record.value("refl_data_source").toString();
+
+        // Handle noise data (assuming `deserializeNoise` function exists)
+        QString noiseJson = record.value("noise_json").toString();
+        this->noi = deserializeNoise(noiseJson);
+
+        // Handle attenuation data (assuming `deserializeAttenuation` function exists)
+        QString attenJson = record.value("atten_json").toString();
+        this->atten = deserializeAtten(attenJson);
+
+        // Handle reflection data (assuming `deserializeReflection` function exists)
+        QString reflJson = record.value("refl_json").toString();
+        this->refl = deserializeAtten(reflJson);
+
+        // StaticBox_grille specific member variables
+        this->staticBox_model = record.value("staticBox_model").toString();
+        this->staticBox_brand = record.value("staticBox_brand").toString();
+        this->grille_model = record.value("grille_model").toString();
+        this->grille_brand = record.value("grille_brand").toString();
+    }
+
     StaticBox_grille(const QString& model, const QString& brand, const QString& table_id,
                      const QString& UUID, const QString& noi_data_source,
                      const QString& atten_data_source, const QString& refl_data_source,
@@ -519,7 +1170,7 @@ typedef struct StaticBox_grille : Terminal
                      const array<QString, 8>& refl,
                      const QString& staticBox_model, const QString& staticBox_brand,
                      const QString& grille_model, const QString& grille_brand)
-        : Terminal(model, brand, table_id, noi_data_source, atten_data_source, refl_data_source, UUID,
+        : Terminal(model, brand, table_id, UUID, noi_data_source, atten_data_source, refl_data_source,
                    shape, size, noi, atten, refl),
           staticBox_model(staticBox_model), staticBox_brand(staticBox_brand),
           grille_model(grille_model), grille_brand(grille_brand)
@@ -533,7 +1184,7 @@ typedef struct StaticBox_grille : Terminal
                      const QString& shape, const QString& size,
                      const QString& staticBox_model, const QString& staticBox_brand,
                      const QString& grille_model, const QString& grille_brand)
-        : Terminal(model, brand, table_id, noi_data_source, atten_data_source, refl_data_source, UUID,
+        : Terminal(model, brand, table_id, UUID, noi_data_source, atten_data_source, refl_data_source,
                    shape, size),
           staticBox_model(staticBox_model), staticBox_brand(staticBox_brand),
           grille_model(grille_model), grille_brand(grille_brand)
@@ -545,11 +1196,105 @@ public:
     QString typeName() const override{
         return component_type_name::STATICBOX_GRILLE;
     }
+
+    // ComponentBase interface
+public:
+    QList<QStringList> getComponentDataAsStringList() const override
+    {
+        QList<QStringList> dataLists;
+        QStringList data_noise = {
+            table_id,
+            staticBox_model,
+            staticBox_brand,
+            grille_model,
+            grille_brand,
+            terminal_shape,
+            terminal_size,
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : noi) {
+            data_noise.push_back(noi_value);
+        }
+
+        data_noise.push_back(noi_data_source);
+        data_noise.push_back(UUID);
+
+
+        QStringList data_atten = {
+            table_id,
+            staticBox_model,
+            staticBox_brand,
+            grille_model,
+            grille_brand,
+            terminal_shape,
+            terminal_size,
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : atten) {
+            data_atten.push_back(noi_value);
+        }
+
+        data_atten.push_back(atten_data_source);
+        data_atten.push_back(UUID);
+
+        QStringList data_refl = {
+            table_id,
+            staticBox_model,
+            staticBox_brand,
+            grille_model,
+            grille_brand,
+            terminal_shape,
+            terminal_size,
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : refl) {
+            data_refl.push_back(noi_value);
+        }
+
+        data_refl.push_back(refl_data_source);
+        data_refl.push_back(UUID);
+
+        dataLists.append(data_noise);
+        dataLists.append(data_atten);
+        dataLists.append(data_refl);
+
+        return dataLists;
+    }
 }StaticBox_grille;
 
 typedef struct Disp_vent_terminal : Terminal
 {
     Disp_vent_terminal() = default;
+
+    Disp_vent_terminal(const QSqlRecord& record) {
+        // Base class member variables (inherited from ComponentBase)
+        this->model = record.value("model").toString();
+        this->brand = record.value("brand").toString();
+        this->table_id = record.value("table_id").toString();
+        this->UUID = record.value("UUID").toString();
+
+        // Terminal specific member variables
+        this->terminal_shape = record.value("terminal_shape").toString();
+        this->terminal_size = record.value("terminal_size").toString();
+        this->noi_data_source = record.value("noi_data_source").toString();
+        this->atten_data_source = record.value("atten_data_source").toString();
+        this->refl_data_source = record.value("refl_data_source").toString();
+
+        // Handle noise data (assuming `deserializeNoise` function exists)
+        QString noiseJson = record.value("noise_json").toString();
+        this->noi = deserializeNoise(noiseJson);
+
+        // Handle attenuation data (assuming `deserializeAttenuation` function exists)
+        QString attenJson = record.value("atten_json").toString();
+        this->atten = deserializeAtten(attenJson);
+
+        // Handle reflection data (assuming `deserializeReflection` function exists)
+        QString reflJson = record.value("refl_json").toString();
+        this->refl = deserializeAtten(reflJson);
+    }
 
     Disp_vent_terminal(const QString& model, const QString& brand, const QString& table_id,
                        const QString& UUID, const QString& noi_data_source,
@@ -557,7 +1302,7 @@ typedef struct Disp_vent_terminal : Terminal
                        const QString& shape, const QString& size,
                        const array<QString, 9>& noi, const array<QString, 8>& atten,
                        const array<QString, 8>& refl)
-        : Terminal(model, brand, table_id, noi_data_source, atten_data_source, refl_data_source, UUID,
+        : Terminal(model, brand, table_id, UUID, noi_data_source, atten_data_source, refl_data_source,
                    shape, size, noi, atten, refl)
     {
     }
@@ -567,7 +1312,7 @@ typedef struct Disp_vent_terminal : Terminal
                        const QString& UUID, const QString& noi_data_source,
                        const QString& atten_data_source, const QString& refl_data_source,
                        const QString& shape, const QString& size)
-        : Terminal(model, brand, table_id, noi_data_source, atten_data_source, refl_data_source, UUID,
+        : Terminal(model, brand, table_id, UUID, noi_data_source, atten_data_source, refl_data_source,
                    shape, size)
     {
     }
@@ -577,6 +1322,68 @@ public:
     QString typeName() const override{
         return component_type_name::DISP_VENT_TERMINAL;
     }
+
+    // ComponentBase interface
+public:
+    QList<QStringList> getComponentDataAsStringList() const override
+    {
+        QList<QStringList> dataLists;
+        QStringList data_noise = {
+            table_id,
+            model,
+            brand,
+            terminal_shape,
+            terminal_size
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : noi) {
+            data_noise.push_back(noi_value);
+        }
+
+        data_noise.push_back(noi_data_source);
+        data_noise.push_back(UUID);
+
+
+        QStringList data_atten = {
+            table_id,
+            model,
+            brand,
+            terminal_shape,
+            terminal_size
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : atten) {
+            data_atten.push_back(noi_value);
+        }
+
+        data_atten.push_back(atten_data_source);
+        data_atten.push_back(UUID);
+
+        QStringList data_refl = {
+            table_id,
+            model,
+            brand,
+            terminal_shape,
+            terminal_size
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : refl) {
+            data_refl.push_back(noi_value);
+        }
+
+        data_refl.push_back(refl_data_source);
+        data_refl.push_back(UUID);
+
+        dataLists.append(data_noise);
+        dataLists.append(data_atten);
+        dataLists.append(data_refl);
+
+        return dataLists;
+
+    }
 }Disp_vent_terminal;
 
 typedef struct Other_send_terminal : Terminal
@@ -585,6 +1392,36 @@ typedef struct Other_send_terminal : Terminal
 
     Other_send_terminal() = default;
 
+    Other_send_terminal(const QSqlRecord& record) {
+        // Base class member variables (inherited from ComponentBase)
+        this->model = record.value("model").toString();
+        this->brand = record.value("brand").toString();
+        this->table_id = record.value("table_id").toString();
+        this->UUID = record.value("UUID").toString();
+
+        // Terminal specific member variables
+        this->terminal_shape = record.value("terminal_shape").toString();
+        this->terminal_size = record.value("terminal_size").toString();
+        this->noi_data_source = record.value("noi_data_source").toString();
+        this->atten_data_source = record.value("atten_data_source").toString();
+        this->refl_data_source = record.value("refl_data_source").toString();
+
+        // Handle noise data (assuming `deserializeNoise` function exists)
+        QString noiseJson = record.value("noise_json").toString();
+        this->noi = deserializeNoise(noiseJson);
+
+        // Handle attenuation data (assuming `deserializeAttenuation` function exists)
+        QString attenJson = record.value("atten_json").toString();
+        this->atten = deserializeAtten(attenJson);
+
+        // Handle reflection data (assuming `deserializeReflection` function exists)
+        QString reflJson = record.value("refl_json").toString();
+        this->refl = deserializeAtten(reflJson);
+
+        // Other_send_terminal specific member variables
+        this->remark = record.value("remark").toString();
+    }
+
     Other_send_terminal(const QString& model, const QString& brand, const QString& table_id,
                         const QString& UUID, const QString& noi_data_source,
                         const QString& atten_data_source, const QString& refl_data_source,
@@ -592,7 +1429,7 @@ typedef struct Other_send_terminal : Terminal
                         const array<QString, 9>& noi, const array<QString, 8>& atten,
                         const array<QString, 8>& refl,
                         const QString& remark)
-        : Terminal(model, brand, table_id, noi_data_source, atten_data_source, refl_data_source, UUID,
+        : Terminal(model, brand, table_id, UUID, noi_data_source, atten_data_source, refl_data_source,
                    shape, size, noi, atten, refl),
           remark(remark)
     {
@@ -604,7 +1441,7 @@ typedef struct Other_send_terminal : Terminal
                         const QString& atten_data_source, const QString& refl_data_source,
                         const QString& shape, const QString& size,
                         QString remark)
-        : Terminal(model, brand, table_id, noi_data_source, atten_data_source, refl_data_source, UUID,
+        : Terminal(model, brand, table_id, UUID, noi_data_source, atten_data_source, refl_data_source,
                    shape, size),
           remark(remark)
     {
@@ -615,12 +1452,93 @@ public:
     QString typeName() const override{
         return component_type_name::OTHER_SEND_TERMINAL;
     }
+
+    // ComponentBase interface
+public:
+    QList<QStringList> getComponentDataAsStringList() const override
+    {
+        QList<QStringList> dataLists;
+        QStringList data_noise = {
+            table_id,
+            model,
+            brand,
+            terminal_shape,
+            terminal_size
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : noi) {
+            data_noise.push_back(noi_value);
+        }
+
+        data_noise.push_back(noi_data_source);
+        data_noise.push_back(remark);
+        data_noise.push_back(UUID);
+
+
+        QStringList data_atten = {
+            table_id,
+            model,
+            brand,
+            terminal_shape,
+            terminal_size
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : atten) {
+            data_atten.push_back(noi_value);
+        }
+
+        data_atten.push_back(atten_data_source);
+        data_atten.push_back(remark);
+        data_atten.push_back(UUID);
+
+        QStringList data_refl = {
+            table_id,
+            model,
+            brand,
+            terminal_shape,
+            terminal_size
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : refl) {
+            data_refl.push_back(noi_value);
+        }
+
+        data_refl.push_back(refl_data_source);
+        data_refl.push_back(remark);
+        data_refl.push_back(UUID);
+
+        dataLists.append(data_noise);
+        dataLists.append(data_atten);
+        dataLists.append(data_refl);
+
+        return dataLists;
+    }
 }Other_send_terminal;
 
 typedef struct Static_box : Branch
 {
     // 默认构造函数
     Static_box() = default;
+
+    Static_box(const QSqlRecord& record) {
+        // Base class member variables (inherited from ComponentBase)
+        this->model = record.value("model").toString();
+        this->brand = record.value("brand").toString();
+        this->table_id = record.value("table_id").toString();
+        this->UUID = record.value("UUID").toString();
+        this->data_source = record.value("data_source").toString();
+
+        // Branch specific member variables
+        this->q1 = record.value("q1").toDouble(); // Assuming real is stored as double in QSqlRecord
+        this->q = record.value("q").toDouble(); // Assuming real is stored as double in QSqlRecord
+
+        // Handle attenuation data (assuming `deserializeAttenuation` function exists)
+        QString attenJson = record.value("atten_json").toString();
+        this->atten = deserializeAtten(attenJson);
+    }
 
     // 构造函数，包含atten数组参数
     Static_box(const QString& model, const QString& brand, const QString& table_id,
@@ -639,6 +1557,31 @@ public:
     QString typeName() const override{
         return component_type_name::STATICBOX;
     }
+
+    // ComponentBase interface
+public:
+    QList<QStringList> getComponentDataAsStringList() const override
+    {
+        QList<QStringList> dataLists;
+        QStringList data = {
+            table_id,
+            model,
+            brand,
+            q,
+            q1
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : atten) {
+            data.push_back(noi_value);
+        }
+
+        data.push_back(data_source);
+        data.push_back(UUID);
+
+        dataLists.append(data);
+        return dataLists;
+    }
 }Static_box;
 
 
@@ -646,6 +1589,23 @@ typedef struct Multi_ranc : Branch
 {
     // 默认构造函数
     Multi_ranc() = default;
+
+    Multi_ranc(const QSqlRecord& record) {
+        // Base class member variables (inherited from ComponentBase)
+        this->model = record.value("model").toString();
+        this->brand = record.value("brand").toString();
+        this->table_id = record.value("table_id").toString();
+        this->UUID = record.value("UUID").toString();
+        this->data_source = record.value("data_source").toString();
+
+        // Branch specific member variables
+        this->q1 = record.value("q1").toDouble(); // Assuming real is stored as double in QSqlRecord
+        this->q = record.value("q").toDouble(); // Assuming real is stored as double in QSqlRecord
+
+        // Handle attenuation data (assuming `deserializeAttenuation` function exists)
+        QString attenJson = record.value("atten_json").toString();
+        this->atten = deserializeAtten(attenJson);
+    }
 
     // 构造函数，包含atten数组参数
     Multi_ranc(const QString& model, const QString& brand, const QString& table_id,
@@ -664,12 +1624,54 @@ public:
     QString typeName() const override{
         return component_type_name::MULTI_RANC;
     }
+
+    // ComponentBase interface
+public:
+    QList<QStringList> getComponentDataAsStringList() const override
+    {
+        QList<QStringList> dataLists;
+        QStringList data = {
+            table_id,
+            model,
+            brand,
+            q,
+            q1
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : atten) {
+            data.push_back(noi_value);
+        }
+
+        data.push_back(data_source);
+        data.push_back(UUID);
+
+        dataLists.append(data);
+        return dataLists;
+    }
 }Multi_ranc;
 
 typedef struct Tee : Branch
 {
     // 默认构造函数
     Tee() = default;
+
+    Tee(const QSqlRecord& record) {
+        // Base class member variables (inherited from ComponentBase)
+        this->model = record.value("model").toString();
+        this->brand = record.value("brand").toString();
+        this->table_id = record.value("table_id").toString();
+        this->UUID = record.value("UUID").toString();
+        this->data_source = record.value("data_source").toString();
+
+        // Branch specific member variables
+        this->q1 = record.value("q1").toDouble(); // Assuming real is stored as double in QSqlRecord
+        this->q = record.value("q").toDouble(); // Assuming real is stored as double in QSqlRecord
+
+        // Handle attenuation data (assuming `deserializeAttenuation` function exists)
+        QString attenJson = record.value("atten_json").toString();
+        this->atten = deserializeAtten(attenJson);
+    }
 
     // 构造函数，包含atten数组参数
     Tee(const QString& model, const QString& brand, const QString& table_id,
@@ -688,6 +1690,31 @@ public:
     QString typeName() const override{
         return component_type_name::TEE;
     }
+
+    // ComponentBase interface
+public:
+    QList<QStringList> getComponentDataAsStringList() const override
+    {
+        QList<QStringList> dataLists;
+        QStringList data = {
+            table_id,
+            model,
+            brand,
+            q,
+            q1
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : atten) {
+            data.push_back(noi_value);
+        }
+
+        data.push_back(data_source);
+        data.push_back(UUID);
+
+        dataLists.append(data);
+        return dataLists;
+    }
 }Tee;
 
 typedef struct Pipe : ComponentBase
@@ -699,6 +1726,24 @@ typedef struct Pipe : ComponentBase
 
     // 默认构造函数
     Pipe() = default;
+
+    Pipe(const QSqlRecord& record) {
+        // Base class member variables (inherited from ComponentBase)
+        this->model = record.value("model").toString();
+        this->brand = record.value("brand").toString();
+        this->table_id = record.value("table_id").toString();
+        this->UUID = record.value("UUID").toString();
+        this->data_source = record.value("data_source").toString();
+
+        // Pipe specific member variables
+        this->pipe_shape = record.value("pipe_shape").toString();
+        this->size = record.value("size").toString();
+
+        // Handle attenuation data (assuming `deserializeAttenuation` function exists)
+        QString attenJson = record.value("atten_json").toString();
+        this->atten = deserializeAtten(attenJson);
+    }
+
 
     // 包含所有成员变量的构造函数
     Pipe(const QString& model, const QString& brand, const QString& table_id,
@@ -723,6 +1768,32 @@ public:
     QString typeName() const override{
         return component_type_name::PIPE;
     }
+
+    // ComponentBase interface
+public:
+    QList<QStringList> getComponentDataAsStringList() const override
+    {
+        QList<QStringList> dataLists;
+        QStringList data = {
+            table_id,
+            model,
+            brand,
+            pipe_shape,
+            size
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : atten) {
+            data.push_back(noi_value);
+        }
+
+        data.push_back(data_source);
+        data.push_back(UUID);
+
+        dataLists.append(data);
+
+        return dataLists;
+    }
 }Pipe;
 
 typedef struct Elbow : ComponentBase
@@ -733,6 +1804,23 @@ typedef struct Elbow : ComponentBase
 
     // 默认构造函数
     Elbow() = default;
+
+    Elbow(const QSqlRecord& record) {
+        // Base class member variables (inherited from ComponentBase)
+        this->model = record.value("model").toString();
+        this->brand = record.value("brand").toString();
+        this->table_id = record.value("table_id").toString();
+        this->UUID = record.value("UUID").toString();
+        this->data_source = record.value("data_source").toString();
+
+        // Elbow specific member variables
+        this->elbow_shape = record.value("elbow_shape").toString();
+        this->size = record.value("size").toString();
+
+        // Handle attenuation data (assuming `deserializeAttenuation` function exists)
+        QString attenJson = record.value("atten_json").toString();
+        this->atten = deserializeAtten(attenJson);
+    }
 
     // 包含所有成员变量的构造函数
     Elbow(const QString& model, const QString& brand, const QString& table_id,
@@ -757,6 +1845,31 @@ public:
     QString typeName() const override{
         return component_type_name::ELBOW;
     }
+
+    // ComponentBase interface
+public:
+    QList<QStringList> getComponentDataAsStringList() const override
+    {
+        QList<QStringList> dataLists;
+        QStringList data = {
+            table_id,
+            model,
+            brand,
+            elbow_shape,
+            size
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : atten) {
+            data.push_back(noi_value);
+        }
+
+        data.push_back(data_source);
+        data.push_back(UUID);
+
+        dataLists.append(data);
+        return dataLists;
+    }
 }Elbow;
 
 typedef struct Reducer : ComponentBase
@@ -768,6 +1881,24 @@ typedef struct Reducer : ComponentBase
 
     // 默认构造函数
     Reducer() = default;
+
+    Reducer(const QSqlRecord& record) {
+        // Base class member variables (inherited from ComponentBase)
+        this->model = record.value("model").toString();
+        this->brand = record.value("brand").toString();
+        this->table_id = record.value("table_id").toString();
+        this->UUID = record.value("UUID").toString();
+        this->data_source = record.value("data_source").toString();
+
+        // Reducer specific member variables
+        this->reducer_type = record.value("reducer_type").toString();
+        this->reducer_before_size = record.value("reducer_before_size").toString();
+        this->reducer_after_size = record.value("reducer_after_size").toString();
+
+        // Handle attenuation data (assuming `deserializeAttenuation` function exists)
+        QString attenJson = record.value("atten_json").toString();
+        this->atten = deserializeAtten(attenJson);
+    }
 
     // 包含所有成员变量的构造函数
     Reducer(const QString& model, const QString& brand, const QString& table_id,
@@ -793,6 +1924,32 @@ public:
     QString typeName() const override{
         return component_type_name::REDUCER;
     }
+
+    // ComponentBase interface
+public:
+    QList<QStringList> getComponentDataAsStringList() const override
+    {
+        QList<QStringList> dataLists;
+        QStringList data = {
+            table_id,
+            model,
+            brand,
+            reducer_type,
+            reducer_before_size,
+            reducer_after_size
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : atten) {
+            data.push_back(noi_value);
+        }
+
+        data.push_back(data_source);
+        data.push_back(UUID);
+
+        dataLists.append(data);
+        return dataLists;
+    }
 }Reducer;
 
 typedef struct Silencer : ComponentBase
@@ -802,6 +1959,22 @@ typedef struct Silencer : ComponentBase
 
     // 默认构造函数
     Silencer() = default;
+
+    Silencer(const QSqlRecord& record) {
+        // Base class member variables (inherited from ComponentBase)
+        this->model = record.value("model").toString();
+        this->brand = record.value("brand").toString();
+        this->table_id = record.value("table_id").toString();
+        this->UUID = record.value("UUID").toString();
+        this->data_source = record.value("data_source").toString();
+
+        // Silencer specific member variable
+        this->silencer_type = record.value("silencer_type").toString();
+
+        // Handle attenuation data (assuming `deserializeAttenuation` function exists)
+        QString attenJson = record.value("atten_json").toString();
+        this->atten = deserializeAtten(attenJson);
+    }
 
     // 包含所有成员变量的构造函数
     Silencer(const QString& model, const QString& brand, const QString& table_id,
@@ -822,6 +1995,29 @@ typedef struct Silencer : ComponentBase
 public:
     QString typeName() const override{
         return component_type_name::SILENCER;
+    }
+
+    // ComponentBase interface
+public:
+    QList<QStringList> getComponentDataAsStringList() const override
+    {
+        QList<QStringList> dataLists;
+        QStringList data = {
+            table_id,
+            model,
+            brand
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : atten) {
+            data.push_back(noi_value);
+        }
+
+        data.push_back(data_source);
+        data.push_back(UUID);
+
+        dataLists.append(data);
+        return dataLists;
     }
 }Silencer;
 

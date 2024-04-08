@@ -11,9 +11,11 @@
 #include <string>
 #include <regex>
 #include <QTableWidget>
+#include <QObject>
 
-class ComponentManager
+class ComponentManager : public QObject
 {
+    Q_OBJECT
 public:
     static ComponentManager& getInstance() {
         static ComponentManager instance; // 在首次调用时创建唯一实例
@@ -21,7 +23,7 @@ public:
     }
 
     // 添加组件
-    void addComponent(const QSharedPointer<ComponentBase>& component, bool update = false);
+    void addComponent(const QSharedPointer<ComponentBase>& component, bool updateOrLoad = false);
     // 删除组件
     bool removeComponent(const QString& uuid, bool update = false);
     // 查找组件
@@ -32,6 +34,13 @@ public:
 
     // 修改组件
     bool updateComponent(const QString& uuid, const QSharedPointer<ComponentBase>& newComponent);
+
+    void clearCurrentPrjComponents();
+
+    void loadComponentToHash();
+
+signals:
+    void loadComponentsDone();
 
 private:
     // 禁止通过构造函数和复制构造函数创建实例

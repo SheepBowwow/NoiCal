@@ -36,6 +36,15 @@ private slots:
     void on_pushButton_rect_clicked();
     void on_pushButton_circle_elbow_clicked();
     void on_pushButton_rect_elbow_clicked();
+
+    // Widget_base_inputTable interface
+public:
+    void clearTableFuc() override;
+
+
+    // Widget_base_inputTable interface
+public:
+    void loadComponentToTable() override;
 };
 
 #endif // WIDGET_SILENCER_INPUTTABLE_H

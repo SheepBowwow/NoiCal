@@ -66,8 +66,6 @@ void Widget_static_box_inputTable::onRevise()
         QCheckBox* checkBox = widget ? qobject_cast<QCheckBox*>(widget) : nullptr;
         if(checkBox && checkBox->isChecked())
         {
-            // 获取UUID，假设它在最后一列
-            QString UUID = tableWidget->item(row, tableWidget->columnCount() - 1)->text();
             // 调用通用的修订函数，传入正确的类型参数
             componentRevision<Static_box, Dialog_static_box>(tableWidget, row);
         }
@@ -81,5 +79,18 @@ void Widget_static_box_inputTable::onInput()
 
 void Widget_static_box_inputTable::onOutput()
 {
+    
+}
 
+void Widget_static_box_inputTable::loadComponentToTable()
+{
+    auto componentList = ComponentManager::getInstance().getComponentsByType(component_type_name::STATICBOX);
+    for (const auto& component : componentList) {
+        if (auto staticboxComponent = dynamic_cast<Static_box*>(component.data())) {
+            auto lists = staticboxComponent->getComponentDataAsStringList();
+            for (const auto& list : lists) {
+                addRowToTable(ui->tableWidget, list);
+            }
+        }
+    }
 }

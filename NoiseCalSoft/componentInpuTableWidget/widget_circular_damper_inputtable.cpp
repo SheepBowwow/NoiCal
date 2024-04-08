@@ -94,3 +94,16 @@ void Widget_Circular_damper_inputTable::onOutput()
 {
 
 }
+
+void Widget_Circular_damper_inputTable::loadComponentToTable()
+{
+    auto componentList = ComponentManager::getInstance().getComponentsByType(component_type_name::CIRCULAR_DAMPER);
+    for (const auto& component : componentList) {
+        if (auto damperComponent = dynamic_cast<Circular_damper*>(component.data())) {
+            auto lists = damperComponent->getComponentDataAsStringList();
+            for (const auto& list : lists) {
+                addRowToTable(ui->tableWidget, list);
+            }
+        }
+    }
+}

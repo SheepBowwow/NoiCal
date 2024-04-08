@@ -28,6 +28,15 @@ public slots:
     virtual void onRevise() = 0;
     virtual void onInput() = 0;
     virtual void onOutput() = 0;
+
+    // Widget_base_inputTable interface
+public:
+    void clearTableFuc() override;
+
+
+    // Widget_base_inputTable interface
+public:
+    void loadComponentToTable() override;
 };
 
 #endif // WIDGET_TERMINAL_BASE_INPUTTABLE_H

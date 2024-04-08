@@ -82,5 +82,18 @@ void Widget_Multi_ranc_inputTable::onInput()
 
 void Widget_Multi_ranc_inputTable::onOutput()
 {
+    
+}
 
+void Widget_Multi_ranc_inputTable::loadComponentToTable()
+{
+    auto componentList = ComponentManager::getInstance().getComponentsByType(component_type_name::MULTI_RANC);
+    for (const auto& component : componentList) {
+        if (auto multiRancComponent = dynamic_cast<Multi_ranc*>(component.data())) {
+            auto lists = multiRancComponent->getComponentDataAsStringList();
+            for (const auto& list : lists) {
+                addRowToTable(ui->tableWidget, list);
+            }
+        }
+    }
 }

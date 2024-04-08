@@ -45,6 +45,10 @@ public:
     void mousePressEvent(QMouseEvent *event);
     void keyPressEvent(QKeyEvent* e);
     bool eventFilter(QObject* obj, QEvent* event);
+    void setAttachmentTable();
+    void setDrawingTable();
+    void setNoiseLimit();
+    void setPrjBasicInfo();
 
 protected:
     void mouseMoveEvent(QMouseEvent *e);
@@ -122,6 +126,10 @@ private slots:
     void LoadExeclData(QTableWidget *table);
 
     void SaveExeclData(QTableWidget *table,QString component_name);
+
+    void clearTable();  //用于切换项目清理界面
+
+    void setBasicPageWhenSwitchPrj();   //切换项目时调用
 
 //    void on_pushButton_fanNoi_input_clicked();
 
@@ -204,6 +212,10 @@ private slots:
     void on_pushButton_noi_limit_save_clicked();
 
     void on_pushButton_project_attachment_del_clicked();
+
+    void on_pushButton_noi_limit_revise_clicked();
+
+    void on_pushButton_drawing_list_revise_clicked();
 
 private:
     Ui::Widget *ui;

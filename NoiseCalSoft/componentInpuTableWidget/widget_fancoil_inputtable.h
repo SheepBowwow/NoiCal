@@ -25,6 +25,10 @@ public slots:
     void onOutput() override;
 private:
     void mergeCells(int startRow);
+
+    // Widget_base_inputTable interface
+public:
+    void loadComponentToTable() override;
 };
 
 #endif // WIDGET_FANCOIL_INPUTTABLE_H

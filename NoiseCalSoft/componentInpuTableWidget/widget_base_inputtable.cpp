@@ -1,6 +1,9 @@
 #include "widget_base_inputtable.h"
 #include "ui_widget_base_inputtable.h"
 #include "globle_var.h"
+#include "project/projectmanager.h"
+#include "Component/ComponentManager.h"
+#include <QQueue>
 
 Widget_base_inputTable::Widget_base_inputTable(QWidget *parent,  bool setupUi) :
     QWidget(parent),
@@ -9,6 +12,9 @@ Widget_base_inputTable::Widget_base_inputTable(QWidget *parent,  bool setupUi) :
     if (setupUi) {
         ui->setupUi(this);
     }
+
+    connect(&ProjectManager::getInstance(), &ProjectManager::clearTable, this, &Widget_base_inputTable::clearTable);
+    connect(&ComponentManager::getInstance(),&ComponentManager::loadComponentsDone, this, &Widget_base_inputTable::loadTable);
 }
 
 Widget_base_inputTable::~Widget_base_inputTable()
@@ -20,6 +26,52 @@ void Widget_base_inputTable::setTitle(const QString& title)
 {
     ui->label_title->setText(title);
     ui->label_title->adjustSize();
+}
+
+void Widget_base_inputTable::clearTableFuc()
+{
+    // 定义一个Lambda表达式用于递归清空QTableWidgets
+    std::function<void(QWidget*)> clearAllTableWidgets = [&](QWidget* parent) {
+        if (!parent) return;
+
+        // 创建一个队列用于广度优先搜索
+        QQueue<QWidget*> queue;
+        queue.enqueue(parent);
+
+        while (!queue.isEmpty()) {
+            QWidget* currentWidget = queue.dequeue();
+
+            // 尝试将当前控件转换为QTableWidget
+            QTableWidget *tableWidget = qobject_cast<QTableWidget*>(currentWidget);
+            if (tableWidget) {
+                // 如果转换成功，清空QTableWidget
+                tableWidget->setRowCount(0);
+                tableWidget->clearContents(); // 清空内容但保留列头
+            } else {
+                // 如果当前控件不是QTableWidget，将它的子控件加入队列
+                const auto children = currentWidget->children();
+                for (QObject *child : children) {
+                    QWidget *childWidget = qobject_cast<QWidget*>(child);
+                    if (childWidget) {
+                        queue.enqueue(childWidget);
+                    }
+                }
+            }
+        }
+    };
+
+    // 使用定义的Lambda表达式从该窗口控件开始递归清空所有QTableWidget
+    clearAllTableWidgets(this);
+}
+
+void Widget_base_inputTable::clearTable()
+{
+    clearTableFuc();
+}
+
+void Widget_base_inputTable::loadTable()
+{
+    loadComponentToTable();
 }
 
 /**
@@ -37,7 +89,8 @@ void Widget_base_inputTable::setTableWidget(QTableWidget *tableWidget, const QSt
     tableWidget->setRowCount(0);
     tableWidget->setHorizontalHeaderLabels(headerText);
     tableWidget->verticalHeader()->setVisible(false);
-
+    tableWidget->setSelectionMode(QAbstractItemView::NoSelection);
+    tableWidget->setFocusPolicy(Qt::NoFocus);
     int totalWidth = 0;
     for (int i = 0; i < colCount; ++i)
     {

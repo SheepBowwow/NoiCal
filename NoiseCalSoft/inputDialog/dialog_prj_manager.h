@@ -26,11 +26,17 @@ private slots:
 
     void on_pushButton_create_prj_clicked();
 
+
+    void on_pushButton_switch_clicked();
+
+    void on_pushButton_del_clicked();
+
 private:
     QPoint last;
     int canmove=0;
 private:
     Ui::Dialog_prj_manager *ui;
+    void initComboBox();
 };
 
 #endif // DIALOG_PRJ_MANAGER_H
