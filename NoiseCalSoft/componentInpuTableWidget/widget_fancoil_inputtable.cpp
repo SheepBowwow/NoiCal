@@ -72,7 +72,7 @@ void Widget_fanCoil_inputTable::onAdd()
 {
     //修改
     QTableWidget *tableWidget = ui->tableWidget;
-    Dialog_fanCoil *dialog = new Dialog_fanCoil(this);
+    Dialog_fanCoil *dialog = new Dialog_fanCoil(nullptr);
     QSharedPointer<FanCoil> component;
 
     int rowCount = tableWidget->rowCount(); //获取当前行数

@@ -32,7 +32,7 @@ void Widget_Elbow_inputTable::initTableWidget()
 void Widget_Elbow_inputTable::onAdd()
 {
     QTableWidget *tableWidget = ui->tableWidget;
-    Dialog_elbow *dialog = new Dialog_elbow(this);
+    Dialog_elbow *dialog = new Dialog_elbow(nullptr);
     QSharedPointer<Elbow> component;
 
     if (dialog->exec() == QDialog::Accepted) {

@@ -36,7 +36,7 @@ void Widget_VAV_terminal_inputTable::initTableWidget()
 void Widget_VAV_terminal_inputTable::onAdd()
 {
     QTableWidget *tableWidget = ui->tableWidget;
-    Dialog_VAV_terminal *dialog = new Dialog_VAV_terminal(this);
+    Dialog_VAV_terminal *dialog = new Dialog_VAV_terminal(nullptr);
     QSharedPointer<VAV_terminal> component;
 
     if (dialog->exec() == QDialog::Accepted) {

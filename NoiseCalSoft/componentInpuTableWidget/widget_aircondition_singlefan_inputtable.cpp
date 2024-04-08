@@ -73,7 +73,7 @@ void Widget_aircondition_singleFan_inputTable::initTableWidget()
 void Widget_aircondition_singleFan_inputTable::onAdd()
 {
     QTableWidget *tableWidget = ui->tableWidget;
-    Dialog_aircondition *dialog =  new Dialog_aircondition(this,-1, 1);
+    Dialog_aircondition *dialog =  new Dialog_aircondition(nullptr,-1, 1);
     QSharedPointer<Aircondition> component;
 
     int rowCount = tableWidget->rowCount(); //获取当前行数

@@ -2139,7 +2139,7 @@ color: white;
     <widget class="QComboBox" name="comboBox_noi_data_source">
      <property name="geometry">
       <rect>
-       <x>150</x>
+       <x>140</x>
        <y>167</y>
        <width>91</width>
        <height>31</height>

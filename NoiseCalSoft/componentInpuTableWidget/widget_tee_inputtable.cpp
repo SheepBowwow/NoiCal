@@ -31,7 +31,7 @@ void Widget_Tee_inputTable::initTableWidget()
 void Widget_Tee_inputTable::onAdd()
 {
     QTableWidget *tableWidget = ui->tableWidget;
-    Dialog_tee *dialog = new Dialog_tee(this);
+    Dialog_tee *dialog = new Dialog_tee(nullptr);
     QSharedPointer<Tee> component;
 
     if (dialog->exec() == QDialog::Accepted) {

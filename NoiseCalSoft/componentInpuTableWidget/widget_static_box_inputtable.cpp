@@ -31,7 +31,7 @@ void Widget_static_box_inputTable::initTableWidget()
 void Widget_static_box_inputTable::onAdd()
 {
     QTableWidget *tableWidget = ui->tableWidget;
-    Dialog_static_box *dialog = new Dialog_static_box(this);
+    Dialog_static_box *dialog = new Dialog_static_box(nullptr);
     QSharedPointer<Static_box> component;
 
     if (dialog->exec() == QDialog::Accepted) {

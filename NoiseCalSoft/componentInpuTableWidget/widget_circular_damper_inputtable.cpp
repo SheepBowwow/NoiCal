@@ -35,7 +35,7 @@ void Widget_Circular_damper_inputTable::initTableWidget()
 void Widget_Circular_damper_inputTable::onAdd()
 {
     QTableWidget *tableWidget = ui->tableWidget;
-    Dialog_circular_damper *dialog = new Dialog_circular_damper(this);
+    Dialog_circular_damper *dialog = new Dialog_circular_damper(nullptr);
     QSharedPointer<Circular_damper> component;
 
     if (dialog->exec() == QDialog::Accepted) {
