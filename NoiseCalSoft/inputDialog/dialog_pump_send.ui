@@ -2320,6 +2320,45 @@ color : rgb(105, 105, 105);
    </widget>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit_model</tabstop>
+  <tabstop>lineEdit_brand</tabstop>
+  <tabstop>lineEdit_63</tabstop>
+  <tabstop>lineEdit_125</tabstop>
+  <tabstop>lineEdit_250</tabstop>
+  <tabstop>lineEdit_500</tabstop>
+  <tabstop>lineEdit_1k</tabstop>
+  <tabstop>lineEdit_2k</tabstop>
+  <tabstop>lineEdit_4k</tabstop>
+  <tabstop>lineEdit_8k</tabstop>
+  <tabstop>lineEdit_total</tabstop>
+  <tabstop>lineEdit_63_atten</tabstop>
+  <tabstop>lineEdit_125_atten</tabstop>
+  <tabstop>lineEdit_250_atten</tabstop>
+  <tabstop>lineEdit_500_atten</tabstop>
+  <tabstop>lineEdit_1k_atten</tabstop>
+  <tabstop>lineEdit_2k_atten</tabstop>
+  <tabstop>lineEdit_4k_atten</tabstop>
+  <tabstop>lineEdit_8k_atten</tabstop>
+  <tabstop>lineEdit_63_refl</tabstop>
+  <tabstop>lineEdit_125_refl</tabstop>
+  <tabstop>lineEdit_250_refl</tabstop>
+  <tabstop>lineEdit_500_refl</tabstop>
+  <tabstop>lineEdit_1k_refl</tabstop>
+  <tabstop>lineEdit_2k_refl</tabstop>
+  <tabstop>lineEdit_4k_refl</tabstop>
+  <tabstop>lineEdit_8k_refl</tabstop>
+  <tabstop>comboBox_refl_data_source</tabstop>
+  <tabstop>comboBox_noi_data_source</tabstop>
+  <tabstop>comboBox_atten_data_source</tabstop>
+  <tabstop>radioButton_circle</tabstop>
+  <tabstop>radioButton_rect</tabstop>
+  <tabstop>close</tabstop>
+  <tabstop>pushButton_confirm</tabstop>
+  <tabstop>lineEdit_width</tabstop>
+  <tabstop>lineEdit_length</tabstop>
+  <tabstop>lineEdit_diameter</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

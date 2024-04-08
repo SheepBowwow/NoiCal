@@ -1452,26 +1452,6 @@ color: white;
       <string>来源</string>
      </property>
     </widget>
-    <widget class="QComboBox" name="comboBox_data_source">
-     <property name="geometry">
-      <rect>
-       <x>470</x>
-       <y>80</y>
-       <width>101</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <item>
-      <property name="text">
-       <string>厂家信息</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>设计预估</string>
-      </property>
-     </item>
-    </widget>
     <widget class="QLabel" name="label_30">
      <property name="geometry">
       <rect>
@@ -1496,6 +1476,32 @@ color: white;
      <property name="alignment">
       <set>Qt::AlignCenter</set>
      </property>
+    </widget>
+    <widget class="QComboBox" name="comboBox_data_source">
+     <property name="geometry">
+      <rect>
+       <x>470</x>
+       <y>80</y>
+       <width>101</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei</family>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+     <item>
+      <property name="text">
+       <string>厂家信息</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>设计预估</string>
+      </property>
+     </item>
     </widget>
    </widget>
    <widget class="QLabel" name="label_15">
@@ -1560,6 +1566,34 @@ background-color : rgb(105, 105, 105);
    </widget>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit_number</tabstop>
+  <tabstop>lineEdit_model</tabstop>
+  <tabstop>lineEdit_brand</tabstop>
+  <tabstop>lineEdit_static_pressure</tabstop>
+  <tabstop>lineEdit_air_volume</tabstop>
+  <tabstop>lineEdit_in_63</tabstop>
+  <tabstop>lineEdit_in_125</tabstop>
+  <tabstop>lineEdit_in_250</tabstop>
+  <tabstop>lineEdit_in_500</tabstop>
+  <tabstop>lineEdit_in_1k</tabstop>
+  <tabstop>lineEdit_in_2k</tabstop>
+  <tabstop>lineEdit_in_4k</tabstop>
+  <tabstop>lineEdit_in_8k</tabstop>
+  <tabstop>lineEdit_out_63</tabstop>
+  <tabstop>lineEdit_out_125</tabstop>
+  <tabstop>lineEdit_out_250</tabstop>
+  <tabstop>lineEdit_out_500</tabstop>
+  <tabstop>lineEdit_out_1k</tabstop>
+  <tabstop>lineEdit_out_2k</tabstop>
+  <tabstop>lineEdit_out_4k</tabstop>
+  <tabstop>lineEdit_out_8k</tabstop>
+  <tabstop>comboBox_data_source</tabstop>
+  <tabstop>lineEdit_in_total</tabstop>
+  <tabstop>lineEdit_out_total</tabstop>
+  <tabstop>close</tabstop>
+  <tabstop>pushButton_confirm</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

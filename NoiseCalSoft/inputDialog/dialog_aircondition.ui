@@ -3074,6 +3074,55 @@ background-color: rgb(157, 196, 229);
    </widget>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit_model</tabstop>
+  <tabstop>lineEdit_brand</tabstop>
+  <tabstop>lineEdit_send_number</tabstop>
+  <tabstop>lineEdit_send_air_volume</tabstop>
+  <tabstop>lineEdit_send_static_pressure</tabstop>
+  <tabstop>lineEdit_send_in_63</tabstop>
+  <tabstop>lineEdit_send_in_125</tabstop>
+  <tabstop>lineEdit_send_in_250</tabstop>
+  <tabstop>lineEdit_send_in_500</tabstop>
+  <tabstop>lineEdit_send_in_1k</tabstop>
+  <tabstop>lineEdit_send_in_2k</tabstop>
+  <tabstop>lineEdit_send_in_4k</tabstop>
+  <tabstop>lineEdit_send_in_8k</tabstop>
+  <tabstop>lineEdit_send_in_total</tabstop>
+  <tabstop>lineEdit_send_out_63</tabstop>
+  <tabstop>lineEdit_send_out_125</tabstop>
+  <tabstop>lineEdit_send_out_250</tabstop>
+  <tabstop>lineEdit_send_out_500</tabstop>
+  <tabstop>lineEdit_send_out_1k</tabstop>
+  <tabstop>lineEdit_send_out_2k</tabstop>
+  <tabstop>lineEdit_send_out_4k</tabstop>
+  <tabstop>lineEdit_send_out_8k</tabstop>
+  <tabstop>lineEdit_exhaust_number</tabstop>
+  <tabstop>lineEdit_exhaust_air_volume</tabstop>
+  <tabstop>lineEdit_exhaust_static_pressure</tabstop>
+  <tabstop>lineEdit_exhaust_in_63</tabstop>
+  <tabstop>lineEdit_exhaust_in_125</tabstop>
+  <tabstop>lineEdit_exhaust_in_250</tabstop>
+  <tabstop>lineEdit_exhaust_in_500</tabstop>
+  <tabstop>lineEdit_exhaust_in_1k</tabstop>
+  <tabstop>lineEdit_exhaust_in_2k</tabstop>
+  <tabstop>lineEdit_exhaust_in_4k</tabstop>
+  <tabstop>lineEdit_exhaust_in_8k</tabstop>
+  <tabstop>lineEdit_exhaust_in_total</tabstop>
+  <tabstop>lineEdit_exhaust_out_63</tabstop>
+  <tabstop>lineEdit_exhaust_out_125</tabstop>
+  <tabstop>lineEdit_exhaust_out_250</tabstop>
+  <tabstop>lineEdit_exhaust_out_500</tabstop>
+  <tabstop>lineEdit_exhaust_out_1k</tabstop>
+  <tabstop>lineEdit_exhaust_out_2k</tabstop>
+  <tabstop>lineEdit_exhaust_out_4k</tabstop>
+  <tabstop>lineEdit_exhaust_out_8k</tabstop>
+  <tabstop>comboBox_data_source</tabstop>
+  <tabstop>pushButton_confirm</tabstop>
+  <tabstop>lineEdit_send_out_total</tabstop>
+  <tabstop>lineEdit_exhaust_out_total</tabstop>
+  <tabstop>close</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

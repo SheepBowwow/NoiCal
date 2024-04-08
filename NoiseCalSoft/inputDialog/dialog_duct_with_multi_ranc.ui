@@ -922,6 +922,23 @@ color : rgb(105, 105, 105);
    </widget>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit_model</tabstop>
+  <tabstop>lineEdit_brand</tabstop>
+  <tabstop>lineEdit_q</tabstop>
+  <tabstop>lineEdit_q1</tabstop>
+  <tabstop>lineEdit_63</tabstop>
+  <tabstop>lineEdit_125</tabstop>
+  <tabstop>lineEdit_250</tabstop>
+  <tabstop>lineEdit_500</tabstop>
+  <tabstop>lineEdit_1k</tabstop>
+  <tabstop>lineEdit_2k</tabstop>
+  <tabstop>lineEdit_4k</tabstop>
+  <tabstop>lineEdit_8k</tabstop>
+  <tabstop>close</tabstop>
+  <tabstop>comboBox_data_source</tabstop>
+  <tabstop>pushButton_confirm</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -1213,6 +1213,28 @@ border: 1px solid #000000;
    </widget>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit_model</tabstop>
+  <tabstop>lineEdit_brand</tabstop>
+  <tabstop>lineEdit_63</tabstop>
+  <tabstop>lineEdit_125</tabstop>
+  <tabstop>lineEdit_250</tabstop>
+  <tabstop>lineEdit_500</tabstop>
+  <tabstop>lineEdit_1k</tabstop>
+  <tabstop>lineEdit_2k</tabstop>
+  <tabstop>lineEdit_4k</tabstop>
+  <tabstop>lineEdit_8k</tabstop>
+  <tabstop>radioButton_unlined</tabstop>
+  <tabstop>lineEdit_diameter</tabstop>
+  <tabstop>pushButton_confirm</tabstop>
+  <tabstop>close</tabstop>
+  <tabstop>pushButton</tabstop>
+  <tabstop>comboBox_data_source</tabstop>
+  <tabstop>radioButton_circle</tabstop>
+  <tabstop>radioButton_rect</tabstop>
+  <tabstop>lineEdit_width</tabstop>
+  <tabstop>radioButton_lined</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

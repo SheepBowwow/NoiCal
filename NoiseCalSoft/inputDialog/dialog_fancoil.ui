@@ -1553,6 +1553,34 @@ background-color : rgb(105, 105, 105);
    </widget>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit_type</tabstop>
+  <tabstop>lineEdit_model</tabstop>
+  <tabstop>lineEdit_brand</tabstop>
+  <tabstop>lineEdit_static_pressure</tabstop>
+  <tabstop>lineEdit_air_volume</tabstop>
+  <tabstop>lineEdit_in_63</tabstop>
+  <tabstop>lineEdit_in_125</tabstop>
+  <tabstop>lineEdit_in_250</tabstop>
+  <tabstop>lineEdit_in_500</tabstop>
+  <tabstop>lineEdit_in_1k</tabstop>
+  <tabstop>lineEdit_in_2k</tabstop>
+  <tabstop>lineEdit_in_4k</tabstop>
+  <tabstop>lineEdit_in_8k</tabstop>
+  <tabstop>lineEdit_in_total</tabstop>
+  <tabstop>lineEdit_out_63</tabstop>
+  <tabstop>lineEdit_out_125</tabstop>
+  <tabstop>lineEdit_out_250</tabstop>
+  <tabstop>lineEdit_out_500</tabstop>
+  <tabstop>lineEdit_out_1k</tabstop>
+  <tabstop>lineEdit_out_2k</tabstop>
+  <tabstop>lineEdit_out_4k</tabstop>
+  <tabstop>lineEdit_out_8k</tabstop>
+  <tabstop>lineEdit_out_total</tabstop>
+  <tabstop>close</tabstop>
+  <tabstop>comboBox_data_source</tabstop>
+  <tabstop>pushButton_confirm</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

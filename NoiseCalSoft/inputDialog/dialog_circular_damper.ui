@@ -1098,10 +1098,10 @@ background-color: rgb(157, 196, 229);
   <zorder>widget</zorder>
  </widget>
  <tabstops>
+  <tabstop>lineEdit_model</tabstop>
+  <tabstop>lineEdit_brand</tabstop>
   <tabstop>lineEdit_diameter</tabstop>
   <tabstop>lineEdit_air_volume</tabstop>
-  <tabstop>comboBox_angle</tabstop>
-  <tabstop>lineEdit_brand</tabstop>
   <tabstop>lineEdit_63</tabstop>
   <tabstop>lineEdit_125</tabstop>
   <tabstop>lineEdit_250</tabstop>
@@ -1113,6 +1113,8 @@ background-color: rgb(157, 196, 229);
   <tabstop>lineEdit_total</tabstop>
   <tabstop>pushButton_confirm</tabstop>
   <tabstop>close</tabstop>
+  <tabstop>comboBox_angle</tabstop>
+  <tabstop>comboBox_data_source</tabstop>
  </tabstops>
  <resources/>
  <connections/>

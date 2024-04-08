@@ -1272,6 +1272,8 @@ color : rgb(105, 105, 105);
   </widget>
  </widget>
  <tabstops>
+  <tabstop>lineEdit_model</tabstop>
+  <tabstop>lineEdit_brand</tabstop>
   <tabstop>lineEdit_63</tabstop>
   <tabstop>lineEdit_125</tabstop>
   <tabstop>lineEdit_250</tabstop>
@@ -1280,8 +1282,19 @@ color : rgb(105, 105, 105);
   <tabstop>lineEdit_2k</tabstop>
   <tabstop>lineEdit_4k</tabstop>
   <tabstop>lineEdit_8k</tabstop>
-  <tabstop>close</tabstop>
+  <tabstop>comboBox_data_source</tabstop>
   <tabstop>pushButton_confirm</tabstop>
+  <tabstop>close</tabstop>
+  <tabstop>radioButton_circle_to_circle</tabstop>
+  <tabstop>radioButton_rect_to_rect</tabstop>
+  <tabstop>radioButton_circle_to_rect</tabstop>
+  <tabstop>radioButton_rect_to_circle</tabstop>
+  <tabstop>lineEdit_before_diameter</tabstop>
+  <tabstop>lineEdit_before_length</tabstop>
+  <tabstop>lineEdit_before_width</tabstop>
+  <tabstop>lineEdit_after_diameter</tabstop>
+  <tabstop>lineEdit_after_length</tabstop>
+  <tabstop>lineEdit_after_width</tabstop>
  </tabstops>
  <resources/>
  <connections/>
