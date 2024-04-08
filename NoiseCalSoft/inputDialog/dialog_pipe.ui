@@ -83,7 +83,12 @@ QLineEdit
 font-family: '黑体';
 }
 
-QComboBox
+QRadioButton
+{
+font-family: '黑体';
+}
+
+QPushButton
 {
 font-family: '黑体';
 }</string>
@@ -931,7 +936,7 @@ color: white;
      </property>
      <property name="font">
       <font>
-       <family>黑体</family>
+       <family>Microsoft YaHei</family>
        <pointsize>-1</pointsize>
       </font>
      </property>

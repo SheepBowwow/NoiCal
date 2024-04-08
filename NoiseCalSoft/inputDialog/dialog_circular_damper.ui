@@ -70,6 +70,16 @@ font-size: 16px;
 QLineEdit
 {
 font-family: '黑体';
+}
+
+QRadioButton
+{
+font-family: '黑体';
+}
+
+QPushButton
+{
+font-family: '黑体';
 }</string>
     </property>
     <widget class="QLineEdit" name="lineEdit_brand">

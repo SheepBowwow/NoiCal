@@ -21,14 +21,14 @@ background-color:white;
 
 QLineEdit 
 {
-font-family: 'Microsoft YaHei';
+font-family: '黑体';
 font-size: 13px;
 }
 
 QComboBox
 {
-font-family: 'Microsoft YaHei';
-font-size: 13px;
+font-family: '黑体';
+font-size: 14px;
 }</string>
   </property>
   <widget class="QWidget" name="widget_disp_vent_terminal" native="true">
@@ -2112,7 +2112,7 @@ color: white;
      </property>
      <property name="font">
       <font>
-       <family>Microsoft YaHei</family>
+       <family>黑体</family>
        <pointsize>-1</pointsize>
       </font>
      </property>
@@ -2138,7 +2138,7 @@ color: white;
      </property>
      <property name="font">
       <font>
-       <family>Microsoft YaHei</family>
+       <family>黑体</family>
        <pointsize>-1</pointsize>
       </font>
      </property>
@@ -2164,7 +2164,7 @@ color: white;
      </property>
      <property name="font">
       <font>
-       <family>Microsoft YaHei</family>
+       <family>黑体</family>
        <pointsize>-1</pointsize>
       </font>
      </property>

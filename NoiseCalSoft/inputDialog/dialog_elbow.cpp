@@ -102,8 +102,8 @@ void Dialog_elbow::on_pushButton_confirm_clicked()
     this->component = new Elbow(
                 ui->lineEdit_model->text(),
                 ui->lineEdit_brand->text(),
-                "",
-                "",
+                table_id,
+                UUID,
                 ui->comboBox_data_source->currentText(),
                 elbow_shape,
                 size,
@@ -114,6 +114,7 @@ void Dialog_elbow::on_pushButton_confirm_clicked()
 
 void Dialog_elbow::on_radioButton_circle_clicked()
 {
+    ui->stackedWidget_input->setCurrentWidget(ui->page_circle);
     ui->lineEdit_63->clear();
     ui->lineEdit_125->clear();
     ui->lineEdit_250->clear();
@@ -128,6 +129,7 @@ void Dialog_elbow::on_radioButton_circle_clicked()
 
 void Dialog_elbow::on_radioButton_rect_clicked()
 {
+    ui->stackedWidget_input->setCurrentWidget(ui->page_rect);
     ui->lineEdit_63->clear();
     ui->lineEdit_125->clear();
     ui->lineEdit_250->clear();

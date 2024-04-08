@@ -14,7 +14,7 @@
    <string>Dialog</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">#Dialog_aircondition_noise
+   <string notr="true">#Dialog_aircondition
 {
 background-color:white;
 }
@@ -80,6 +80,16 @@ font-size: 16px;
 }
 
 QLineEdit
+{
+font-family: '黑体';
+}
+
+QRadioButton
+{
+font-family: '黑体';
+}
+
+QPushButton
 {
 font-family: '黑体';
 }</string>

@@ -11,6 +11,11 @@ Dialog_reducer::Dialog_reducer(QWidget *parent, int editRow,  const Reducer& dat
     ui->setupUi(this);
     setTopWidget(ui->widget_top);  // 设置顶部部件
 
+    ui->radioButton_circle_to_circle->setChecked(true);
+
+    atten_lineEdits = { ui->lineEdit_63, ui->lineEdit_125, ui->lineEdit_250, ui->lineEdit_500,
+                      ui->lineEdit_1k, ui->lineEdit_2k, ui->lineEdit_4k, ui->lineEdit_8k};
+
     if(editRow != -1)
     {
         ui->lineEdit_model->setText(data.model);

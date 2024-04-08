@@ -10,6 +10,12 @@
  */
 void ComponentManager::addComponent(const QSharedPointer<ComponentBase> &component, bool update)
 {
+    if(!DatabaseManager::getInstance().isProjectExist(ProjectManager::getInstance().getPrjID()))
+    {
+        qDebug() << "还未创建项目" << endl;
+        return;
+    }
+
     components[component->UUID] = component;
     componentsByType[component->typeName()].append(component);
 

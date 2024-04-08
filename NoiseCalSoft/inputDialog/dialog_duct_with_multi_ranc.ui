@@ -104,6 +104,16 @@ font-size: 16px;
 QLineEdit
 {
 font-family: '黑体';
+}
+
+QRadioButton
+{
+font-family: '黑体';
+}
+
+QPushButton
+{
+font-family: '黑体';
 }</string>
     </property>
     <widget class="QLineEdit" name="lineEdit_brand">
@@ -337,7 +347,7 @@ color: white;
       <rect>
        <x>390</x>
        <y>40</y>
-       <width>71</width>
+       <width>41</width>
        <height>31</height>
       </rect>
      </property>
