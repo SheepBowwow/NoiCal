@@ -1,16 +1,70 @@
 // DatabaseManager.cpp
-#include "DatabaseManager.h"
 #include "database/DatabaseOperations.h"
+#include "databasemanager.h"
 #include <QMessageBox>
+#include <QFile>
+#include <QDir>
+#include <QStandardPaths>
+
+QHash<QString, QString> typeNameToTableName = {
+    {component_type_name::FAN, "fan"},
+    {component_type_name::FANCOIL, "fancoil"},
+    {component_type_name::AIRCONDITION, "aircondition"},
+    {component_type_name::VAV_TERMINAL, "vav_terminal"},
+    {component_type_name::CIRCULAR_DAMPER, "circular_damper"},
+    {component_type_name::RECT_DAMPER, "rect_damper"},
+    {component_type_name::AIRDIFF, "air_diff"},
+    {component_type_name::PUMPSEND, "pump_send"},
+    {component_type_name::STATICBOX_GRILLE, "static_box_grille"},
+    {component_type_name::DISP_VENT_TERMINAL, "disp_vent_terminal"},
+    {component_type_name::OTHER_SEND_TERMINAL, "other_send_terminal"},
+    {component_type_name::STATICBOX, "static_box"},
+    {component_type_name::MULTI_RANC, "multi_ranc"},
+    {component_type_name::TEE, "tee"},
+    {component_type_name::PIPE, "pipe"},
+    {component_type_name::ELBOW, "elbow"},
+    {component_type_name::REDUCER, "reducer"},
+    {component_type_name::SILENCER, "silencer"}
+};
 
 DatabaseManager::DatabaseManager(const QString& dbName) {
-    db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(dbName);
-    if (!db.open()) {
-        qDebug() << "无法打开数据库：" << db.lastError().text();
+    // 获取应用数据的路径
+    QString dataDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    // 创建项目名文件夹的路径
+    QString projectDirPath = dataDir;
+
+    // 使用QDir创建文件夹
+    QDir dir;
+    if (!dir.exists(projectDirPath)) {
+        dir.mkpath(projectDirPath);
     }
 
+    // 在项目文件夹内构建数据库文件的完整路径
+    QString dbPath = projectDirPath + "/noi_cal_database.db";  // 修改了文件名以符合你的需求
+
+    // 检查数据库文件是否已经存在
+    if (!QFile::exists(dbPath)) {
+        // 从资源中复制数据库文件到目标位置，注意资源文件的路径也进行了相应的调整
+        QFile::copy(":/databaseFile/databaseFile/noi_cal_database_origin.db", dbPath); // 修改了资源路径和文件名
+        // 确保目标数据库文件是可写的
+        QFile::setPermissions(dbPath, QFile::ReadOwner | QFile::WriteOwner);
+    }
+    // 连接到数据库
+    db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName(dbPath);
+    if (!db.open()) {
+        qDebug() << "Error opening database:" << db.lastError();
+        return;
+    }
+
+
     registerAddFunctions();
+    registerUpdateFunctions();
+}
+
+QMap<QString, AddToDatabaseFunc> DatabaseManager::getComponentUpdateFuncMap() const
+{
+    return componentUpdateFuncMap;
 }
 
 QMap<QString, AddToDatabaseFunc> DatabaseManager::getComponentAddFuncMap() const
@@ -22,7 +76,10 @@ DatabaseManager::~DatabaseManager() {
     db.close();
 }
 
-
+/**
+ * @brief 程序开始的时候加载所有的项目编号到容器里，方便comboBox调用
+ * @return
+ */
 QSet<QString> DatabaseManager::loadProjectIDs() {
     QSet<QString> projectIDs;
     if (db.isOpen()) {
@@ -38,85 +95,180 @@ QSet<QString> DatabaseManager::loadProjectIDs() {
     return projectIDs;
 }
 
+/**
+ * @brief 注册各种组件的添加到数据库的函数到函数映射表中。
+ *
+ * 此方法通过组件类型为键，将特定的添加组件到数据库的函数绑定到函数映射表（componentAddFuncMap）中。
+ * 每个绑定的函数都负责处理将相应类型的组件数据安全有效地添加到数据库中。
+ * 通过这种方式，当需要添加一个新的组件时，可以通过查询该映射表来动态调用对应的添加函数，
+ * 实现了添加逻辑的解耦和动态扩展。
+ *
+ * 这种注册机制简化了对不同组件处理函数的管理，使得为新的组件类型添加支持变得更加灵活和高效。
+ * 如果需要支持新的组件类型，只需实现对应的添加到数据库的函数，并在此方法中进行注册即可。
+ *
+ * 注意：在调用任何添加组件的函数之前，确保数据库连接已正确设置并打开。
+ */
 void DatabaseManager::registerAddFunctions()
 {
     componentAddFuncMap[component_type_name::FAN] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addFanToDatabase(component, this->db);
+        return DBComponentAddOperations::addOrUpdateFanToDatabase(component, this->db);
     };
 
     componentAddFuncMap[component_type_name::FANCOIL] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addFanCoilToDatabase(component, this->db);
+        return DBComponentAddOperations::addOrUpdateFanCoilToDatabase(component, this->db);
     };
 
     componentAddFuncMap[component_type_name::AIRCONDITION] = [this](const ComponentBase& component) -> bool {
-      return DBComponentAddOperations::addAirConditionToDatabase(component, this->db);
+      return DBComponentAddOperations::addOrUpdateAirConditionToDatabase(component, this->db);
     };
 
     componentAddFuncMap[component_type_name::VAV_TERMINAL] = [this](const ComponentBase& component) -> bool {
-      return DBComponentAddOperations::addVAVTerminalToDatabase(component, this->db);
+      return DBComponentAddOperations::addOrUpdateVAVTerminalToDatabase(component, this->db);
     };
 
     componentAddFuncMap[component_type_name::CIRCULAR_DAMPER] = [this](const ComponentBase& component) -> bool {
-      return DBComponentAddOperations::addCircularDamperToDatabase(component, this->db);
+      return DBComponentAddOperations::addOrUpdateCircularDamperToDatabase(component, this->db);
     };
 
     componentAddFuncMap[component_type_name::RECT_DAMPER] = [this](const ComponentBase& component) -> bool {
-      return DBComponentAddOperations::addRectDamperToDatabase(component, this->db);
+      return DBComponentAddOperations::addOrUpdateRectDamperToDatabase(component, this->db);
     };
 
     componentAddFuncMap[component_type_name::AIRDIFF] = [this](const ComponentBase& component) -> bool {
-      return DBComponentAddOperations::addAirDiffToDatabase(component, this->db);
+      return DBComponentAddOperations::addOrUpdateAirDiffToDatabase(component, this->db);
     };
 
     componentAddFuncMap[component_type_name:: PUMPSEND] = [this](const ComponentBase& component) -> bool {
-      return DBComponentAddOperations::addPumpSendToDatabase(component, this->db);
+      return DBComponentAddOperations::addOrUpdatePumpSendToDatabase(component, this->db);
     };
 
     componentAddFuncMap[component_type_name::STATICBOX_GRILLE] = [this](const ComponentBase& component) -> bool {
-      return DBComponentAddOperations::addStaticBoxGrilleToDatabase(component, this->db);
+      return DBComponentAddOperations::addOrUpdateStaticBoxGrilleToDatabase(component, this->db);
     };
 
     componentAddFuncMap[component_type_name::DISP_VENT_TERMINAL] = [this](const ComponentBase& component) -> bool {
-      return DBComponentAddOperations::addDispVentTerminalToDatabase(component, this->db);
+      return DBComponentAddOperations::addOrUpdateDispVentTerminalToDatabase(component, this->db);
     };
 
     componentAddFuncMap[component_type_name::OTHER_SEND_TERMINAL] = [this](const ComponentBase& component) -> bool {
-      return DBComponentAddOperations::addOtherSendTerminalToDatabase(component, this->db);
+      return DBComponentAddOperations::addOrUpdateOtherSendTerminalToDatabase(component, this->db);
     };
 
     componentAddFuncMap[component_type_name::STATICBOX] = [this](const ComponentBase& component) -> bool {
-      return DBComponentAddOperations::addStaticBoxToDatabase(component, this->db);
+      return DBComponentAddOperations::addOrUpdateStaticBoxToDatabase(component, this->db);
     };
 
     componentAddFuncMap[component_type_name::MULTI_RANC] = [this](const ComponentBase& component) -> bool {
-      return DBComponentAddOperations::addMultiRancToDatabase(component, this->db);
+      return DBComponentAddOperations::addOrUpdateMultiRancToDatabase(component, this->db);
     };
 
     componentAddFuncMap[component_type_name::TEE] = [this](const ComponentBase& component) -> bool {
-      return DBComponentAddOperations::addTeeToDatabase(component, this->db);
+      return DBComponentAddOperations::addOrUpdateTeeToDatabase(component, this->db);
     };
 
     componentAddFuncMap[component_type_name::PIPE] = [this](const ComponentBase& component) -> bool {
-      return DBComponentAddOperations::addPipeToDatabase(component, this->db);
+      return DBComponentAddOperations::addOrUpdatePipeToDatabase(component, this->db);
     };
 
     componentAddFuncMap[component_type_name::ELBOW] = [this](const ComponentBase& component) -> bool {
-      return DBComponentAddOperations::addPipeToDatabase(component, this->db);
+      return DBComponentAddOperations::addOrUpdatePipeToDatabase(component, this->db);
     };
 
     componentAddFuncMap[component_type_name::REDUCER] = [this](const ComponentBase& component) -> bool {
-      return DBComponentAddOperations::addPipeToDatabase(component, this->db);
+      return DBComponentAddOperations::addOrUpdatePipeToDatabase(component, this->db);
     };
 
     componentAddFuncMap[component_type_name::SILENCER] = [this](const ComponentBase& component) -> bool {
-      return DBComponentAddOperations::addPipeToDatabase(component, this->db);
+      return DBComponentAddOperations::addOrUpdatePipeToDatabase(component, this->db);
     };
 
 }
 
-void DatabaseManager::addComponentToDel(const QString &UUID)
+void DatabaseManager::registerUpdateFunctions()
 {
-    componentToDel.append(UUID);
+    componentUpdateFuncMap[component_type_name::FAN] = [this](const ComponentBase& component) -> bool {
+        return DBComponentAddOperations::addOrUpdateFanToDatabase(component, this->db, true);
+    };
+
+    componentUpdateFuncMap[component_type_name::FANCOIL] = [this](const ComponentBase& component) -> bool {
+        return DBComponentAddOperations::addOrUpdateFanCoilToDatabase(component, this->db, true);
+    };
+
+    componentUpdateFuncMap[component_type_name::AIRCONDITION] = [this](const ComponentBase& component) -> bool {
+      return DBComponentAddOperations::addOrUpdateAirConditionToDatabase(component, this->db, true);
+    };
+
+    componentUpdateFuncMap[component_type_name::VAV_TERMINAL] = [this](const ComponentBase& component) -> bool {
+      return DBComponentAddOperations::addOrUpdateVAVTerminalToDatabase(component, this->db, true);
+    };
+
+    componentUpdateFuncMap[component_type_name::CIRCULAR_DAMPER] = [this](const ComponentBase& component) -> bool {
+      return DBComponentAddOperations::addOrUpdateCircularDamperToDatabase(component, this->db, true);
+    };
+
+    componentUpdateFuncMap[component_type_name::RECT_DAMPER] = [this](const ComponentBase& component) -> bool {
+      return DBComponentAddOperations::addOrUpdateRectDamperToDatabase(component, this->db, true);
+    };
+
+    componentUpdateFuncMap[component_type_name::AIRDIFF] = [this](const ComponentBase& component) -> bool {
+      return DBComponentAddOperations::addOrUpdateAirDiffToDatabase(component, this->db, true);
+    };
+
+    componentUpdateFuncMap[component_type_name:: PUMPSEND] = [this](const ComponentBase& component) -> bool {
+      return DBComponentAddOperations::addOrUpdatePumpSendToDatabase(component, this->db, true);
+    };
+
+    componentUpdateFuncMap[component_type_name::STATICBOX_GRILLE] = [this](const ComponentBase& component) -> bool {
+      return DBComponentAddOperations::addOrUpdateStaticBoxGrilleToDatabase(component, this->db, true);
+    };
+
+    componentUpdateFuncMap[component_type_name::DISP_VENT_TERMINAL] = [this](const ComponentBase& component) -> bool {
+      return DBComponentAddOperations::addOrUpdateDispVentTerminalToDatabase(component, this->db, true);
+    };
+
+    componentUpdateFuncMap[component_type_name::OTHER_SEND_TERMINAL] = [this](const ComponentBase& component) -> bool {
+      return DBComponentAddOperations::addOrUpdateOtherSendTerminalToDatabase(component, this->db, true);
+    };
+
+    componentUpdateFuncMap[component_type_name::STATICBOX] = [this](const ComponentBase& component) -> bool {
+      return DBComponentAddOperations::addOrUpdateStaticBoxToDatabase(component, this->db, true);
+    };
+
+    componentUpdateFuncMap[component_type_name::MULTI_RANC] = [this](const ComponentBase& component) -> bool {
+      return DBComponentAddOperations::addOrUpdateMultiRancToDatabase(component, this->db, true);
+    };
+
+    componentUpdateFuncMap[component_type_name::TEE] = [this](const ComponentBase& component) -> bool {
+      return DBComponentAddOperations::addOrUpdateTeeToDatabase(component, this->db, true);
+    };
+
+    componentUpdateFuncMap[component_type_name::PIPE] = [this](const ComponentBase& component) -> bool {
+      return DBComponentAddOperations::addOrUpdatePipeToDatabase(component, this->db, true);
+    };
+
+    componentUpdateFuncMap[component_type_name::ELBOW] = [this](const ComponentBase& component) -> bool {
+      return DBComponentAddOperations::addOrUpdatePipeToDatabase(component, this->db, true);
+    };
+
+    componentUpdateFuncMap[component_type_name::REDUCER] = [this](const ComponentBase& component) -> bool {
+      return DBComponentAddOperations::addOrUpdatePipeToDatabase(component, this->db, true);
+    };
+
+    componentUpdateFuncMap[component_type_name::SILENCER] = [this](const ComponentBase& component) -> bool {
+      return DBComponentAddOperations::addOrUpdatePipeToDatabase(component, this->db, true);
+    };
+
+}
+
+
+/**
+ * @brief 根据不同的表去删除对应uuid的部件
+ * @param componentName
+ * @param UUID
+ */
+void DatabaseManager::delComponentInDatabase(const QString& componentName ,const QString &UUID)
+{
+    DBComponentDelOperations::deleteComponentFromDatabase(typeNameToTableName[componentName], UUID, this->db);
 }
 
 bool DatabaseManager::addProjectInfoToDatabase(const ProjectInfo &projectInfo)

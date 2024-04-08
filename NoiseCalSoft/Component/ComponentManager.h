@@ -21,9 +21,9 @@ public:
     }
 
     // 添加组件
-    void addComponent(const QSharedPointer<ComponentBase>& component);
+    void addComponent(const QSharedPointer<ComponentBase>& component, bool update = false);
     // 删除组件
-    bool removeComponent(const QString& uuid);
+    bool removeComponent(const QString& uuid, bool update = false);
     // 查找组件
     QSharedPointer<ComponentBase> findComponent(const QString& uuid) const;
 

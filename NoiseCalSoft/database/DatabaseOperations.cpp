@@ -10,7 +10,7 @@ namespace DBComponentAddOperations {
 
 
 
-bool addFanToDatabase(const ComponentBase& component, QSqlDatabase& db)
+bool addOrUpdateFanToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update)
 {
     if (!db.isOpen()) {
         // 确保数据库已经打开
@@ -42,9 +42,18 @@ bool addFanToDatabase(const ComponentBase& component, QSqlDatabase& db)
 
     // 创建并准备 SQL 插入语句
     QSqlQuery query(db);
-    query.prepare("INSERT INTO fan (projectID, table_id, number, model, air_volume, static_pressure, brand, noise_in_json, noise_out_json, data_source, UUID) "
-                  "VALUES (:projectID, :table_id, :number, :model, :air_volume, :static_pressure, :brand, :noise_in_json, :noise_out_json, :data_source, :UUID)");
-
+    if (update) {
+        // 准备更新语句
+        query.prepare("UPDATE fan SET projectID=:projectID, table_id=:table_id, number=:number, model=:model, "
+                      "air_volume=:air_volume, static_pressure=:static_pressure, brand=:brand, noise_in_json=:noise_in_json, "
+                      "noise_out_json=:noise_out_json, data_source=:data_source WHERE UUID=:UUID");
+    } else {
+        // 准备插入语句
+        query.prepare("INSERT INTO fan (projectID, table_id, number, model, air_volume, "
+                      "static_pressure, brand, noise_in_json, noise_out_json, data_source, UUID) "
+                      "VALUES (:projectID, :table_id, :number, :model, :air_volume, "
+                      ":static_pressure, :brand, :noise_in_json, :noise_out_json, :data_source, :UUID)");
+    }
     // 绑定值到插入语句
     query.bindValue(":projectID", ProjectManager::getInstance().getPrjID());
     query.bindValue(":table_id", fan->table_id);
@@ -60,14 +69,14 @@ bool addFanToDatabase(const ComponentBase& component, QSqlDatabase& db)
 
     // 执行 SQL 插入操作
     if (!query.exec()) {
-        qWarning() << "Insert operation failed:" << query.lastError();
+        qWarning() << "Operation failed:" << query.lastError();
         return false;
     }
 
     return true;
 }
 
-bool addFanCoilToDatabase(const ComponentBase& component, QSqlDatabase& db)
+bool addOrUpdateFanCoilToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update)
 {
     if (!db.isOpen()) {
         qWarning() << "Database is not open!";
@@ -98,10 +107,21 @@ bool addFanCoilToDatabase(const ComponentBase& component, QSqlDatabase& db)
 
     // 创建并准备SQL插入语句
     QSqlQuery query(db);
-    query.prepare("INSERT INTO fanCoil (projectID, table_id, model, air_volume, static_pressure, brand, noise_in_json, noise_out_json, data_source, UUID) "
-                  "VALUES (:projectID, :table_id, :model, :air_volume, :static_pressure, :brand, :noise_in_json, :noise_out_json, :data_source, :UUID)");
+    if (update) {
+        // 准备更新语句
+        query.prepare("UPDATE fanCoil "
+                      "SET projectID=:projectID, table_id=:table_id, model=:model, air_volume=:air_volume, "
+                      "static_pressure=:static_pressure, brand=:brand, noise_in_json=:noise_in_json, "
+                      "noise_out_json=:noise_out_json, data_source=:data_source "
+                      "WHERE UUID=:UUID");
+    } else {
+        // 准备插入语句
+        query.prepare("INSERT INTO fanCoil (projectID, table_id, model, air_volume, "
+                      "static_pressure, brand, noise_in_json, noise_out_json, data_source, UUID) "
+                      "VALUES (:projectID, :table_id, :model, :air_volume, :static_pressure, "
+                      ":brand, :noise_in_json, :noise_out_json, :data_source, :UUID)");
+    }
 
-    qDebug() << "prjID:" << ProjectManager::getInstance().getPrjID();
 
     // 绑定值到插入语句
     query.bindValue(":projectID", ProjectManager::getInstance().getPrjID());
@@ -117,14 +137,14 @@ bool addFanCoilToDatabase(const ComponentBase& component, QSqlDatabase& db)
 
     // 执行SQL插入操作
     if (!query.exec()) {
-        qWarning() << "Insert operation failed:" << query.lastError();
+        qWarning() << "Operation failed:" << query.lastError();
         return false;
     }
 
     return true;
 }
 
-bool addAirConditionToDatabase(const ComponentBase& component, QSqlDatabase& db)
+bool addOrUpdateAirConditionToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update)
 {
     if (!db.isOpen()) {
         qWarning() << "Database is not open!";
@@ -150,9 +170,25 @@ bool addAirConditionToDatabase(const ComponentBase& component, QSqlDatabase& db)
 
     // 准备SQL插入语句
     QSqlQuery query(db);
-    query.prepare("INSERT INTO aircondition (projectID, table_id, fan_counts, send_number, send_air_volume, send_static_pressure, exhaust_number, exhaust_air_volume, exhaust_static_pressure, model, brand, noise_send_in_json, noise_send_out_json, noise_exhaust_in_json, noise_exhaust_out_json, data_source, UUID) "
-                  "VALUES (:projectID, :table_id, :fan_counts, :send_number, :send_air_volume, :send_static_pressure, :exhaust_number, :exhaust_air_volume, :exhaust_static_pressure, :model, :brand, :noise_send_in_json, :noise_send_out_json, :noise_exhaust_in_json, :noise_exhaust_out_json, :data_source, :UUID)");
-
+    if (update) {
+        query.prepare("UPDATE aircondition "
+                      "SET projectID=:projectID, table_id=:table_id, fan_counts=:fan_counts, send_number=:send_number, "
+                      "send_air_volume=:send_air_volume, send_static_pressure=:send_static_pressure, exhaust_number=:exhaust_number, "
+                      "exhaust_air_volume=:exhaust_air_volume, exhaust_static_pressure=:exhaust_static_pressure, model=:model, "
+                      "brand=:brand, noise_send_in_json=:noise_send_in_json, noise_send_out_json=:noise_send_out_json, "
+                      "noise_exhaust_in_json=:noise_exhaust_in_json, noise_exhaust_out_json=:noise_exhaust_out_json, "
+                      "data_source=:data_source "
+                      "WHERE UUID=:UUID");
+    } else {
+        query.prepare("INSERT INTO aircondition (projectID, table_id, fan_counts, send_number, "
+                      "send_air_volume, send_static_pressure, exhaust_number, exhaust_air_volume, "
+                      "exhaust_static_pressure, model, brand, noise_send_in_json, noise_send_out_json, "
+                      "noise_exhaust_in_json, noise_exhaust_out_json, data_source, UUID) "
+                      "VALUES (:projectID, :table_id, :fan_counts, :send_number, :send_air_volume, "
+                      ":send_static_pressure, :exhaust_number, :exhaust_air_volume, :exhaust_static_pressure, "
+                      ":model, :brand, :noise_send_in_json, :noise_send_out_json, :noise_exhaust_in_json, "
+                      ":noise_exhaust_out_json, :data_source, :UUID)");
+    }
     // 绑定值
     query.bindValue(":projectID", ProjectManager::getInstance().getPrjID());
     query.bindValue(":table_id", aircondition->table_id.toInt());
@@ -181,7 +217,7 @@ bool addAirConditionToDatabase(const ComponentBase& component, QSqlDatabase& db)
     return true;
 }
 
-bool addVAVTerminalToDatabase(const ComponentBase& component, QSqlDatabase& db)
+bool addOrUpdateVAVTerminalToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update)
 {
     if (!db.isOpen()) {
         qWarning() << "Database is not open!";
@@ -205,8 +241,18 @@ bool addVAVTerminalToDatabase(const ComponentBase& component, QSqlDatabase& db)
 
     // 准备SQL插入语句
     QSqlQuery query(db);
-    query.prepare("INSERT INTO vav_terminal (projectID, table_id, number, model, valve_angle, air_volume, brand, noise_json, data_source, UUID) "
-                  "VALUES (:projectID, :table_id, :number, :model, :valve_angle, :air_volume, :brand, :noise_json, :data_source, :UUID)");
+    if (update) {
+        query.prepare("UPDATE vav_terminal "
+                      "SET projectID=:projectID, table_id=:table_id, number=:number, model=:model, "
+                      "valve_angle=:valve_angle, air_volume=:air_volume, brand=:brand, noise_json=:noise_json, "
+                      "data_source=:data_source "
+                      "WHERE UUID=:UUID");
+    } else {
+        query.prepare("INSERT INTO vav_terminal (projectID, table_id, number, model, "
+                      "valve_angle, air_volume, brand, noise_json, data_source, UUID) "
+                      "VALUES (:projectID, :table_id, :number, :model, :valve_angle, "
+                      ":air_volume, :brand, :noise_json, :data_source, :UUID)");
+    }
 
     // 绑定值
     query.bindValue(":projectID", ProjectManager::getInstance().getPrjID()); // 假设ProjectManager::getInstance().getPrjID()是已经在某处定义好的当前项目ID
@@ -229,7 +275,7 @@ bool addVAVTerminalToDatabase(const ComponentBase& component, QSqlDatabase& db)
     return true;
 }
 
-bool addCircularDamperToDatabase(const ComponentBase& component, QSqlDatabase& db)
+bool addOrUpdateCircularDamperToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update)
 {
     if (!db.isOpen()) {
         qWarning() << "Database is not open!";
@@ -253,8 +299,18 @@ bool addCircularDamperToDatabase(const ComponentBase& component, QSqlDatabase& d
 
     // Prepare SQL insert statement
     QSqlQuery query(db);
-    query.prepare("INSERT INTO circular_damper (projectID, table_id, size, model, valve_angle, air_volume, brand, noise_json, data_source, UUID) "
-                  "VALUES (:projectID, :table_id, :size, :model, :valve_angle, :air_volume, :brand, :noise_json, :data_source, :UUID)");
+    if (update) {
+        query.prepare("UPDATE circular_damper "
+                      "SET projectID=:projectID, table_id=:table_id, size=:size, model=:model, "
+                      "valve_angle=:valve_angle, air_volume=:air_volume, brand=:brand, noise_json=:noise_json, "
+                      "data_source=:data_source "
+                      "WHERE UUID=:UUID");
+    } else {
+        query.prepare("INSERT INTO circular_damper (projectID, table_id, size, "
+                      "model, valve_angle, air_volume, brand, noise_json, data_source, UUID) "
+                      "VALUES (:projectID, :table_id, :size, :model, :valve_angle, "
+                      ":air_volume, :brand, :noise_json, :data_source, :UUID)");
+    }
 
     // Bind values to the insert statement
     query.bindValue(":projectID", ProjectManager::getInstance().getPrjID());
@@ -277,7 +333,7 @@ bool addCircularDamperToDatabase(const ComponentBase& component, QSqlDatabase& d
     return true;
 }
 
-bool addRectDamperToDatabase(const ComponentBase& component, QSqlDatabase& db)
+bool addOrUpdateRectDamperToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update)
 {
     if (!db.isOpen()) {
         qWarning() << "Database is not open!";
@@ -301,8 +357,18 @@ bool addRectDamperToDatabase(const ComponentBase& component, QSqlDatabase& db)
 
     // Prepare SQL insert statement
     QSqlQuery query(db);
-    query.prepare("INSERT INTO rect_damper (projectID, table_id, model, brand, size, valve_angle, air_volume, noise_json, data_source, UUID) "
-                  "VALUES (:projectID, :table_id, :model, :brand, :size, :valve_angle, :air_volume, :noise_json, :data_source, :UUID)");
+    if (update) {
+        query.prepare("UPDATE rect_damper "
+                      "SET projectID=:projectID, table_id=:table_id, model=:model, brand=:brand, "
+                      "size=:size, valve_angle=:valve_angle, air_volume=:air_volume, noise_json=:noise_json, "
+                      "data_source=:data_source "
+                      "WHERE UUID=:UUID");
+    } else {
+        query.prepare("INSERT INTO rect_damper (projectID, table_id, model, "
+                      "brand, size, valve_angle, air_volume, noise_json, data_source, UUID) "
+                      "VALUES (:projectID, :table_id, :model, :brand, :size, :valve_angle, "
+                      ":air_volume, :noise_json, :data_source, :UUID)");
+    }
 
     // Bind values to the insert statement
     query.bindValue(":projectID", ProjectManager::getInstance().getPrjID());
@@ -325,7 +391,7 @@ bool addRectDamperToDatabase(const ComponentBase& component, QSqlDatabase& db)
     return true;
 }
 
-bool addAirDiffToDatabase(const ComponentBase& component, QSqlDatabase& db)
+bool addOrUpdateAirDiffToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update)
 {
     if (!db.isOpen()) {
         qWarning() << "Database is not open!";
@@ -351,8 +417,25 @@ bool addAirDiffToDatabase(const ComponentBase& component, QSqlDatabase& db)
 
     // Prepare SQL insert statement
     QSqlQuery query(db);
-    query.prepare("INSERT INTO air_diff (projectID, table_id, air_distributor_model, air_distributor_brand, diffuser_model, diffuser_brand, terminal_shape, terminal_size, noise_json, atten_json, refl_json, noi_data_source, atten_data_source, refl_data_source, UUID) "
-                  "VALUES (:projectID, :table_id, :air_distributor_model, :air_distributor_brand, :diffuser_model, :diffuser_brand, :terminal_shape, :terminal_size, :noise_json, :atten_json, :refl_json, :noi_data_source, :atten_data_source, :refl_data_source, :UUID)");
+    if (update) {
+        query.prepare("UPDATE air_diff "
+                      "SET projectID=:projectID, table_id=:table_id, air_distributor_model=:air_distributor_model, "
+                      "air_distributor_brand=:air_distributor_brand, "
+                      "diffuser_model=:diffuser_model, diffuser_brand=:diffuser_brand, terminal_shape=:terminal_shape, "
+                      "terminal_size=:terminal_size, "
+                      "noise_json=:noise_json, atten_json=:atten_json, refl_json=:refl_json, "
+                      "noi_data_source=:noi_data_source, "
+                      "atten_data_source=:atten_data_source, refl_data_source=:refl_data_source "
+                      "WHERE UUID=:UUID");
+    } else {
+        query.prepare("INSERT INTO air_diff (projectID, table_id, air_distributor_model, "
+                      "air_distributor_brand, diffuser_model, diffuser_brand, terminal_shape, "
+                      "terminal_size, noise_json, atten_json, refl_json, noi_data_source, "
+                      "atten_data_source, refl_data_source, UUID) "
+                      "VALUES (:projectID, :table_id, :air_distributor_model, :air_distributor_brand, "
+                      ":diffuser_model, :diffuser_brand, :terminal_shape, :terminal_size, :noise_json, "
+                      ":atten_json, :refl_json, :noi_data_source, :atten_data_source, :refl_data_source, :UUID)");
+    }
 
     // Bind values to the insert statement
     query.bindValue(":projectID", ProjectManager::getInstance().getPrjID());
@@ -380,7 +463,7 @@ bool addAirDiffToDatabase(const ComponentBase& component, QSqlDatabase& db)
     return true;
 }
 
-bool addPumpSendToDatabase(const ComponentBase& component, QSqlDatabase& db)
+bool addOrUpdatePumpSendToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update)
 {
     if (!db.isOpen()) {
         qWarning() << "Database is not open!";
@@ -406,8 +489,21 @@ bool addPumpSendToDatabase(const ComponentBase& component, QSqlDatabase& db)
 
     // Prepare SQL insert statement
     QSqlQuery query(db);
-    query.prepare("INSERT INTO pump_send (projectID, table_id, type_pump_or_send, model, terminal_shape, terminal_size, brand, noise_json, atten_json, refl_json, noi_data_source, atten_data_source, refl_data_source, UUID) "
-                  "VALUES (:projectID, :table_id, :type_pump_or_send, :model, :terminal_shape, :terminal_size, :brand, :noise_json, :atten_json, :refl_json, :noi_data_source, :atten_data_source, :refl_data_source, :UUID)");
+    if (update) {
+        query.prepare("UPDATE pump_send "
+                      "SET projectID=:projectID, table_id=:table_id, type_pump_or_send=:type_pump_or_send, model=:model, "
+                      "terminal_shape=:terminal_shape, terminal_size=:terminal_size, brand=:brand, noise_json=:noise_json, "
+                      "atten_json=:atten_json, refl_json=:refl_json, noi_data_source=:noi_data_source, "
+                      "atten_data_source=:atten_data_source, refl_data_source=:refl_data_source "
+                      "WHERE UUID=:UUID");
+    } else {
+        query.prepare("INSERT INTO pump_send (projectID, table_id, type_pump_or_send, model, "
+                      "terminal_shape, terminal_size, brand, noise_json, atten_json, refl_json, "
+                      "noi_data_source, atten_data_source, refl_data_source, UUID) "
+                      "VALUES (:projectID, :table_id, :type_pump_or_send, :model, :terminal_shape, "
+                      ":terminal_size, :brand, :noise_json, :atten_json, :refl_json, :noi_data_source, "
+                      ":atten_data_source, :refl_data_source, :UUID)");
+    }
 
     // Bind values to the insert statement
     query.bindValue(":projectID", ProjectManager::getInstance().getPrjID());
@@ -434,7 +530,7 @@ bool addPumpSendToDatabase(const ComponentBase& component, QSqlDatabase& db)
     return true;
 }
 
-bool addStaticBoxGrilleToDatabase(const ComponentBase& component, QSqlDatabase& db)
+bool addOrUpdateStaticBoxGrilleToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update)
 {
     if (!db.isOpen()) {
         qWarning() << "Database is not open!";
@@ -460,8 +556,23 @@ bool addStaticBoxGrilleToDatabase(const ComponentBase& component, QSqlDatabase& 
 
     // Prepare SQL insert statement
     QSqlQuery query(db);
-    query.prepare("INSERT INTO static_box_grille (projectID, table_id, static_box_model, static_box_brand, grille_model, grille_brand, terminal_shape, terminal_size, noise_json, atten_json, refl_json, noi_data_source, atten_data_source, refl_data_source, UUID) "
-                  "VALUES (:projectID, :table_id, :static_box_model, :static_box_brand, :grille_model, :grille_brand, :terminal_shape, :terminal_size, :noise_json, :atten_json, :refl_json, :noi_data_source, :atten_data_source, :refl_data_source, :UUID)");
+    if (update) {
+        query.prepare("UPDATE static_box_grille "
+                      "SET projectID=:projectID, table_id=:table_id, static_box_model=:static_box_model, "
+                      "static_box_brand=:static_box_brand, "
+                      "grille_model=:grille_model, grille_brand=:grille_brand, terminal_shape=:terminal_shape, "
+                      "terminal_size=:terminal_size, "
+                      "noise_json=:noise_json, atten_json=:atten_json, refl_json=:refl_json, noi_data_source=:noi_data_source, "
+                      "atten_data_source=:atten_data_source, refl_data_source=:refl_data_source "
+                      "WHERE UUID=:UUID");
+    } else {
+        query.prepare("INSERT INTO static_box_grille (projectID, table_id, static_box_model, static_box_brand, "
+                      "grille_model, grille_brand, terminal_shape, terminal_size, noise_json, atten_json, "
+                      "refl_json, noi_data_source, atten_data_source, refl_data_source, UUID) "
+                      "VALUES (:projectID, :table_id, :static_box_model, :static_box_brand, :grille_model, "
+                      ":grille_brand, :terminal_shape, :terminal_size, :noise_json, :atten_json, :refl_json, "
+                      ":noi_data_source, :atten_data_source, :refl_data_source, :UUID)");
+    }
 
     // Bind values to the insert statement
     query.bindValue(":projectID", ProjectManager::getInstance().getPrjID());
@@ -490,7 +601,7 @@ bool addStaticBoxGrilleToDatabase(const ComponentBase& component, QSqlDatabase& 
 
 }
 
-bool addDispVentTerminalToDatabase(const ComponentBase& component, QSqlDatabase& db)
+bool addOrUpdateDispVentTerminalToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update)
 {
     if (!db.isOpen()) {
         qWarning() << "Database is not open!";
@@ -516,8 +627,21 @@ bool addDispVentTerminalToDatabase(const ComponentBase& component, QSqlDatabase&
 
     // Prepare SQL insert statement
     QSqlQuery query(db);
-    query.prepare("INSERT INTO disp_vent_terminal (projectID, table_id, model, terminal_shape, terminal_size, brand, nosie_json, atten_json, refl_json, noi_data_source, atten_data_source, refl_data_source, UUID) "
-                  "VALUES (:projectID, :table_id, :model, :terminal_shape, :terminal_size, :brand, :nosie_json, :atten_json, :refl_json, :noi_data_source, :atten_data_source, :refl_data_source, :UUID)");
+    if (update) {
+        query.prepare("UPDATE disp_vent_terminal "
+                      "SET projectID=:projectID, table_id=:table_id, model=:model, terminal_shape=:terminal_shape, "
+                      "terminal_size=:terminal_size, brand=:brand, nosie_json=:nosie_json, atten_json=:atten_json, "
+                      "refl_json=:refl_json, noi_data_source=:noi_data_source, atten_data_source=:atten_data_source, "
+                      "refl_data_source=:refl_data_source "
+                      "WHERE UUID=:UUID");
+    } else {
+        query.prepare("INSERT INTO disp_vent_terminal (projectID, table_id, model, terminal_shape, "
+                      "terminal_size, brand, nosie_json, atten_json, refl_json, noi_data_source, "
+                      "atten_data_source, refl_data_source, UUID) "
+                      "VALUES (:projectID, :table_id, :model, :terminal_shape, :terminal_size, "
+                      ":brand, :nosie_json, :atten_json, :refl_json, :noi_data_source, :atten_data_source, "
+                      ":refl_data_source, :UUID)");
+    }
 
     // Bind values to the insert statement
     query.bindValue(":projectID", ProjectManager::getInstance().getPrjID());
@@ -543,7 +667,7 @@ bool addDispVentTerminalToDatabase(const ComponentBase& component, QSqlDatabase&
     return true;
 }
 
-bool addOtherSendTerminalToDatabase(const ComponentBase& component, QSqlDatabase& db)
+bool addOrUpdateOtherSendTerminalToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update)
 {
     // Check if the database is open
     if (!db.isOpen()) {
@@ -570,8 +694,21 @@ bool addOtherSendTerminalToDatabase(const ComponentBase& component, QSqlDatabase
 
     // Prepare SQL insert statement
     QSqlQuery query(db);
-    query.prepare("INSERT INTO other_send_terminal (projectID, table_id, model, terminal_shape, terminal_size, brand, nosie_json, atten_json, refl_json, noi_data_source, atten_data_source, refl_data_source, remark, UUID) "
-                  "VALUES (:projectID, :table_id, :model, :terminal_shape, :terminal_size, :brand, :noise_json, :atten_json, :refl_json, :noi_data_source, :atten_data_source, :refl_data_source, :remark, :UUID)");
+    if (update) {
+        query.prepare("UPDATE other_send_terminal "
+                      "SET projectID=:projectID, table_id=:table_id, model=:model, terminal_shape=:terminal_shape, "
+                      "terminal_size=:terminal_size, brand=:brand, noise_json=:noise_json, atten_json=:atten_json, "
+                      "refl_json=:refl_json, noi_data_source=:noi_data_source, atten_data_source=:atten_data_source, "
+                      "refl_data_source=:refl_data_source, remark=:remark "
+                      "WHERE UUID=:UUID");
+    } else {
+        query.prepare("INSERT INTO other_send_terminal (projectID, table_id, model, terminal_shape, "
+                      "terminal_size, brand, nosie_json, atten_json, refl_json, noi_data_source, "
+                      "atten_data_source, refl_data_source, remark, UUID) "
+                      "VALUES (:projectID, :table_id, :model, :terminal_shape, :terminal_size, "
+                      ":brand, :noise_json, :atten_json, :refl_json, :noi_data_source, :atten_data_source, "
+                      ":refl_data_source, :remark, :UUID)");
+    }
 
     // Bind values to the insert statement
     query.bindValue(":projectID", ProjectManager::getInstance().getPrjID());
@@ -598,7 +735,7 @@ bool addOtherSendTerminalToDatabase(const ComponentBase& component, QSqlDatabase
     return true;
 }
 
-bool addStaticBoxToDatabase(const ComponentBase& component, QSqlDatabase& db)
+bool addOrUpdateStaticBoxToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update)
 {
     // Check if the database is open
     if (!db.isOpen()) {
@@ -619,8 +756,15 @@ bool addStaticBoxToDatabase(const ComponentBase& component, QSqlDatabase& db)
 
     // Prepare SQL insert statement
     QSqlQuery query(db);
-    query.prepare("INSERT INTO static_box (projectID, table_id, model, brand, q, q1, atten_json, data_source, UUID) "
-                  "VALUES (:projectID, :table_id, :model, :brand, :q, :q1, :atten_json, :data_source, :UUID)");
+    if (update) {
+        query.prepare("UPDATE static_box "
+                      "SET projectID=:projectID, table_id=:table_id, model=:model, brand=:brand, "
+                      "q=:q, q1=:q1, atten_json=:atten_json, data_source=:data_source "
+                      "WHERE UUID=:UUID");
+    } else {
+        query.prepare("INSERT INTO static_box (projectID, table_id, model, brand, q, q1, atten_json, data_source, UUID) "
+                      "VALUES (:projectID, :table_id, :model, :brand, :q, :q1, :atten_json, :data_source, :UUID)");
+    }
 
     // Bind values to the insert statement
     query.bindValue(":projectID", ProjectManager::getInstance().getPrjID());
@@ -642,7 +786,7 @@ bool addStaticBoxToDatabase(const ComponentBase& component, QSqlDatabase& db)
     return true;
 }
 
-bool addMultiRancToDatabase(const ComponentBase& component, QSqlDatabase& db)
+bool addOrUpdateMultiRancToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update)
 {
     // Check if the database is open
     if (!db.isOpen()) {
@@ -663,8 +807,15 @@ bool addMultiRancToDatabase(const ComponentBase& component, QSqlDatabase& db)
 
     // Prepare SQL insert statement
     QSqlQuery query(db);
-    query.prepare("INSERT INTO multi_ranc (projectID, table_id, model, brand, q, q1, atten_json, data_source, UUID) "
-                  "VALUES (:projectID, :table_id, :model, :brand, :q, :q1, :atten_json, :data_source, :UUID)");
+    if (update) {
+        query.prepare("UPDATE multi_ranc "
+                      "SET projectID=:projectID, table_id=:table_id, model=:model, brand=:brand, "
+                      "q=:q, q1=:q1, atten_json=:atten_json, data_source=:data_source "
+                      "WHERE UUID=:UUID");
+    } else {
+        query.prepare("INSERT INTO multi_ranc (projectID, table_id, model, brand, q, q1, atten_json, data_source, UUID) "
+                      "VALUES (:projectID, :table_id, :model, :brand, :q, :q1, :atten_json, :data_source, :UUID)");
+    }
 
     // Bind values to the insert statement
     query.bindValue(":projectID", ProjectManager::getInstance().getPrjID());
@@ -686,7 +837,7 @@ bool addMultiRancToDatabase(const ComponentBase& component, QSqlDatabase& db)
     return true;
 }
 
-bool addTeeToDatabase(const ComponentBase& component, QSqlDatabase& db)
+bool addOrUpdateTeeToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update)
 {
     // Check if the database is open
     if (!db.isOpen()) {
@@ -707,8 +858,15 @@ bool addTeeToDatabase(const ComponentBase& component, QSqlDatabase& db)
 
     // Prepare SQL insert statement
     QSqlQuery query(db);
-    query.prepare("INSERT INTO tee (projectID, table_id, model, brand, q, q1, atten_json, data_source, UUID) "
-                  "VALUES (:projectID, :table_id, :model, :brand, :q, :q1, :atten_json, :data_source, :UUID)");
+    if (update) {
+        query.prepare("UPDATE tee "
+                      "SET projectID=:projectID, table_id=:table_id, model=:model, brand=:brand, "
+                      "q=:q, q1=:q1, atten_json=:atten_json, data_source=:data_source "
+                      "WHERE UUID=:UUID");
+    } else {
+        query.prepare("INSERT INTO tee (projectID, table_id, model, brand, q, q1, atten_json, data_source, UUID) "
+                      "VALUES (:projectID, :table_id, :model, :brand, :q, :q1, :atten_json, :data_source, :UUID)");
+    }
 
     // Bind values to the insert statement
     query.bindValue(":projectID", ProjectManager::getInstance().getPrjID());
@@ -730,7 +888,7 @@ bool addTeeToDatabase(const ComponentBase& component, QSqlDatabase& db)
     return true;
 }
 
-bool addPipeToDatabase(const ComponentBase& component, QSqlDatabase& db)
+bool addOrUpdatePipeToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update)
 {
     // Check if the database is open
     if (!db.isOpen()) {
@@ -751,8 +909,15 @@ bool addPipeToDatabase(const ComponentBase& component, QSqlDatabase& db)
 
     // Prepare SQL insert statement
     QSqlQuery query(db);
-    query.prepare("INSERT INTO pipe (projectID, table_id, model, brand, pipe_shape, size, atten_json, data_source, UUID) "
-                  "VALUES (:projectID, :table_id, :model, :brand, :pipe_shape, :size, :atten_json, :data_source, :UUID)");
+    if (update) {
+        query.prepare("UPDATE pipe "
+                      "SET projectID = :projectID, table_id = :table_id, model = :model, brand = :brand, "
+                      "pipe_shape = :pipe_shape, size = :size, atten_json = :atten_json, data_source = :data_source "
+                      "WHERE UUID = :UUID");
+    } else {
+        query.prepare("INSERT INTO pipe (projectID, table_id, model, brand, pipe_shape, size, atten_json, data_source, UUID) "
+                      "VALUES (:projectID, :table_id, :model, :brand, :pipe_shape, :size, :atten_json, :data_source, :UUID)");
+    }
 
     // Bind values to the insert statement
     query.bindValue(":projectID", ProjectManager::getInstance().getPrjID());
@@ -774,7 +939,7 @@ bool addPipeToDatabase(const ComponentBase& component, QSqlDatabase& db)
     return true;
 }
 
-bool addElbowToDatabase(const ComponentBase& component, QSqlDatabase& db)
+bool addOrUpdateElbowToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update)
 {
     // Check if the database is open
     if (!db.isOpen()) {
@@ -795,8 +960,20 @@ bool addElbowToDatabase(const ComponentBase& component, QSqlDatabase& db)
 
     // Prepare SQL insert statement
     QSqlQuery query(db);
-    query.prepare("INSERT INTO elbow (projectID, table_id, model, brand, elbow_shape, size, atten_json, data_source, UUID) "
-                  "VALUES (:projectID, :table_id, :model, :brand, :elbow_shape, :size, :atten_json, :data_source, :UUID)");
+    if (update) {
+        query.prepare("UPDATE elbow "
+                      "SET projectID = :projectID, table_id = :table_id, model = :model, brand = :brand, "
+                      "elbow_shape = :elbow_shape, size = :size, atten_json = :atten_json, data_source = :data_source "
+                      "WHERE UUID = :UUID");
+    } else {
+        query.prepare("INSERT INTO elbow (projectID, table_id, model, brand, elbow_shape, size, atten_json, "
+                      "data_source, UUID) "
+                      "VALUES (:projectID, :table_id, :model, :brand, :elbow_shape, :size, :atten_json, "
+                      ":data_source, :UUID)");
+    }
+
+
+
 
     // Bind values to the insert statement
     query.bindValue(":projectID", ProjectManager::getInstance().getPrjID());
@@ -818,7 +995,7 @@ bool addElbowToDatabase(const ComponentBase& component, QSqlDatabase& db)
     return true;
 }
 
-bool addReducerToDatabase(const ComponentBase& component, QSqlDatabase& db)
+bool addOrUpdateReducerToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update)
 {
     // Check if the database is open
     if (!db.isOpen()) {
@@ -839,8 +1016,18 @@ bool addReducerToDatabase(const ComponentBase& component, QSqlDatabase& db)
 
     // Prepare SQL insert statement
     QSqlQuery query(db);
-    query.prepare("INSERT INTO reducer (projectID, table_id, model, brand, reducer_type, reducer_before_size, reducer_after_size, atten_json, data_source, UUID) "
-                  "VALUES (:projectID, :table_id, :model, :brand, :reducer_type, :reducer_before_size, :reducer_after_size, :atten_json, :data_source, :UUID)");
+    if (update) {
+        query.prepare("UPDATE reducer "
+                      "SET projectID = :projectID, table_id = :table_id, model = :model, brand = :brand, "
+                      "reducer_type = :reducer_type, reducer_before_size = :reducer_before_size, "
+                      "reducer_after_size = :reducer_after_size, atten_json = :atten_json, data_source = :data_source "
+                      "WHERE UUID = :UUID");
+    } else {
+        query.prepare("INSERT INTO reducer (projectID, table_id, model, brand, reducer_type, reducer_before_size, "
+                      "reducer_after_size, atten_json, data_source, UUID) "
+                      "VALUES (:projectID, :table_id, :model, :brand, :reducer_type, :reducer_before_size, "
+                      ":reducer_after_size, :atten_json, :data_source, :UUID)");
+    }
 
     // Bind values to the insert statement
     query.bindValue(":projectID", ProjectManager::getInstance().getPrjID());
@@ -863,7 +1050,7 @@ bool addReducerToDatabase(const ComponentBase& component, QSqlDatabase& db)
     return true;
 }
 
-bool addSilencerToDatabase(const ComponentBase& component, QSqlDatabase& db)
+bool addSilencerToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update)
 {
     // Check if the database is open
     if (!db.isOpen()) {
@@ -884,8 +1071,15 @@ bool addSilencerToDatabase(const ComponentBase& component, QSqlDatabase& db)
 
     // Prepare SQL insert statement
     QSqlQuery query(db);
-    query.prepare("INSERT INTO silencer (projectID, table_id, model, brand, silencer_type, atten_json, data_source, UUID) "
-                  "VALUES (:projectID, :table_id, :model, :brand, :silencer_type, :atten_json, :data_source, :UUID)");
+    if (update) {
+        query.prepare("UPDATE silencer "
+                      "SET projectID = :projectID, table_id = :table_id, model = :model, brand = :brand, "
+                      "silencer_type = :silencer_type, atten_json = :atten_json, data_source = :data_source "
+                      "WHERE UUID = :UUID");
+    } else {
+        query.prepare("INSERT INTO silencer (projectID, table_id, model, brand, silencer_type, atten_json, data_source, UUID) "
+                      "VALUES (:projectID, :table_id, :model, :brand, :silencer_type, :atten_json, :data_source, :UUID)");
+    }
 
     // Bind values to the insert statement
     query.bindValue(":projectID", ProjectManager::getInstance().getPrjID());
@@ -906,4 +1100,31 @@ bool addSilencerToDatabase(const ComponentBase& component, QSqlDatabase& db)
     return true;
 }
 
+}
+
+namespace DBComponentDelOperations {
+bool deleteComponentFromDatabase(const QString &tableName, const QString &UUID, QSqlDatabase &db)
+{
+    if (!db.isOpen()) {
+        // 确保数据库已经打开
+        qWarning() << "Database is not open!";
+        return false;
+    }
+
+    // 创建并准备 SQL 删除语句
+    QSqlQuery query(db);
+    QString sql = QString("DELETE FROM %1 WHERE UUID = :UUID").arg(tableName);
+    query.prepare(sql);
+
+    // 绑定UUID值到删除语句
+    query.bindValue(":UUID", UUID);
+
+    // 执行 SQL 删除操作
+    if (!query.exec()) {
+        qWarning() << "Delete operation failed:" << query.lastError();
+        return false;
+    }
+
+    return true;
+}
 }

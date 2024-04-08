@@ -161,7 +161,6 @@ void Widget_base_inputTable::deleteRowFromTable(QTableWidget *tableWidget, int d
             item->setData(Qt::ForegroundRole, QColor(70, 70, 70));
         }
         //重新编号后再进行更新
-        DBManager->addComponentToDel(UUID);
         componentManager.removeComponent(UUID);
 
         // 更新组件信息
@@ -250,7 +249,6 @@ void Widget_base_inputTable::deleteRowFromTable(QTableWidget *tableWidget_noise,
         }
 
         //重新编号后再进行更新
-        DBManager->addComponentToDel(UUID);
         componentManager.removeComponent(UUID);
     }
     else if(msgBox.clickedButton() == noButton)

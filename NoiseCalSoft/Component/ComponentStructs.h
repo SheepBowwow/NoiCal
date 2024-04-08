@@ -11,24 +11,24 @@ using std::array;
 using std::unique_ptr;
 
 namespace component_type_name{
-const char* const FAN = "风机";
-const char* const FANCOIL = "风机盘管";
-const char* const AIRCONDITION = "空调器";
-const char* const VAV_TERMINAL = "变风量末端";
-const char* const CIRCULAR_DAMPER = "圆形调风门";
-const char* const RECT_DAMPER = "方形调风门";
-const char* const AIRDIFF = "布风器+散流器";
-const char* const PUMPSEND = "抽/送风头";
-const char* const STATICBOX_GRILLE = "静压箱+格栅";
-const char* const DISP_VENT_TERMINAL = "置换通风末端";
-const char* const OTHER_SEND_TERMINAL = "其他送风末端";
-const char* const STATICBOX = "静压箱";
-const char* const MULTI_RANC = "风道多分支";
-const char* const TEE = "三通";
-const char* const PIPE = "直管";
-const char* const ELBOW = "弯头";
-const char* const REDUCER = "变径";
-const char* const SILENCER = "消音器";
+const QString FAN = QStringLiteral("风机");
+const QString FANCOIL = QStringLiteral("风机盘管");
+const QString AIRCONDITION = QStringLiteral("空调器");
+const QString VAV_TERMINAL = QStringLiteral("变风量末端");
+const QString CIRCULAR_DAMPER = QStringLiteral("圆形调风门");
+const QString RECT_DAMPER = QStringLiteral("方形调风门");
+const QString AIRDIFF = QStringLiteral("布风器+散流器");
+const QString PUMPSEND = QStringLiteral("抽/送风头");
+const QString STATICBOX_GRILLE = QStringLiteral("静压箱+格栅");
+const QString DISP_VENT_TERMINAL = QStringLiteral("置换通风末端");
+const QString OTHER_SEND_TERMINAL = QStringLiteral("其他送风末端");
+const QString STATICBOX = QStringLiteral("静压箱");
+const QString MULTI_RANC = QStringLiteral("风道多分支");
+const QString TEE = QStringLiteral("三通");
+const QString PIPE = QStringLiteral("直管");
+const QString ELBOW = QStringLiteral("弯头");
+const QString REDUCER = QStringLiteral("变径");
+const QString SILENCER = QStringLiteral("消音器");
 }
 
 class ComponentBase

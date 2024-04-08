@@ -7,10 +7,16 @@
 #include <QSqlQuery>
 #include <QDebug>
 #include "project/projectmanager.h"
-#include "Component/ComponentManager.h"
+#include "Component/ComponentStructs.h"
+#include <QHash>
+
+extern QHash<QString, QString> typeNameToTableName;
+
+
 
 // 定义函数指针类型，用于添加到数据库的操作
 using AddToDatabaseFunc = std::function<bool(const ComponentBase&)>;
+using UpdateToDatabaseFunc = std::function<bool(const ComponentBase&)>;
 
 class DatabaseManager {
 public:
@@ -26,9 +32,9 @@ public:
     // 新增成员函数：从project_basicInfo表中加载projectID
     QSet<QString> loadProjectIDs();
     void registerAddFunctions();
-    bool addToDatabase(const ComponentBase& component);
+    void registerUpdateFunctions();
 
-    void addComponentToDel(const QString& UUID);
+    void delComponentInDatabase(const QString& componentName ,const QString &UUID);
     bool addProjectInfoToDatabase(const ProjectInfo& projectInfo);
     bool updateProjectInfoInDatabase(const ProjectInfo &projectInfo);
     bool updateProjectIDInDatabase(const QString& old_prjID, const QString& new_prjID);
@@ -40,6 +46,8 @@ public:
 
     QMap<QString, AddToDatabaseFunc> getComponentAddFuncMap() const;
 
+    QMap<QString, AddToDatabaseFunc> getComponentUpdateFuncMap() const;
+
 private:
     QSqlDatabase db;
     // 私有构造函数
@@ -48,8 +56,8 @@ private:
     DatabaseManager(const DatabaseManager&) = delete;
     DatabaseManager& operator=(const DatabaseManager&) = delete;
 
-    QList<QString> componentToDel;
     QMap<QString, AddToDatabaseFunc> componentAddFuncMap;
+    QMap<QString, AddToDatabaseFunc> componentUpdateFuncMap;
 };
 
 #endif // DATABASEMANAGER_H
