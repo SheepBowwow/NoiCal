@@ -106,9 +106,9 @@ color: white;
    <widget class="QLineEdit" name="lineEdit">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>60</y>
-      <width>191</width>
+      <x>130</x>
+      <y>70</y>
+      <width>181</width>
       <height>31</height>
      </rect>
     </property>
@@ -122,9 +122,9 @@ color: white;
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>60</y>
-      <width>71</width>
+      <x>30</x>
+      <y>70</y>
+      <width>91</width>
       <height>31</height>
      </rect>
     </property>
@@ -149,8 +149,8 @@ color: white;
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>124</width>
-      <height>45</height>
+      <width>148</width>
+      <height>54</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_37">
@@ -185,6 +185,7 @@ background-color : rgb(105, 105, 105);
         <font>
          <family>Microsoft YaHei</family>
          <pointsize>24</pointsize>
+         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>

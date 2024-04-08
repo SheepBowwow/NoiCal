@@ -2267,8 +2267,8 @@ color: white;
      <rect>
       <x>1</x>
       <y>10</y>
-      <width>251</width>
-      <height>45</height>
+      <width>298</width>
+      <height>54</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_22">
@@ -2303,6 +2303,7 @@ background-color : rgb(105, 105, 105);
         <font>
          <family>Microsoft YaHei</family>
          <pointsize>24</pointsize>
+         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -2380,6 +2381,9 @@ color : rgb(105, 105, 105);
   <tabstop>lineEdit_air_distributor_brand</tabstop>
   <tabstop>lineEdit_diffuser_model</tabstop>
   <tabstop>lineEdit_diffuser_brand</tabstop>
+  <tabstop>lineEdit_length</tabstop>
+  <tabstop>lineEdit_width</tabstop>
+  <tabstop>lineEdit_diameter</tabstop>
   <tabstop>lineEdit_63</tabstop>
   <tabstop>lineEdit_125</tabstop>
   <tabstop>lineEdit_250</tabstop>
@@ -2404,17 +2408,14 @@ color : rgb(105, 105, 105);
   <tabstop>lineEdit_2k_refl</tabstop>
   <tabstop>lineEdit_4k_refl</tabstop>
   <tabstop>lineEdit_8k_refl</tabstop>
-  <tabstop>close</tabstop>
   <tabstop>pushButton_confirm</tabstop>
-  <tabstop>comboBox_noi_data_source</tabstop>
-  <tabstop>comboBox_atten_data_source</tabstop>
   <tabstop>lineEdit_total</tabstop>
-  <tabstop>lineEdit_diameter</tabstop>
+  <tabstop>comboBox_atten_data_source</tabstop>
   <tabstop>comboBox_refl_data_source</tabstop>
   <tabstop>radioButton_circle</tabstop>
   <tabstop>radioButton_rect</tabstop>
-  <tabstop>lineEdit_length</tabstop>
-  <tabstop>lineEdit_width</tabstop>
+  <tabstop>comboBox_noi_data_source</tabstop>
+  <tabstop>close</tabstop>
  </tabstops>
  <resources/>
  <connections/>

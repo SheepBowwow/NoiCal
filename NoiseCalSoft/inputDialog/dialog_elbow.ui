@@ -142,7 +142,7 @@ background-color: rgb(255, 255, 255);
 </string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="page_rect">
       <widget class="QLineEdit" name="lineEdit_width">
@@ -441,7 +441,7 @@ border: 1px solid #DCDCDC;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -501,7 +501,7 @@ border: 1px solid #DCDCDC;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -561,7 +561,7 @@ border: 1px solid #DCDCDC;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -621,7 +621,7 @@ border: 1px solid #DCDCDC;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -681,7 +681,7 @@ border: 1px solid #DCDCDC;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -744,7 +744,7 @@ border: 1px solid #DCDCDC;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -804,7 +804,7 @@ border: 1px solid #DCDCDC;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -885,6 +885,7 @@ border: 1px solid #DCDCDC;
       <font>
        <family>黑体</family>
        <pointsize>12</pointsize>
+       <weight>50</weight>
        <bold>false</bold>
       </font>
      </property>
@@ -1074,8 +1075,8 @@ color: white;
      <rect>
       <x>1</x>
       <y>10</y>
-      <width>101</width>
-      <height>45</height>
+      <width>108</width>
+      <height>54</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_32">
@@ -1110,6 +1111,7 @@ background-color : rgb(105, 105, 105);
         <font>
          <family>Microsoft YaHei</family>
          <pointsize>24</pointsize>
+         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -1208,6 +1210,28 @@ border: 1px solid #000000;
    </widget>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit_model</tabstop>
+  <tabstop>lineEdit_brand</tabstop>
+  <tabstop>lineEdit_width</tabstop>
+  <tabstop>lineEdit_diameter</tabstop>
+  <tabstop>lineEdit_63</tabstop>
+  <tabstop>lineEdit_125</tabstop>
+  <tabstop>lineEdit_250</tabstop>
+  <tabstop>lineEdit_500</tabstop>
+  <tabstop>lineEdit_1k</tabstop>
+  <tabstop>lineEdit_2k</tabstop>
+  <tabstop>lineEdit_4k</tabstop>
+  <tabstop>lineEdit_8k</tabstop>
+  <tabstop>pushButton_confirm</tabstop>
+  <tabstop>pushButton</tabstop>
+  <tabstop>comboBox_data_source</tabstop>
+  <tabstop>radioButton_circle</tabstop>
+  <tabstop>radioButton_rect</tabstop>
+  <tabstop>close</tabstop>
+  <tabstop>radioButton_lined</tabstop>
+  <tabstop>radioButton_unlined</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

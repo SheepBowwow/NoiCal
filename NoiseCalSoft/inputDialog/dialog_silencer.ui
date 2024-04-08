@@ -680,8 +680,8 @@ color: white;
      <rect>
       <x>1</x>
       <y>10</y>
-      <width>91</width>
-      <height>45</height>
+      <width>108</width>
+      <height>54</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_38">
@@ -716,6 +716,7 @@ background-color : rgb(105, 105, 105);
         <font>
          <family>Microsoft YaHei</family>
          <pointsize>24</pointsize>
+         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -771,6 +772,21 @@ background-color: rgb(157, 196, 229);
    </widget>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit_model</tabstop>
+  <tabstop>lineEdit_brand</tabstop>
+  <tabstop>lineEdit_63</tabstop>
+  <tabstop>lineEdit_125</tabstop>
+  <tabstop>lineEdit_250</tabstop>
+  <tabstop>lineEdit_500</tabstop>
+  <tabstop>lineEdit_1k</tabstop>
+  <tabstop>lineEdit_2k</tabstop>
+  <tabstop>lineEdit_4k</tabstop>
+  <tabstop>lineEdit_8k</tabstop>
+  <tabstop>pushButton_confirm</tabstop>
+  <tabstop>close</tabstop>
+  <tabstop>comboBox_data_source</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

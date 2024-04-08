@@ -119,6 +119,7 @@ background-color : rgb(105, 105, 105);
         <font>
          <family>Microsoft YaHei</family>
          <pointsize>24</pointsize>
+         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -151,6 +152,7 @@ color : rgb(105, 105, 105);
      <font>
       <family>Microsoft YaHei</family>
       <pointsize>12</pointsize>
+      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -261,6 +263,7 @@ color: white;
      <font>
       <family>Microsoft YaHei</family>
       <pointsize>12</pointsize>
+      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -397,6 +400,14 @@ color: white;
    </widget>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>comboBox_prj_num</tabstop>
+  <tabstop>lineEdit_prj_ID</tabstop>
+  <tabstop>pushButton_create_prj</tabstop>
+  <tabstop>pushButton_6</tabstop>
+  <tabstop>close</tabstop>
+  <tabstop>pushButton_5</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

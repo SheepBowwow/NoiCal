@@ -56,8 +56,8 @@ border: 1px solid #000000;
      <rect>
       <x>1</x>
       <y>10</y>
-      <width>141</width>
-      <height>45</height>
+      <width>148</width>
+      <height>54</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_25">
@@ -92,6 +92,7 @@ background-color : rgb(105, 105, 105);
         <font>
          <family>Microsoft YaHei</family>
          <pointsize>24</pointsize>
+         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -440,7 +441,7 @@ color: white;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -494,7 +495,7 @@ color: white;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -548,7 +549,7 @@ color: white;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -602,7 +603,7 @@ color: white;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -656,7 +657,7 @@ color: white;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -713,7 +714,7 @@ color: white;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -767,7 +768,7 @@ color: white;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -821,7 +822,7 @@ color: white;
            <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -932,8 +933,8 @@ background-color: rgb(157, 196, 229);
   <tabstop>lineEdit_2k</tabstop>
   <tabstop>lineEdit_4k</tabstop>
   <tabstop>lineEdit_8k</tabstop>
-  <tabstop>comboBox_data_source</tabstop>
   <tabstop>pushButton_confirm</tabstop>
+  <tabstop>comboBox_data_source</tabstop>
   <tabstop>close</tabstop>
  </tabstops>
  <resources/>

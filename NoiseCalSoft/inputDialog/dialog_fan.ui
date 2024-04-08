@@ -1500,8 +1500,8 @@ color: white;
      <rect>
       <x>0</x>
       <y>10</y>
-      <width>101</width>
-      <height>45</height>
+      <width>108</width>
+      <height>54</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_15">
@@ -1536,6 +1536,7 @@ background-color : rgb(105, 105, 105);
         <font>
          <family>Microsoft YaHei</family>
          <pointsize>24</pointsize>
+         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -1557,6 +1558,34 @@ color : rgb(105, 105, 105);
    </widget>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit_number</tabstop>
+  <tabstop>lineEdit_model</tabstop>
+  <tabstop>lineEdit_brand</tabstop>
+  <tabstop>lineEdit_static_pressure</tabstop>
+  <tabstop>lineEdit_air_volume</tabstop>
+  <tabstop>lineEdit_in_63</tabstop>
+  <tabstop>lineEdit_in_125</tabstop>
+  <tabstop>lineEdit_in_250</tabstop>
+  <tabstop>lineEdit_in_500</tabstop>
+  <tabstop>lineEdit_in_1k</tabstop>
+  <tabstop>lineEdit_in_2k</tabstop>
+  <tabstop>lineEdit_in_4k</tabstop>
+  <tabstop>lineEdit_in_8k</tabstop>
+  <tabstop>lineEdit_out_63</tabstop>
+  <tabstop>lineEdit_out_125</tabstop>
+  <tabstop>lineEdit_out_250</tabstop>
+  <tabstop>lineEdit_out_500</tabstop>
+  <tabstop>lineEdit_out_1k</tabstop>
+  <tabstop>lineEdit_out_2k</tabstop>
+  <tabstop>lineEdit_out_4k</tabstop>
+  <tabstop>lineEdit_out_8k</tabstop>
+  <tabstop>pushButton_confirm</tabstop>
+  <tabstop>close</tabstop>
+  <tabstop>lineEdit_out_total</tabstop>
+  <tabstop>comboBox_data_source</tabstop>
+  <tabstop>lineEdit_in_total</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

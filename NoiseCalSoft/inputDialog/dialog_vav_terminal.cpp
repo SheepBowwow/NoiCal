@@ -104,6 +104,12 @@ void Dialog_VAV_terminal::on_pushButton_confirm_clicked()
         noi[i] = noi_lineEdits[i]->text();
     }
 
+    /**点击确认前检查，数据是否填完整**/
+    if(check_lineedit()==false){
+        QMessageBox::information(this,"提示","内容未填写完整");
+        return;
+    }
+
     this->component = new VAV_terminal(
                 ui->lineEdit_model->text(),
                 ui->lineEdit_brand->text(),
@@ -116,4 +122,18 @@ void Dialog_VAV_terminal::on_pushButton_confirm_clicked()
                 ui->lineEdit_number->text());
 
     this->accept(); // 关闭对话框
+}
+
+bool Dialog_VAV_terminal::check_lineedit()
+{
+    for(size_t i = 0; i < noi_lineEdits.size(); i++){
+        if(noi_lineEdits[i]->text().isEmpty())
+            return false;
+    }
+    if(ui->lineEdit_model->text().isEmpty()||
+            ui->lineEdit_brand->text().isEmpty()||
+            ui->lineEdit_air_volume->text().isEmpty()||
+            ui->lineEdit_number->text().isEmpty())
+        return false;
+    return true;
 }

@@ -114,6 +114,7 @@ Dialog_aircondition::~Dialog_aircondition()
 
 void Dialog_aircondition::on_pushButton_confirm_clicked()
 {
+
     array<QString,9> noi_send_in;
     array<QString,9> noi_send_out;
 
@@ -131,6 +132,12 @@ void Dialog_aircondition::on_pushButton_confirm_clicked()
         {
             noi_exhaust_in[i] = noi_exhaust_in_lineEdits[i]->text();
             noi_exhaust_out[i] = noi_exhaust_out_lineEdits[i]->text();
+        }
+
+        /**点击确认前检查，数据是否填完整**/
+        if(check_lineedit(fan_counts)==false){
+            QMessageBox::information(this,"提示","内容未填写完整");
+            return;
         }
 
         this->component = new Aircondition(
@@ -153,6 +160,11 @@ void Dialog_aircondition::on_pushButton_confirm_clicked()
     }
     else
     {
+        /**点击确认前检查，数据是否填完整**/
+        if(check_lineedit(fan_counts)==false){
+            QMessageBox::information(this,"提示","内容未填写完整");
+            return;
+        }
         this->component = new Aircondition(
                     ui->lineEdit_model->text(),
                     ui->lineEdit_brand->text(),
@@ -169,6 +181,36 @@ void Dialog_aircondition::on_pushButton_confirm_clicked()
 
 
     this->accept(); // 关闭对话框
+}
+
+bool Dialog_aircondition::check_lineedit(int counts)
+{
+    if(ui->lineEdit_model->text().isEmpty()             ||
+       ui->lineEdit_brand->text().isEmpty()             ||
+       ui->lineEdit_send_number->text().isEmpty()       ||
+       ui->lineEdit_send_air_volume->text().isEmpty()   ||
+       ui->lineEdit_send_static_pressure->text().isEmpty()
+       )return false;
+
+    for(size_t i = 0; i < noi_send_in_lineEdits.size(); i++){
+        if(noi_send_in_lineEdits[i]->text().isEmpty()       ||
+           noi_send_out_lineEdits[i]->text().isEmpty())
+            return false;
+    }
+
+    if(counts == 2){
+        for(size_t i = 0; i < noi_exhaust_in_lineEdits.size(); i++){
+            if(noi_exhaust_in_lineEdits[i]->text().isEmpty() ||
+            noi_exhaust_out_lineEdits[i]->text().isEmpty())
+                return false;
+        }
+        if(ui->lineEdit_exhaust_number->text().isEmpty()    ||
+           ui->lineEdit_exhaust_air_volume->text().isEmpty() ||
+           ui->lineEdit_exhaust_static_pressure->text().isEmpty()
+          )return false;
+    }
+
+    return true;
 }
 
 void* Dialog_aircondition::getComponent()

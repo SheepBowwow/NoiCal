@@ -930,7 +930,7 @@ color: white;
      <rect>
       <x>1</x>
       <y>10</y>
-      <width>191</width>
+      <width>228</width>
       <height>45</height>
      </rect>
     </property>
@@ -978,6 +978,7 @@ background-color : rgb(105, 105, 105);
         <font>
          <family>Microsoft YaHei</family>
          <pointsize>24</pointsize>
+         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -1088,10 +1089,10 @@ background-color: rgb(157, 196, 229);
   <zorder>widget</zorder>
  </widget>
  <tabstops>
+  <tabstop>lineEdit_model</tabstop>
+  <tabstop>lineEdit_brand</tabstop>
   <tabstop>lineEdit_diameter</tabstop>
   <tabstop>lineEdit_air_volume</tabstop>
-  <tabstop>comboBox_angle</tabstop>
-  <tabstop>lineEdit_brand</tabstop>
   <tabstop>lineEdit_63</tabstop>
   <tabstop>lineEdit_125</tabstop>
   <tabstop>lineEdit_250</tabstop>
@@ -1100,9 +1101,11 @@ background-color: rgb(157, 196, 229);
   <tabstop>lineEdit_2k</tabstop>
   <tabstop>lineEdit_4k</tabstop>
   <tabstop>lineEdit_8k</tabstop>
-  <tabstop>lineEdit_total</tabstop>
   <tabstop>pushButton_confirm</tabstop>
+  <tabstop>lineEdit_total</tabstop>
   <tabstop>close</tabstop>
+  <tabstop>comboBox_angle</tabstop>
+  <tabstop>comboBox_data_source</tabstop>
  </tabstops>
  <resources/>
  <connections/>

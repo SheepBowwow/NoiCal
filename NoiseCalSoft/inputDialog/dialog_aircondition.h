@@ -24,6 +24,7 @@ public:
 
 private slots:
     void on_pushButton_confirm_clicked();
+    bool check_lineedit(int counts);
     void calTotalNoise();
     void on_close_clicked();
 private:
