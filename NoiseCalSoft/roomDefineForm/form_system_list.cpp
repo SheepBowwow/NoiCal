@@ -2,6 +2,7 @@
 #include "ui_form_system_list.h"
 #include "dialog_add_system.h"
 #include "globle_var.h"
+#include "roomDefineForm/systemmanager.h"
 
 #include <QCheckBox>
 #include <QMessageBox>
@@ -70,12 +71,10 @@ void Form_system_list::on_buttonadd_clicked()
         ui->tableWidget->setItem(RowCount,2,tbitem2);
         ui->tableWidget->setItem(RowCount,3,tbitem3);
 
-        if(dialog->getType() == "空调器")
-            systemListMap[system_name]["空调器"].push_back(QString(dialog->getNumber()));
-        else if(dialog->getType() == "独立排风机")
-            systemListMap[system_name]["风机"].push_back(QString(dialog->getNumber()));
-        else if(dialog->getType() == "公共区域风机盘管")
-            systemListMap[system_name]["风机盘管"].push_back(QString(dialog->getNumber()));
+        QString componentType = dialog->getType();
+        QString componentUUID = dialog->getComponentUUID();
+
+        SystemManager::getInstance().addComponentToSystemMap(system_name, componentType, componentUUID);
     }
 }
 

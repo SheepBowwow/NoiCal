@@ -110,15 +110,15 @@ bool addOrUpdateFanCoilToDatabase(const ComponentBase& component, QSqlDatabase& 
     if (update) {
         // 准备更新语句
         query.prepare("UPDATE fanCoil "
-                      "SET projectID=:projectID, table_id=:table_id, model=:model, air_volume=:air_volume, "
+                      "SET projectID=:projectID, table_id=:table_id, type=:type, model=:model, air_volume=:air_volume, "
                       "static_pressure=:static_pressure, brand=:brand, noise_in_json=:noise_in_json, "
                       "noise_out_json=:noise_out_json, data_source=:data_source "
                       "WHERE UUID=:UUID");
     } else {
         // 准备插入语句
-        query.prepare("INSERT INTO fanCoil (projectID, table_id, model, air_volume, "
+        query.prepare("INSERT INTO fanCoil (projectID, table_id, type, model, air_volume, "
                       "static_pressure, brand, noise_in_json, noise_out_json, data_source, UUID) "
-                      "VALUES (:projectID, :table_id, :model, :air_volume, :static_pressure, "
+                      "VALUES (:projectID, :table_id, :type, :model, :air_volume, :static_pressure, "
                       ":brand, :noise_in_json, :noise_out_json, :data_source, :UUID)");
     }
 
@@ -126,6 +126,7 @@ bool addOrUpdateFanCoilToDatabase(const ComponentBase& component, QSqlDatabase& 
     // 绑定值到插入语句
     query.bindValue(":projectID", ProjectManager::getInstance().getPrjID());
     query.bindValue(":table_id", fanCoil->table_id.toInt());
+    query.bindValue(":type", fanCoil->type);
     query.bindValue(":model", fanCoil->model);
     query.bindValue(":air_volume", fanCoil->air_volume.toDouble());
     query.bindValue(":static_pressure", fanCoil->static_pressure.toDouble());
@@ -259,8 +260,8 @@ bool addOrUpdateVAVTerminalToDatabase(const ComponentBase& component, QSqlDataba
     query.bindValue(":table_id", vavTerminal->table_id.toInt());
     query.bindValue(":number", vavTerminal->number);
     query.bindValue(":model", vavTerminal->model);
-    query.bindValue(":valve_angle", vavTerminal->angle.toDouble());
-    query.bindValue(":air_volume", vavTerminal->air_volume.toDouble());
+    query.bindValue(":valve_angle", vavTerminal->angle);
+    query.bindValue(":air_volume", vavTerminal->air_volume);
     query.bindValue(":brand", vavTerminal->brand);
     query.bindValue(":noise_json", noiJsonString);
     query.bindValue(":data_source", vavTerminal->data_source);

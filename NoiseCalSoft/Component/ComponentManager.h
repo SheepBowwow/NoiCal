@@ -41,6 +41,7 @@ public:
 
 signals:
     void loadComponentsDone();
+    void componentsUpdate(const QString &uuid);
 
 private:
     // 禁止通过构造函数和复制构造函数创建实例

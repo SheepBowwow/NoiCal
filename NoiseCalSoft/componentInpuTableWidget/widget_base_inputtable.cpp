@@ -193,6 +193,7 @@ void Widget_base_inputTable::deleteRowFromTable(QTableWidget *tableWidget, int d
         {
             int row = selectedRows[i];
             UUID = tableWidget->item(row, tableWidget->columnCount() - 1)->text();
+            componentManager.removeComponent(UUID);
             tableWidget->removeRow(row);
             if(deleteRowNum != 1)
             {
@@ -213,8 +214,6 @@ void Widget_base_inputTable::deleteRowFromTable(QTableWidget *tableWidget, int d
             item->setBackground(QBrush(Qt::lightGray));
             item->setData(Qt::ForegroundRole, QColor(70, 70, 70));
         }
-        //重新编号后再进行更新
-        componentManager.removeComponent(UUID);
 
         // 更新组件信息
         for (int row = 0; row < tableWidget->rowCount(); row+=deleteRowNum) {
@@ -277,11 +276,13 @@ void Widget_base_inputTable::deleteRowFromTable(QTableWidget *tableWidget_noise,
     msgBox.exec();
 
     if (msgBox.clickedButton() == yesButton)
-    {
+    {        
         QString UUID;
-        for (auto& row : selectedRows)
+        for (int i = selectedRows.size() - 1; i >= 0; --i)
         {
+            int row = selectedRows[i];
             UUID = tableWidget_noise->item(row , tableWidget_noise->columnCount() - 1)->text();
+            ComponentManager::getInstance().removeComponent(UUID);
             tableWidget_noise->removeRow(row);
             tableWidget_atten->removeRow(row);
             tableWidget_refl->removeRow(row);
@@ -301,8 +302,16 @@ void Widget_base_inputTable::deleteRowFromTable(QTableWidget *tableWidget_noise,
             }
         }
 
-        //重新编号后再进行更新
-        componentManager.removeComponent(UUID);
+        // 更新组件信息
+        for (int row = 0; row < tableWidget_noise->rowCount(); row++) {
+            QString uuid = tableWidget_noise->item(row, tableWidget_noise->columnCount() - 1)->text(); // 获取组件uuid
+            QSharedPointer<ComponentBase> component = componentManager.findComponent(uuid); // 查找组件
+
+            if (component) {
+                component->setTableID(QString::number(row + 1)); // 设置新的table_id，假设组件有这个方法
+                componentManager.updateComponent(uuid, component); // 更新组件
+            }
+        }
     }
     else if(msgBox.clickedButton() == noButton)
     {

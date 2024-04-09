@@ -71,6 +71,7 @@ SOURCES += \
     roomDefineForm/dialog_addroom.cpp \
     roomDefineForm/form_room_define.cpp \
     roomDefineForm/form_system_list.cpp \
+    roomDefineForm/systemmanager.cpp \
     subclass/clickablecombobox.cpp \
     widget.cpp \
     wordEngine/wordengine.cpp
@@ -133,6 +134,7 @@ HEADERS += \
     roomDefineForm/dialog_addroom.h \
     roomDefineForm/form_room_define.h \
     roomDefineForm/form_system_list.h \
+    roomDefineForm/systemmanager.h \
     subclass/clickablecombobox.h \
     widget.h \
     wordEngine/wordengine.h

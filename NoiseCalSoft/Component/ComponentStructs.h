@@ -338,6 +338,7 @@ typedef struct FanCoil : ComponentBase
         this->data_source = record.value("data_source").toString();
 
         // FanCoil specific member variables
+        this->type = record.value("type").toString();
         this->air_volume = record.value("air_volume").toString();
         this->static_pressure = record.value("static_pressure").toString();
 
@@ -636,8 +637,8 @@ typedef struct VAV_terminal : Valve
 
         // VAV_terminal specific member variables
         this->number = record.value("number").toString();
-        this->angle = record.value("valve_angle").toDouble(); // Assuming real is stored as double in QSqlRecord
-        this->air_volume = record.value("air_volume").toDouble(); // Assuming real is stored as double in QSqlRecord
+        this->angle = record.value("valve_angle").toString(); // Assuming real is stored as double in QSqlRecord
+        this->air_volume = record.value("air_volume").toString(); // Assuming real is stored as double in QSqlRecord
 
         // Handle noise data (assuming `deserializeNoise` function exists)
         QString noiseJson = record.value("noise_json").toString();
@@ -993,8 +994,13 @@ public:
     }
 }AirDiff;
 
+namespace pump_send_type {
+const QString PUMP = QStringLiteral("抽风头");
+const QString SEND = QStringLiteral("送风头");
+}
 typedef struct PumpSend : Terminal
 {
+
     QString type_pump_or_send;  //类型 抽风头or送风头
 
     PumpSend() = default;
