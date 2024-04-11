@@ -2,7 +2,7 @@
 #define Pi 3.14159265358979323846
 
 // 注意：此函数的声明需要修改为返回double类型，以便返回计算结果
-double calNoiseTotalValue(const std::array<QLineEdit*, 9>& lineEdits) {
+double calNoiseTotalValue(const array<QLineEdit*, 9>& lineEdits) {
     QVector<double> noises;
     QVector<double> weightings = {-26.2, -16.1, -8.6, -3.2, 0, 1.2, 1, -1.1};
 
@@ -26,9 +26,22 @@ double calNoiseTotalValue(const std::array<QLineEdit*, 9>& lineEdits) {
     return 10.0 * log10(tmp);
 }
 
-QList<double> calCircularDamperNoise(ShapType shape, int angle, double air_volume, double dimension1, double dimension2)
+double calNoiseTotalValue(const array<double, 9>& nois)
 {
-    QList<double> result;
+    QVector<double> weightings = {-26.2, -16.1, -8.6, -3.2, 0, 1.2, 1, -1.1};
+
+    double tmp = 0.0;
+    for(int i = 0; i < nois.size() - 1; ++i) {
+        tmp += pow(10.0, (nois[i] + weightings[i]) / 10.0);
+    }
+
+    // 计算总值
+    return 10.0 * log10(tmp);
+}
+
+array<double, 9> calDamperNoise(ShapType shape, int angle, double air_volume, double dimension1, double dimension2)
+{
+    array<double, 9> results;
 
     QMap<int,QVector<int>> fixNumber;   //修正值
     fixNumber[0] = { -4, -5, -5, -9, -14, -19, -24, -29};
@@ -47,34 +60,32 @@ QList<double> calCircularDamperNoise(ShapType shape, int angle, double air_volum
     if(shape == Circle)
         area = Pi * (dimension1 / 1000.0 / 2) * (dimension1 / 1000.0 / 2);
     else if(shape == Rect)
-        area = dimension1 * dimension2;
+        area = (dimension1 / 1000.0) * (dimension2 / 1000.0);
 
     for(int i = 0; i < 8; i++)
     {
         double res = L + 10 * log10(area)
                 + 55 * log10(air_volume / area / 3600) + fixNumber[angle][i];
-        result.push_back(std::round(res * 10.0) / 10.0);
+        results[i] = (std::round(res * 10.0) / 10.0);
     }
 
-    return result;
+    results[8] = calNoiseTotalValue(results);
+
+    return results;
 }
 
-QList<double> calTerminalReflNoise(QString type, QString size)
+array<double, 8> calTerminalReflNoise(ShapType shape, const double& dimension1, const double& dimension2)
 {
-    QList<double> res;
+    array<double, 8> results;
 
     double D = 0;
-    if(type == "圆形")
+    if(shape == Circle)
     {
-        D = size.toDouble() / 1000.0;
+        D = dimension1 / 1000.0;
     }
-    else if(type == "方形")
+    else if(shape == Rect)
     {
-        QStringList parts = size.split('X'); // 使用split函数按照斜杠分割字符串
-        // parts中的第一个元素是前缀，第二个元素是后缀（如果有的话）
-        double length = parts.value(0).trimmed().toDouble(); // 去除前缀两边的空格
-        double width = parts.value(1).trimmed().toDouble(); // 去除后缀两边的空格
-        D = sqrt((4 * length / 1000.0) * (width / 1000.0) / Pi);
+        D = sqrt(4 * (dimension1 / 1000.0) * (dimension2 / 1000.0) / Pi);
     }
 
     double f[] = {63,125,250,500,1000,2000,4000,8000};
@@ -83,30 +94,30 @@ QList<double> calTerminalReflNoise(QString type, QString size)
     {
         double result = 0;
         result = 10 * log10(1 + pow(((0.7 * 340) / (Pi * f[i] * D)),2));
-        res.push_back(result);
+        results[i] = result;
     }
 
-    return res;
+    return results;
 }
 
-QList<double> calBranchNoise(double q1, double q)
+array<double, 8> calBranchNoise(double q1, double q)
 {
-    QList<double> res;
+    array<double, 8> res;
 
     double noise = 10 * log10(q1 / q);
 
 
     for(int i = 0; i < 8; i++)
     {
-        res.push_back(-noise);
+        res[i] = -noise;
     }
 
     return res;
 }
 
-QList<double> calculateNoiseLevels(ShapType shape, double dimension)
+array<double, 8> calElbowNoise(ShapType shape, double dimension)
 {
-    QList<double> results;
+    array<double, 8> results;
     double f[] = {0.063, 0.125, 0.250, 0.500, 1, 2, 4, 8};
     double fw;
 
@@ -141,205 +152,128 @@ QList<double> calculateNoiseLevels(ShapType shape, double dimension)
                 break;
         }
 
-        results.push_back(result);
+        results[i] = result;
+    }
+    for(auto& num : results)
+    {
+        num = -num;
     }
 
     return results;
 }
 
-/*
-//计算总值 槽函数实现
-void Dialog_pipe::calNoise()
+
+array<double, 8> caPipeNoise(ShapType shape, const double& dimension1, const double& dimension2)
 {
-    if(ui->radioButton_circle->isChecked() && ui->lineEdit_diameter->text().isEmpty())
-    {
-        return;
-    }
-    else if(ui->radioButton_rect->isChecked() && (ui->lineEdit_length->text().isEmpty() || ui->lineEdit_width->text().isEmpty()))
-    {
-        return;
-    }
     double pa = 0, c = 0, s = 0;
-    double noi[8];
-    QVector<QLineEdit*> v_lineEdit = {ui->lineEdit_63, ui->lineEdit_125, ui->lineEdit_250, ui->lineEdit_500, ui->lineEdit_1k, ui->lineEdit_2k, ui->lineEdit_4k, ui->lineEdit_8k};
-    if(ui->radioButton_circle->isChecked())
+    array<double, 8> results;
+
+    if(shape == Circle)
     {
-        if(0 < ui->lineEdit_diameter->text().toDouble() && ui->lineEdit_diameter->text().toDouble() <= 180)
+        if(dimension1 <= 152)
         {
-            noi[0] = 0.03;
-            noi[1] = 0.03;
-            noi[2] = 0.05;
-            noi[3] = 0.1;
-            noi[4] = 0.1;
-            noi[5] = 0.;
-            noi[6] = 0.33;
-            noi[7] = 0.33;
+            results = {0.03, 0.03, 0.05, 0.05, 0.12, 0.1, 0.1, 0.11};
         }
-        else if(180 < ui->lineEdit_diameter->text().toDouble() && ui->lineEdit_diameter->text().toDouble() <= 380)
+        else if(152 < dimension1 && dimension1 <= 254)
         {
-            noi[0] = 0.1;
-            noi[1] = 0.1;
-            noi[2] = 0.1;
-            noi[3] = 0.16;
-            noi[4] = 0.23;
-            noi[5] = 0.23;
-            noi[6] = 0.23;
-            noi[7] = 0.23;
+            results = {0.03, 0.03, 0.04, 0.05, 0.11, 0.09, 0.09, 0.1};
         }
-        else if(180 < ui->lineEdit_diameter->text().toDouble() && ui->lineEdit_diameter->text().toDouble() <= 380)
+        else if(254 < dimension1 && dimension1 <= 381)
         {
-            noi[0] = 0.07;
-            noi[1] = 0.07;
-            noi[2] = 0.07;
-            noi[3] = 0.1;
-            noi[4] = 0.16;
-            noi[5] = 0.16;
-            noi[6] = 0.16;
-            noi[7] = 0.16;
+            results = {0.03, 0.03, 0.03, 0.05, 0.09, 0.07, 0.07, 0.08};
         }
-        else if(180 < ui->lineEdit_diameter->text().toDouble() && ui->lineEdit_diameter->text().toDouble() <= 380)
+        else if(381 < dimension1 && dimension1 <= 559)
         {
-            noi[0] = 0.03;
-            noi[1] = 0.03;
-            noi[2] = 0.03;
-            noi[3] = 0.07;
-            noi[4] = 0.07;
-            noi[5] = 0.07;
-            noi[6] = 0.07;
-            noi[7] = 0.07;
+            results = {0.02, 0.02, 0.02, 0.04, 0.08, 0.06, 0.06, 0.07};
+        }
+        else if(559 < dimension1 && dimension1 <= 762)
+        {
+            results = {0.02, 0.02, 0.02, 0.03, 0.07, 0.05, 0.05, 0.06};
+        }
+        else if(762 < dimension1 && dimension1 <= 1219)
+        {
+            results = {0.01, 0.01, 0.01, 0.02, 0.05, 0.03, 0.03, 0.04};
+        }
+        else if(1219 < dimension1)
+        {
+            results = {0.01, 0.01, 0.01, 0.02, 0.05, 0.03, 0.03, 0.04};
         }
     }
-    else if(ui->radioButton_rect->isChecked())
+    else if(shape == Rect)
     {
-        c = 2 * (ui->lineEdit_length->text().toDouble() + ui->lineEdit_width->text().toDouble());
-        s = ui->lineEdit_length->text().toDouble() * ui->lineEdit_width->text().toDouble();
+        c = 2 * (dimension1 + dimension2);
+        s = dimension1 * dimension2;
 
         pa = c / s;
 
         if(pa <= 0.002)
         {
-            noi[0] = 165 * pa;
-            noi[1] = 165 * pa;
-            noi[2] = 80 * pa;
-            noi[3] = 35 * pa;
-            noi[4] = 35 * pa;
-            noi[5] = 35 * pa;
-            noi[6] = 35 * pa;
-            noi[7] = 35 * pa;
+            results = {165 * pa, 165 * pa, 80 * pa, 35 * pa, 35 * pa, 35 * pa, 35 * pa, 35 * pa};
         }
         else if(pa > 0.002 && pa <= 0.003)
         {
-            noi[0] = 160 * pa + 0.01;
-            noi[1] = 0.33;
-            noi[2] = 70 * pa + 0.02;
-            noi[3] = 0.07;
-            noi[4] = 0.07;
-            noi[5] = 0.07;
-            noi[6] = 0.07;
-            noi[7] = 0.07;
+            results = {160 * pa + 0.01, 0.33, 70 * pa + 0.02, 0.07, 0.07, 0.07, 0.07, 0.07};
         }
         else if(pa > 0.003 && pa <= 0.007)
         {
-            noi[0] = 82.5 * pa + 0.2425;
-            noi[1] = 82.5 * pa;
-            noi[2] = 25 * pa + 0.155;
-            noi[3] = 7.5 * pa + 0.0475;
-            noi[4] = 7.5 * pa + 0.0475;
-            noi[5] = 7.5 * pa + 0.0475;
-            noi[6] = 7.5 * pa + 0.0475;
-            noi[7] = 7.5 * pa + 0.0475;
+            results = {82.5 * pa + 0.2425, 82.5 * pa, 25 * pa + 0.155, 7.5 * pa + 0.0475, 7.5 * pa + 0.0475, 7.5 * pa + 0.0475, 7.5 * pa + 0.0475, 7.5 * pa + 0.0475};
         }
         else if(pa > 0.007 && pa <= 0.01)
         {
-            noi[0] = 170 * pa - 0.39;
-            noi[1] = 0.66;
-            noi[2] = 0.33;
-            noi[3] = 20 * pa + 0.04;
-            noi[4] = 20 * pa + 0.04;
-            noi[5] = 20 * pa + 0.04;
-            noi[6] = 20 * pa + 0.04;
-            noi[7] = 20 * pa + 0.04;
+            results = {170 * pa - 0.39, 0.66, 0.33, 20 * pa + 0.04, 20 * pa + 0.04, 20 * pa + 0.04, 20 * pa + 0.04, 20 * pa + 0.04};
         }
         else if(pa > 0.01 && pa <= 0.013)
         {
-            noi[0] = -53.3 * pa + 1.84;
-            noi[1] = 0.66;
-            noi[2] = 0.33;
-            noi[3] = 13.3 * pa + 0.027;
-            noi[4] = 13.3 * pa + 0.027;
-            noi[5] = 13.3 * pa + 0.027;
-            noi[6] = 13.3 * pa + 0.027;
-            noi[7] = 13.3 * pa + 0.027;
+            results = {-53.3 * pa + 1.84, 0.66, 0.33, 13.3 * pa + 0.027, 13.3 * pa + 0.027, 13.3 * pa + 0.027, 13.3 * pa + 0.027, 13.3 * pa + 0.027};
         }
         else if(pa > 0.013 && pa <= 0.026)
         {
-            noi[0] = -13.1 * pa + 1.32;
-            noi[1] = 0.66;
-            noi[2] = 0.33;
-            noi[3] = 10 * pa + 0.07;
-            noi[4] = 10 * pa + 0.07;
-            noi[5] = 10 * pa + 0.07;
-            noi[6] = 10 * pa + 0.07;
-            noi[7] = 10 * pa + 0.07;
+            results = {-13.1 * pa + 1.32, 0.66, 0.33, 10 * pa + 0.07, 10 * pa + 0.07, 10 * pa + 0.07, 10 * pa + 0.07, 10 * pa + 0.07};
         }
         else if(pa > 0.026)
         {
-            noi[0] = 0.98;
-            noi[1] = 0.66;
-            noi[2] = 0.33;
-            noi[3] = 0.33;
-            noi[4] = 0.33;
-            noi[5] = 0.33;
-            noi[6] = 0.33;
-            noi[7] = 0.33;
+            results = {0.98, 0.66, 0.33, 0.33, 0.33, 0.33, 0.33, 0.33};
         }
+    }
+    for(auto& num : results)
+    {
+        num = -num;
+    }
+    return results;
+}
+
+
+//变径
+array<double, 8> calReducerNoise(const QString& type, double dimension1, double dimension2, double dimension3, double dimension4) {
+    array<double, 8> results;
+    double s1 = 0,s2 = 0, noise = 0;
+    if(type == "圆-圆")
+    {
+        s1 = Pi * (dimension1 / 2000.0) * (dimension1 /2000.0);
+        s2 = Pi * (dimension3 /2000.0) * (dimension3 /2000.0);
+    }
+    else if(type == "方-方")
+    {
+        s1 = Pi * (dimension1 / 1000.0) * (dimension2 /1000.0);
+        s2 = Pi * (dimension3 / 1000.0) * (dimension4 /1000.0);
+    }
+    else if(type == "圆-方")
+    {
+        s1 = Pi * (dimension1 / 2000.0) * (dimension1 /2000.0);
+        s2 = Pi * (dimension3 / 1000.0) * (dimension4 /1000.0);
+    }
+    else if(type == "方-圆")
+    {
+        s1 = Pi * (dimension1 / 1000.0) * (dimension2 /1000.0);
+        s2 = Pi * (dimension3 / 2000.0) * (dimension3 /2000.0);
     }
 
 
+    noise = 10 * log10((pow((s2/s1 + 1),2)) / (4 * (s2 / s1)));
 
     for(int i = 0; i < 8; i++)
     {
-        v_lineEdit[i]->setText(QString::number(noi[i],'f',2));
+        results[i] = -noise;
     }
+    return results;
 }
-
-*/
-
-/*
-//计算总值 槽函数实现
-void Dialog_reducer::calNoise() {
-//    double s1 = 0,s2 = 0,noise = 0;;
-//    if(ui->radioButton_circle->isChecked())
-//    {
-//        if(ui->lineEdit_diameter_before->text().isEmpty() || ui->lineEdit_diameter_after->text().isEmpty())
-//        {
-//            return;
-//        }
-//        s1 = Pi * (ui->lineEdit_diameter_before->text().toDouble() / 2000.0) * (ui->lineEdit_diameter_before->text().toDouble()/2000.0);
-//        s2 = Pi * (ui->lineEdit_diameter_after->text().toDouble()/2000.0) * (ui->lineEdit_diameter_after->text().toDouble()/2000.0);
-//    }
-//    else if(ui->radioButton_rect->isChecked())
-//    {
-//        if(ui->lineEdit_length_before->text().isEmpty() || ui->lineEdit_length_after->text().isEmpty()
-//                || ui->lineEdit_width_before->text().isEmpty() || ui->lineEdit_width_after->text().isEmpty())
-//        {
-//            return;
-//        }
-//        s1 = (ui->lineEdit_length_before->text().toDouble()/1000.0) * (ui->lineEdit_width_before->text().toDouble()/1000.0);
-//        s2 = (ui->lineEdit_length_after->text().toDouble()/1000.0) * (ui->lineEdit_width_after->text().toDouble()/1000.0);
-//    }
-
-
-//    noise = 10 * log10((pow((s2/s1 + 1),2)) / (4 * (s2 / s1)));
-
-//    QString str_noise = QString::number(noise, 'f', 1);
-//    ui->lineEdit_63->setText(str_noise);
-//    ui->lineEdit_125->setText(str_noise);
-//    ui->lineEdit_250->setText(str_noise);
-//    ui->lineEdit_500->setText(str_noise);
-//    ui->lineEdit_1k->setText(str_noise);
-//    ui->lineEdit_2k->setText(str_noise);
-//    ui->lineEdit_4k->setText(str_noise);
-//    ui->lineEdit_8k->setText(str_noise);
-}
- */

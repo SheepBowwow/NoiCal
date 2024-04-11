@@ -2160,6 +2160,11 @@ color: white;
        <string>设计预估</string>
       </property>
      </item>
+     <item>
+      <property name="text">
+       <string>经验公式</string>
+      </property>
+     </item>
     </widget>
     <widget class="QComboBox" name="comboBox_noi_data_source">
      <property name="geometry">

@@ -41,6 +41,18 @@ public:
     }
 };
 
+struct Aircondition_in_calTable : public Aircondition
+{
+    QString send_or_exhaust;
+
+    Aircondition_in_calTable(const Aircondition& ac)
+        : Aircondition(ac) // 调用基类的拷贝构造函数来复制属性
+    {
+    }
+
+    Aircondition_in_calTable() = default;
+};
+
 namespace Ui {
 class RoomCalTable;
 }
@@ -82,7 +94,18 @@ private slots:
 
     void onDebouncedChange();  // 新增的用于实际处理变化的槽函数
 
+    void circular_damper_noise_cal();
+
+    void rect_damper_noise_cal();
+
     void set_Noise_after_cal_Vector();
+
+    void static_box_atten_cal();
+    void multi_ranc_atten_cal();
+    void tee_atten_cal();
+    void pipe_atten_cal();
+    void elbow_atten_cal();
+    void reducer_atten_cal();
 
     void on_stackedWidget_table_currentChanged(int arg1);
 
@@ -104,44 +127,117 @@ private slots:
 
     void on_comboBox_VAV_terminal_number_currentTextChanged(const QString &arg1);
 
-    void on_comboBox_circular_damper_diameter_currentTextChanged(const QString &arg1);
-
-    void on_comboBox_circular_damper_angle_currentTextChanged(const QString &arg1);
-
-    void on_comboBox_circular_damper_air_volume_currentTextChanged(const QString &arg1);
-
-    void on_comboBox_rect_damper_size_currentTextChanged(const QString &arg1);
-
-    void on_comboBox_rect_damper_angle_currentTextChanged(const QString &arg1);
-
-    void on_comboBox_rect_damper_air_volume_currentTextChanged(const QString &arg1);
-
     void on_comboBox_air_distributor_model_currentTextChanged(const QString &arg1);
 
     void on_comboBox_air_diff_terminal_type_currentTextChanged(const QString &arg1);
 
-    void on_comboBox_air_diff_size_currentTextChanged(const QString &arg1);
-
     void on_comboBox_fan_noise_locate_currentIndexChanged(int index);
 
-    void on_comboBox_fanCoil_locate_currentIndexChanged(int index);
+    void on_comboBox_fanCoil_noise_locate_currentIndexChanged(int index);
 
     void on_comboBox_aircondition_noise_locate_currentIndexChanged(int index);
 
     void on_comboBox_aircondition_fan_type_currentIndexChanged(int index);
 
+    void on_comboBox_fan_data_source_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_fanCoil_data_source_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_aircondition_data_source_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_VAV_terminal_data_source_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_circular_damper_data_source_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_circular_damper_model_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_rect_damper_data_source_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_rect_damper_model_currentTextChanged(const QString &arg1);
+
+    void air_diff_data_source_changed();
+    void pump_data_source_changed();
+    void send_data_source_changed();
+    void staticBox_grille_data_source_changed();
+    void disp_vent_terminal_data_source_changed();
+    void other_send_terminal_data_source_changed();
+
+    void on_comboBox_diffuser_model_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_pump_model_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_pump_terminal_type_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_send_model_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_send_terminal_type_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_staticBox_model_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_grille_model_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_staticBox_grille_terminal_type_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_disp_vent_terminal_model_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_disp_vent_terminal_type_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_other_send_terminal_model_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_other_send_terminal_type_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_static_box_data_source_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_static_box_model_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_tee_data_source_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_tee_model_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_multi_ranc_data_source_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_multi_ranc_model_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_pipe_data_source_currentTextChanged(const QString &arg1);
+
+    void on_lineEdit_pipe_size_textChanged(const QString &arg1);
+
+    void on_lineEdit_pipe_length_textChanged(const QString &arg1);
+
+    void on_comboBox_pipe_model_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_reducer_data_source_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_reducer_model_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_silencer_data_source_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_silencer_type_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_silencer_model_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_elbow_data_source_currentTextChanged(const QString &arg1);
+
+    void on_lineEdit_elbow_count_textChanged(const QString &arg1);
+
+    void on_comboBox_elbow_model_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_elbow_type_currentTextChanged(const QString &arg1);
+
 private:
     Ui::RoomCalTable *ui;
-    void clearPage(QWidget *widget);
+    void clearPage(QWidget *widget, bool isPageChanged);
     void connectLineEditsToCalSlot(const QVector<QLineEdit*>& lineEdits);
     void disconnectLineEditsToCalSlot(const QVector<QLineEdit*>& lineEdits);
     bool isCollapsed;
     QString systemName;       //所属系统名称
     QTimer debounceTimer;  // 定时器,用于处理短时间内有多个绑定的lineedit文本改变的信号
     bool updateModelComboBox = false;   //用来更新model，on_comboBox_unit_name_currentTextChanged利用这个函数而不清空当前界面
+    std::pair<int, int> splitDimension(const QString &size);    //用来分割矩形的size
+    void initTerminalDataSourceConn();  //用来初始化所有末端的来源与槽函数连接
 
 private:
-    void clearLineEditsVectors();
+    void clearPageControlVectors();
     QVector<QLineEdit*> noi_after_cal_lineEdits;
     QVector<QLineEdit*> noi_lineEdits;       //噪音
     QVector<QLineEdit*> terminal_atten_lineEdits;       //末端衰减
@@ -151,8 +247,17 @@ private:
     QVector<QLineEdit*> sum_atten_lineEdits;       //衰减汇总
     QVector<QLineEdit*> atten_lineEdits;       //衰减
     QVector<QLineEdit*> currentConnectedLineEdits;  //用来保存当前连接的lineEdit
-    QList<QSharedPointer<ComponentBase>> currentComponentList;
-    QList<QSharedPointer<ComponentBase>> currentAirconditionList_exhaust;   //排风机专用容器
+    /**
+     * @brief currentAllComponentList
+     * 一级列表，用来存放所有该部件的列表
+     */
+    QList<QSharedPointer<ComponentBase>> currentAllComponentList;
+    /**
+     * @brief currentComponentListByDataSource
+     * 二级列表，选择来源之后确定哪些在列表里
+     */
+    QList<QSharedPointer<ComponentBase>> currentComponentListByDataSource;
+
     QSharedPointer<ComponentBase> currentComponent;
 };
 

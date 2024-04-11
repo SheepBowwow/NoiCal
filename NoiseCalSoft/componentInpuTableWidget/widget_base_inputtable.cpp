@@ -105,7 +105,7 @@ void Widget_base_inputTable::setTableWidget(QTableWidget *tableWidget, const QSt
     }
 
     tableWidget->horizontalHeader()->setStretchLastSection(true);
-    tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
 }
 
 /**

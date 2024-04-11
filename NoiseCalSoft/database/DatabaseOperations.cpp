@@ -318,8 +318,8 @@ bool addOrUpdateCircularDamperToDatabase(const ComponentBase& component, QSqlDat
     query.bindValue(":table_id", damper->table_id.toInt());
     query.bindValue(":size", damper->diameter); // Using 'diameter' for 'size'
     query.bindValue(":model", damper->model);
-    query.bindValue(":valve_angle", damper->angle.toDouble());
-    query.bindValue(":air_volume", damper->air_volume.toDouble());
+    query.bindValue(":valve_angle", damper->angle);
+    query.bindValue(":air_volume", damper->air_volume);
     query.bindValue(":brand", damper->brand);
     query.bindValue(":noise_json", noiseJsonString);
     query.bindValue(":data_source", damper->data_source); // Assuming data_source is applicable as is

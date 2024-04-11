@@ -1,12 +1,10 @@
 #include "inputDialog/dialog_air_diff.h"
 #include "ui_dialog_air_diff.h"
-#include "databasemanager.h"
-#include "global_constant.h"
-#include "globle_var.h"
 #include <QDir>
 #include <calFunction/cal_function.h>
 #include <QSet>
 #include <QLineEdit>
+#include "calFunction/cal_function.h"
 #define Pi 3.14159265358979323846
 
 
@@ -85,6 +83,9 @@ Dialog_air_diff::Dialog_air_diff(QWidget *parent, int editRow, const AirDiff& da
     }
 
     connect(ui->pushButton_confirm, &QPushButton::clicked, ImageDialog::getInstance(":/images/image/refl.jpg",this), &ImageDialog::closeImageDialog);
+    connect(ui->lineEdit_length, &QLineEdit::textChanged, this, &Dialog_air_diff::calReflAtten);
+    connect(ui->lineEdit_width, &QLineEdit::textChanged, this, &Dialog_air_diff::calReflAtten);
+    connect(ui->lineEdit_diameter, &QLineEdit::textChanged, this, &Dialog_air_diff::calReflAtten);
 
     this->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint | Qt::WindowStaysOnTopHint);
 }
@@ -102,6 +103,33 @@ void Dialog_air_diff::calTotalNoise() {
     {
         double totalValueIn = calNoiseTotalValue(noi_lineEdits);
         noi_lineEdits[8]->setText(QString::number(totalValueIn, 'f', 1));
+    }
+}
+
+void Dialog_air_diff::calReflAtten()
+{
+    if(ui->comboBox_refl_data_source->currentIndex() != 2)
+        return;
+
+    array<double, 8> reflAtten;
+    if(ui->radioButton_rect->isChecked())
+    {
+        if(!(ui->lineEdit_length->text().isEmpty() || ui->lineEdit_width->text().isEmpty()))
+        {
+            reflAtten = calTerminalReflNoise(Rect, ui->lineEdit_length->text().toDouble(), ui->lineEdit_width->text().toDouble());
+        }
+    }
+    else if(ui->radioButton_circle->isChecked())
+    {
+        if(!(ui->lineEdit_diameter->text().isEmpty()))
+        {
+            reflAtten = calTerminalReflNoise(Circle, ui->lineEdit_diameter->text().toDouble());
+        }
+    }
+
+    for(int i = 0; i < reflAtten.size(); i++)
+    {
+        refl_lineEdits[i]->setText(QString::number(reflAtten[i],'f',1));
     }
 }
 
@@ -304,5 +332,28 @@ QList<QStringList> Dialog_air_diff::getComponentDataAsStringList() const
     dataLists.append(data_refl);
 
     return dataLists;
+}
+
+
+void Dialog_air_diff::on_comboBox_refl_data_source_currentIndexChanged(int index)
+{
+    if(index != 2)
+    {
+        for(auto& lineEdit : refl_lineEdits)
+        {
+            lineEdit->clear();
+            lineEdit->setReadOnly(false);
+        }
+    }
+    else
+    {
+        for(auto& lineEdit : refl_lineEdits)
+        {
+            lineEdit->clear();
+            lineEdit->setReadOnly(true);
+        }
+    }
+
+    calReflAtten();
 }
 

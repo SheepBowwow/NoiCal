@@ -710,8 +710,8 @@ typedef struct Circular_damper : Valve
 
         // VAV_terminal specific member variables
         this->diameter = record.value("size").toString();
-        this->angle = record.value("valve_angle").toDouble(); // Assuming real is stored as double in QSqlRecord
-        this->air_volume = record.value("air_volume").toDouble(); // Assuming real is stored as double in QSqlRecord
+        this->angle = record.value("valve_angle").toString(); // Assuming real is stored as double in QSqlRecord
+        this->air_volume = record.value("air_volume").toString(); // Assuming real is stored as double in QSqlRecord
 
         // Handle noise data (assuming `deserializeNoise` function exists)
         QString noiseJson = record.value("noise_json").toString();
@@ -790,8 +790,8 @@ typedef struct Rect_damper : Valve
 
         // VAV_terminal specific member variables
         this->size = record.value("size").toString();
-        this->angle = record.value("valve_angle").toDouble(); // Assuming real is stored as double in QSqlRecord
-        this->air_volume = record.value("air_volume").toDouble(); // Assuming real is stored as double in QSqlRecord
+        this->angle = record.value("valve_angle").toString(); // Assuming real is stored as double in QSqlRecord
+        this->air_volume = record.value("air_volume").toString(); // Assuming real is stored as double in QSqlRecord
 
         // Handle noise data (assuming `deserializeNoise` function exists)
         QString noiseJson = record.value("noise_json").toString();
@@ -804,7 +804,7 @@ typedef struct Rect_damper : Valve
                 const QString& angle, const QString& air_volume,
                 const array<QString, 9>& noi, const QString& length,  const QString& width)
         : Valve(model, brand, table_id, data_source, UUID, angle, air_volume, noi),
-          length(length), width(width) {}
+          length(length), width(width), size(length + "x" + width) {}
 
     // 使用Valve的不包含噪音数组的构造函数初始化基类部分
     Rect_damper(const QString& model, const QString& brand, const QString& table_id,
@@ -812,7 +812,7 @@ typedef struct Rect_damper : Valve
                 const QString& angle, const QString& air_volume,
                 const QString& length,  const QString& width )
         : Valve(model, brand, table_id, data_source, UUID, angle, air_volume),
-          length(length), width(width) {}
+          length(length), width(width), size(length + "x" + width) {}
 
     // ComponentBase interface
 public:

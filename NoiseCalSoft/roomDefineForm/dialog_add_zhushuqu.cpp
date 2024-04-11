@@ -41,6 +41,6 @@ void Dialog_add_zhushuqu::on_pushButton_clicked()
         QMessageBox::information(this,"提示","内容未填写完整");
         return;
     }
-    emit accept();
+    accept();
     close();
 }

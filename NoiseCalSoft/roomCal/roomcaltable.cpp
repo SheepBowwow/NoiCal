@@ -1,6 +1,7 @@
 #include "roomcaltable.h"
 #include "ui_roomcaltable.h"
 #include <QContextMenuEvent>
+#include <QRegularExpression>
 #include "globle_var.h"
 #include <QWidget>
 #include <QMenu>
@@ -11,6 +12,8 @@
 #include "roomDefineForm/systemmanager.h"
 #include "Component/ComponentManager.h"
 #include "calFunction/cal_function.h"
+#include <utility> // For std::pair
+#define Pi 3.14159265358979323846
 
 RoomCalTable::RoomCalTable(QString systemName, QWidget *parent,QString currentTableType) :
     QWidget(parent),
@@ -19,8 +22,8 @@ RoomCalTable::RoomCalTable(QString systemName, QWidget *parent,QString currentTa
     ui(new Ui::RoomCalTable)
 {
     ui->setupUi(this);
-    //connect(ui->comboBox_noi_src_num, &ClickableComboBox::clicked, this, &RoomCalTable::updateComboBoxItems);
-    connect(&ComponentManager::getInstance(), &ComponentManager::componentsUpdate, this, &RoomCalTable::updateModelComboBoxItems);
+    //connect(&ComponentManager::getInstance(), &ComponentManager::componentsUpdate, this, &RoomCalTable::updateModelComboBoxItems);
+    initTerminalDataSourceConn();
 
     //初始化定时器
     debounceTimer.setInterval(100);  // 设置防抖时间为100毫秒
@@ -50,14 +53,6 @@ RoomCalTable::RoomCalTable(QString systemName, QWidget *parent,QString currentTa
         this->currentTableType = "声源噪音";
         //QList<QString> uuids =
                 SystemManager::getInstance().getNoiseComponentsInSystem(systemName,noise_src_component::FAN);
-//        ui->comboBox_fan_number->clear();
-//        for(QString number: systemListMap[systemName]["风机"])
-//        {
-//            ui->comboBox_fan_number->addItem(number);
-//        }
-//        noi_after_cal_lineEdits = { ui->lineEdit_fan_63, ui->lineEdit_fan_125, ui->lineEdit_fan_250,ui->lineEdit_fan_500,
-//                                        ui->lineEdit_fan_1k, ui->lineEdit_fan_2k, ui->lineEdit_fan_4k, ui->lineEdit_fan_8k,
-//                                        ui->lineEdit_fan_total };
     }
     else if (currentTableType == "气流噪音")
     {
@@ -241,22 +236,34 @@ RoomCalTable::~RoomCalTable()
     delete ui;
 }
 
-void RoomCalTable::clearPage(QWidget *widget)
+void RoomCalTable::clearPage(QWidget *widget, bool isPageChanged)
 {
-    // 递归查找 QLineEdit、QComboBox 和 QCheckBox
+    // 静态正则表达式对象，以避免重复创建和编译
+    static QRegularExpression regexDataSourceOrFanType("data_source|fan_type|comboBox_silencer_type");
+    static QRegularExpression regexNoiseLocateOrAngle("noise_locate|angle|terminal_type|pipe_type|elbow_type|reducer_type");
+
     for (QObject *child : widget->children()) {
         if (QLineEdit *lineEdit = qobject_cast<QLineEdit*>(child)) {
-            // 找到 QLineEdit，清空文本
-            lineEdit->clear();
+            if(lineEdit->text() != "-")
+                lineEdit->clear();
         } else if (QComboBox *comboBox = qobject_cast<QComboBox*>(child)) {
-            // 找到 QComboBox，清空选择
-            comboBox->setCurrentIndex(-1); // 或者使用 comboBox->clear();
-        } else if (QCheckBox *checkBox = qobject_cast<QCheckBox*>(child)) {
-            // 找到 QCheckBox，设置为未选中
-            checkBox->setChecked(false);
+            // 检查comboBox的名称是否匹配"data_source"
+            QRegularExpressionMatch matchDataSource = regexDataSourceOrFanType.match(comboBox->objectName());
+            // 检查comboBox的名称是否匹配"noise_locate"或"fan_type"
+            QRegularExpressionMatch matchNoiseLocateOrFanType = regexNoiseLocateOrAngle.match(comboBox->objectName());
+
+            if (matchDataSource.hasMatch()) {
+                if(isPageChanged)
+                    comboBox->setCurrentIndex(-1);
+            } else if (matchNoiseLocateOrFanType.hasMatch()) {
+                // 如果是"noise_locate"或"fan_type"，则设置为-1
+                comboBox->setCurrentIndex(-1);
+            } else {
+                // 如果不是上述任一情况，则清空选择
+                comboBox->clear();
+            }
         } else if (QWidget *childWidget = qobject_cast<QWidget*>(child)) {
-            // 递归查找子部件
-            clearPage(childWidget);
+            clearPage(childWidget, isPageChanged); // 递归处理子部件
         }
     }
 }
@@ -319,7 +326,7 @@ void RoomCalTable::on_comboBox_sound_type_currentTextChanged(const QString &arg1
 
 void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
 {
-    clearPage(ui->stackedWidget_table->currentWidget());
+    clearPage(ui->stackedWidget_table->currentWidget(), true);
     if(updateModelComboBox == false)
     {
         for (QLineEdit* lineEdit : qAsConst(noi_after_cal_lineEdits))
@@ -329,12 +336,11 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                 disconnect(lineEdit, &QLineEdit::textChanged, this, &RoomCalTable::set_Noise_after_cal_Vector);
             }
         }
-        clearLineEditsVectors();
+        clearPageControlVectors();
         noi_after_cal_lineEdits.clear();
     }
     //不管是否为更新comboBox，都要更新component列表
-    this->currentAirconditionList_exhaust.clear();
-    this->currentComponentList.clear();
+    this->currentAllComponentList.clear();
     this->currentComponent = QSharedPointer<ComponentBase>();
     if(arg1 == "风机")
     {
@@ -347,8 +353,7 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
             auto component = ComponentManager::getInstance().findComponent(uuid);
             if(auto fan = dynamic_cast<Fan*>(component.data()))
             {
-                ui->comboBox_fan_number->addItem(fan->number);
-                this->currentComponentList.append(component);
+                this->currentAllComponentList.append(component);
             }
         }
 
@@ -368,23 +373,34 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                                         ui->lineEdit_aircondition_total };
 
         QList<QString> list_send =
-                SystemManager::getInstance().getNoiseComponentsInSystem(systemName,noise_src_component::AIRCONDITION_SEND);
+                SystemManager::getInstance().getNoiseComponentsInSystem(systemName, noise_src_component::AIRCONDITION_SEND);
         for(auto& uuid : list_send)
         {
             auto component = ComponentManager::getInstance().findComponent(uuid);
-            if(auto aircondition = dynamic_cast<Aircondition*>(component.data()))
+            auto aircondition = qSharedPointerDynamicCast<Aircondition>(component);
+            if(aircondition)
             {
-                this->currentComponentList.append(component);
+                auto airconditionInCalTable = QSharedPointer<Aircondition_in_calTable>::create(*aircondition); // 假设存在这样的复制构造函数
+
+                airconditionInCalTable->send_or_exhaust = "送风机"; // 设置属性为"送风机"
+
+                currentAllComponentList.append(airconditionInCalTable);
             }
         }
+
         QList<QString> list_exhaust =
                 SystemManager::getInstance().getNoiseComponentsInSystem(systemName,noise_src_component::AIRCONDITION_EXHAUST);
         for(auto& uuid : list_exhaust)
         {
             auto component = ComponentManager::getInstance().findComponent(uuid);
-            if(auto aircondition = dynamic_cast<Aircondition*>(component.data()))
+            auto aircondition = qSharedPointerDynamicCast<Aircondition>(component);
+            if(aircondition)
             {
-                this->currentAirconditionList_exhaust.append(component);
+                auto airconditionInCalTable = QSharedPointer<Aircondition_in_calTable>::create(*aircondition); // 假设存在这样的复制构造函数
+
+                airconditionInCalTable->send_or_exhaust = "排风机"; // 设置属性为"送风机"
+
+                currentAllComponentList.append(airconditionInCalTable);
             }
         }
 
@@ -403,7 +419,6 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
             if(auto fanCoil = dynamic_cast<FanCoil*>(component.data()))
             {
                 ui->comboBox_fanCoil_model->addItem(fanCoil->model);
-                this->currentComponentList.append(component);
             }
         }
 
@@ -424,17 +439,8 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                           ui->lineEdit_VAV_terminal_1k, ui->lineEdit_VAV_terminal_2k, ui->lineEdit_VAV_terminal_4k, ui->lineEdit_VAV_terminal_8k,
                           ui->lineEdit_VAV_terminal_total};
 
-
-        this->currentComponentList =
+        this->currentAllComponentList =
                 ComponentManager::getInstance().getComponentsByType(component_type_name::VAV_TERMINAL);
-
-        for(auto& component : currentComponentList)
-        {
-            if(auto vav_terminal = dynamic_cast<VAV_terminal*>(component.data()))
-            {
-                ui->comboBox_VAV_terminal_number->addItem(vav_terminal->number);
-            }
-        }
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_VAV_terminal);
 
@@ -449,17 +455,8 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                           ui->lineEdit_circular_damper_1k, ui->lineEdit_circular_damper_2k, ui->lineEdit_circular_damper_4k, ui->lineEdit_circular_damper_8k,
                           ui->lineEdit_circular_damper_total};
 
-
-        this->currentComponentList =
+        this->currentAllComponentList =
                 ComponentManager::getInstance().getComponentsByType(component_type_name::CIRCULAR_DAMPER);
-
-        for(auto& component : currentComponentList)
-        {
-            if(auto circular_damper = dynamic_cast<Circular_damper*>(component.data()))
-            {
-                ui->comboBox_circular_damper_model->addItem(circular_damper->model);
-            }
-        }
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_circular_damper);
     }
@@ -474,16 +471,8 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                           ui->lineEdit_rect_damper_total};
 
 
-        this->currentComponentList =
+        this->currentAllComponentList =
                 ComponentManager::getInstance().getComponentsByType(component_type_name::RECT_DAMPER);
-
-        for(auto& component : currentComponentList)
-        {
-            if(auto rect_damper = dynamic_cast<Rect_damper*>(component.data()))
-            {
-                ui->comboBox_rect_damper_model->addItem(rect_damper->model);
-            }
-        }
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_rect_damper);
     }
@@ -506,23 +495,8 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                                    ui->lineEdit_air_diff_noi_total};
 
 
-        this->currentComponentList =
+        this->currentAllComponentList =
                 ComponentManager::getInstance().getComponentsByType(component_type_name::AIRDIFF);
-
-        //用set去重
-        QSet<QString> set;
-        for(auto& component : currentComponentList)
-        {
-            if(auto air_diff = dynamic_cast<AirDiff*>(component.data()))
-            {
-                set.insert(air_diff->air_distributor_model);
-            }
-        }
-
-        for(QString air_distributor_model : set)
-        {
-            ui->comboBox_air_distributor_model->addItem(air_distributor_model);
-        }
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_air_diff);
     }
@@ -544,24 +518,8 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                                    ui->lineEdit_pump_noi_1k, ui->lineEdit_pump_noi_2k, ui->lineEdit_pump_noi_4k, ui->lineEdit_pump_noi_8k,
                                    ui->lineEdit_pump_noi_total};
 
-        this->currentComponentList =
+        this->currentAllComponentList =
                 ComponentManager::getInstance().getComponentsByType(component_type_name::PUMPSEND);
-
-        //用set去重
-        QSet<QString> set;
-        for(auto& component : currentComponentList)
-        {
-            if(auto pump = dynamic_cast<PumpSend*>(component.data()))
-            {
-                if(pump->type_pump_or_send == pump_send_type::PUMP)
-                    set.insert(pump->model);
-            }
-        }
-
-        for(QString pump_model : set)
-        {
-            ui->comboBox_pump_model->addItem(pump_model);
-        }
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_pump);
     }
@@ -583,23 +541,8 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                                    ui->lineEdit_send_noi_1k, ui->lineEdit_send_noi_2k, ui->lineEdit_send_noi_4k, ui->lineEdit_send_noi_8k,
                                    ui->lineEdit_send_noi_total};
 
-        this->currentComponentList =
+        this->currentAllComponentList =
                 ComponentManager::getInstance().getComponentsByType(component_type_name::PUMPSEND);
-        //用set去重
-        QSet<QString> set;
-        for(auto& component : currentComponentList)
-        {
-            if(auto send = dynamic_cast<PumpSend*>(component.data()))
-            {
-                if(send->type_pump_or_send == pump_send_type::SEND)
-                    set.insert(send->model);
-            }
-        }
-
-        for(QString send_model : set)
-        {
-            ui->comboBox_send_model->addItem(send_model);
-        }
         ui->stackedWidget_table->setCurrentWidget(ui->page_send);
     }
     else if(arg1 == "末端/静压箱+格栅")
@@ -620,22 +563,8 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                                    ui->lineEdit_staticBox_grille_noi_1k, ui->lineEdit_staticBox_grille_noi_2k, ui->lineEdit_staticBox_grille_noi_4k, ui->lineEdit_staticBox_grille_noi_8k,
                                    ui->lineEdit_staticBox_grille_noi_total};
 
-        this->currentComponentList =
+        this->currentAllComponentList =
                 ComponentManager::getInstance().getComponentsByType(component_type_name::STATICBOX_GRILLE);
-        //用set去重
-        QSet<QString> set;
-        for(auto& component : currentComponentList)
-        {
-            if(auto staticBox_grille = dynamic_cast<StaticBox_grille*>(component.data()))
-            {
-                set.insert(staticBox_grille->staticBox_model);
-            }
-        }
-
-        for(QString staticBox_model : set)
-        {
-            ui->comboBox_staticBox_model->addItem(staticBox_model);
-        }
         ui->stackedWidget_table->setCurrentWidget(ui->page_staticBox_grille);
     }
     else if(arg1 == "末端/置换通风末端")
@@ -656,22 +585,8 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                                    ui->lineEdit_disp_vent_terminal_noi_1k, ui->lineEdit_disp_vent_terminal_noi_2k, ui->lineEdit_disp_vent_terminal_noi_4k, ui->lineEdit_disp_vent_terminal_noi_8k,
                                    ui->lineEdit_disp_vent_terminal_noi_total};
 
-        this->currentComponentList =
+        this->currentAllComponentList =
                 ComponentManager::getInstance().getComponentsByType(component_type_name::DISP_VENT_TERMINAL);
-        //用set去重
-        QSet<QString> set;
-        for(auto& component : currentComponentList)
-        {
-            if(auto disp_vent = dynamic_cast<Disp_vent_terminal*>(component.data()))
-            {
-                    set.insert(disp_vent->model);
-            }
-        }
-
-        for(QString disp_vent_model : set)
-        {
-            ui->comboBox_disp_vent_terminal_model->addItem(disp_vent_model);
-        }
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_disp_vent_terminal);
     }
@@ -693,22 +608,8 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                                    ui->lineEdit_other_send_terminal_noi_1k, ui->lineEdit_other_send_terminal_noi_2k, ui->lineEdit_other_send_terminal_noi_4k, ui->lineEdit_other_send_terminal_noi_8k,
                                    ui->lineEdit_other_send_terminal_noi_total};
 
-        this->currentComponentList =
+        this->currentAllComponentList =
                 ComponentManager::getInstance().getComponentsByType(component_type_name::OTHER_SEND_TERMINAL);
-        //用set去重
-        QSet<QString> set;
-        for(auto& component : currentComponentList)
-        {
-            if(auto other_send = dynamic_cast<Other_send_terminal*>(component.data()))
-            {
-                    set.insert(other_send->model);
-            }
-        }
-
-        for(QString other_send_model : set)
-        {
-            ui->comboBox_other_send_terminal_model->addItem(other_send_model);
-        }
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_other_send_terminal);
     }
@@ -722,22 +623,9 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                             ui->lineEdit_static_box_1k, ui->lineEdit_static_box_2k, ui->lineEdit_static_box_4k, ui->lineEdit_static_box_8k,
                             ui->lineEdit_static_box_total};
 
-        this->currentComponentList =
+        this->currentAllComponentList =
                 ComponentManager::getInstance().getComponentsByType(component_type_name::STATICBOX);
-        //用set去重
-        QSet<QString> set;
-        for(auto& component : currentComponentList)
-        {
-            if(auto static_box = dynamic_cast<Static_box*>(component.data()))
-            {
-                    set.insert(static_box->model);
-            }
-        }
 
-        for(QString static_box_model : set)
-        {
-            ui->comboBox_static_box_model->addItem(static_box_model);
-        }
         ui->stackedWidget_table->setCurrentWidget(ui->page_static_box);
     }
     else if(arg1 == "分支/风道多分支")
@@ -750,22 +638,8 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                             ui->lineEdit_multi_ranc_1k, ui->lineEdit_multi_ranc_2k, ui->lineEdit_multi_ranc_4k, ui->lineEdit_multi_ranc_8k,
                             ui->lineEdit_multi_ranc_total};
 
-        this->currentComponentList =
+        this->currentAllComponentList =
                 ComponentManager::getInstance().getComponentsByType(component_type_name::MULTI_RANC);
-        //用set去重
-        QSet<QString> set;
-        for(auto& component : currentComponentList)
-        {
-            if(auto multi_ranc = dynamic_cast<Multi_ranc*>(component.data()))
-            {
-                    set.insert(multi_ranc->model);
-            }
-        }
-
-        for(QString multi_ranc_model : set)
-        {
-            ui->comboBox_multi_ranc_model->addItem(multi_ranc_model);
-        }
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_multi_ranc);
     }
@@ -780,22 +654,8 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                             ui->lineEdit_tee_total};
 
 
-        this->currentComponentList =
+        this->currentAllComponentList =
                 ComponentManager::getInstance().getComponentsByType(component_type_name::TEE);
-        //用set去重
-        QSet<QString> set;
-        for(auto& component : currentComponentList)
-        {
-            if(auto tee = dynamic_cast<Tee*>(component.data()))
-            {
-                set.insert(tee->model);
-            }
-        }
-
-        for(QString tee_model : set)
-        {
-            ui->comboBox_tee_model->addItem(tee_model);
-        }
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_tee);
     }
@@ -814,22 +674,8 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                                 ui->lineEdit_pipe_sum_total};
 
 
-        this->currentComponentList =
+        this->currentAllComponentList =
                 ComponentManager::getInstance().getComponentsByType(component_type_name::PIPE);
-        //用set去重
-        QSet<QString> set;
-        for(auto& component : currentComponentList)
-        {
-            if(auto pipe = dynamic_cast<Pipe*>(component.data()))
-            {
-                set.insert(pipe->model);
-            }
-        }
-
-        for(QString pipe_model : set)
-        {
-            ui->comboBox_pipe_model->addItem(pipe_model);
-        }
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_pipe);
     }
@@ -847,22 +693,8 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                                 ui->lineEdit_elbow_sum_1k, ui->lineEdit_elbow_sum_2k, ui->lineEdit_elbow_sum_4k, ui->lineEdit_elbow_sum_8k,
                                 ui->lineEdit_elbow_sum_total};
 
-        this->currentComponentList =
+        this->currentAllComponentList =
                 ComponentManager::getInstance().getComponentsByType(component_type_name::ELBOW);
-        //用set去重
-        QSet<QString> set;
-        for(auto& component : currentComponentList)
-        {
-            if(auto elbow = dynamic_cast<Elbow*>(component.data()))
-            {
-                set.insert(elbow->model);
-            }
-        }
-
-        for(QString elbow_model : set)
-        {
-            ui->comboBox_elbow_model->addItem(elbow_model);
-        }
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_elbow);
     }
@@ -876,49 +708,21 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                                         ui->lineEdit_reducer_1k, ui->lineEdit_reducer_2k, ui->lineEdit_reducer_4k, ui->lineEdit_reducer_8k,
                                         ui->lineEdit_reducer_total};
 
-        this->currentComponentList =
+        this->currentAllComponentList =
                 ComponentManager::getInstance().getComponentsByType(component_type_name::REDUCER);
-        //用set去重
-        QSet<QString> set;
-        for(auto& component : currentComponentList)
-        {
-            if(auto reducer = dynamic_cast<Reducer*>(component.data()))
-            {
-                set.insert(reducer->model);
-            }
-        }
-
-        for(QString reducer_model : set)
-        {
-            ui->comboBox_reducer_model->addItem(reducer_model);
-        }
-
         ui->stackedWidget_table->setCurrentWidget(ui->page_reducer);
     }
     else if(arg1 == "消音器")
     {
         noi_after_cal_lineEdits = { ui->lineEdit_silencer_after_63, ui->lineEdit_silencer_after_125, ui->lineEdit_silencer_after_250,ui->lineEdit_silencer_after_500,
-                                        ui->lineEdit_silencer_after_1k, ui->lineEdit_silencer_after_2k, ui->lineEdit_silencer_after_4k, ui->lineEdit_silencer_after_8k, nullptr};
+                                        ui->lineEdit_silencer_after_1k, ui->lineEdit_silencer_after_2k, ui->lineEdit_silencer_after_4k, ui->lineEdit_silencer_after_8k, ui->lineEdit_silencer_after_total};
 
         atten_lineEdits = { ui->lineEdit_silencer_63, ui->lineEdit_silencer_125, ui->lineEdit_silencer_250,ui->lineEdit_silencer_500,
-                                        ui->lineEdit_silencer_1k, ui->lineEdit_silencer_2k, ui->lineEdit_silencer_4k, ui->lineEdit_silencer_8k, nullptr};
+                                        ui->lineEdit_silencer_1k, ui->lineEdit_silencer_2k, ui->lineEdit_silencer_4k, ui->lineEdit_silencer_8k, ui->lineEdit_silencer_total};
 
-        this->currentComponentList =
+        this->currentAllComponentList =
                 ComponentManager::getInstance().getComponentsByType(component_type_name::SILENCER);
-        //用set去重
-        QSet<QString> set;
-        for(auto& component : currentComponentList)
-        {
-            if(auto silencer = dynamic_cast<Silencer*>(component.data()))
-            {
-                set.insert(silencer->model);
-            }
-        }
 
-        for(QString silencer_model : set)
-        {
-            ui->comboBox_reducer_model->addItem(silencer_model);
-        }
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_silencer);
     }
@@ -932,7 +736,6 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                 connect(lineEdit, &QLineEdit::textChanged, this, &RoomCalTable::set_Noise_after_cal_Vector);
             }
         }
-        clearPage(ui->stackedWidget_table->currentWidget());
     }
 }
 
@@ -1055,12 +858,12 @@ void RoomCalTable::setSerialNum(int num)
 void RoomCalTable::updateModelComboBoxItems(const QString &uuid) {
     QSharedPointer<ComponentBase> changedComponent = ComponentManager::getInstance().findComponent(uuid);
     bool isTypeSame = (changedComponent->typeName() == currentComponent->typeName());
-    auto it = std::find_if(currentComponentList.begin(),currentComponentList.end(), [&](QSharedPointer<ComponentBase> component){
+    auto it = std::find_if(currentAllComponentList.begin(),currentAllComponentList.end(), [&](QSharedPointer<ComponentBase> component){
             return uuid == component->UUID;
     });
 
     //uuid等于当前的说明当前的部件被修改或删除了
-    if(uuid == currentComponent->UUID && (isTypeSame && it == currentComponentList.end()))
+    if(uuid == currentComponent->UUID && (isTypeSame && it == currentAllComponentList.end()))
     {
         updateModelComboBox = true;
         on_comboBox_unit_name_currentTextChanged(ui->comboBox_unit_name->currentText());
@@ -1072,7 +875,7 @@ void RoomCalTable::updateModelComboBoxItems(const QString &uuid) {
  * @brief RoomCalTable::clearQVectors
  * 清除所有lineEdit容器
  */
-void RoomCalTable::clearLineEditsVectors()
+void RoomCalTable::clearPageControlVectors()
 {
     noi_lineEdits.clear();
     terminal_atten_lineEdits.clear();
@@ -1133,6 +936,48 @@ void RoomCalTable::disconnectLineEditsToCalSlot(const QVector<QLineEdit*>& lineE
             disconnect(lineEdit, &QLineEdit::textChanged, this, &RoomCalTable::calVariations);
         }
     }
+}
+
+std::pair<int, int> RoomCalTable::splitDimension(const QString &size)
+{
+    // 使用正则表达式来匹配 "数字x数字" 的格式
+    QRegExp rx("(\\d+)x(\\d+)");
+    if (rx.indexIn(size) != -1) {
+        // 如果匹配成功，则从捕获的组中获取数字
+        int firstNumber = rx.cap(1).toInt();
+        int secondNumber = rx.cap(2).toInt();
+        return std::make_pair(firstNumber, secondNumber);
+    } else {
+        // 如果输入格式不正确，返回一对-1表示错误
+        return std::make_pair(-1, -1);
+    }
+}
+
+void RoomCalTable::initTerminalDataSourceConn()
+{
+    connect(ui->comboBox_air_diff_atten_data_source, &QComboBox::currentTextChanged, this, &RoomCalTable::air_diff_data_source_changed);
+    connect(ui->comboBox_air_diff_noi_data_source, &QComboBox::currentTextChanged, this, &RoomCalTable::air_diff_data_source_changed);
+    connect(ui->comboBox_air_diff_refl_data_source, &QComboBox::currentTextChanged, this, &RoomCalTable::air_diff_data_source_changed);
+
+    connect(ui->comboBox_pump_atten_data_source, &QComboBox::currentTextChanged, this, &RoomCalTable::pump_data_source_changed);
+    connect(ui->comboBox_pump_noi_data_source, &QComboBox::currentTextChanged, this, &RoomCalTable::pump_data_source_changed);
+    connect(ui->comboBox_pump_refl_data_source, &QComboBox::currentTextChanged, this, &RoomCalTable::pump_data_source_changed);
+
+    connect(ui->comboBox_send_atten_data_source, &QComboBox::currentTextChanged, this, &RoomCalTable::send_data_source_changed);
+    connect(ui->comboBox_send_noi_data_source, &QComboBox::currentTextChanged, this, &RoomCalTable::send_data_source_changed);
+    connect(ui->comboBox_send_refl_data_source, &QComboBox::currentTextChanged, this, &RoomCalTable::send_data_source_changed);
+
+    connect(ui->comboBox_staticBox_grille_atten_data_source, &QComboBox::currentTextChanged, this, &RoomCalTable::staticBox_grille_data_source_changed);
+    connect(ui->comboBox_staticBox_grille_noi_data_source, &QComboBox::currentTextChanged, this, &RoomCalTable::staticBox_grille_data_source_changed);
+    connect(ui->comboBox_staticBox_grille_refl_data_source, &QComboBox::currentTextChanged, this, &RoomCalTable::staticBox_grille_data_source_changed);
+
+    connect(ui->comboBox_disp_vent_terminal_atten_data_source, &QComboBox::currentTextChanged, this, &RoomCalTable::disp_vent_terminal_data_source_changed);
+    connect(ui->comboBox_disp_vent_terminal_noi_data_source, &QComboBox::currentTextChanged, this, &RoomCalTable::disp_vent_terminal_data_source_changed);
+    connect(ui->comboBox_disp_vent_terminal_refl_data_source, &QComboBox::currentTextChanged, this, &RoomCalTable::disp_vent_terminal_data_source_changed);
+
+    connect(ui->comboBox_other_send_terminal_atten_data_source, &QComboBox::currentTextChanged, this, &RoomCalTable::other_send_terminal_data_source_changed);
+    connect(ui->comboBox_other_send_terminal_noi_data_source, &QComboBox::currentTextChanged, this, &RoomCalTable::other_send_terminal_data_source_changed);
+    connect(ui->comboBox_other_send_terminal_refl_data_source, &QComboBox::currentTextChanged, this, &RoomCalTable::other_send_terminal_data_source_changed);
 }
 
 void RoomCalTable::calVariations()
@@ -1226,22 +1071,43 @@ void RoomCalTable::calVariations()
     noi_after_cal_lineEdits[8]->setText(QString::number(calNoiseTotalValue(lineEdits),'f' ,1)); //总值
 }
 
+/**********风机**********/
+#pragma region "fan"{
+void RoomCalTable::on_comboBox_fan_data_source_currentTextChanged(const QString &arg1)
+{
+    clearPage(ui->stackedWidget_table->currentWidget(), false);
+    currentComponentListByDataSource.clear();
+    for(auto& component : currentAllComponentList)
+    {
+        // 尝试将component转换为Silencer类型的智能指针
+        if(auto fan = qSharedPointerDynamicCast<Fan>(component))
+        {
+            if(fan->data_source == arg1)
+                currentComponentListByDataSource.append(component); // 直接添加component
+        }
+    }
+
+    for(auto& component : currentComponentListByDataSource)
+    {
+        if(auto fan = qSharedPointerDynamicCast<Fan>(component))
+            ui->comboBox_fan_number->addItem(fan->number);
+    }
+    ui->comboBox_fan_number->setCurrentIndex(-1);
+}
+
 //风机编号选择
 void RoomCalTable::on_comboBox_fan_number_currentTextChanged(const QString &arg1)
 {
-    ui->lineEdit_fan_air_volume->clear();
-    ui->lineEdit_fan_model->clear();
-    ui->lineEdit_fan_static_press->clear();
-    auto it = std::find_if(this->currentComponentList.begin(),this->currentComponentList.end(), [&](const QSharedPointer<ComponentBase>& component){
-        auto fan = dynamic_cast<Fan*>(component.data());
+    auto it = std::find_if(this->currentComponentListByDataSource.begin(),this->currentComponentListByDataSource.end(), [&](const QSharedPointer<ComponentBase>& component){
+        auto fan = qSharedPointerDynamicCast<Fan>(component);
         if(fan && fan->number == arg1)
             return true;
         return false;
     });
 
-    if(it != currentComponentList.end())
+    if(it != currentComponentListByDataSource.end())
     {
-        if(auto fan = dynamic_cast<Fan*>((*it).data()))
+        if(auto fan = qSharedPointerDynamicCast<Fan>(*it))
         {
             currentComponent = (*it);
             ui->lineEdit_fan_air_volume->setText(fan->air_volume);
@@ -1254,6 +1120,8 @@ void RoomCalTable::on_comboBox_fan_number_currentTextChanged(const QString &arg1
 
 void RoomCalTable::on_comboBox_fan_noise_locate_currentIndexChanged(int index)
 {
+    if(index == -1)
+        return;
     if(auto fan = dynamic_cast<Fan*>(currentComponent.data()))
     {
         if(index == 0)
@@ -1272,34 +1140,63 @@ void RoomCalTable::on_comboBox_fan_noise_locate_currentIndexChanged(int index)
         }
     }
 }
+#pragma endregion}
+/**********风机**********/
+
+
+/**********风机盘管**********/
+#pragma region "fanCoil"{
+void RoomCalTable::on_comboBox_fanCoil_data_source_currentTextChanged(const QString &arg1)
+{
+    clearPage(ui->stackedWidget_table->currentWidget(), false);
+    currentComponentListByDataSource.clear();
+    for(auto& component : currentAllComponentList)
+    {
+        // 尝试将component转换为Silencer类型的智能指针
+        if(auto fanCoil = qSharedPointerDynamicCast<FanCoil>(component))
+        {
+            if(fanCoil->data_source == arg1)
+                currentComponentListByDataSource.append(component); // 直接添加component
+        }
+    }
+
+    for(auto& component : currentComponentListByDataSource)
+    {
+        if(auto fanCoil = qSharedPointerDynamicCast<FanCoil>(component))
+            ui->comboBox_fanCoil_model->addItem(fanCoil->model);
+    }
+    ui->comboBox_fanCoil_model->setCurrentIndex(-1);
+}
 
 //风机盘管型号选择
 void RoomCalTable::on_comboBox_fanCoil_model_currentTextChanged(const QString &arg1)
 {
     ui->lineEdit_fanCoil_air_volume->clear();
     ui->lineEdit_fanCoil_static_press->clear();
-    auto it = std::find_if(this->currentComponentList.begin(),this->currentComponentList.end(), [&](const QSharedPointer<ComponentBase>& component){
+    auto it = std::find_if(this->currentComponentListByDataSource.begin(),this->currentComponentListByDataSource.end(), [&](const QSharedPointer<ComponentBase>& component){
         auto fanCoil = dynamic_cast<FanCoil*>(component.data());
         if(fanCoil && fanCoil->model == arg1)
             return true;
         return false;
     });
 
-    if(it != currentComponentList.end())
+    if(it != currentComponentListByDataSource.end())
     {
-        if(auto fanCoil = dynamic_cast<FanCoil*>((*it).data()))
+        if(auto fanCoil = qSharedPointerDynamicCast<FanCoil>(*it))
         {
             currentComponent = (*it);
             ui->lineEdit_fanCoil_air_volume->setText(fanCoil->air_volume);
             ui->lineEdit_fanCoil_static_press->setText(fanCoil->static_pressure);
         }
     }
-    on_comboBox_fanCoil_locate_currentIndexChanged(ui->comboBox_fanCoil_locate->currentIndex());
+    on_comboBox_fanCoil_noise_locate_currentIndexChanged(ui->comboBox_fanCoil_noise_locate->currentIndex());
 }
 
-void RoomCalTable::on_comboBox_fanCoil_locate_currentIndexChanged(int index)
+void RoomCalTable::on_comboBox_fanCoil_noise_locate_currentIndexChanged(int index)
 {
-    if(auto fanCoil = dynamic_cast<FanCoil*>(currentComponent.data()))
+    if(index == -1)
+        return;
+    if(auto fanCoil = qSharedPointerDynamicCast<FanCoil>(currentComponent))
     {
         if(index == 0)
         {
@@ -1317,35 +1214,63 @@ void RoomCalTable::on_comboBox_fanCoil_locate_currentIndexChanged(int index)
         }
     }
 }
+#pragma endregion}
+/**********风机盘管**********/
+
+/**********空调器**********/
+#pragma region "aircondition"{
+void RoomCalTable::on_comboBox_aircondition_data_source_currentTextChanged(const QString &arg1)
+{
+    clearPage(ui->stackedWidget_table->currentWidget(), false);
+    currentComponentListByDataSource.clear();
+    for(auto& component : currentAllComponentList)
+    {
+        // 尝试将component转换为Silencer类型的智能指针
+        if(auto airconditionIntable = qSharedPointerDynamicCast<Aircondition_in_calTable>(component))
+        {
+            if(airconditionIntable->data_source == arg1)
+                currentComponentListByDataSource.append(component); // 直接添加component
+        }
+    }
+
+    ui->comboBox_aircondition_number->setCurrentIndex(-1);
+}
 
 //空调器风机类型选择
 void RoomCalTable::on_comboBox_aircondition_fan_type_currentIndexChanged(int index)
 {
-    ui->comboBox_aircondition_number->clear();
+    clearPage(ui->stackedWidget_table->currentWidget(), false);
 
+    // 断开信号和槽的连接
+    disconnect(ui->comboBox_aircondition_number, SIGNAL(currentTextChanged(QString)),
+               this, SLOT(on_comboBox_aircondition_number_currentTextChanged(QString)));
     //送风机
     if(index == 0)
     {
-        for(auto& component : this->currentComponentList)
+        for(auto& component : this->currentComponentListByDataSource)
         {
-            if(auto aircondition = dynamic_cast<Aircondition*>(component.data()))
+            if(auto airconditionIntable = qSharedPointerDynamicCast<Aircondition_in_calTable>(component))
             {
-                ui->comboBox_aircondition_number->addItem(aircondition->send_number);
+                if(airconditionIntable->send_or_exhaust == "送风机")
+                    ui->comboBox_aircondition_number->addItem(airconditionIntable->send_number);
             }
         }
     }
     else if(index == 1)
     {
-        for(auto& component : this->currentAirconditionList_exhaust)
+        for(auto& component : this->currentComponentListByDataSource)
         {
-            if(auto aircondition = dynamic_cast<Aircondition*>(component.data()))
+            if(auto airconditionIntable = qSharedPointerDynamicCast<Aircondition_in_calTable>(component))
             {
-                ui->comboBox_aircondition_number->addItem(aircondition->exhaust_number);
+                if(airconditionIntable->send_or_exhaust == "排风机")
+                    ui->comboBox_aircondition_number->addItem(airconditionIntable->exhaust_number);
             }
         }
     }
-
-    on_comboBox_aircondition_noise_locate_currentIndexChanged(ui->comboBox_aircondition_noise_locate->currentIndex());
+    ui->comboBox_aircondition_number->setCurrentIndex(-1);
+    // 断开信号和槽的连接
+    connect(ui->comboBox_aircondition_number, SIGNAL(currentTextChanged(QString)),
+               this, SLOT(on_comboBox_aircondition_number_currentTextChanged(QString)));
 }
 
 //空调器编号选择
@@ -1359,100 +1284,81 @@ void RoomCalTable::on_comboBox_aircondition_number_currentTextChanged(const QStr
 
     if(fan_type_index == 0)
     {
-        auto it = std::find_if(this->currentComponentList.begin(),this->currentComponentList.end(), [&](const QSharedPointer<ComponentBase>& component){
-            auto aircondition = dynamic_cast<Aircondition*>(component.data());
-            if(aircondition)
+        auto it = std::find_if(this->currentComponentListByDataSource.begin(),this->currentComponentListByDataSource.end(), [&](const QSharedPointer<ComponentBase>& component){
+            auto airconditionIntable = qSharedPointerDynamicCast<Aircondition_in_calTable>(component);
+            if(airconditionIntable)
             {
-                return aircondition->send_number == arg1;
+                return airconditionIntable->send_or_exhaust == "送风机" && airconditionIntable->send_number == arg1;
             }
             return false;
         });
-        if(it != currentComponentList.end())
+        if(it != currentComponentListByDataSource.end())
         {
-            if(auto aircondition = dynamic_cast<Aircondition*>((*it).data()))
+            if(auto airconditionIntable = qSharedPointerDynamicCast<Aircondition_in_calTable>(*it))
             {
                 currentComponent = (*it);
-                ui->lineEdit_aircondition_air_volume->setText(aircondition->send_air_volume);
-                ui->lineEdit_aircondition_model->setText(aircondition->model);
-                ui->lineEdit_aircondition_static_press->setText(aircondition->send_static_pressure);
+                ui->lineEdit_aircondition_air_volume->setText(airconditionIntable->send_air_volume);
+                ui->lineEdit_aircondition_model->setText(airconditionIntable->model);
+                ui->lineEdit_aircondition_static_press->setText(airconditionIntable->send_static_pressure);
             }
         }
     }
     else if(fan_type_index == 1)
     {
-        auto it = std::find_if(this->currentAirconditionList_exhaust.begin(),this->currentAirconditionList_exhaust.end(), [&](const QSharedPointer<ComponentBase>& component){
-            auto aircondition = dynamic_cast<Aircondition*>(component.data());
-            if(aircondition)
+        auto it = std::find_if(this->currentComponentListByDataSource.begin(),this->currentComponentListByDataSource.end(), [&](const QSharedPointer<ComponentBase>& component){
+            auto airconditionIntable = qSharedPointerDynamicCast<Aircondition_in_calTable>(component);
+            if(airconditionIntable)
             {
-                return aircondition->exhaust_number == arg1;
+                return airconditionIntable->send_or_exhaust == "排风机" && airconditionIntable->exhaust_number == arg1;
             }
             return false;
         });
-        if(it != currentAirconditionList_exhaust.end())
+        if(it != currentComponentListByDataSource.end())
         {
-            if(auto aircondition = dynamic_cast<Aircondition*>((*it).data()))
+            if(auto airconditionIntable = qSharedPointerDynamicCast<Aircondition_in_calTable>(*it))
             {
                 currentComponent = (*it);
-                ui->lineEdit_aircondition_air_volume->setText(aircondition->exhaust_air_volume);
-                ui->lineEdit_aircondition_model->setText(aircondition->model);
-                ui->lineEdit_aircondition_static_press->setText(aircondition->exhaust_static_pressure);
+                ui->lineEdit_aircondition_air_volume->setText(airconditionIntable->exhaust_air_volume);
+                ui->lineEdit_aircondition_model->setText(airconditionIntable->model);
+                ui->lineEdit_aircondition_static_press->setText(airconditionIntable->exhaust_static_pressure);
             }
         }
     }
-
 
     on_comboBox_aircondition_noise_locate_currentIndexChanged(ui->comboBox_aircondition_noise_locate->currentIndex());
 }
 
 void RoomCalTable::on_comboBox_aircondition_noise_locate_currentIndexChanged(int index)
 {
-    for(int i = 0; i < noi_after_cal_lineEdits.size(); i++)
-    {
-        noi_after_cal_lineEdits[i]->clear();
-    }
-    int fan_type_index = ui->comboBox_aircondition_fan_type->currentIndex();
+    if(index == -1)
+        return;
+
+
     if(currentComponent)
     {
-        if(fan_type_index == 0)
-        {
-            auto it = std::find_if(this->currentComponentList.begin(),this->currentComponentList.end(), [&](const QSharedPointer<ComponentBase>& component){
-                auto aircondition = dynamic_cast<Aircondition*>(component.data());
-                if(aircondition)
-                {
-                    return aircondition->UUID == currentComponent->UUID;
-                }
-                return false;
-            });
-            if(it == currentComponentList.end())
+        auto it = std::find_if(this->currentComponentListByDataSource.begin(),this->currentComponentListByDataSource.end(), [&](const QSharedPointer<ComponentBase>& component){
+            auto airconditionIntable = qSharedPointerDynamicCast<Aircondition_in_calTable>(component);
+            if(airconditionIntable)
             {
-                return;
+                return airconditionIntable->UUID == currentComponent->UUID;
             }
-        }
-        else
+            return false;
+        });
+        if(it == currentComponentListByDataSource.end())
         {
-            auto it = std::find_if(this->currentAirconditionList_exhaust.begin(),this->currentAirconditionList_exhaust.end(), [&](const QSharedPointer<ComponentBase>& component){
-                auto aircondition = dynamic_cast<Aircondition*>(component.data());
-                if(aircondition)
-                {
-                    return aircondition->UUID == currentComponent->UUID;
-                }
-                return false;
-            });
-            if(it == currentAirconditionList_exhaust.end())
-            {
-                return;
-            }
+            return;
         }
     }
-    if(auto aircondition = dynamic_cast<Aircondition*>(currentComponent.data()))
+
+    if(auto airconditionIntable = qSharedPointerDynamicCast<Aircondition_in_calTable>(currentComponent))
     {
         if(index == 0)
         {
-
             for(int i = 0; i < noi_after_cal_lineEdits.size(); i++)
             {
                 noi_after_cal_lineEdits[i]->setText(
-                            fan_type_index == 0 ? aircondition->noi_send_in[i] : aircondition->noi_exhaust_in[i]);
+                            airconditionIntable->send_or_exhaust == "送风机" ?
+                                airconditionIntable->noi_send_in[i] : airconditionIntable->noi_exhaust_in[i]);
             }
         }
         else if(index == 1)
@@ -1460,32 +1366,62 @@ void RoomCalTable::on_comboBox_aircondition_noise_locate_currentIndexChanged(int
             for(int i = 0; i < noi_after_cal_lineEdits.size(); i++)
             {
                 noi_after_cal_lineEdits[i]->setText(
-                            fan_type_index == 0 ? aircondition->noi_send_out[i] : aircondition->noi_exhaust_out[i]);
+                            airconditionIntable->send_or_exhaust == "送风机" ?
+                                airconditionIntable->noi_send_out[i] : airconditionIntable->noi_exhaust_out[i]);
             }
         }
     }
 
 }
+#pragma endregion}
+/**********空调器**********/
+
+/**********变风量末端**********/
+#pragma region "VAV_terminal"{
+void RoomCalTable::on_comboBox_VAV_terminal_data_source_currentTextChanged(const QString &arg1)
+{
+    clearPage(ui->stackedWidget_table->currentWidget(), false);
+    currentComponentListByDataSource.clear();
+    for(auto& component : currentAllComponentList)
+    {
+        // 尝试将component转换为Silencer类型的智能指针
+        if(auto vav = qSharedPointerDynamicCast<VAV_terminal>(component))
+        {
+            if(vav->data_source == arg1)
+                currentComponentListByDataSource.append(component); // 直接添加component
+        }
+    }
+
+    // 断开信号和槽的连接
+    disconnect(ui->comboBox_VAV_terminal_number, SIGNAL(currentTextChanged(QString)),
+               this, SLOT(on_comboBox_VAV_terminal_number_currentTextChanged(QString)));
+
+    for(auto& component : currentComponentListByDataSource)
+    {
+        if(auto vav = qSharedPointerDynamicCast<VAV_terminal>(component))
+            ui->comboBox_VAV_terminal_number->addItem(vav->number);
+    }
+    ui->comboBox_VAV_terminal_number->setCurrentIndex(-1);
+
+    // 重新连接信号和槽
+    connect(ui->comboBox_VAV_terminal_number, SIGNAL(currentTextChanged(QString)),
+            this, SLOT(on_comboBox_VAV_terminal_number_currentTextChanged(QString)));
+}
 
 void RoomCalTable::on_comboBox_VAV_terminal_number_currentTextChanged(const QString &arg1)
 {
-    for(int i = 0; i < noi_lineEdits.size(); i++)
-    {
-        noi_lineEdits[i]->clear();
-    }
-    ui->lineEdit_VAV_terminal_model->clear();
-    ui->lineEdit_VAV_terminal_air_volume->clear();
-    ui->lineEdit_VAV_terminal_angle->clear();
-    auto it = std::find_if(this->currentComponentList.begin(),this->currentComponentList.end(), [&](const QSharedPointer<ComponentBase>& component){
-        auto vav = dynamic_cast<VAV_terminal*>(component.data());
+    if(ui->comboBox_VAV_terminal_number->currentIndex() == -1)
+        return;
+    auto it = std::find_if(this->currentComponentListByDataSource.begin(),this->currentComponentListByDataSource.end(), [&](const QSharedPointer<ComponentBase>& component){
+        auto vav = qSharedPointerDynamicCast<VAV_terminal>(component);
         if(vav && vav->number == arg1)
             return true;
         return false;
     });
 
-    if(it != currentComponentList.end())
+    if(it != currentComponentListByDataSource.end())
     {
-        if(auto vav = dynamic_cast<VAV_terminal*>((*it).data()))
+        if(auto vav = qSharedPointerDynamicCast<VAV_terminal>(*it))
         {
             currentComponent = (*it);
             ui->lineEdit_VAV_terminal_air_volume->setText(vav->air_volume);
@@ -1499,343 +1435,1626 @@ void RoomCalTable::on_comboBox_VAV_terminal_number_currentTextChanged(const QStr
         }
     }
 }
+#pragma endregion}
+/**********变风量末端**********/
 
-//圆形调风门直径选择后
-void RoomCalTable::on_comboBox_circular_damper_diameter_currentTextChanged(const QString &arg1)
+/**********圆形调风门**********/
+#pragma region "circular_damper"{
+void RoomCalTable::circular_damper_noise_cal()
 {
-    if(this->currentComponentList.isEmpty())
+    if(ui->comboBox_circular_damper_angle->currentText().isEmpty() ||
+            ui->lineEdit_circular_damper_air_volume->text().isEmpty() ||
+            ui->lineEdit_circular_damper_diameter->text().isEmpty())
         return;
 
-    // 断开信号与槽的连接
-    disconnect(ui->comboBox_circular_damper_angle, SIGNAL(currentTextChanged(const QString &)), this, SLOT(on_comboBox_circular_damper_angle_currentTextChanged(const QString &)));
+    array<double, 9> noi =  calDamperNoise(Circle,ui->comboBox_circular_damper_angle->currentText().remove("°").toInt(),
+                                           ui->lineEdit_circular_damper_air_volume->text().toDouble(),
+                                           ui->lineEdit_circular_damper_diameter->text().toDouble());
 
-
-    ui->comboBox_circular_damper_angle->clear();
-
-    QSet<QString> set;
-
-    for(auto& component : currentComponentList)
+    for(int i = 0; i < noi.size(); i++)
     {
-        const Circular_damper* circular_damper = dynamic_cast<const Circular_damper*>(component.data());
-        if(circular_damper->model == ui->comboBox_circular_damper_diameter->currentText())
-        {
-            set.insert(circular_damper->angle);
-        }
+        noi_lineEdits[i]->setText(QString::number(noi[i],'f', 1));
     }
-
-    // 转换为数字列表，同时移除度数符号
-    QList<int> numbers;
-    for(QString model : set) {
-        bool ok;
-        int number = model.remove("°").toInt(&ok);
-        if(ok) { // 确保转换成功
-            numbers.append(number);
-        }
-    }
-
-    // 对数字列表进行排序
-    std::sort(numbers.begin(), numbers.end());
-
-    for(int number : numbers)
-    {
-        // 将数字转换回QString并添加度数符号，然后添加到comboBox
-        ui->comboBox_circular_damper_angle->addItem(QString::number(number) + "°");
-    }
-
-    ui->comboBox_circular_damper_angle->setCurrentIndex(-1);
-
-    connect(ui->comboBox_circular_damper_angle, SIGNAL(currentTextChanged(const QString &)), this, SLOT(on_comboBox_circular_damper_angle_currentTextChanged(const QString &)));
 }
 
-//圆形调风门阀门开度选择后
-void RoomCalTable::on_comboBox_circular_damper_angle_currentTextChanged(const QString &arg1)
+void RoomCalTable::on_comboBox_circular_damper_data_source_currentTextChanged(const QString &arg1)
 {
-    if(this->currentComponentList.isEmpty())
-        return;
-
-    // 断开信号与槽的连接
-    disconnect(ui->comboBox_circular_damper_air_volume, SIGNAL(currentTextChanged(const QString &)), this, SLOT(on_comboBox_circular_damper_air_volume_currentTextChanged(const QString &)));
-
-    ui->comboBox_circular_damper_air_volume->clear();
-
-    QList<int> numbers;
-
-    for(auto& component : currentComponentList)
+    clearPage(ui->stackedWidget_table->currentWidget(), false);
+    if(arg1 != "经验公式")
     {
-        const Circular_damper* circular_damper = dynamic_cast<const Circular_damper*>(component.data());
-        if(circular_damper->model == ui->comboBox_circular_damper_diameter->currentText()
-                && circular_damper->angle == ui->comboBox_circular_damper_angle->currentText())
+        ui->comboBox_circular_damper_model->setEnabled(true);
+        ui->comboBox_circular_damper_model->setStyleSheet("QComboBox { border:none;"
+                                                          "border-bottom:1px solid black;}");
+
+        // 隐藏下拉箭头
+        ui->comboBox_circular_damper_angle->setStyleSheet("QComboBox { combobox-popup: 0; border:none;"
+                                                          "border-bottom:1px solid black;"
+                                                          "font-family: '黑体';"
+                                                          "font-size: 14px;}"
+                                                          "QComboBox::drop-down { width:0px; }"); // CSS隐藏下拉箭头
+        // 防止显示下拉列表
+        ui->comboBox_circular_damper_angle->setEditable(true);
+        ui->comboBox_circular_damper_angle->lineEdit()->setReadOnly(true);
+
+        ui->lineEdit_circular_damper_diameter->setReadOnly(true);
+        ui->lineEdit_circular_damper_air_volume->setReadOnly(true);
+
+        disconnect(ui->comboBox_circular_damper_angle, &QComboBox::currentTextChanged, this, &RoomCalTable::circular_damper_noise_cal);
+        disconnect(ui->lineEdit_circular_damper_air_volume, &QLineEdit::textChanged, this, &RoomCalTable::circular_damper_noise_cal);
+        disconnect(ui->lineEdit_circular_damper_diameter, &QLineEdit::textChanged, this, &RoomCalTable::circular_damper_noise_cal);
+
+        clearPage(ui->stackedWidget_table->currentWidget(), false);
+        currentComponentListByDataSource.clear();
+        for(auto& component : currentAllComponentList)
         {
-            bool ok;
-            int number = circular_damper->air_volume.toInt(&ok);
-            if(ok) { // 确保转换成功
-                numbers.append(number);
-            }
-        }
-    }
-
-    // 对数字列表进行排序
-    std::sort(numbers.begin(), numbers.end());
-
-    for(int number : numbers)
-    {
-        ui->comboBox_circular_damper_angle->addItem(QString::number(number));
-    }
-
-    ui->comboBox_circular_damper_air_volume->setCurrentIndex(-1);
-
-    connect(ui->comboBox_circular_damper_air_volume, SIGNAL(currentTextChanged(const QString &)), this, SLOT(on_comboBox_circular_damper_air_volume_currentTextChanged(const QString &)));
-}
-
-//选择圆形调风门风量,得出噪声量
-void RoomCalTable::on_comboBox_circular_damper_air_volume_currentTextChanged(const QString &arg1)
-{
-    if(this->currentComponentList.isEmpty())
-        return;
-
-    QVector<QString> circular_damperNoise;
-
-    for(auto& component : currentComponentList)
-    {
-        const Circular_damper* circular_damper = dynamic_cast<const Circular_damper*>(component.data());
-        if(circular_damper->model == ui->comboBox_circular_damper_diameter->currentText()
-                && circular_damper->angle == ui->comboBox_circular_damper_angle->currentText()
-                && circular_damper->air_volume == ui->comboBox_circular_damper_air_volume->currentText())
-        {
-
-            for(int i = 0; i < 9; i++)
+            // 尝试将component转换为Silencer类型的智能指针
+            if(auto circluar_damper = qSharedPointerDynamicCast<Circular_damper>(component))
             {
-                noi_lineEdits[i]->setText(circular_damper->noi[i]);
+                if(circluar_damper->data_source == arg1)
+                    currentComponentListByDataSource.append(component); // 直接添加component
             }
         }
+
+        // 断开信号和槽的连接
+        disconnect(ui->comboBox_circular_damper_model, SIGNAL(currentTextChanged(QString)),
+                   this, SLOT(on_comboBox_circular_damper_model_currentTextChanged(QString)));
+
+        for(auto& component : currentComponentListByDataSource)
+        {
+            if(auto circluar_damper = qSharedPointerDynamicCast<Circular_damper>(component))
+                ui->comboBox_circular_damper_model->addItem(circluar_damper->model);
+        }
+        ui->comboBox_circular_damper_model->setCurrentIndex(-1);
+
+        // 重新连接信号和槽
+        connect(ui->comboBox_circular_damper_model, SIGNAL(currentTextChanged(QString)),
+                this, SLOT(on_comboBox_circular_damper_model_currentTextChanged(QString)));
+    }
+    else
+    {
+        ui->comboBox_circular_damper_model->setCurrentText("-");
+        ui->comboBox_circular_damper_model->setEnabled(false);
+        ui->comboBox_circular_damper_model->setStyleSheet("QComboBox { border:1px solid black ;background-color: rgb(240,240,240);"
+                                                          "font-family: '黑体';"
+                                                          "font-size: 14px;}");
+
+        // 隐藏下拉箭头
+        ui->comboBox_circular_damper_angle->setStyleSheet("QComboBox{border:none; "
+                                                          "border-bottom:1px solid black;}"
+                                                          "QLineEdit{font-family: '黑体';"
+                                                          "font-size: 14px;}"); // CSS隐藏下拉箭头
+        // 防止显示下拉列表
+        ui->comboBox_circular_damper_angle->setMaxVisibleItems(10);
+        ui->comboBox_circular_damper_angle->setEditable(false);
+        //ui->comboBox_circular_damper_angle->lineEdit()->setReadOnly(false);
+
+        ui->lineEdit_circular_damper_diameter->setReadOnly(false);
+        ui->lineEdit_circular_damper_air_volume->setReadOnly(false);
+
+        connect(ui->comboBox_circular_damper_angle, &QComboBox::currentTextChanged, this, &RoomCalTable::circular_damper_noise_cal);
+        connect(ui->lineEdit_circular_damper_air_volume, &QLineEdit::textChanged, this, &RoomCalTable::circular_damper_noise_cal);
+        connect(ui->lineEdit_circular_damper_diameter, &QLineEdit::textChanged, this, &RoomCalTable::circular_damper_noise_cal);
     }
 }
 
-//选择方形调风门尺寸
-void RoomCalTable::on_comboBox_rect_damper_size_currentTextChanged(const QString &arg1)
+void RoomCalTable::on_comboBox_circular_damper_model_currentTextChanged(const QString &arg1)
 {
-    if(this->currentComponentList.isEmpty())
+    if(ui->comboBox_circular_damper_model->currentIndex() == -1)
         return;
 
-    // 断开信号与槽的连接
-    disconnect(ui->comboBox_rect_damper_angle, SIGNAL(currentTextChanged(const QString &)), this, SLOT(on_comboBox_rect_damper_angle_currentTextChanged(const QString &)));
+    auto it = std::find_if(this->currentComponentListByDataSource.begin(),this->currentComponentListByDataSource.end(), [&](const QSharedPointer<ComponentBase>& component){
+        auto damper = qSharedPointerDynamicCast<Circular_damper>(component);
+        if(damper && damper->model == arg1)
+            return true;
+        return false;
+    });
 
-
-    ui->comboBox_rect_damper_angle->clear();
-
-    QSet<QString> set;
-
-    for(auto& component : currentComponentList)
+    if(it != currentComponentListByDataSource.end())
     {
-        const Rect_damper* rect_damper = dynamic_cast<const Rect_damper*>(component.data());
-        if(rect_damper->model == ui->comboBox_rect_damper_size->currentText())
+        if(auto damper = qSharedPointerDynamicCast<Circular_damper>(*it))
         {
-            set.insert(rect_damper->angle);
-        }
-    }
+            currentComponent = (*it);
+            ui->lineEdit_circular_damper_air_volume->setText(damper->air_volume);
+            ui->lineEdit_circular_damper_diameter->setText(damper->diameter);
+            ui->comboBox_circular_damper_angle->setCurrentText(damper->angle);
 
-    // 转换为数字列表，同时移除度数符号
-    QList<int> numbers;
-    for(QString model : set) {
-        bool ok;
-        int number = model.remove("°").toInt(&ok);
-        if(ok) { // 确保转换成功
-            numbers.append(number);
-        }
-    }
-
-    // 对数字列表进行排序
-    std::sort(numbers.begin(), numbers.end());
-
-    for(int number : numbers)
-    {
-        // 将数字转换回QString并添加度数符号，然后添加到comboBox
-        ui->comboBox_rect_damper_angle->addItem(QString::number(number) + "°");
-    }
-
-    ui->comboBox_rect_damper_angle->setCurrentIndex(-1);
-
-    connect(ui->comboBox_rect_damper_angle, SIGNAL(currentTextChanged(const QString &)), this, SLOT(on_comboBox_rect_damper_angle_currentTextChanged(const QString &)));
-}
-
-//方形调风门阀门开度
-void RoomCalTable::on_comboBox_rect_damper_angle_currentTextChanged(const QString &arg1)
-{
-    if(this->currentComponentList.isEmpty())
-        return;
-
-    // 断开信号与槽的连接
-    disconnect(ui->comboBox_rect_damper_air_volume, SIGNAL(currentTextChanged(const QString &)), this, SLOT(on_comboBox_rect_damper_air_volume_currentTextChanged(const QString &)));
-
-    ui->comboBox_rect_damper_air_volume->clear();
-
-    QList<int> numbers;
-
-    for(auto& component : currentComponentList)
-    {
-        const Rect_damper* rect_damper = dynamic_cast<const Rect_damper*>(component.data());
-        if(rect_damper->model == ui->comboBox_rect_damper_size->currentText()
-                && rect_damper->angle == ui->comboBox_rect_damper_angle->currentText())
-        {
-            bool ok;
-            int number = rect_damper->air_volume.toInt(&ok);
-            if(ok) { // 确保转换成功
-                numbers.append(number);
-            }
-        }
-    }
-
-    // 对数字列表进行排序
-    std::sort(numbers.begin(), numbers.end());
-
-    for(int number : numbers)
-    {
-        ui->comboBox_rect_damper_angle->addItem(QString::number(number));
-    }
-
-    ui->comboBox_rect_damper_air_volume->setCurrentIndex(-1);
-
-    connect(ui->comboBox_rect_damper_air_volume, SIGNAL(currentTextChanged(const QString &)), this, SLOT(on_comboBox_rect_damper_air_volume_currentTextChanged(const QString &)));
-}
-
-//方形调风门风量
-void RoomCalTable::on_comboBox_rect_damper_air_volume_currentTextChanged(const QString &arg1)
-{
-    if(this->currentComponentList.isEmpty())
-        return;
-
-    QVector<QString> rect_damperNoise;
-
-    for(auto& component : currentComponentList)
-    {
-        const Rect_damper* rect_damper = dynamic_cast<const Rect_damper*>(component.data());
-        if(rect_damper->model == ui->comboBox_rect_damper_size->currentText()
-                && rect_damper->angle == ui->comboBox_rect_damper_angle->currentText()
-                && rect_damper->air_volume == ui->comboBox_rect_damper_air_volume->currentText())
-        {
-
-            for(int i = 0; i < 9; i++)
+            for(int i = 0; i < noi_after_cal_lineEdits.size(); i++)
             {
-                noi_lineEdits[i]->setText(rect_damper->noi[i]);
+                noi_lineEdits[i]->setText(damper->noi[i]);
             }
         }
     }
 }
 
+#pragma endregion}
+/**********圆形调风门**********/
+
+/**********方形调风门**********/
+#pragma region "rect_damper"{
+void RoomCalTable::rect_damper_noise_cal()
+{
+    if(ui->comboBox_rect_damper_angle->currentText().isEmpty() ||
+            ui->lineEdit_rect_damper_air_volume->text().isEmpty() ||
+            ui->lineEdit_rect_damper_size->text().isEmpty())
+        return;
+
+    auto dimensions = splitDimension(ui->lineEdit_rect_damper_size->text());
+    double length, width;
+    if (dimensions.first != -1) {
+        length = dimensions.first;
+        width = dimensions.second;
+    }
+
+    array<double, 9> noi =  calDamperNoise(Rect,ui->comboBox_rect_damper_angle->currentText().remove("°").toInt(),
+                                           ui->lineEdit_rect_damper_air_volume->text().toDouble(),
+                                           length,
+                                           width);
+
+    for(int i = 0; i < noi.size(); i++)
+    {
+        noi_lineEdits[i]->setText(QString::number(noi[i],'f', 1));
+    }
+}
+
+void RoomCalTable::on_comboBox_rect_damper_data_source_currentTextChanged(const QString &arg1)
+{
+    clearPage(ui->stackedWidget_table->currentWidget(), false);
+    if(arg1 != "经验公式")
+    {
+        ui->comboBox_rect_damper_model->setEnabled(true);
+        ui->comboBox_rect_damper_model->setStyleSheet("QComboBox { border:none;"
+                                                          "border-bottom:1px solid black;}");
+
+        // 隐藏下拉箭头
+        ui->comboBox_rect_damper_angle->setStyleSheet("QComboBox { combobox-popup: 0; border:none;"
+                                                          "border-bottom:1px solid black;"
+                                                          "font-family: '黑体';"
+                                                          "font-size: 14px;}"
+                                                          "QComboBox::drop-down { width:0px; }"); // CSS隐藏下拉箭头
+        // 防止显示下拉列表
+        ui->comboBox_rect_damper_angle->setEditable(true);
+        ui->comboBox_rect_damper_angle->lineEdit()->setReadOnly(true);
+
+        ui->lineEdit_rect_damper_size->setValidator(nullptr);
+        ui->lineEdit_rect_damper_size->setReadOnly(true);
+        ui->lineEdit_rect_damper_air_volume->setReadOnly(true);
+
+        disconnect(ui->comboBox_rect_damper_angle, &QComboBox::currentTextChanged, this, &RoomCalTable::rect_damper_noise_cal);
+        disconnect(ui->lineEdit_rect_damper_air_volume, &QLineEdit::textChanged, this, &RoomCalTable::rect_damper_noise_cal);
+        disconnect(ui->lineEdit_rect_damper_size, &QLineEdit::textChanged, this, &RoomCalTable::rect_damper_noise_cal);
+
+        currentComponentListByDataSource.clear();
+        for(auto& component : currentAllComponentList)
+        {
+            // 尝试将component转换为Silencer类型的智能指针
+            if(auto rect_damper = qSharedPointerDynamicCast<Rect_damper>(component))
+            {
+                if(rect_damper->data_source == arg1)
+                    currentComponentListByDataSource.append(component); // 直接添加component
+            }
+        }
+
+        // 断开信号和槽的连接
+        disconnect(ui->comboBox_rect_damper_model, SIGNAL(currentTextChanged(QString)),
+                   this, SLOT(on_comboBox_rect_damper_model_currentTextChanged(QString)));
+
+        for(auto& component : currentComponentListByDataSource)
+        {
+            if(auto rect_damper = qSharedPointerDynamicCast<Rect_damper>(component))
+                ui->comboBox_rect_damper_model->addItem(rect_damper->model);
+        }
+        ui->comboBox_rect_damper_model->setCurrentIndex(-1);
+
+        // 重新连接信号和槽
+        connect(ui->comboBox_rect_damper_model, SIGNAL(currentTextChanged(QString)),
+                this, SLOT(on_comboBox_rect_damper_model_currentTextChanged(QString)));
+    }
+    else
+    {
+        //给size LineEdit安装验证器
+        ui->lineEdit_rect_damper_size->setValidator(new DimensionValidator(this));
+        ui->comboBox_rect_damper_model->setCurrentText("-");
+        ui->comboBox_rect_damper_model->setEnabled(false);
+        ui->comboBox_rect_damper_model->setStyleSheet("QComboBox { border:1px solid black ;background-color: rgb(240,240,240);"
+                                                          "font-family: '黑体';"
+                                                          "font-size: 14px;}");
+
+        // 隐藏下拉箭头
+        ui->comboBox_rect_damper_angle->setStyleSheet("QComboBox{border:none; "
+                                                          "border-bottom:1px solid black;}"
+                                                          "QLineEdit{font-family: '黑体';"
+                                                          "font-size: 14px;}"); // CSS隐藏下拉箭头
+        // 防止显示下拉列表
+        ui->comboBox_rect_damper_angle->setMaxVisibleItems(10);
+        ui->comboBox_rect_damper_angle->setEditable(false);
+
+        ui->lineEdit_rect_damper_size->setPlaceholderText("长 x 宽");
+        ui->lineEdit_rect_damper_size->setReadOnly(false);
+        ui->lineEdit_rect_damper_air_volume->setReadOnly(false);
+
+        connect(ui->comboBox_rect_damper_angle, &QComboBox::currentTextChanged, this, &RoomCalTable::rect_damper_noise_cal);
+        connect(ui->lineEdit_rect_damper_air_volume, &QLineEdit::textChanged, this, &RoomCalTable::rect_damper_noise_cal);
+        connect(ui->lineEdit_rect_damper_size, &QLineEdit::textChanged, this, &RoomCalTable::rect_damper_noise_cal);
+    }
+}
+
+void RoomCalTable::on_comboBox_rect_damper_model_currentTextChanged(const QString &arg1)
+{
+    if(ui->comboBox_rect_damper_model->currentIndex() == -1)
+        return;
+
+    auto it = std::find_if(this->currentComponentListByDataSource.begin(),this->currentComponentListByDataSource.end(), [&](const QSharedPointer<ComponentBase>& component){
+        auto damper = qSharedPointerDynamicCast<Rect_damper>(component);
+        if(damper && damper->model == arg1)
+            return true;
+        return false;
+    });
+
+    if(it != currentComponentListByDataSource.end())
+    {
+        if(auto damper = qSharedPointerDynamicCast<Rect_damper>(*it))
+        {
+            currentComponent = (*it);
+            ui->lineEdit_rect_damper_air_volume->setText(damper->air_volume);
+            ui->lineEdit_rect_damper_size->setText(damper->size);
+            ui->comboBox_rect_damper_angle->setCurrentText(damper->angle);
+
+            for(int i = 0; i < noi_after_cal_lineEdits.size(); i++)
+            {
+                noi_lineEdits[i]->setText(damper->noi[i]);
+            }
+        }
+    }
+}
+
+#pragma endregion}
+/**********方形调风门**********/
+
+/**********布风器+散流器**********/
+#pragma region "rect_damper"{
 //选择完布风器型号,添加散流器型号
+void RoomCalTable::air_diff_data_source_changed()
+{
+    if(ui->comboBox_air_diff_atten_data_source->currentText().isEmpty() ||
+            ui->comboBox_air_diff_noi_data_source->currentText().isEmpty() ||
+            ui->comboBox_air_diff_refl_data_source->currentText().isEmpty())
+        return;
+
+    clearPage(ui->stackedWidget_table->currentWidget(), false);
+    currentComponentListByDataSource.clear();
+    for(auto& component : currentAllComponentList)
+    {
+        // 尝试将component转换为Silencer类型的智能指针
+        if(auto airdiff = qSharedPointerDynamicCast<AirDiff>(component))
+        {
+            if(airdiff->noi_data_source == ui->comboBox_air_diff_noi_data_source->currentText()
+                    && airdiff->atten_data_source == ui->comboBox_air_diff_atten_data_source->currentText()
+                    && airdiff->refl_data_source == ui->comboBox_air_diff_refl_data_source->currentText())
+                currentComponentListByDataSource.append(component); // 直接添加component
+        }
+    }
+
+    qDebug() << ui->comboBox_air_diff_noi_data_source->currentText();
+    qDebug() << ui->comboBox_air_diff_atten_data_source->currentText();
+    qDebug() << ui->comboBox_air_diff_refl_data_source->currentText();
+
+    for(auto& component : currentComponentListByDataSource)
+    {
+        if(auto airdiff = qSharedPointerDynamicCast<AirDiff>(component))
+            ui->comboBox_air_distributor_model->addItem(airdiff->air_distributor_model);
+    }
+    ui->comboBox_air_distributor_model->setCurrentIndex(-1);
+}
+
 void RoomCalTable::on_comboBox_air_distributor_model_currentTextChanged(const QString &arg1)
 {
-    if(this->currentComponentList.isEmpty())
-        return;
-
     ui->comboBox_diffuser_model->clear();
-
-    for(auto& component : currentComponentList)
+    ui->comboBox_diffuser_model->blockSignals(true);
+    for(auto& component : currentComponentListByDataSource)
     {
-        const AirDiff* air_diff = dynamic_cast<const AirDiff*>(component.data());
-        if(air_diff->air_distributor_model == ui->comboBox_air_distributor_model->currentText())
+        if(auto airdiff = qSharedPointerDynamicCast<AirDiff>(component))
         {
-            ui->comboBox_diffuser_model->addItem(air_diff->diffuser_model);
+            if(airdiff->air_distributor_model == arg1)
+                ui->comboBox_diffuser_model->addItem(airdiff->diffuser_model);
         }
     }
-
     ui->comboBox_diffuser_model->setCurrentIndex(-1);
+    ui->comboBox_diffuser_model->blockSignals(false);
+}
+
+void RoomCalTable::on_comboBox_diffuser_model_currentTextChanged(const QString &arg1)
+{
+    if(arg1.isEmpty())
+        return;
+
+    ui->lineEdit_air_diff_size->clear();
+    ui->comboBox_air_diff_terminal_type->clear();
+    // 在添加item之前，暂时阻止comboBox的信号
+    ui->comboBox_air_diff_terminal_type->blockSignals(true);
+    for(auto& component : currentComponentListByDataSource)
+    {
+        if(auto airdiff = qSharedPointerDynamicCast<AirDiff>(component))
+        {
+            if(airdiff->air_distributor_model == ui->comboBox_air_distributor_model->currentText() && airdiff->diffuser_model == arg1)
+            {
+                ui->comboBox_air_diff_terminal_type->addItem(airdiff->terminal_shape);
+            }
+        }
+    }
+    ui->comboBox_air_diff_terminal_type->setCurrentIndex(-1);
+    // 添加item之后，恢复comboBox的信号
+    ui->comboBox_air_diff_terminal_type->blockSignals(false);
 }
 
 //选择完末端类型
 void RoomCalTable::on_comboBox_air_diff_terminal_type_currentTextChanged(const QString &arg1)
 {
-    if(this->currentComponentList.isEmpty())
+    if(arg1.isEmpty() ||
+            ui->comboBox_air_distributor_model->currentText().isEmpty()
+            || ui->comboBox_diffuser_model->currentText().isEmpty())
         return;
-
-    ui->comboBox_air_diff_size->clear();
-
-    QStringList sizeStrings;
-
-    for(auto& component : currentComponentList)
+    ui->lineEdit_air_diff_size->clear();
+    for(auto& component : currentComponentListByDataSource)
     {
-        const AirDiff* air_diff = dynamic_cast<const AirDiff*>(component.data());
-        if(air_diff->air_distributor_model == ui->comboBox_air_distributor_model->currentText()
-                && air_diff->diffuser_model == ui->comboBox_diffuser_model->currentText())
+        if(auto airdiff = qSharedPointerDynamicCast<AirDiff>(component))
         {
-            sizeStrings.append(air_diff->terminal_size);
-        }
-    }
-
-    // 转换为QSet去重
-    QSet<QString> uniqueSet = QSet<QString>::fromList(sizeStrings);
-
-    // 从QSet转回QStringList
-    sizeStrings = QList<QString>::fromSet(uniqueSet);
-
-
-    // 自定义比较函数
-    auto compareSizes_rect = [](const QString &a, const QString &b) {
-        QStringList partsA = a.split('X');
-        QStringList partsB = b.split('X');
-        if(partsA.size() == 2 && partsB.size() == 2) {
-            int lengthA = partsA[0].toInt();
-            int widthA = partsA[1].toInt();
-            int lengthB = partsB[0].toInt();
-            int widthB = partsB[1].toInt();
-
-            if(lengthA == lengthB) {
-                return widthA < widthB;
-            }
-            return lengthA < lengthB;
-        }
-        return false; // 如果格式不正确，默认不更改顺序
-    };
-
-    // 自定义比较函数
-    auto compareSizes_circular = [](const QString &a, const QString &b) {
-        int numberA = a.toInt();
-        int numberB = b.toInt();
-
-        return numberA < numberB; // 直接比较转换后的整数
-    };
-
-    if(arg1 == "方形")
-    {
-        // 使用自定义比较函数对尺寸字符串进行排序
-        std::sort(sizeStrings.begin(), sizeStrings.end(), compareSizes_rect);
-    }
-    else if (arg1 == "圆形")
-    {
-        std::sort(sizeStrings.begin(), sizeStrings.end(), compareSizes_circular);
-    }
-    // 清空comboBox，防止重复添加
-    ui->comboBox_air_diff_size->clear();
-
-    // 添加排序后的尺寸到comboBox
-    for (const QString &sizeString : sizeStrings) {
-        ui->comboBox_air_diff_size->addItem(sizeString);
-    }
-}
-
-
-void RoomCalTable::on_comboBox_air_diff_size_currentTextChanged(const QString &arg1)
-{
-    if(this->currentComponentList.isEmpty())
-        return;
-
-    for(auto& component : currentComponentList)
-    {
-        const AirDiff* air_diff = dynamic_cast<const AirDiff*>(component.data());
-        if(air_diff->air_distributor_model == ui->comboBox_air_distributor_model->currentText()
-                && air_diff->diffuser_model == ui->comboBox_diffuser_model->currentText()
-                && air_diff->terminal_shape == ui->comboBox_air_diff_terminal_type->currentText()
-                && air_diff->terminal_size == ui->comboBox_air_diff_size->currentText())
-        {
-            for(int i = 0; i < 8; i++)
+            if(airdiff->air_distributor_model == ui->comboBox_air_distributor_model->currentText()
+                    && airdiff->diffuser_model == ui->comboBox_diffuser_model->currentText() && airdiff->terminal_shape == arg1)
             {
-                terminal_atten_lineEdits[i]->setText(air_diff->atten[i]);
-                terminal_refl_lineEdits[i]->setText(air_diff->refl[i]);
-                terminal_noi_lineEdits[i]->setText(air_diff->noi[i]);
+                ui->lineEdit_air_diff_size->setText(airdiff->terminal_size);
+                for(int i = 0; i < 8; i++)
+                {
+                    terminal_noi_lineEdits[i]->setText(airdiff->noi[i]);
+                    terminal_atten_lineEdits[i]->setText(airdiff->atten[i]);
+                    terminal_refl_lineEdits[i]->setText(airdiff->refl[i]);
+                }
+                terminal_noi_lineEdits[8]->setText(airdiff->noi[8]);
             }
-
-            terminal_noi_lineEdits[8]->setText(air_diff->noi[8]);
         }
     }
 }
+
+#pragma endregion}
+/**********布风器+散流器**********/
+
+/**********抽风头**********/
+#pragma region "pump"{
+void RoomCalTable::pump_data_source_changed()
+{
+    if(ui->comboBox_pump_atten_data_source->currentText().isEmpty() ||
+            ui->comboBox_pump_noi_data_source->currentText().isEmpty() ||
+            ui->comboBox_pump_refl_data_source->currentText().isEmpty())
+        return;
+
+    clearPage(ui->stackedWidget_table->currentWidget(), false);
+    currentComponentListByDataSource.clear();
+    for(auto& component : currentAllComponentList)
+    {
+        // 尝试将component转换为Silencer类型的智能指针
+        if(auto pump = qSharedPointerDynamicCast<PumpSend>(component))
+        {
+            if(pump->noi_data_source == ui->comboBox_pump_noi_data_source->currentText()
+                    && pump->atten_data_source == ui->comboBox_pump_atten_data_source->currentText()
+                    && pump->refl_data_source == ui->comboBox_pump_refl_data_source->currentText())
+                currentComponentListByDataSource.append(component); // 直接添加component
+        }
+    }
+
+    for(auto& component : currentComponentListByDataSource)
+    {
+        if(auto pump = qSharedPointerDynamicCast<PumpSend>(component))
+            ui->comboBox_pump_model->addItem(pump->model);
+    }
+    ui->comboBox_pump_model->setCurrentIndex(-1);
+}
+
+
+void RoomCalTable::on_comboBox_pump_model_currentTextChanged(const QString &arg1)
+{
+    if(arg1.isEmpty())
+        return;
+
+    ui->lineEdit_pump_size->clear();
+    ui->comboBox_pump_terminal_type->clear();
+    // 在添加item之前，暂时阻止comboBox的信号
+    ui->comboBox_pump_terminal_type->blockSignals(true);
+    for(auto& component : currentComponentListByDataSource)
+    {
+        if(auto pump = qSharedPointerDynamicCast<PumpSend>(component))
+        {
+            if(pump->model == arg1)
+            {
+                ui->comboBox_pump_terminal_type->addItem(pump->terminal_shape);
+            }
+        }
+    }
+    ui->comboBox_pump_terminal_type->setCurrentIndex(-1);
+    // 添加item之后，恢复comboBox的信号
+    ui->comboBox_pump_terminal_type->blockSignals(false);
+}
+
+void RoomCalTable::on_comboBox_pump_terminal_type_currentTextChanged(const QString &arg1)
+{
+    if(arg1.isEmpty() || ui->comboBox_pump_model->currentText().isEmpty())
+        return;
+    ui->lineEdit_pump_size->clear();
+    for(auto& component : currentComponentListByDataSource)
+    {
+        if(auto pump = qSharedPointerDynamicCast<PumpSend>(component))
+        {
+            if(pump->model == ui->comboBox_pump_model->currentText()
+                    && pump->terminal_shape == arg1)
+            {
+                ui->lineEdit_pump_size->setText(pump->terminal_size);
+                for(int i = 0; i < 8; i++)
+                {
+                    terminal_noi_lineEdits[i]->setText(pump->noi[i]);
+                    terminal_atten_lineEdits[i]->setText(pump->atten[i]);
+                    terminal_refl_lineEdits[i]->setText(pump->refl[i]);
+                }
+                terminal_noi_lineEdits[8]->setText(pump->noi[8]);
+            }
+        }
+    }
+}
+
+#pragma endregion}
+/**********抽风头**********/
+
+/**********送风头**********/
+#pragma region "send"{
+void RoomCalTable::send_data_source_changed()
+{
+    if(ui->comboBox_send_atten_data_source->currentText().isEmpty() ||
+            ui->comboBox_send_noi_data_source->currentText().isEmpty() ||
+            ui->comboBox_send_refl_data_source->currentText().isEmpty())
+        return;
+
+    clearPage(ui->stackedWidget_table->currentWidget(), false);
+    currentComponentListByDataSource.clear();
+    ui->comboBox_send_model->blockSignals(true);
+    for(auto& component : currentAllComponentList)
+    {
+        // 尝试将component转换为Silencer类型的智能指针
+        if(auto send = qSharedPointerDynamicCast<PumpSend>(component))
+        {
+            if(send->noi_data_source == ui->comboBox_send_noi_data_source->currentText()
+                    && send->atten_data_source == ui->comboBox_send_atten_data_source->currentText()
+                    && send->refl_data_source == ui->comboBox_send_refl_data_source->currentText())
+                currentComponentListByDataSource.append(component); // 直接添加component
+        }
+    }
+
+    for(auto& component : currentComponentListByDataSource)
+    {
+        if(auto send = qSharedPointerDynamicCast<PumpSend>(component))
+            ui->comboBox_send_model->addItem(send->model);
+    }
+    ui->comboBox_send_model->setCurrentIndex(-1);
+    ui->comboBox_send_model->blockSignals(false);
+}
+
+void RoomCalTable::on_comboBox_send_model_currentTextChanged(const QString &arg1)
+{
+    if(arg1.isEmpty())
+        return;
+
+    ui->lineEdit_send_size->clear();
+    ui->comboBox_send_terminal_type->clear();
+    // 在添加item之前，暂时阻止comboBox的信号
+    ui->comboBox_send_terminal_type->blockSignals(true);
+    for(auto& component : currentComponentListByDataSource)
+    {
+        if(auto send = qSharedPointerDynamicCast<PumpSend>(component))
+        {
+            if(send->model == arg1)
+            {
+                ui->comboBox_send_terminal_type->addItem(send->terminal_shape);
+            }
+        }
+    }
+    ui->comboBox_send_terminal_type->setCurrentIndex(-1);
+    // 添加item之后，恢复comboBox的信号
+    ui->comboBox_send_terminal_type->blockSignals(false);
+}
+
+void RoomCalTable::on_comboBox_send_terminal_type_currentTextChanged(const QString &arg1)
+{
+    if(arg1.isEmpty() || ui->comboBox_send_model->currentText().isEmpty())
+        return;
+    ui->lineEdit_send_size->clear();
+    for(auto& component : currentComponentListByDataSource)
+    {
+        if(auto send = qSharedPointerDynamicCast<PumpSend>(component))
+        {
+            if(send->model == ui->comboBox_send_model->currentText()
+                    && send->terminal_shape == arg1)
+            {
+                ui->lineEdit_send_size->setText(send->terminal_size);
+                for(int i = 0; i < 8; i++)
+                {
+                    terminal_noi_lineEdits[i]->setText(send->noi[i]);
+                    terminal_atten_lineEdits[i]->setText(send->atten[i]);
+                    terminal_refl_lineEdits[i]->setText(send->refl[i]);
+                }
+                terminal_noi_lineEdits[8]->setText(send->noi[8]);
+            }
+        }
+    }
+}
+#pragma endregion}
+/**********送风头**********/
+
+
+/**********静压箱+格栅**********/
+#pragma region "staticBox_grille"{
+void RoomCalTable::staticBox_grille_data_source_changed()
+{
+    if(ui->comboBox_staticBox_grille_atten_data_source->currentText().isEmpty() ||
+            ui->comboBox_staticBox_grille_noi_data_source->currentText().isEmpty() ||
+            ui->comboBox_staticBox_grille_refl_data_source->currentText().isEmpty())
+        return;
+
+    clearPage(ui->stackedWidget_table->currentWidget(), false);
+    currentComponentListByDataSource.clear();
+    for(auto& component : currentAllComponentList)
+    {
+        // 尝试将component转换为Silencer类型的智能指针
+        if(auto staticBox_grille = qSharedPointerDynamicCast<StaticBox_grille>(component))
+        {
+            if(staticBox_grille->noi_data_source == ui->comboBox_staticBox_grille_noi_data_source->currentText()
+                    && staticBox_grille->atten_data_source == ui->comboBox_staticBox_grille_atten_data_source->currentText()
+                    && staticBox_grille->refl_data_source == ui->comboBox_staticBox_grille_refl_data_source->currentText())
+                currentComponentListByDataSource.append(component); // 直接添加component
+        }
+    }
+
+    ui->comboBox_staticBox_model->blockSignals(true);
+    for(auto& component : currentComponentListByDataSource)
+    {
+        if(auto staticBox_grille = qSharedPointerDynamicCast<StaticBox_grille>(component))
+            ui->comboBox_staticBox_model->addItem(staticBox_grille->staticBox_model);
+    }
+    ui->comboBox_staticBox_model->setCurrentIndex(-1);
+    ui->comboBox_staticBox_model->blockSignals(false);
+}
+
+void RoomCalTable::on_comboBox_staticBox_model_currentTextChanged(const QString &arg1)
+{
+    ui->comboBox_grille_model->clear();
+    ui->comboBox_grille_model->blockSignals(true);
+    for(auto& component : currentComponentListByDataSource)
+    {
+        if(auto staticBox_grille = qSharedPointerDynamicCast<StaticBox_grille>(component))
+        {
+            if(staticBox_grille->staticBox_model == arg1)
+                ui->comboBox_grille_model->addItem(staticBox_grille->grille_model);
+        }
+    }
+    ui->comboBox_grille_model->setCurrentIndex(-1);
+    ui->comboBox_grille_model->blockSignals(false);
+}
+
+void RoomCalTable::on_comboBox_grille_model_currentTextChanged(const QString &arg1)
+{
+    if(arg1.isEmpty())
+        return;
+
+    ui->lineEdit_staticBox_grille_size->clear();
+    ui->comboBox_staticBox_grille_terminal_type->clear();
+    // 在添加item之前，暂时阻止comboBox的信号
+    ui->comboBox_staticBox_grille_terminal_type->blockSignals(true);
+    for(auto& component : currentComponentListByDataSource)
+    {
+        if(auto staticBox_grille = qSharedPointerDynamicCast<StaticBox_grille>(component))
+        {
+            if(staticBox_grille->staticBox_model == ui->comboBox_air_distributor_model->currentText()
+                    && staticBox_grille->grille_model == arg1)
+            {
+                ui->comboBox_staticBox_grille_terminal_type->addItem(staticBox_grille->terminal_shape);
+            }
+        }
+    }
+    ui->comboBox_staticBox_grille_terminal_type->setCurrentIndex(-1);
+    // 添加item之后，恢复comboBox的信号
+    ui->comboBox_staticBox_grille_terminal_type->blockSignals(false);
+}
+
+void RoomCalTable::on_comboBox_staticBox_grille_terminal_type_currentTextChanged(const QString &arg1)
+{
+    if(arg1.isEmpty() ||
+            ui->comboBox_staticBox_model->currentText().isEmpty()
+            || ui->comboBox_grille_model->currentText().isEmpty())
+        return;
+    ui->lineEdit_staticBox_grille_size->clear();
+    for(auto& component : currentComponentListByDataSource)
+    {
+        if(auto staticBox_grille = qSharedPointerDynamicCast<StaticBox_grille>(component))
+        {
+            if(staticBox_grille->staticBox_model == ui->comboBox_staticBox_model->currentText()
+                    && staticBox_grille->grille_model == ui->comboBox_grille_model->currentText() && staticBox_grille->terminal_shape == arg1)
+            {
+                ui->lineEdit_staticBox_grille_size->setText(staticBox_grille->terminal_size);
+                for(int i = 0; i < 8; i++)
+                {
+                    terminal_noi_lineEdits[i]->setText(staticBox_grille->noi[i]);
+                    terminal_atten_lineEdits[i]->setText(staticBox_grille->atten[i]);
+                    terminal_refl_lineEdits[i]->setText(staticBox_grille->refl[i]);
+                }
+                terminal_noi_lineEdits[8]->setText(staticBox_grille->noi[8]);
+            }
+        }
+    }
+}
+#pragma endregion}
+/**********静压箱+格栅**********/
+
+
+/**********置换通风末端**********/
+#pragma region "staticBox_grille"{
+void RoomCalTable::disp_vent_terminal_data_source_changed()
+{
+    if(ui->comboBox_disp_vent_terminal_atten_data_source->currentText().isEmpty() ||
+            ui->comboBox_disp_vent_terminal_noi_data_source->currentText().isEmpty() ||
+            ui->comboBox_disp_vent_terminal_refl_data_source->currentText().isEmpty())
+        return;
+
+    clearPage(ui->stackedWidget_table->currentWidget(), false);
+    currentComponentListByDataSource.clear();
+    for(auto& component : currentAllComponentList)
+    {
+        // 尝试将component转换为Silencer类型的智能指针
+        if(auto disp_vent_terminal = qSharedPointerDynamicCast<Disp_vent_terminal>(component))
+        {
+            if(disp_vent_terminal->noi_data_source == ui->comboBox_disp_vent_terminal_noi_data_source->currentText()
+                    && disp_vent_terminal->atten_data_source == ui->comboBox_disp_vent_terminal_atten_data_source->currentText()
+                    && disp_vent_terminal->refl_data_source == ui->comboBox_disp_vent_terminal_refl_data_source->currentText())
+                currentComponentListByDataSource.append(component); // 直接添加component
+        }
+    }
+
+    for(auto& component : currentComponentListByDataSource)
+    {
+        if(auto disp_vent_terminal = qSharedPointerDynamicCast<Disp_vent_terminal>(component))
+            ui->comboBox_disp_vent_terminal_model->addItem(disp_vent_terminal->model);
+    }
+    ui->comboBox_disp_vent_terminal_model->setCurrentIndex(-1);
+}
+
+void RoomCalTable::on_comboBox_disp_vent_terminal_model_currentTextChanged(const QString &arg1)
+{
+    if(arg1.isEmpty())
+        return;
+
+    ui->lineEdit_disp_vent_terminal_size->clear();
+    ui->comboBox_disp_vent_terminal_type->clear();
+    // 在添加item之前，暂时阻止comboBox的信号
+    ui->comboBox_disp_vent_terminal_type->blockSignals(true);
+    for(auto& component : currentComponentListByDataSource)
+    {
+        if(auto disp_vent_terminal = qSharedPointerDynamicCast<Disp_vent_terminal>(component))
+        {
+            if(disp_vent_terminal->model == arg1)
+            {
+                ui->comboBox_disp_vent_terminal_type->addItem(disp_vent_terminal->terminal_shape);
+            }
+        }
+    }
+    ui->comboBox_disp_vent_terminal_type->setCurrentIndex(-1);
+    // 添加item之后，恢复comboBox的信号
+    ui->comboBox_disp_vent_terminal_type->blockSignals(false);
+}
+
+void RoomCalTable::on_comboBox_disp_vent_terminal_type_currentTextChanged(const QString &arg1)
+{
+    if(arg1.isEmpty() || ui->comboBox_disp_vent_terminal_model->currentText().isEmpty())
+        return;
+    ui->lineEdit_disp_vent_terminal_size->clear();
+    for(auto& component : currentComponentListByDataSource)
+    {
+        if(auto disp_vent_terminal = qSharedPointerDynamicCast<Disp_vent_terminal>(component))
+        {
+            if(disp_vent_terminal->model == ui->comboBox_disp_vent_terminal_model->currentText()
+                    && disp_vent_terminal->terminal_shape == arg1)
+            {
+                ui->lineEdit_disp_vent_terminal_size->setText(disp_vent_terminal->terminal_size);
+                for(int i = 0; i < 8; i++)
+                {
+                    terminal_noi_lineEdits[i]->setText(disp_vent_terminal->noi[i]);
+                    terminal_atten_lineEdits[i]->setText(disp_vent_terminal->atten[i]);
+                    terminal_refl_lineEdits[i]->setText(disp_vent_terminal->refl[i]);
+                }
+                terminal_noi_lineEdits[8]->setText(disp_vent_terminal->noi[8]);
+            }
+        }
+    }
+}
+
+
+#pragma endregion}
+/**********置换通风末端**********/
+
+/**********其他送风末端**********/
+#pragma region "other_send_terminal"{
+void RoomCalTable::other_send_terminal_data_source_changed()
+{
+    if(ui->comboBox_other_send_terminal_atten_data_source->currentText().isEmpty() ||
+            ui->comboBox_other_send_terminal_noi_data_source->currentText().isEmpty() ||
+            ui->comboBox_other_send_terminal_refl_data_source->currentText().isEmpty())
+        return;
+
+    clearPage(ui->stackedWidget_table->currentWidget(), false);
+    currentComponentListByDataSource.clear();
+    for(auto& component : currentAllComponentList)
+    {
+        // 尝试将component转换为Silencer类型的智能指针
+        if(auto other_send_terminal = qSharedPointerDynamicCast<Other_send_terminal>(component))
+        {
+            if(other_send_terminal->noi_data_source == ui->comboBox_other_send_terminal_noi_data_source->currentText()
+                    && other_send_terminal->atten_data_source == ui->comboBox_other_send_terminal_atten_data_source->currentText()
+                    && other_send_terminal->refl_data_source == ui->comboBox_other_send_terminal_refl_data_source->currentText())
+                currentComponentListByDataSource.append(component); // 直接添加component
+        }
+    }
+
+    for(auto& component : currentComponentListByDataSource)
+    {
+        if(auto other_send_terminal = qSharedPointerDynamicCast<Other_send_terminal>(component))
+            ui->comboBox_other_send_terminal_model->addItem(other_send_terminal->model);
+    }
+    ui->comboBox_other_send_terminal_model->setCurrentIndex(-1);
+}
+
+void RoomCalTable::on_comboBox_other_send_terminal_model_currentTextChanged(const QString &arg1)
+{
+    if(arg1.isEmpty())
+        return;
+
+    ui->lineEdit_other_send_terminal_size->clear();
+    ui->comboBox_other_send_terminal_type->clear();
+    // 在添加item之前，暂时阻止comboBox的信号
+    ui->comboBox_other_send_terminal_type->blockSignals(true);
+    for(auto& component : currentComponentListByDataSource)
+    {
+        if(auto other_send_terminal = qSharedPointerDynamicCast<Other_send_terminal>(component))
+        {
+            if(other_send_terminal->model == arg1)
+            {
+                ui->comboBox_other_send_terminal_type->addItem(other_send_terminal->terminal_shape);
+            }
+        }
+    }
+    ui->comboBox_other_send_terminal_type->setCurrentIndex(-1);
+    // 添加item之后，恢复comboBox的信号
+    ui->comboBox_other_send_terminal_type->blockSignals(false);
+}
+
+void RoomCalTable::on_comboBox_other_send_terminal_type_currentTextChanged(const QString &arg1)
+{
+    if(arg1.isEmpty() || ui->comboBox_other_send_terminal_model->currentText().isEmpty())
+        return;
+    ui->lineEdit_other_send_terminal_size->clear();
+    for(auto& component : currentComponentListByDataSource)
+    {
+        if(auto other_send_terminal = qSharedPointerDynamicCast<Other_send_terminal>(component))
+        {
+            if(other_send_terminal->model == ui->comboBox_other_send_terminal_model->currentText()
+                    && other_send_terminal->terminal_shape == arg1)
+            {
+                ui->lineEdit_other_send_terminal_size->setText(other_send_terminal->terminal_size);
+                for(int i = 0; i < 8; i++)
+                {
+                    terminal_noi_lineEdits[i]->setText(other_send_terminal->noi[i]);
+                    terminal_atten_lineEdits[i]->setText(other_send_terminal->atten[i]);
+                    terminal_refl_lineEdits[i]->setText(other_send_terminal->refl[i]);
+                }
+                terminal_noi_lineEdits[8]->setText(other_send_terminal->noi[8]);
+            }
+        }
+    }
+}
+
+#pragma endregion}
+
+
+/**********静压箱**********/
+#pragma region "static_box"{
+void RoomCalTable::static_box_atten_cal()
+{
+    if( ui->lineEdit_static_box_total_air_volume->text().isEmpty() ||
+            ui->lineEdit_static_box_branch_air_volume->text().isEmpty())
+        return;
+
+    array<double, 8> atten =  calBranchNoise(ui->lineEdit_static_box_total_air_volume->text().toDouble(),
+                                           ui->lineEdit_static_box_branch_air_volume->text().toDouble());
+
+    for(int i = 0; i < atten.size(); i++)
+    {
+        atten_lineEdits[i]->setText(QString::number(atten[i],'f', 1));
+    }
+}
+
+void RoomCalTable::on_comboBox_static_box_data_source_currentTextChanged(const QString &arg1)
+{
+    clearPage(ui->stackedWidget_table->currentWidget(), false);
+    if(arg1 != "经验公式")
+    {
+        ui->comboBox_static_box_model->setEnabled(true);
+        ui->comboBox_static_box_model->setStyleSheet("QComboBox { border:none;"
+                                                          "border-bottom:1px solid black;}");
+
+        ui->lineEdit_static_box_total_air_volume->setReadOnly(true);
+        ui->lineEdit_static_box_branch_air_volume->setReadOnly(true);
+
+        disconnect(ui->lineEdit_static_box_total_air_volume, &QLineEdit::textChanged, this, &RoomCalTable::static_box_atten_cal);
+        disconnect(ui->lineEdit_static_box_branch_air_volume, &QLineEdit::textChanged, this, &RoomCalTable::static_box_atten_cal);
+
+        clearPage(ui->stackedWidget_table->currentWidget(), false);
+        currentComponentListByDataSource.clear();
+        for(auto& component : currentAllComponentList)
+        {
+            // 尝试将component转换为Silencer类型的智能指针
+            if(auto static_box = qSharedPointerDynamicCast<Static_box>(component))
+            {
+                if(static_box->data_source == arg1)
+                    currentComponentListByDataSource.append(component); // 直接添加component
+            }
+        }
+
+        ui->comboBox_static_box_model->blockSignals(true);
+
+        for(auto& component : currentComponentListByDataSource)
+        {
+            if(auto static_box = qSharedPointerDynamicCast<Static_box>(component))
+                ui->comboBox_static_box_model->addItem(static_box->model);
+        }
+        ui->comboBox_static_box_model->setCurrentIndex(-1);
+
+        ui->comboBox_static_box_model->blockSignals(false);
+    }
+    else
+    {
+        ui->comboBox_static_box_model->setCurrentText("-");
+        ui->comboBox_static_box_model->setEnabled(false);
+        ui->comboBox_static_box_model->setStyleSheet("QComboBox { border:1px solid black ;background-color: rgb(240,240,240);"
+                                                          "font-family: '黑体';"
+                                                          "font-size: 14px;}");
+
+        ui->lineEdit_static_box_total_air_volume->setReadOnly(false);
+        ui->lineEdit_static_box_branch_air_volume->setReadOnly(false);
+
+        connect(ui->lineEdit_static_box_total_air_volume, &QLineEdit::textChanged, this, &RoomCalTable::static_box_atten_cal);
+        connect(ui->lineEdit_static_box_branch_air_volume, &QLineEdit::textChanged, this, &RoomCalTable::static_box_atten_cal);
+    }
+
+}
+
+void RoomCalTable::on_comboBox_static_box_model_currentTextChanged(const QString &arg1)
+{
+    if(ui->comboBox_static_box_model->currentIndex() == -1)
+        return;
+
+    auto it = std::find_if(this->currentComponentListByDataSource.begin(),this->currentComponentListByDataSource.end(), [&](const QSharedPointer<ComponentBase>& component){
+        auto static_box = qSharedPointerDynamicCast<Static_box>(component);
+        if(static_box && static_box->model == arg1)
+            return true;
+        return false;
+    });
+
+    if(it != currentComponentListByDataSource.end())
+    {
+        if(auto static_box = qSharedPointerDynamicCast<Static_box>(*it))
+        {
+            currentComponent = (*it);
+            ui->lineEdit_static_box_total_air_volume->setText(static_box->q);
+            ui->lineEdit_static_box_branch_air_volume->setText(static_box->q1);
+
+            for(int i = 0; i < static_box->atten.size(); i++)
+            {
+                atten_lineEdits[i]->setText(static_box->atten[i]);
+            }
+        }
+    }
+}
+
+#pragma endregion}
+/**********静压箱**********/
+
+/**********风道多分支**********/
+#pragma region "multi_ranc"{
+void RoomCalTable::multi_ranc_atten_cal()
+{
+    if( ui->lineEdit_multi_ranc_total_air_volume->text().isEmpty() ||
+            ui->lineEdit_multi_ranc_branch_air_volume->text().isEmpty())
+        return;
+
+    array<double, 8> atten =  calBranchNoise(ui->lineEdit_multi_ranc_total_air_volume->text().toDouble(),
+                                           ui->lineEdit_multi_ranc_branch_air_volume->text().toDouble());
+
+    for(int i = 0; i < atten.size(); i++)
+    {
+        atten_lineEdits[i]->setText(QString::number(atten[i],'f', 1));
+    }
+}
+
+void RoomCalTable::on_comboBox_multi_ranc_data_source_currentTextChanged(const QString &arg1)
+{
+    clearPage(ui->stackedWidget_table->currentWidget(), false);
+    if(arg1 != "经验公式")
+    {
+        ui->comboBox_multi_ranc_model->setEnabled(true);
+        ui->comboBox_multi_ranc_model->setStyleSheet("QComboBox { border:none;"
+                                                          "border-bottom:1px solid black;}");
+
+        ui->lineEdit_multi_ranc_total_air_volume->setReadOnly(true);
+        ui->lineEdit_multi_ranc_branch_air_volume->setReadOnly(true);
+
+        disconnect(ui->lineEdit_multi_ranc_total_air_volume, &QLineEdit::textChanged, this, &RoomCalTable::multi_ranc_atten_cal);
+        disconnect(ui->lineEdit_multi_ranc_branch_air_volume, &QLineEdit::textChanged, this, &RoomCalTable::multi_ranc_atten_cal);
+
+        clearPage(ui->stackedWidget_table->currentWidget(), false);
+        currentComponentListByDataSource.clear();
+        for(auto& component : currentAllComponentList)
+        {
+            // 尝试将component转换为Silencer类型的智能指针
+            if(auto multi_ranc = qSharedPointerDynamicCast<Multi_ranc>(component))
+            {
+                if(multi_ranc->data_source == arg1)
+                    currentComponentListByDataSource.append(component); // 直接添加component
+            }
+        }
+
+        ui->comboBox_multi_ranc_model->blockSignals(true);
+
+        for(auto& component : currentComponentListByDataSource)
+        {
+            if(auto multi_ranc = qSharedPointerDynamicCast<Multi_ranc>(component))
+                ui->comboBox_multi_ranc_model->addItem(multi_ranc->model);
+        }
+        ui->comboBox_multi_ranc_model->setCurrentIndex(-1);
+
+        ui->comboBox_multi_ranc_model->blockSignals(false);
+    }
+    else
+    {
+        ui->comboBox_multi_ranc_model->setCurrentText("-");
+        ui->comboBox_multi_ranc_model->setEnabled(false);
+        ui->comboBox_multi_ranc_model->setStyleSheet("QComboBox { border:1px solid black ;background-color: rgb(240,240,240);"
+                                                          "font-family: '黑体';"
+                                                          "font-size: 14px;}");
+
+        ui->lineEdit_multi_ranc_total_air_volume->setReadOnly(false);
+        ui->lineEdit_multi_ranc_branch_air_volume->setReadOnly(false);
+
+        connect(ui->lineEdit_multi_ranc_total_air_volume, &QLineEdit::textChanged, this, &RoomCalTable::multi_ranc_atten_cal);
+        connect(ui->lineEdit_multi_ranc_branch_air_volume, &QLineEdit::textChanged, this, &RoomCalTable::multi_ranc_atten_cal);
+    }
+}
+
+void RoomCalTable::on_comboBox_multi_ranc_model_currentTextChanged(const QString &arg1)
+{
+    if(ui->comboBox_multi_ranc_model->currentIndex() == -1)
+        return;
+
+    auto it = std::find_if(this->currentComponentListByDataSource.begin(),this->currentComponentListByDataSource.end(), [&](const QSharedPointer<ComponentBase>& component){
+        auto multi_ranc = qSharedPointerDynamicCast<Multi_ranc>(component);
+        if(multi_ranc && multi_ranc->model == arg1)
+            return true;
+        return false;
+    });
+
+    if(it != currentComponentListByDataSource.end())
+    {
+        if(auto multi_ranc = qSharedPointerDynamicCast<Multi_ranc>(*it))
+        {
+            currentComponent = (*it);
+            ui->lineEdit_multi_ranc_total_air_volume->setText(multi_ranc->q);
+            ui->lineEdit_multi_ranc_branch_air_volume->setText(multi_ranc->q1);
+
+            for(int i = 0; i < multi_ranc->atten.size(); i++)
+            {
+                atten_lineEdits[i]->setText(multi_ranc->atten[i]);
+            }
+        }
+    }
+}
+
+
+#pragma endregion}
+/**********风道多分支**********/
+
+/**********三通**********/
+#pragma region "tee"{
+void RoomCalTable::tee_atten_cal()
+{
+    if( ui->lineEdit_tee_total_air_volume->text().isEmpty() ||
+            ui->lineEdit_tee_branch_air_volume->text().isEmpty())
+        return;
+
+    array<double, 8> atten =  calBranchNoise(ui->lineEdit_tee_total_air_volume->text().toDouble(),
+                                           ui->lineEdit_tee_branch_air_volume->text().toDouble());
+
+    for(int i = 0; i < atten.size(); i++)
+    {
+        atten_lineEdits[i]->setText(QString::number(atten[i],'f', 1));
+    }
+}
+
+void RoomCalTable::on_comboBox_tee_data_source_currentTextChanged(const QString &arg1)
+{
+    clearPage(ui->stackedWidget_table->currentWidget(), false);
+    if(arg1 != "经验公式")
+    {
+        ui->comboBox_tee_model->setEnabled(true);
+        ui->comboBox_tee_model->setStyleSheet("QComboBox { border:none;"
+                                                          "border-bottom:1px solid black;}");
+
+        ui->lineEdit_tee_total_air_volume->setReadOnly(true);
+        ui->lineEdit_tee_branch_air_volume->setReadOnly(true);
+
+        disconnect(ui->lineEdit_tee_total_air_volume, &QLineEdit::textChanged, this, &RoomCalTable::tee_atten_cal);
+        disconnect(ui->lineEdit_tee_branch_air_volume, &QLineEdit::textChanged, this, &RoomCalTable::tee_atten_cal);
+
+        clearPage(ui->stackedWidget_table->currentWidget(), false);
+        currentComponentListByDataSource.clear();
+        for(auto& component : currentAllComponentList)
+        {
+            // 尝试将component转换为Silencer类型的智能指针
+            if(auto tee = qSharedPointerDynamicCast<Tee>(component))
+            {
+                if(tee->data_source == arg1)
+                    currentComponentListByDataSource.append(component); // 直接添加component
+            }
+        }
+
+        ui->comboBox_tee_model->blockSignals(true);
+
+        for(auto& component : currentComponentListByDataSource)
+        {
+            if(auto tee = qSharedPointerDynamicCast<Tee>(component))
+                ui->comboBox_tee_model->addItem(tee->model);
+        }
+        ui->comboBox_tee_model->setCurrentIndex(-1);
+
+        ui->comboBox_tee_model->blockSignals(false);
+    }
+    else
+    {
+        ui->comboBox_tee_model->setCurrentText("-");
+        ui->comboBox_tee_model->setEnabled(false);
+        ui->comboBox_tee_model->setStyleSheet("QComboBox { border:1px solid black ;background-color: rgb(240,240,240);"
+                                                          "font-family: '黑体';"
+                                                          "font-size: 14px;}");
+
+        ui->lineEdit_tee_total_air_volume->setReadOnly(false);
+        ui->lineEdit_tee_branch_air_volume->setReadOnly(false);
+
+        connect(ui->lineEdit_tee_total_air_volume, &QLineEdit::textChanged, this, &RoomCalTable::tee_atten_cal);
+        connect(ui->lineEdit_tee_branch_air_volume, &QLineEdit::textChanged, this, &RoomCalTable::tee_atten_cal);
+    }
+}
+
+void RoomCalTable::on_comboBox_tee_model_currentTextChanged(const QString &arg1)
+{
+    if(ui->comboBox_tee_model->currentIndex() == -1)
+        return;
+
+    auto it = std::find_if(this->currentComponentListByDataSource.begin(),this->currentComponentListByDataSource.end(), [&](const QSharedPointer<ComponentBase>& component){
+        auto tee = qSharedPointerDynamicCast<Tee>(component);
+        if(tee && tee->model == arg1)
+            return true;
+        return false;
+    });
+
+    if(it != currentComponentListByDataSource.end())
+    {
+        if(auto tee = qSharedPointerDynamicCast<Tee>(*it))
+        {
+            currentComponent = (*it);
+            ui->lineEdit_tee_total_air_volume->setText(tee->q);
+            ui->lineEdit_tee_branch_air_volume->setText(tee->q1);
+
+            for(int i = 0; i < tee->atten.size(); i++)
+            {
+                atten_lineEdits[i]->setText(tee->atten[i]);
+            }
+        }
+    }
+}
+#pragma endregion}
+/**********三通**********/
+
+/**********直管**********/
+#pragma region "pipe"{
+void RoomCalTable::pipe_atten_cal()
+{
+    if( ui->lineEdit_pipe_size->text().isEmpty() ||
+            ui->comboBox_pipe_type->currentIndex() == -1)
+        return;
+
+    array<double, 8> atten;
+    if(ui->comboBox_pipe_type->currentIndex() == 0)
+    {
+        atten = caPipeNoise(Circle, ui->lineEdit_pipe_size->text().toDouble());
+    }
+    else{
+        auto dimensions = splitDimension(ui->lineEdit_rect_damper_size->text());
+        double length, width;
+        if (dimensions.first != -1) {
+            length = dimensions.first;
+            width = dimensions.second;
+        }
+        atten =  caPipeNoise(Rect, length, width);
+    }
+
+
+    for(int i = 0; i < atten.size(); i++)
+    {
+        each_atten_lineEdits[i]->setText(QString::number(atten[i],'f', 2));
+    }
+}
+
+void RoomCalTable::on_comboBox_pipe_data_source_currentTextChanged(const QString &arg1)
+{
+    clearPage(ui->stackedWidget_table->currentWidget(), false);
+    if(arg1 != "经验公式")
+    {
+        ui->comboBox_pipe_model->setEnabled(true);
+        ui->comboBox_pipe_model->setStyleSheet("QComboBox { border:none;"
+                                                          "border-bottom:1px solid black;}");
+
+        ui->lineEdit_pipe_size->setReadOnly(true);
+
+        disconnect(ui->lineEdit_pipe_size, &QLineEdit::textChanged, this, &RoomCalTable::pipe_atten_cal);
+
+        currentComponentListByDataSource.clear();
+        for(auto& component : currentAllComponentList)
+        {
+            // 尝试将component转换为Silencer类型的智能指针
+            if(auto pipe = qSharedPointerDynamicCast<Pipe>(component))
+            {
+                if(pipe->data_source == arg1)
+                    currentComponentListByDataSource.append(component); // 直接添加component
+            }
+        }
+
+        ui->comboBox_pipe_model->blockSignals(true);
+
+        for(auto& component : currentComponentListByDataSource)
+        {
+            if(auto pipe = qSharedPointerDynamicCast<Pipe>(component))
+                ui->comboBox_pipe_model->addItem(pipe->model);
+        }
+        ui->comboBox_pipe_model->setCurrentIndex(-1);
+
+        ui->comboBox_pipe_model->blockSignals(false);
+    }
+    else
+    {
+        ui->comboBox_pipe_model->setCurrentText("-");
+        ui->comboBox_pipe_model->setEnabled(false);
+        ui->comboBox_pipe_model->setStyleSheet("QComboBox { border:1px solid black ;background-color: rgb(240,240,240);"
+                                                          "font-family: '黑体';"
+                                                          "font-size: 14px;}");
+
+        ui->lineEdit_pipe_size->setReadOnly(false);
+
+        connect(ui->lineEdit_pipe_size, &QLineEdit::textChanged, this, &RoomCalTable::pipe_atten_cal);
+    }
+}
+
+void RoomCalTable::on_lineEdit_pipe_size_textChanged(const QString &arg1)
+{
+    if(arg1.isEmpty())
+        return;
+
+    if(ui->comboBox_pipe_type->currentIndex() == 0)
+    {
+        double perimeter;
+        perimeter = 2* Pi * ( arg1.toDouble() / 2 );
+        ui->lineEdit_pipe_perimeter->setText(QString::number(perimeter, 'f', 1));
+    }
+    else
+    {
+        auto dimensions = splitDimension(ui->lineEdit_rect_damper_size->text());
+        double length, width;
+        if (dimensions.first != -1) {
+            length = dimensions.first;
+            width = dimensions.second;
+        }
+        ui->lineEdit_pipe_perimeter->setText(QString::number(length * 2 + width * 2, 'f', 1));
+    }
+}
+
+void RoomCalTable::on_lineEdit_pipe_length_textChanged(const QString &arg1)
+{
+    if(arg1.isEmpty())
+        return;
+    for(int i = 0; i < 8; i++)
+    {
+        if(each_atten_lineEdits[i]->text().isEmpty())
+            return;
+    }
+
+    for(int i = 0; i < 8; i++)
+    {
+        sum_atten_lineEdits[i]->setText(QString::number(each_atten_lineEdits[i]->text().toDouble() * arg1.toDouble(), 'f' ,2));
+    }
+}
+
+void RoomCalTable::on_comboBox_pipe_model_currentTextChanged(const QString &arg1)
+{
+    if(ui->comboBox_pipe_model->currentIndex() == -1)
+        return;
+
+    auto it = std::find_if(this->currentComponentListByDataSource.begin(),this->currentComponentListByDataSource.end(), [&](const QSharedPointer<ComponentBase>& component){
+        auto pipe = qSharedPointerDynamicCast<Pipe>(component);
+        if(pipe && pipe->model == arg1)
+            return true;
+        return false;
+    });
+
+    if(it != currentComponentListByDataSource.end())
+    {
+        if(auto pipe = qSharedPointerDynamicCast<Pipe>(*it))
+        {
+            currentComponent = (*it);
+            for(int i = 0; i < pipe->atten.size(); i++)
+            {
+                each_atten_lineEdits[i]->setText(pipe->atten[i]);
+            }
+            ui->comboBox_pipe_type->setCurrentText(pipe->pipe_shape);
+            ui->lineEdit_pipe_size->setText(pipe->size);
+        }
+    }
+}
+#pragma endregion}
+/**********直管**********/
+
+/**********弯头**********/
+#pragma region "elbow"{
+void RoomCalTable::elbow_atten_cal()
+{
+    if( ui->lineEdit_elbow_size->text().isEmpty() ||
+            ui->comboBox_elbow_type->currentIndex() == -1)
+        return;
+
+    array<double, 8> atten;
+    if(ui->comboBox_elbow_type->currentIndex() == 0)
+    {
+        atten = calElbowNoise(Circle, ui->lineEdit_elbow_size->text().toDouble());
+    }
+    else if(ui->comboBox_elbow_type->currentIndex() == 1){
+        atten = calElbowNoise(RectangleUnlined, ui->lineEdit_elbow_size->text().toDouble());
+    }
+    else if(ui->comboBox_elbow_type->currentIndex() == 2){
+        atten = calElbowNoise(RectangleLined, ui->lineEdit_elbow_size->text().toDouble());
+    }
+
+    for(int i = 0; i < atten.size(); i++)
+    {
+        each_atten_lineEdits[i]->setText(QString::number(atten[i],'f', 2));
+    }
+}
+
+void RoomCalTable::on_comboBox_elbow_data_source_currentTextChanged(const QString &arg1)
+{
+    clearPage(ui->stackedWidget_table->currentWidget(), false);
+    if(arg1 != "经验公式")
+    {
+        ui->comboBox_elbow_model->setEnabled(true);
+        ui->comboBox_elbow_model->setStyleSheet("QComboBox { border:none;"
+                                                          "border-bottom:1px solid black;}");
+
+        ui->lineEdit_elbow_size->setReadOnly(true);
+
+        disconnect(ui->lineEdit_elbow_size, &QLineEdit::textChanged, this, &RoomCalTable::elbow_atten_cal);
+
+        currentComponentListByDataSource.clear();
+        for(auto& component : currentAllComponentList)
+        {
+            // 尝试将component转换为Silencer类型的智能指针
+            if(auto elbow = qSharedPointerDynamicCast<Elbow>(component))
+            {
+                if(elbow->data_source == arg1)
+                    currentComponentListByDataSource.append(component); // 直接添加component
+            }
+        }
+
+        ui->comboBox_elbow_model->blockSignals(true);
+
+        for(auto& component : currentComponentListByDataSource)
+        {
+            if(auto elbow = qSharedPointerDynamicCast<Elbow>(component))
+                ui->comboBox_elbow_model->addItem(elbow->model);
+        }
+        ui->comboBox_elbow_model->setCurrentIndex(-1);
+
+        ui->comboBox_elbow_model->blockSignals(false);
+    }
+    else
+    {
+        ui->comboBox_elbow_model->setCurrentText("-");
+        ui->comboBox_elbow_model->setEnabled(false);
+        ui->comboBox_elbow_model->setStyleSheet("QComboBox { border:1px solid black ;background-color: rgb(240,240,240);"
+                                                          "font-family: '黑体';"
+                                                          "font-size: 14px;}");
+
+        ui->lineEdit_elbow_size->setReadOnly(false);
+
+        connect(ui->lineEdit_elbow_size, &QLineEdit::textChanged, this, &RoomCalTable::elbow_atten_cal);
+    }
+}
+
+void RoomCalTable::on_comboBox_elbow_type_currentTextChanged(const QString &arg1)
+{
+    elbow_atten_cal();
+}
+
+void RoomCalTable::on_lineEdit_elbow_count_textChanged(const QString &arg1)
+{
+    if(arg1.isEmpty())
+        return;
+    for(int i = 0; i < 8; i++)
+    {
+        if(each_atten_lineEdits[i]->text().isEmpty())
+            return;
+    }
+
+    for(int i = 0; i < 8; i++)
+    {
+        sum_atten_lineEdits[i]->setText(QString::number(each_atten_lineEdits[i]->text().toDouble() * arg1.toDouble(), 'f' ,2));
+    }
+}
+
+void RoomCalTable::on_comboBox_elbow_model_currentTextChanged(const QString &arg1)
+{
+    if(ui->comboBox_elbow_model->currentIndex() == -1)
+        return;
+
+    auto it = std::find_if(this->currentComponentListByDataSource.begin(),this->currentComponentListByDataSource.end(), [&](const QSharedPointer<ComponentBase>& component){
+        auto elbow = qSharedPointerDynamicCast<Elbow>(component);
+        if(elbow && elbow->model == arg1)
+            return true;
+        return false;
+    });
+
+    if(it != currentComponentListByDataSource.end())
+    {
+        if(auto elbow = qSharedPointerDynamicCast<Elbow>(*it))
+        {
+            currentComponent = (*it);
+            for(int i = 0; i < elbow->atten.size(); i++)
+            {
+                each_atten_lineEdits[i]->setText(elbow->atten[i]);
+            }
+            ui->comboBox_elbow_type->setCurrentText(elbow->elbow_shape);
+            ui->lineEdit_elbow_size->setText(elbow->size);
+        }
+    }
+}
+
+
+
+#pragma endregion}
+
+/**********变径**********/
+#pragma region "reducer"{
+void RoomCalTable::reducer_atten_cal()
+{
+    if(ui->comboBox_reducer_type->currentIndex() == -1 ||
+            ui->lineEdit_reducer_before_size->text().isEmpty() ||
+            ui->lineEdit_reducer_after_size->text().isEmpty())
+        return;
+
+    array<double,8> atten;
+    if(ui->comboBox_reducer_type->currentText() == "圆-圆")
+    {
+        atten = calReducerNoise(ui->comboBox_reducer_type->currentText(),
+                                ui->lineEdit_reducer_before_size->text().toDouble(),
+                                -1,
+                                ui->lineEdit_reducer_after_size->text().toDouble(),
+                                -1);
+    }
+    else if(ui->comboBox_reducer_type->currentText() == "方-方")
+    {
+        auto dimensions_before = splitDimension(ui->lineEdit_reducer_before_size->text());
+        double length_before, width_before;
+        if (dimensions_before.first != -1) {
+            length_before = dimensions_before.first;
+            width_before = dimensions_before.second;
+        }
+
+        auto dimensions_after = splitDimension(ui->lineEdit_reducer_after_size->text());
+        double length_after, width_after;
+        if (dimensions_after.first != -1) {
+            length_after = dimensions_after.first;
+            width_after = dimensions_after.second;
+        }
+
+        atten =  calReducerNoise(ui->comboBox_reducer_type->currentText(),
+                                 length_before,
+                                 width_before,
+                                 length_after,
+                                 width_after);
+    }
+    else if((ui->comboBox_reducer_type->currentText() == "方-圆"))
+    {
+        auto dimensions_before = splitDimension(ui->lineEdit_reducer_before_size->text());
+        double length_before, width_before;
+        if (dimensions_before.first != -1) {
+            length_before = dimensions_before.first;
+            width_before = dimensions_before.second;
+        }
+        atten =  calReducerNoise(ui->comboBox_reducer_type->currentText(),
+                                 length_before,
+                                 width_before,
+                                 ui->lineEdit_reducer_after_size->text().toDouble(),
+                                 -1);
+    }
+    else if((ui->comboBox_reducer_type->currentText() == "圆-方"))
+    {
+        auto dimensions_after = splitDimension(ui->lineEdit_reducer_after_size->text());
+        double length_after, width_after;
+        if (dimensions_after.first != -1) {
+            length_after = dimensions_after.first;
+            width_after = dimensions_after.second;
+        }
+        atten =  calReducerNoise(ui->comboBox_reducer_type->currentText(),
+                                 ui->lineEdit_reducer_before_size->text().toDouble(),
+                                 -1,
+                                 length_after,
+                                 width_after);
+    }
+
+    for(int i = 0; i < atten.size(); i++)
+    {
+        atten_lineEdits[i]->setText(QString::number(atten[i],'f', 1));
+    }
+}
+
+void RoomCalTable::on_comboBox_reducer_data_source_currentTextChanged(const QString &arg1)
+{
+    clearPage(ui->stackedWidget_table->currentWidget(), false);
+    if(arg1 != "经验公式")
+    {
+        ui->comboBox_reducer_model->setEnabled(true);
+        ui->comboBox_reducer_model->setStyleSheet("QComboBox { border:none;"
+                                                          "border-bottom:1px solid black;}");
+
+        ui->lineEdit_reducer_before_size->setReadOnly(true);
+        ui->lineEdit_reducer_after_size->setReadOnly(true);
+
+        disconnect(ui->lineEdit_reducer_before_size, &QLineEdit::textChanged, this, &RoomCalTable::reducer_atten_cal);
+        disconnect(ui->lineEdit_reducer_after_size, &QLineEdit::textChanged, this, &RoomCalTable::reducer_atten_cal);
+
+        currentComponentListByDataSource.clear();
+        for(auto& component : currentAllComponentList)
+        {
+            // 尝试将component转换为Silencer类型的智能指针
+            if(auto reducer = qSharedPointerDynamicCast<Reducer>(component))
+            {
+                if(reducer->data_source == arg1)
+                    currentComponentListByDataSource.append(component); // 直接添加component
+            }
+        }
+
+        ui->comboBox_reducer_model->blockSignals(true);
+
+        for(auto& component : currentComponentListByDataSource)
+        {
+            if(auto reducer = qSharedPointerDynamicCast<Reducer>(component))
+                ui->comboBox_reducer_model->addItem(reducer->model);
+        }
+        ui->comboBox_reducer_model->setCurrentIndex(-1);
+
+        ui->comboBox_reducer_model->blockSignals(false);
+    }
+    else
+    {
+        ui->comboBox_reducer_model->setCurrentText("-");
+        ui->comboBox_reducer_model->setEnabled(false);
+        ui->comboBox_reducer_model->setStyleSheet("QComboBox { border:1px solid black ;background-color: rgb(240,240,240);"
+                                                          "font-family: '黑体';"
+                                                          "font-size: 14px;}");
+
+        ui->lineEdit_reducer_before_size->setReadOnly(false);
+        ui->lineEdit_reducer_after_size->setReadOnly(false);
+
+        connect(ui->lineEdit_reducer_before_size, &QLineEdit::textChanged, this, &RoomCalTable::reducer_atten_cal);
+        connect(ui->lineEdit_reducer_after_size, &QLineEdit::textChanged, this, &RoomCalTable::reducer_atten_cal);
+    }
+}
+
+void RoomCalTable::on_comboBox_reducer_model_currentTextChanged(const QString &arg1)
+{
+    if(ui->comboBox_reducer_model->currentIndex() == -1)
+        return;
+
+    auto it = std::find_if(this->currentComponentListByDataSource.begin(),this->currentComponentListByDataSource.end(), [&](const QSharedPointer<ComponentBase>& component){
+        auto reducer = qSharedPointerDynamicCast<Reducer>(component);
+        if(reducer && reducer->model == arg1)
+            return true;
+        return false;
+    });
+
+    if(it != currentComponentListByDataSource.end())
+    {
+        if(auto reducer = qSharedPointerDynamicCast<Reducer>(*it))
+        {
+            currentComponent = (*it);
+            for(int i = 0; i < reducer->atten.size(); i++)
+            {
+                atten_lineEdits[i]->setText(reducer->atten[i]);
+            }
+            ui->comboBox_reducer_type->setCurrentText(reducer->reducer_type);
+            ui->lineEdit_reducer_before_size->setText(reducer->reducer_before_size);
+            ui->lineEdit_reducer_after_size->setText(reducer->reducer_after_size);
+        }
+    }
+}
+#pragma endregion}
+/**********变径**********/
+
+/**********消音器**********/
+#pragma region "reducer"{
+void RoomCalTable::on_comboBox_silencer_data_source_currentTextChanged(const QString &arg1)
+{
+    clearPage(ui->stackedWidget_table->currentWidget(), false);
+    currentComponentListByDataSource.clear();
+    for(auto& component : currentAllComponentList)
+    {
+        // 尝试将component转换为Silencer类型的智能指针
+        if(auto silencer = qSharedPointerDynamicCast<Silencer>(component))
+        {
+            if(silencer->data_source == arg1)
+                currentComponentListByDataSource.append(component); // 直接添加component
+        }
+    }
+}
+
+void RoomCalTable::on_comboBox_silencer_type_currentTextChanged(const QString &arg1)
+{
+    clearPage(ui->stackedWidget_table->currentWidget(), false);
+
+    ui->comboBox_silencer_model->blockSignals(true);
+
+    for(auto& component : currentComponentListByDataSource)
+    {
+        if(auto silencer = qSharedPointerDynamicCast<Silencer>(component))
+            if(silencer->silencer_type == ui->comboBox_silencer_type->currentText())
+                ui->comboBox_silencer_model->addItem(silencer->model);
+    }
+    ui->comboBox_silencer_model->setCurrentIndex(-1);
+
+    ui->comboBox_silencer_model->blockSignals(false);
+}
+
+void RoomCalTable::on_comboBox_silencer_model_currentTextChanged(const QString &arg1)
+{
+    if(ui->comboBox_silencer_model->currentIndex() == -1)
+        return;
+    auto it = std::find_if(this->currentComponentListByDataSource.begin(),this->currentComponentListByDataSource.end(), [&](const QSharedPointer<ComponentBase>& component){
+        auto silencer = qSharedPointerDynamicCast<Silencer>(component);
+        if(silencer && silencer->model == arg1)
+            return true;
+        return false;
+    });
+
+    if(it != currentComponentListByDataSource.end())
+    {
+        if(auto silencer = qSharedPointerDynamicCast<Silencer>(*it))
+        {
+            currentComponent = (*it);
+
+            for(int i = 0; i < silencer->atten.size(); i++)
+            {
+                atten_lineEdits[i]->setText(silencer->atten[i]);
+            }
+        }
+    }
+
+}
+#pragma endregion}
+/**********消音器**********/
 

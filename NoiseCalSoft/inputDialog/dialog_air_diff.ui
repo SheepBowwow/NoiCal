@@ -2251,6 +2251,11 @@ color: white;
        <string>设计预估</string>
       </property>
      </item>
+     <item>
+      <property name="text">
+       <string>经验公式</string>
+      </property>
+     </item>
     </widget>
     <widget class="QLabel" name="label_43">
      <property name="geometry">

@@ -26,7 +26,10 @@ private slots:
 
     void calTotalNoise();
 
+    void calReflAtten();
+
     void on_pushButton_confirm_clicked();
+
     bool check_lineedit();
 
     void on_close_clicked();
@@ -34,6 +37,8 @@ private slots:
     void on_radioButton_circle_clicked();
 
     void on_radioButton_rect_clicked();
+
+    void on_comboBox_refl_data_source_currentIndexChanged(int index);
 
 private:
     Ui::Dialog_air_diff *ui;
