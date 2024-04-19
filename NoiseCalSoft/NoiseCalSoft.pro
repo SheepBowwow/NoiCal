@@ -16,6 +16,7 @@ QMAKE_CXXFLAGS += -Wno-unknown-pragmas
 
 SOURCES += \
     Component/ComponentManager.cpp \
+    Component/componentsdb.cpp \
     calFunction/cal_function.cpp \
     componentInpuTableWidget/widget_air_diff_inputtable.cpp \
     componentInpuTableWidget/widget_aircondition_doublefan_inputtable.cpp \
@@ -79,6 +80,7 @@ SOURCES += \
 HEADERS += \
     Component/ComponentManager.h \
     Component/ComponentStructs.h \
+    Component/componentsdb.h \
     calFunction/cal_function.h \
     componentInpuTableWidget/widget_air_diff_inputtable.h \
     componentInpuTableWidget/widget_aircondition_doublefan_inputtable.h \
@@ -140,6 +142,7 @@ HEADERS += \
     wordEngine/wordengine.h
 
 FORMS += \
+    Component/componentsdb.ui \
     componentInpuTableWidget/widget_base_inputtable.ui \
     componentInpuTableWidget/widget_pump_send_inputtable.ui \
     componentInpuTableWidget/widget_silencer_inputtable.ui \

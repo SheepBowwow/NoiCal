@@ -123,12 +123,12 @@ QPushButton
 font-family: '黑体';
 }</string>
     </property>
-    <widget class="QLabel" name="label_4">
+    <widget class="QLabel" name="label_number">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>39</y>
-       <width>41</width>
+       <x>12</x>
+       <y>41</y>
+       <width>32</width>
        <height>31</height>
       </rect>
      </property>
@@ -146,8 +146,8 @@ font-family: '黑体';
      <property name="geometry">
       <rect>
        <x>420</x>
-       <y>39</y>
-       <width>41</width>
+       <y>41</y>
+       <width>32</width>
        <height>31</height>
       </rect>
      </property>
@@ -164,11 +164,17 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_number">
      <property name="geometry">
       <rect>
-       <x>60</x>
-       <y>39</y>
-       <width>131</width>
+       <x>51</x>
+       <y>41</y>
+       <width>141</width>
        <height>31</height>
       </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>31</height>
+      </size>
      </property>
      <property name="font">
       <font>
@@ -711,11 +717,23 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_brand">
      <property name="geometry">
       <rect>
-       <x>470</x>
-       <y>39</y>
-       <width>101</width>
+       <x>458</x>
+       <y>41</y>
+       <width>81</width>
        <height>31</height>
       </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>31</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>142</width>
+       <height>31</height>
+      </size>
      </property>
      <property name="font">
       <font>
@@ -727,11 +745,17 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_air_volume">
      <property name="geometry">
       <rect>
-       <x>300</x>
-       <y>79</y>
-       <width>101</width>
+       <x>301</x>
+       <y>81</y>
+       <width>93</width>
        <height>31</height>
       </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>31</height>
+      </size>
      </property>
      <property name="font">
       <font>
@@ -743,9 +767,9 @@ font-family: '黑体';
     <widget class="QLabel" name="label_6">
      <property name="geometry">
       <rect>
-       <x>210</x>
-       <y>79</y>
-       <width>81</width>
+       <x>213</x>
+       <y>81</y>
+       <width>82</width>
        <height>31</height>
       </rect>
      </property>
@@ -762,11 +786,17 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_static_pressure">
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>79</y>
-       <width>101</width>
+       <x>82</x>
+       <y>81</y>
+       <width>110</width>
        <height>31</height>
       </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>31</height>
+      </size>
      </property>
      <property name="font">
       <font>
@@ -778,9 +808,9 @@ font-family: '黑体';
     <widget class="QLabel" name="label_17">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>79</y>
-       <width>61</width>
+       <x>12</x>
+       <y>81</y>
+       <width>64</width>
        <height>31</height>
       </rect>
      </property>
@@ -797,11 +827,23 @@ font-family: '黑体';
     <widget class="QLineEdit" name="lineEdit_model">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>39</y>
-       <width>141</width>
+       <x>251</x>
+       <y>41</y>
+       <width>143</width>
        <height>31</height>
       </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>31</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>143</width>
+       <height>31</height>
+      </size>
      </property>
      <property name="font">
       <font>
@@ -813,9 +855,9 @@ font-family: '黑体';
     <widget class="QLabel" name="label_18">
      <property name="geometry">
       <rect>
-       <x>210</x>
-       <y>39</y>
-       <width>41</width>
+       <x>213</x>
+       <y>41</y>
+       <width>32</width>
        <height>31</height>
       </rect>
      </property>
@@ -1437,8 +1479,8 @@ color: white;
      <property name="geometry">
       <rect>
        <x>420</x>
-       <y>79</y>
-       <width>41</width>
+       <y>81</y>
+       <width>32</width>
        <height>31</height>
       </rect>
      </property>
@@ -1480,11 +1522,23 @@ color: white;
     <widget class="QComboBox" name="comboBox_data_source">
      <property name="geometry">
       <rect>
-       <x>470</x>
-       <y>80</y>
-       <width>101</width>
+       <x>458</x>
+       <y>81</y>
+       <width>79</width>
        <height>31</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>31</height>
+      </size>
      </property>
      <property name="font">
       <font>

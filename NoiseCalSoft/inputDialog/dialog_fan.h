@@ -40,5 +40,6 @@ private:
 public:
     QList<QStringList> getComponentDataAsStringList() const override;
     void* getComponent() override;
+    void switchToComponentDB();
 };
 #endif // DIALOG_FAN_H

@@ -45,6 +45,7 @@
 #include <regex>
 #include <QDateTime>
 #include "project/projectmanager.h"
+#include "Component/componentsdb.h"
 
 WordEngine* wordEngine = new WordEngine();
 
@@ -103,8 +104,6 @@ void Widget::initTableWidget(QTableWidget *tableWidget, const QStringList &heade
 
 // 假设 CustomWidget 是你的自定义界面类
 void Widget::addWidgetToPage(QWidget* targetPage, Widget_base_inputTable* widgetToAdd) {
-    //初始化表格
-    widgetToAdd->initialize();
     // 检查目标页面是否已经有布局，如果没有，则创建一个新的 QVBoxLayout
     QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(targetPage->layout());
     if (layout == nullptr) {
@@ -112,21 +111,13 @@ void Widget::addWidgetToPage(QWidget* targetPage, Widget_base_inputTable* widget
         targetPage->setLayout(layout);
 
         // 设置布局的边距和间距为0
-        layout->setContentsMargins(0, 0, 0, 0); // 移除布局的边距
-        layout->setSpacing(0); // 移除布局内部控件的间距
+        layout->setContentsMargins(6, 6, 6, 6); // 设置布局的边距
     }
 
-    // 创建一个容器QWidget作为widgetToAdd的父对象
-    QWidget* container = new QWidget();
-    QVBoxLayout* containerLayout = new QVBoxLayout(container);
-    containerLayout->setContentsMargins(6, 6, 0, 0); // 在容器内部为widgetToAdd设置偏移
-    containerLayout->addWidget(widgetToAdd);
-
-    // 确保容器内部没有多余的边距和间距
-    containerLayout->setSpacing(0);
-
     // 将容器添加到页面的布局中
-    layout->addWidget(container);
+    layout->addWidget(widgetToAdd);
+    //初始化表格
+    widgetToAdd->initialize();
 }
 
 void Widget::setTable()
@@ -260,6 +251,13 @@ void Widget::initializeTreeWidget()
 
     // 设置子项为展开状态
     item_prj->setExpanded(true); // 这一行将子项设置为展开状态
+}
+
+//部件数据库
+void Widget::on_pushButton_database_clicked()
+{
+    ComponentsDB *componentDB = new ComponentsDB();
+    componentDB->show();
 }
 
 //工程管理按钮

@@ -24,7 +24,7 @@ public:
     virtual ~Widget_base_inputTable(); // 虚析构函数
 
 
-    void setTableWidget(QTableWidget *tableWidget, const QStringList &headerText, const int *columnWidths, int colCount);
+    void setTableWidget(QTableWidget *tableWidget, const QStringList &headerText,const int *columnWidths, int colCount);
     void addRowToTable(QTableWidget *tableWidget, const QStringList &data, int position = -1);
     void deleteRowFromTable(QTableWidget *tableWidget, int deleteRowNum);
     void deleteRowFromTable(QTableWidget *tableWidget_noise, QTableWidget *tableWidget_atten, QTableWidget *tableWidget_refl);
@@ -43,9 +43,8 @@ public:
     // 加载组件到表格的纯虚函数，需要在子类中实现
     virtual void loadComponentToTable() = 0;
 
-    void initialize() { initTableWidget(); };
-
     void setTitle(const QString& title);
+
 public slots:
     virtual void onAdd() = 0;
     virtual void onDel() = 0;
@@ -54,6 +53,7 @@ public slots:
     virtual void onOutput() = 0;
     virtual void clearTable();
     virtual void loadTable();
+    void initialize() { initTableWidget(); };
 
 protected:
     Ui::Widget_base_inputTable *ui;
