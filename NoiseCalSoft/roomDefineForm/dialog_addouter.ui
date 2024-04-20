@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog_addroom</class>
- <widget class="QDialog" name="Dialog_addroom">
+ <class>Dialog_addouter</class>
+ <widget class="QDialog" name="Dialog_addouter">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -14,45 +14,11 @@
    <string>Dialog</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">#Dialog_addroom
+   <string notr="true">#Dialog_addouter
 {
 background-color:white;
 }</string>
   </property>
-  <widget class="QWidget" name="widget_top" native="true">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>481</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">#widget_top
-{
-border: 1px solid #000000;
-background-color: rgb(157, 196, 229);
-background-color: rgb(157, 196, 229);
-}</string>
-   </property>
-   <widget class="QPushButton" name="close">
-    <property name="geometry">
-     <rect>
-      <x>450</x>
-      <y>5</y>
-      <width>21</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border-image: url(:/images/image/closeWindow.jpg);</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-  </widget>
   <widget class="QWidget" name="widget" native="true">
    <property name="geometry">
     <rect>
@@ -104,7 +70,7 @@ background-color : rgb(105, 105, 105);
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_title">
+      <widget class="QLabel" name="label_3">
        <property name="minimumSize">
         <size>
          <width>141</width>
@@ -132,7 +98,7 @@ color : rgb(105, 105, 105);
 }</string>
        </property>
        <property name="text">
-        <string>定义房间</string>
+        <string>定义室外</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -227,7 +193,7 @@ font-family: '黑体';
       </font>
      </property>
     </widget>
-    <widget class="QLabel" name="label_cg4">
+    <widget class="QLabel" name="label_10">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -243,7 +209,7 @@ font-family: '黑体';
       </font>
      </property>
      <property name="text">
-      <string>房间类型：</string>
+      <string>类型：</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -303,16 +269,19 @@ font-family: '黑体';
        <family>黑体</family>
       </font>
      </property>
+     <property name="text">
+      <string>外部区域</string>
+     </property>
      <property name="readOnly">
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="label_cg3">
+    <widget class="QLabel" name="label_4">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>160</y>
-       <width>101</width>
+       <width>131</width>
        <height>31</height>
       </rect>
      </property>
@@ -323,13 +292,13 @@ font-family: '黑体';
       </font>
      </property>
      <property name="text">
-      <string>主风管数量：</string>
+      <string>噪音源支管数量：</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
      </property>
     </widget>
-    <widget class="QLabel" name="label_cg2">
+    <widget class="QLabel" name="label_6">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -345,7 +314,7 @@ font-family: '黑体';
       </font>
      </property>
      <property name="text">
-      <string>房间名称：</string>
+      <string>室外名称：</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -390,8 +359,13 @@ font-family: '黑体';
        <height>31</height>
       </rect>
      </property>
+     <item>
+      <property name="text">
+       <string>室外</string>
+      </property>
+     </item>
     </widget>
-    <widget class="QLabel" name="label_cg1">
+    <widget class="QLabel" name="label_5">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -407,7 +381,7 @@ font-family: '黑体';
       </font>
      </property>
      <property name="text">
-      <string>房间编号：</string>
+      <string>室外编号：</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -474,18 +448,41 @@ font-family: '黑体';
     </widget>
    </widget>
   </widget>
+  <widget class="QWidget" name="widget_top" native="true">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>481</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">#widget_top
+{
+border: 1px solid #000000;
+background-color: rgb(157, 196, 229);
+background-color: rgb(157, 196, 229);
+}</string>
+   </property>
+   <widget class="QPushButton" name="close">
+    <property name="geometry">
+     <rect>
+      <x>450</x>
+      <y>5</y>
+      <width>21</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(:/images/image/closeWindow.jpg);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+  </widget>
  </widget>
- <tabstops>
-  <tabstop>lineEdit_roomid</tabstop>
-  <tabstop>lineEdit_roomname</tabstop>
-  <tabstop>lineEdit_jiaban</tabstop>
-  <tabstop>lineEdit_pipe</tabstop>
-  <tabstop>pushButton</tabstop>
-  <tabstop>lineEdit_roomcalclass</tabstop>
-  <tabstop>close</tabstop>
-  <tabstop>comboBox</tabstop>
-  <tabstop>lineEdit_limit</tabstop>
- </tabstops>
  <resources/>
  <connections/>
 </ui>
