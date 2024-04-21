@@ -19,6 +19,7 @@ class Form_room_define : public QWidget
 public:
     explicit Form_room_define(QWidget *parent = nullptr);
     ~Form_room_define();
+    void change_outer();
 
     void setjiabanItem(QTreeWidgetItem *item);
 

@@ -21,6 +21,16 @@ Form_room_define::~Form_room_define()
     delete ui;
 }
 
+void Form_room_define::change_outer()
+{
+    ui->label_cg1->setText("定义室外");
+    // 设置列标题
+    ui->tableWidget_room_define->setColumnCount(8);
+    QStringList headerLabels;
+    headerLabels<<""<<"室外编号"<<"室外名称"<<"类型"<<"甲板"<<"噪音源支管数量"<<"噪声限值dB(A)"<<"房间计算类型";
+    ui->tableWidget_room_define->setHorizontalHeaderLabels(headerLabels);
+}
+
 void Form_room_define::setjiabanItem(QTreeWidgetItem *item)
 {
     _jiabanitem=item;
@@ -47,6 +57,9 @@ void Form_room_define::on_buttonadd_clicked()
     }
 
     dialog = new Dialog_addroom(this);
+    if(ui->label_cg1->text()=="定义室外"){
+        dialog->change_outer();
+    }
 
     //弹窗点击确定，接收信号并发送提醒主界面改变
     connect(dialog,SIGNAL(dialogsent(QString,int,QString, QString)),this,SLOT(jieshou(QString,int,QString, QString)));
