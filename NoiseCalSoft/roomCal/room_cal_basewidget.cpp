@@ -293,3 +293,10 @@ void room_cal_baseWidget::setSystemName(QString systemName) //设置主风管编
 {
     this->systemName = systemName;
 }
+
+void room_cal_baseWidget::change_outer_cal()
+{
+    title_label="噪音源支管";
+    ui->label_cg1->setText("室外编号:");
+    ui->label_cg2->setText("噪音源支管数量:");
+}

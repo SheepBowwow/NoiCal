@@ -308,7 +308,10 @@ private:
 
     /**************容器*********************/
     QVector<QTreeWidgetItem *> vec_zsq;                        //保存主竖区item
+
     QVector<QTreeWidgetItem *> vec_system;                     //保存系统item
+    QVector<QTreeWidgetItem *> vec_outer;                     //保存室外item
+
     QMap<QTreeWidgetItem *,QTreeWidgetItem *> map_zsq67;       // 第六项的主竖区和第七项的主竖区对应关系
     QMap<QTreeWidgetItem *,QTreeWidgetItem *> map_zsq68;       // 第六项的主竖区和第八项的主竖区对应关系
     QMap<QTreeWidgetItem *,QTreeWidgetItem *> map_system67;       // 第六项的系统和第七项的系统对应关系

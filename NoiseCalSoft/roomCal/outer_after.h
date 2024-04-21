@@ -1,26 +1,25 @@
-#ifndef ROOM_CAL_TOTAL_H
-#define ROOM_CAL_TOTAL_H
+#ifndef OUTER_AFTER_H
+#define OUTER_AFTER_H
 
 #include <QWidget>
 
 namespace Ui {
-class room_cal_total;
+class outer_after;
 }
 
-class room_cal_total : public QWidget
+class outer_after : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit room_cal_total(QWidget *parent = nullptr);
-    ~room_cal_total();
-
-    void change_outer_cal();
+    explicit outer_after(QWidget *parent = nullptr);
+    ~outer_after();
 
     void setInfo(QString zhushuqu, QString deck,
                  QString room_number, QString noise_limit, QString duct_num);    //设置基本信息，主竖区、甲板、房间编号、噪声限值、主风管数量
+
 private:
-    Ui::room_cal_total *ui;
+    Ui::outer_after *ui;
 };
 
-#endif // ROOM_CAL_TOTAL_H
+#endif // OUTER_AFTER_H

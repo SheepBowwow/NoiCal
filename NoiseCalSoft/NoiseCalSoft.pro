@@ -64,6 +64,8 @@ SOURCES += \
     inputbasedialog.cpp \
     main.cpp \
     project/projectmanager.cpp \
+    roomCal/outer_after.cpp \
+    roomCal/outer_before.cpp \
     roomCal/room_cal_basewidget.cpp \
     roomCal/room_cal_total.cpp \
     roomCal/roomcaltable.cpp \
@@ -128,6 +130,8 @@ HEADERS += \
     inputDialog/dialog_vav_terminal.h \
     inputbasedialog.h \
     project/projectmanager.h \
+    roomCal/outer_after.h \
+    roomCal/outer_before.h \
     roomCal/room_cal_basewidget.h \
     roomCal/room_cal_total.h \
     roomCal/roomcaltable.h \
@@ -166,6 +170,8 @@ FORMS += \
     inputDialog/dialog_static_box.ui \
     inputDialog/dialog_tee.ui \
     inputDialog/dialog_vav_terminal.ui \
+    roomCal/outer_after.ui \
+    roomCal/outer_before.ui \
     roomCal/room_cal_basewidget.ui \
     roomCal/room_cal_total.ui \
     roomCal/roomcaltable.ui \

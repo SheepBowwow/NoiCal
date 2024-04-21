@@ -53,7 +53,7 @@ int Dialog_addroom::getmainpipe()
 
 QString Dialog_addroom::getroomclass()
 {
-    return " ";
+    return ui->comboBox->currentText();
 }
 
 QString Dialog_addroom::getlimit()
@@ -64,6 +64,31 @@ QString Dialog_addroom::getlimit()
 QString Dialog_addroom::getroomcalclass()
 {
     return ui->lineEdit_roomcalclass->text();
+}
+
+void Dialog_addroom::change_outer()
+{
+    ui->label_title->setText("定义室外");
+    ui->label_cg1->setText("室外编号:");
+    ui->label_cg2->setText("室外名称:");
+    ui->label_cg3->setText("噪音源支管数量:");
+    ui->label_cg4->setText("类型:");
+
+    ui->comboBox->addItem("室外");
+    ui->comboBox->setCurrentText("室外");
+    ui->comboBox->setStyleSheet("QComboBox { background-color: lightGray; color: black; }"
+                                "QComboBox { padding: 0px; }");
+    // 设置为只读
+    ui->comboBox->setEditable(false);
+    // 隐藏下拉按钮
+    ui->comboBox->view()->setFixedHeight(0); // 隐藏下拉列表
+
+
+    ui->lineEdit_limit->setReadOnly(false);
+    ui->lineEdit_roomcalclass->setText("外部区域");
+    ui->lineEdit_roomcalclass->setStyleSheet("QLineEdit { background-color: lightGray; color: black; }"
+                            "QLineEdit:read-only { background-color: lightGray; color: black; }");
+
 }
 
 void Dialog_addroom::on_pushButton_clicked()
@@ -85,6 +110,7 @@ void Dialog_addroom::on_pushButton_clicked()
     }
 
     emit dialogsent(name,num, jiaban, limit);
+    accept();
     close();
 }
 

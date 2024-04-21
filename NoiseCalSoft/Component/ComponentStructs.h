@@ -9,6 +9,7 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QSqlRecord>
+#include <QVariant>
 
 using std::array;
 using std::unique_ptr;

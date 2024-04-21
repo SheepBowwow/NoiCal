@@ -24,6 +24,9 @@ public:
     void setFanQuantity(QString fanQuantity); //设置风量
     void setSystemName(QString systemName); //设置系统名
 
+    void change_outer_cal();
+    QString title_label="主风管";
+
 private slots:
     void handleAddBefore(int index);
     void handleAddAfter(int index);

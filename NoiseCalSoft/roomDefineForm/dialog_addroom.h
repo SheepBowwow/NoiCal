@@ -26,6 +26,8 @@ public:
     QString getlimit();
     QString getroomcalclass();
 
+    void change_outer();
+
 
 
 signals:
