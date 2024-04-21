@@ -23,6 +23,17 @@ private:
 public:
     void initTableWidget() override;
     void setCurrentTable(const int& index);
+    enum pump_send_type
+    {
+        pump_noi,
+        send_noi,
+        pump_atten,
+        send_atten,
+        pump_refl,
+        send_refl
+    };
+
+    void switchPage(pump_send_type type);
 
 public slots:
     void onAdd() override;

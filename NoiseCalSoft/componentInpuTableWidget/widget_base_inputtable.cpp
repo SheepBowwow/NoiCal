@@ -319,3 +319,56 @@ void Widget_base_inputTable::deleteRowFromTable(QTableWidget *tableWidget_noise,
     }
 
 }
+
+void Widget_base_inputTable::mergeColumnsByNames(QTableWidget* table, const QStringList& columnNames, int mergeRowCount) {
+    if (table == nullptr || mergeRowCount < 2 || table->columnCount() == 0) return;
+
+    // 找到需要合并的列索引
+    QList<int> columnsToMerge;
+    for (const QString& name : columnNames) {
+        for (int i = 0; i < table->columnCount(); ++i) {
+            if (table->horizontalHeaderItem(i)->text() == name) {
+                columnsToMerge.append(i);
+                break;
+            }
+        }
+    }
+
+    // 对指定的列进行行合并
+    for (int col : columnsToMerge) {
+        for (int row = 0; row < table->rowCount(); row += mergeRowCount) {
+            int mergeTill = row + mergeRowCount - 1;
+            if (mergeTill >= table->rowCount()) mergeTill = table->rowCount() - 1;
+
+            QTableWidgetItem* firstItem = table->item(row, col);
+            if (!firstItem) {
+                firstItem = new QTableWidgetItem();
+                table->setItem(row, col, firstItem);
+            }
+            table->setSpan(row, col, mergeTill - row + 1, 1);
+
+            for(int i = row; i < row + 2; i++)
+            {
+                QWidget* widget = table->cellWidget(row, 0);
+                if (widget != nullptr) {
+                    // 获取widget里所有的子部件
+                    QList<QWidget*> widgets = widget->findChildren<QWidget*>();
+                    // 遍历子部件并删除
+                    foreach(QWidget* childWidget, widgets) {
+                        delete childWidget;
+                    }
+                }
+            }
+
+            // 处理复选框
+            QCheckBox* checkBox = new QCheckBox();
+            QWidget* widget = new QWidget();
+            widget->setStyleSheet("background-color: #C0C0C0;");
+            QHBoxLayout* layout = new QHBoxLayout(widget);
+            layout->addWidget(checkBox);
+            layout->setAlignment(Qt::AlignCenter);
+            layout->setContentsMargins(0, 0, 0, 0);
+            table->setCellWidget(row, 0, widget);
+        }
+    }
+}

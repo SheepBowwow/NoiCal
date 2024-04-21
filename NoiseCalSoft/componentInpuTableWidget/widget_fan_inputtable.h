@@ -23,7 +23,7 @@ public slots:
     void onInput() override;
     void onOutput() override;
 private:
-    void mergeCells(int startRow);
+    QStringList mergeCols;
 
     // Widget_base_inputTable interface
 public:

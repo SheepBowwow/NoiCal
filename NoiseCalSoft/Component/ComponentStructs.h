@@ -939,6 +939,7 @@ public:
             diffuser_brand,
             terminal_shape,
             terminal_size,
+            "气流噪音"
         };
 
         // 迭代 noi_out 数组来填充 QStringList
@@ -958,6 +959,7 @@ public:
             diffuser_brand,
             terminal_shape,
             terminal_size,
+            "末端衰减"
         };
 
         // 迭代 noi_out 数组来填充 QStringList
@@ -965,6 +967,7 @@ public:
             data_atten.push_back(noi_value);
         }
 
+        data_atten.push_back("-");
         data_atten.push_back(atten_data_source);
         data_atten.push_back(UUID);
 
@@ -976,6 +979,7 @@ public:
             diffuser_brand,
             terminal_shape,
             terminal_size,
+            "反射衰减"
         };
 
         // 迭代 noi_out 数组来填充 QStringList
@@ -983,6 +987,7 @@ public:
             data_refl.push_back(noi_value);
         }
 
+        data_refl.push_back("-");
         data_refl.push_back(refl_data_source);
         data_refl.push_back(UUID);
 

@@ -28452,7 +28452,7 @@ height: 30px;
      </size>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="page_unit">
      <widget class="QLabel" name="label_9">
@@ -28495,7 +28495,7 @@ border-bottom:1px solid black;</string>
       </property>
       <item>
        <property name="text">
-        <string>声源噪音</string>
+        <string>噪声源</string>
        </property>
       </item>
       <item>

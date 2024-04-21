@@ -1,11 +1,11 @@
 #ifndef WIDGET_AIR_DIFF_INPUTTABLE_H
 #define WIDGET_AIR_DIFF_INPUTTABLE_H
 
-#include "widget_terminal_base_inputtable.h"
+#include "widget_base_inputtable.h"
 #include <QObject>
 #include <QWidget>
 
-class Widget_air_diff_inputTable : public Widget_terminal_base_inputTable
+class Widget_air_diff_inputTable : public Widget_base_inputTable
 {
     Q_OBJECT
 public:
@@ -24,6 +24,8 @@ public slots:
     void onInput() override;
     void onOutput() override;
 
+private:
+    QStringList mergeCols;
     // Widget_base_inputTable interface
 public:
     void loadComponentToTable() override;

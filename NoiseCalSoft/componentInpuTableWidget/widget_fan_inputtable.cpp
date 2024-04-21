@@ -37,44 +37,23 @@ void Widget_fan_inputTable::initTableWidget()
     int columnWidths[] = {30, 38, 120, 120, 60, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 60, 0};
     // 调用封装好的初始化表格函数
     setTableWidget(ui->tableWidget, headerText, columnWidths, colCount);
+    QStringList merge
+    {
+        "",
+        "序号",
+        "编号",
+        "型号",
+        "品牌",
+        "风量\n(m³/h)",
+        "静压\n(Pa)",
+        "来源",
+        "UUID"
+    };
+
+    this->mergeCols = merge;
 
     // 隐藏最后一列
     ui->tableWidget->setColumnHidden(colCount - 1, true);
-}
-
-void Widget_fan_inputTable::mergeCells(int startRow)
-{
-    QTableWidget *tableWidget = ui->tableWidget;
-    for(int i = 0; i < tableWidget->columnCount(); i++)
-    {
-        if(i < 7 || i > 16)
-        {
-            tableWidget->setSpan(startRow, i, 2, 1);
-        }
-    }
-
-    for(int i = startRow; i < startRow + 2; i++)
-    {
-        QWidget* widget = tableWidget->cellWidget(i, 0);
-        if (widget != nullptr) {
-            // 获取widget里所有的子部件
-            QList<QWidget*> widgets = widget->findChildren<QWidget*>();
-            // 遍历子部件并删除
-            foreach(QWidget* childWidget, widgets) {
-                delete childWidget;
-            }
-        }
-    }
-
-    // 处理复选框
-    QCheckBox* checkBox = new QCheckBox();
-    QWidget* widget = new QWidget();
-    widget->setStyleSheet("background-color: #C0C0C0;");
-    QHBoxLayout* layout = new QHBoxLayout(widget);
-    layout->addWidget(checkBox);
-    layout->setAlignment(Qt::AlignCenter);
-    layout->setContentsMargins(0, 0, 0, 0);
-    tableWidget->setCellWidget(startRow, 0, widget);
 }
 
 void Widget_fan_inputTable::loadComponentToTable()
@@ -85,13 +64,13 @@ void Widget_fan_inputTable::loadComponentToTable()
         if (auto fanComponent = dynamic_cast<Fan*>(component.data()))
         {
             auto lists = fanComponent->getComponentDataAsStringList();
-            int rowCount = ui->tableWidget->rowCount();
+            //int rowCount = ui->tableWidget->rowCount();
 
             for (const auto& list : lists) {
                 addRowToTable(ui->tableWidget, list);
             }
 
-            mergeCells(rowCount);
+            mergeColumnsByNames(ui->tableWidget, mergeCols, 2);
         }
     }
 }
@@ -126,7 +105,7 @@ void Widget_fan_inputTable::onAdd()
 
             componentManager.addComponent(component);
 
-            mergeCells(rowCount);
+            mergeColumnsByNames(ui->tableWidget, mergeCols, 2);
         }
     }
 }
@@ -140,11 +119,7 @@ void Widget_fan_inputTable::onDel()
 {
     deleteRowFromTable(ui->tableWidget, 2);
 
-
-    for(int i = 0; i < ui->tableWidget->rowCount(); i += 2)
-    {
-        mergeCells(i);
-    }
+    mergeColumnsByNames(ui->tableWidget, mergeCols, 2);
 }
 
 /**
@@ -154,34 +129,36 @@ void Widget_fan_inputTable::onDel()
  */
 void Widget_fan_inputTable::onRevise()
 {
-    for (int row = 0; row < ui->tableWidget->rowCount(); row+=2) {
+    for (int row = 0; row < ui->tableWidget->rowCount(); row += 2) {
         QWidget* widget = ui->tableWidget->cellWidget(row, 0); // Assuming the checkbox is in the first column
         QCheckBox* checkBox = widget ? widget->findChild<QCheckBox*>() : nullptr;
         if (checkBox && checkBox->isChecked()) {
-            QString uuid = ui->tableWidget->item(row, ui->tableWidget->columnCount() - 1)->text();
-            QSharedPointer<Fan> component = componentManager.findComponent(uuid).dynamicCast<Fan>();
-            if(!component)
-                continue;
-            Dialog_fan *dialog = new Dialog_fan(this, row, *component);
-            if (dialog->exec() == QDialog::Accepted) {
-                QSharedPointer<Fan> newComponent = QSharedPointer<Fan>(static_cast<Fan*>(dialog->getComponent()));
+            componentRevision<Fan, Dialog_fan>(ui->tableWidget, 2, row);
+            mergeColumnsByNames(ui->tableWidget, mergeCols, 2);
+//            QString uuid = ui->tableWidget->item(row, ui->tableWidget->columnCount() - 1)->text();
+//            QSharedPointer<Fan> component = componentManager.findComponent(uuid).dynamicCast<Fan>();
+//            if(!component)
+//                continue;
+//            Dialog_fan *dialog = new Dialog_fan(this, row, *component);
+//            if (dialog->exec() == QDialog::Accepted) {
+//                QSharedPointer<Fan> newComponent = QSharedPointer<Fan>(static_cast<Fan*>(dialog->getComponent()));
 
-                if (newComponent && componentManager.updateComponent(uuid, newComponent)) {
-                    int insertPosition = row; // 记录要插入新行的位置
+//                if (newComponent && componentManager.updateComponent(uuid, newComponent)) {
+//                    int insertPosition = row; // 记录要插入新行的位置
 
-                    // 删除旧行
-                    ui->tableWidget->removeRow(row + 1); // 先删除下一行
-                    ui->tableWidget->removeRow(row); // 再删除当前行
+//                    // 删除旧行
+//                    ui->tableWidget->removeRow(row + 1); // 先删除下一行
+//                    ui->tableWidget->removeRow(row); // 再删除当前行
 
-                    auto lists = dialog->getComponentDataAsStringList();
+//                    auto lists = dialog->getComponentDataAsStringList();
 
-                    // 现在在记录的位置插入行
-                    addRowToTable(ui->tableWidget, lists[0], insertPosition);
-                    addRowToTable(ui->tableWidget, lists[1], insertPosition + 1); // 注意这里是在紧接着上一行后插入
-                    mergeCells(row);
-                }
-                delete dialog; // Ensure dialog is deleted to avoid memory leak
-            }
+//                    // 现在在记录的位置插入行
+//                    addRowToTable(ui->tableWidget, lists[0], insertPosition);
+//                    addRowToTable(ui->tableWidget, lists[1], insertPosition + 1); // 注意这里是在紧接着上一行后插入
+//                    mergeColumnsByNames(ui->tableWidget, mergeCols, 2);
+//                }
+//                delete dialog; // Ensure dialog is deleted to avoid memory leak
+//            }
         }
     }
 }

@@ -4,7 +4,7 @@
 #include <QQueue>
 
 Widget_Pump_Send_inputTable::Widget_Pump_Send_inputTable(QWidget *parent) :
-    Widget_base_inputTable(parent),
+    Widget_base_inputTable(parent,false),
     ui(new Ui::Widget_Pump_Send_inputTable)
 {
     ui->setupUi(this);
@@ -74,6 +74,40 @@ void Widget_Pump_Send_inputTable::setCurrentTable(const int& index)
     else
     {
         on_pushButton_send_clicked();
+    }
+}
+
+void Widget_Pump_Send_inputTable::switchPage(pump_send_type type)
+{
+    if(type == pump_noi)
+    {
+        ui->stackedWidget->setCurrentWidget(ui->page_noi);
+        ui->stackedWidget_noi->setCurrentWidget(ui->page_noi_pump);
+    }
+    else if(type == send_noi)
+    {
+        ui->stackedWidget->setCurrentWidget(ui->page_noi);
+        ui->stackedWidget_noi->setCurrentWidget(ui->page_noi_send);
+    }
+    else if(type == pump_atten)
+    {
+        ui->stackedWidget->setCurrentWidget(ui->page_atten);
+        ui->stackedWidget_atten->setCurrentWidget(ui->page_atten_pump);
+    }
+    else if(type == send_atten)
+    {
+        ui->stackedWidget->setCurrentWidget(ui->page_atten);
+        ui->stackedWidget_atten->setCurrentWidget(ui->page_atten_send);
+    }
+    else if(type == pump_refl)
+    {
+        ui->stackedWidget->setCurrentWidget(ui->page_refl);
+        ui->stackedWidget_refl->setCurrentWidget(ui->page_refl_pump);
+    }
+    else if(type == send_refl)
+    {
+        ui->stackedWidget->setCurrentWidget(ui->page_refl);
+        ui->stackedWidget_refl->setCurrentWidget(ui->page_refl_send);
     }
 }
 

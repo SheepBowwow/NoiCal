@@ -44,13 +44,13 @@ RoomCalTable::RoomCalTable(QString systemName, QWidget *parent,QString currentTa
         noise_before_cal.push_back(QString());
     }
 
-    if(currentTableType == "" || currentTableType == "声源噪音")
+    if(currentTableType == "" || currentTableType == "噪声源")
     {
         ui->stackedWidget_title->setCurrentWidget(ui->page_unit);
-        ui->comboBox_sound_type->setCurrentText("声源噪音");
+        ui->comboBox_sound_type->setCurrentText("噪声源");
         ui->comboBox_unit_name->setCurrentIndex(0);
         ui->stackedWidget_table->setCurrentWidget(ui->page_fan);
-        this->currentTableType = "声源噪音";
+        this->currentTableType = "噪声源";
         //QList<QString> uuids =
                 SystemManager::getInstance().getNoiseComponentsInSystem(systemName,noise_src_component::FAN);
     }
@@ -271,7 +271,7 @@ void RoomCalTable::clearPage(QWidget *widget, bool isPageChanged)
 void RoomCalTable::on_comboBox_sound_type_currentTextChanged(const QString &arg1)
 {
     ui->stackedWidget_title->setCurrentWidget(ui->page_unit);
-    if(arg1 == "声源噪音")
+    if(arg1 == "噪声源")
     {
         ui->comboBox_unit_name->clear();
         ui->comboBox_unit_name->addItem("风机");
@@ -743,7 +743,7 @@ void RoomCalTable::on_comboBox_sound_type_room_currentTextChanged(const QString 
 {
     ui->stackedWidget_title->setCurrentWidget(ui->page_unit);
     ui->comboBox_sound_type->setCurrentText(arg1);
-    if(arg1 == "声源噪音")
+    if(arg1 == "噪声源")
     {
         ui->comboBox_unit_name->clear();
         ui->comboBox_unit_name->addItem("风机");

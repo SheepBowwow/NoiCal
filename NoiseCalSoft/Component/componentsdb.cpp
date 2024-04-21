@@ -21,12 +21,14 @@
 #include "componentInpuTableWidget/widget_silencer_inputtable.h"
 
 ComponentsDB::ComponentsDB(QWidget *parent) :
-    QWidget(parent),
+    QDialog(parent),
     ui(new Ui::ComponentsDB)
 {
     ui->setupUi(this);
     initTree();
     setTable();
+
+    this->setWindowFlags(Qt::Dialog);
 }
 
 ComponentsDB::~ComponentsDB()
@@ -36,51 +38,42 @@ ComponentsDB::~ComponentsDB()
 
 void ComponentsDB::initTree()
 {
-    item_sound_sorce_noise = new QTreeWidgetItem(QStringList("1.声源噪音"));   //1音源噪音
-    item_fan_noise = new QTreeWidgetItem(item_sound_sorce_noise,QStringList("风机噪音"));   //1.1风机噪音
-    item_fan_coil_noise = new QTreeWidgetItem(item_sound_sorce_noise,QStringList("风机盘管噪音"));   //1.2风机盘管噪音
-    item_aircondition_noise_single_fan = new QTreeWidgetItem(item_sound_sorce_noise,QStringList("空调器噪音(单风机)"));   //1.3空调器噪音(单风机)
-    item_aircondition_noise_double_fan = new QTreeWidgetItem(item_sound_sorce_noise,QStringList("空调器噪音(双风机)"));   //1.3空调器噪音(双风机)
+    item_sound_sorce_noise = new QTreeWidgetItem(QStringList("1.噪声源"));   //1音源噪音
+    item_fan_noise = new QTreeWidgetItem(item_sound_sorce_noise,QStringList("风机"));   //1.1风机噪音
+    item_fan_coil_noise = new QTreeWidgetItem(item_sound_sorce_noise,QStringList("风机盘管"));   //1.2风机盘管噪音
+    item_aircondition_noise_single_fan = new QTreeWidgetItem(item_sound_sorce_noise,QStringList("空调器(单风机)"));   //1.3空调器噪音(单风机)
+    item_aircondition_noise_double_fan = new QTreeWidgetItem(item_sound_sorce_noise,QStringList("空调器(双风机)"));   //1.3空调器噪音(双风机)
 
-    item_pipe_and_acce_airflow_noise = new QTreeWidgetItem(QStringList("2.管路及附件气流噪音"));            //2.管路及附件气流噪音
-    item_valve_noise = new QTreeWidgetItem(item_pipe_and_acce_airflow_noise,QStringList("阀门噪音"));                                  //2.1 阀门噪音
+    item_airflow_noise = new QTreeWidgetItem(QStringList("2.气流噪音"));            //2.管路及附件气流噪音
+    item_valve_noise = new QTreeWidgetItem(item_airflow_noise,QStringList("阀门"));                                  //2.1 阀门噪音
     item_VAV_terminal = new QTreeWidgetItem(item_valve_noise,QStringList("变风量末端"));                                  //2.1.1 变风量末端
     item_circular_damper = new QTreeWidgetItem(item_valve_noise,QStringList("圆形调风门"));                                  //2.1.2 圆形调风门
     item_rect_damper = new QTreeWidgetItem(item_valve_noise,QStringList("方形调风门"));                                      //2.1.3 方形调风门
-    item_terminal_airflow_noise = new QTreeWidgetItem(item_pipe_and_acce_airflow_noise,QStringList("末端气流噪声"));                           //2.2 末端气流噪声
-    item_air_diff = new QTreeWidgetItem(item_terminal_airflow_noise,QStringList("布风器+散流器"));                                         //2.2.1 布风器+散流器
-    item_pump_send_tuyere = new QTreeWidgetItem(item_terminal_airflow_noise,QStringList("抽/送风头"));                         //2.2.2 抽/送风头
-    item_staticBox_grille = new QTreeWidgetItem(item_terminal_airflow_noise,QStringList("静压箱+格栅"));                            //2.2.3 回风箱+格栅
-    item_disp_vent_terminal = new QTreeWidgetItem(item_terminal_airflow_noise,QStringList("置换通风末端"));                //2.2.4 置换通风末端
-    item_other_send_terminal = new QTreeWidgetItem(item_terminal_airflow_noise,QStringList("其他送风末端"));                //2.2.5 静压箱孔板送风
+    item_atten_and_airflow_noise = new QTreeWidgetItem(QStringList("3.噪音衰减+气流噪音"));                           //2.2 末端气流噪声
+    item_air_diff = new QTreeWidgetItem(item_atten_and_airflow_noise,QStringList("布风器+散流器"));                                         //2.2.1 布风器+散流器
+    item_pump = new QTreeWidgetItem(item_atten_and_airflow_noise,QStringList("抽风头"));                         //2.2.2 抽/送风头
+    item_send = new QTreeWidgetItem(item_atten_and_airflow_noise,QStringList("送风头"));                         //2.2.2 抽/送风头
+    item_staticBox_grille = new QTreeWidgetItem(item_atten_and_airflow_noise,QStringList("静压箱+格栅"));                            //2.2.3 回风箱+格栅
+    item_disp_vent_terminal = new QTreeWidgetItem(item_atten_and_airflow_noise,QStringList("置换通风末端"));                //2.2.4 置换通风末端
+    item_other_send_terminal = new QTreeWidgetItem(item_atten_and_airflow_noise,QStringList("其他送风末端"));                //2.2.5 静压箱孔板送风
 
-    item_noise_atten_in_pipe_acce = new QTreeWidgetItem(QStringList("3.管路及附件噪音衰减"));                //3. 管路及附件噪音衰减
-    item_branch_atten = new QTreeWidgetItem(item_noise_atten_in_pipe_acce,QStringList("分支衰减"));                             //3.1 分支衰减
+    item_noise_atten = new QTreeWidgetItem(QStringList("4.噪音衰减"));                //3. 管路及附件噪音衰减
+    item_branch_atten = new QTreeWidgetItem(item_noise_atten,QStringList("分支"));                             //3.1 分支衰减
     item_static_box = new QTreeWidgetItem(item_branch_atten,QStringList("静压箱"));                               //3.1.1 静压箱
     item_duct_with_multi_ranc = new QTreeWidgetItem(item_branch_atten,QStringList("风道多分支"));                     //3.1.2 风道多分支
-    item_tee_atten = new QTreeWidgetItem(item_branch_atten,QStringList("三通衰减"));                                //3.1.3 三通衰减
-    item_pipe_atten = new QTreeWidgetItem(item_noise_atten_in_pipe_acce,QStringList("直管衰减"));                                //3.2 直管衰减
-    item_elbow_atten = new QTreeWidgetItem(item_noise_atten_in_pipe_acce,QStringList("弯头衰减"));                                //3.3 弯头衰减
-    item_reducer_atten = new QTreeWidgetItem(item_noise_atten_in_pipe_acce,QStringList("变径衰减"));                                //3.4 变径衰减
-    item_silencer_atten = new QTreeWidgetItem(item_noise_atten_in_pipe_acce,QStringList("消音器衰减"));                                //3.5 消音器衰减
-
-    item_terminal_atten = new QTreeWidgetItem(item_noise_atten_in_pipe_acce,QStringList("末端衰减"));                                //3.6 末端衰减
-    item_air_diff_terminal_atten = new QTreeWidgetItem(item_terminal_atten,QStringList("布风器+散流器"));
-    item_pump_send_tuyere_terminal_atten = new QTreeWidgetItem(item_terminal_atten,QStringList("抽/送风头"));
-    item_staticBox_grille_terminal_atten = new QTreeWidgetItem(item_terminal_atten,QStringList("静压箱+格栅"));
-    item_disp_vent_terminal_atten = new QTreeWidgetItem(item_terminal_atten,QStringList("置换通风末端"));
-    item_other_send_terminal_atten = new QTreeWidgetItem(item_terminal_atten,QStringList("其他送风末端"));
-
-    item_terminal_refl_atten = new QTreeWidgetItem(item_noise_atten_in_pipe_acce,QStringList("末端反射衰减")); //3.7 末端反射衰减
-    item_air_diff_relf_atten = new QTreeWidgetItem(item_terminal_refl_atten,QStringList("布风器+散流器"));
-    item_pump_send_tuyere_relf_atten = new QTreeWidgetItem(item_terminal_refl_atten,QStringList("抽/送风头"));
-    item_staticBox_grille_relf_atten = new QTreeWidgetItem(item_terminal_refl_atten,QStringList("静压箱+格栅"));
-    item_disp_vent_relf_atten = new QTreeWidgetItem(item_terminal_refl_atten,QStringList("置换通风末端"));
-    item_other_send_relf_atten = new QTreeWidgetItem(item_terminal_refl_atten,QStringList("其他送风末端"));
+    item_tee_atten = new QTreeWidgetItem(item_branch_atten,QStringList("三通"));                                //3.1.3 三通衰减
+    item_pipe_atten = new QTreeWidgetItem(item_noise_atten,QStringList("直管"));                                //3.2 直管衰减
+    item_elbow_atten = new QTreeWidgetItem(item_noise_atten,QStringList("弯头"));                                //3.3 弯头衰减
+    item_reducer_atten = new QTreeWidgetItem(item_noise_atten,QStringList("变径"));                                //3.4 变径衰减
+    item_circular_silencer_atten = new QTreeWidgetItem(item_noise_atten,QStringList("圆形消音器"));                                //3.5 消音器衰减
+    item_rect_silencer_atten = new QTreeWidgetItem(item_noise_atten,QStringList("方形消音器"));                                //3.5 消音器衰减
+    item_circular_silencer_elbow_atten = new QTreeWidgetItem(item_noise_atten,QStringList("圆形消音弯头"));                                //3.5 消音器衰减
+    item_rect_silencer_elbow_atten = new QTreeWidgetItem(item_noise_atten,QStringList("方形消音弯头"));                                //3.5 消音器衰减
 
     ui->treeWidget->addTopLevelItem(item_sound_sorce_noise);
-    ui->treeWidget->addTopLevelItem(item_pipe_and_acce_airflow_noise);
-    ui->treeWidget->addTopLevelItem(item_noise_atten_in_pipe_acce);
+    ui->treeWidget->addTopLevelItem(item_airflow_noise);
+    ui->treeWidget->addTopLevelItem(item_atten_and_airflow_noise);
+    ui->treeWidget->addTopLevelItem(item_noise_atten);
 }
 
 void ComponentsDB::addWidgetToPage(QWidget *targetPage, Widget_base_inputTable *widgetToAdd)
@@ -136,137 +129,137 @@ void ComponentsDB::setTable()
 
 void ComponentsDB::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous)
 {
-    if(current == item_fan_noise)      //风机噪音
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_fan);
-    }
-    else if(current == item_fan_coil_noise) //风机盘管噪音
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_fanCoil);
-    }
-    else if(current == item_aircondition_noise_single_fan) //风机盘管噪音
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_air_noi_single_fan);
-    }
-    else if(current == item_aircondition_noise_double_fan) //风机盘管噪音
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_air_noi_double_fan);
-    }
-    else if(current == item_VAV_terminal)   //变风量末端噪音
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_VAV_terminal);
-    }
-    else if(current == item_circular_damper)   //圆形调风门
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_circular_damper);
-    }
-    else if(current == item_rect_damper)   //方形调风门
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_rect_damper);
-    }
-    else if(current == item_air_diff)       //布风器+散流器
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_air_diff);
-        ui->stackedWidget->currentWidget()->findChild<Widget_air_diff_inputTable*>()->setCurrentTable(0);
-    }
-    else if(current == item_pump_send_tuyere)   //抽/送风头
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_pump_send);
-        ui->stackedWidget->currentWidget()->findChild<Widget_Pump_Send_inputTable*>()->setCurrentTable(0);
-    }
-    else if(current == item_staticBox_grille)  //回风箱+格栅
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_staticBox_grille);
-        ui->stackedWidget->currentWidget()->findChild<Widget_static_box_grille_inputTable*>()->setCurrentTable(0);
-    }
-    else if(current == item_disp_vent_terminal)     //置换通风末端
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_disp_vent_terminal);
-        ui->stackedWidget->currentWidget()->findChild<Widget_Disp_vent_terminal_inputTable*>()->setCurrentTable(0);
-    }
-    else if (current == item_other_send_terminal)       //静压箱孔板送风
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_other_send_terminal);
-        ui->stackedWidget->currentWidget()->findChild<Widget_Other_send_terminal_inputTable*>()->setCurrentTable(0);
-    }
-    else if(current == item_static_box)         //静压箱
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_static_box);
-    }
-    else if(current == item_duct_with_multi_ranc)         //风道多分支
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_duct_with_multi_ranc);
-    }
-    else if(current == item_tee_atten)         //三通
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_tee);
-    }
-    else if(current == item_pipe_atten)         //直管
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_pipe);
-    }
-    else if(current == item_elbow_atten)         //直管
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_elbow);
-    }
-    else if(current == item_reducer_atten)         //变径
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_reducer);
-    }
-    else if(current == item_silencer_atten)     //消音器
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_silencer);
-    }
-    else if(current == item_air_diff_terminal_atten)     //布风器散流器末端衰减
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_air_diff);
-        ui->stackedWidget->currentWidget()->findChild<Widget_air_diff_inputTable*>()->setCurrentTable(1);
-    }
-    else if(current == item_pump_send_tuyere_terminal_atten)     //抽送风头末端衰减
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_pump_send);
-        ui->stackedWidget->currentWidget()->findChild<Widget_Pump_Send_inputTable*>()->setCurrentTable(1);
-    }
-    else if(current == item_staticBox_grille_terminal_atten)     //抽送风头末端衰减
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_staticBox_grille);
-        ui->stackedWidget->currentWidget()->findChild<Widget_static_box_grille_inputTable*>()->setCurrentTable(1);
-    }
-    else if(current == item_disp_vent_terminal_atten)     //置换通风末端衰减
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_disp_vent_terminal);
-        ui->stackedWidget->currentWidget()->findChild<Widget_Disp_vent_terminal_inputTable*>()->setCurrentTable(1);
-    }
-    else if(current == item_other_send_terminal_atten)     //其他送风末端衰减
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_other_send_terminal);
-        ui->stackedWidget->currentWidget()->findChild<Widget_Other_send_terminal_inputTable*>()->setCurrentTable(1);
-    }
-    else if(current == item_air_diff_relf_atten)     //末端布风器散流器反射衰减
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_air_diff);
-        ui->stackedWidget->currentWidget()->findChild<Widget_air_diff_inputTable*>()->setCurrentTable(2);
-    }
-    else if(current == item_pump_send_tuyere_relf_atten)     //抽送风头末端反射衰减
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_pump_send);
-        ui->stackedWidget->currentWidget()->findChild<Widget_Pump_Send_inputTable*>()->setCurrentTable(2);
-    }
-    else if(current == item_staticBox_grille_relf_atten)     //回风箱＋格栅末端反射衰减
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_staticBox_grille);
-        ui->stackedWidget->currentWidget()->findChild<Widget_static_box_grille_inputTable*>()->setCurrentTable(2);
-    }
-    else if(current == item_disp_vent_relf_atten)     //置换通风末端反射衰减
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_disp_vent_terminal);
-        ui->stackedWidget->currentWidget()->findChild<Widget_Disp_vent_terminal_inputTable*>()->setCurrentTable(2);
-    }
-    else if(current == item_other_send_relf_atten)     //其他送风末端反射衰减
-    {
-        ui->stackedWidget->setCurrentWidget(ui->page_other_send_terminal);
-        ui->stackedWidget->currentWidget()->findChild<Widget_Other_send_terminal_inputTable*>()->setCurrentTable(2);
-    }
+//    if(current == item_fan_noise)      //风机噪音
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_fan);
+//    }
+//    else if(current == item_fan_coil_noise) //风机盘管噪音
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_fanCoil);
+//    }
+//    else if(current == item_aircondition_noise_single_fan) //风机盘管噪音
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_air_noi_single_fan);
+//    }
+//    else if(current == item_aircondition_noise_double_fan) //风机盘管噪音
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_air_noi_double_fan);
+//    }
+//    else if(current == item_VAV_terminal)   //变风量末端噪音
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_VAV_terminal);
+//    }
+//    else if(current == item_circular_damper)   //圆形调风门
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_circular_damper);
+//    }
+//    else if(current == item_rect_damper)   //方形调风门
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_rect_damper);
+//    }
+//    else if(current == item_air_diff)       //布风器+散流器
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_air_diff);
+//        ui->stackedWidget->currentWidget()->findChild<Widget_air_diff_inputTable*>()->setCurrentTable(0);
+//    }
+//    else if(current == item_pump)   //抽/送风头
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_pump_send);
+//        ui->stackedWidget->currentWidget()->findChild<Widget_Pump_Send_inputTable*>()->setCurrentTable(0);
+//    }
+//    else if(current == item_staticBox_grille)  //回风箱+格栅
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_staticBox_grille);
+//        ui->stackedWidget->currentWidget()->findChild<Widget_static_box_grille_inputTable*>()->setCurrentTable(0);
+//    }
+//    else if(current == item_disp_vent_terminal)     //置换通风末端
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_disp_vent_terminal);
+//        ui->stackedWidget->currentWidget()->findChild<Widget_Disp_vent_terminal_inputTable*>()->setCurrentTable(0);
+//    }
+//    else if (current == item_other_send_terminal)       //静压箱孔板送风
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_other_send_terminal);
+//        ui->stackedWidget->currentWidget()->findChild<Widget_Other_send_terminal_inputTable*>()->setCurrentTable(0);
+//    }
+//    else if(current == item_static_box)         //静压箱
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_static_box);
+//    }
+//    else if(current == item_duct_with_multi_ranc)         //风道多分支
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_duct_with_multi_ranc);
+//    }
+//    else if(current == item_tee_atten)         //三通
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_tee);
+//    }
+//    else if(current == item_pipe_atten)         //直管
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_pipe);
+//    }
+//    else if(current == item_elbow_atten)         //直管
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_elbow);
+//    }
+//    else if(current == item_reducer_atten)         //变径
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_reducer);
+//    }
+//    else if(current == item_circular_silencer_atten)     //消音器
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_silencer);
+//    }
+//    else if(current == item_air_diff_terminal_atten)     //布风器散流器末端衰减
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_air_diff);
+//        ui->stackedWidget->currentWidget()->findChild<Widget_air_diff_inputTable*>()->setCurrentTable(1);
+//    }
+//    else if(current == item_pump_terminal_atten)     //抽送风头末端衰减
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_pump_send);
+//        ui->stackedWidget->currentWidget()->findChild<Widget_Pump_Send_inputTable*>()->setCurrentTable(1);
+//    }
+//    else if(current == item_staticBox_grille_terminal_atten)     //抽送风头末端衰减
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_staticBox_grille);
+//        ui->stackedWidget->currentWidget()->findChild<Widget_static_box_grille_inputTable*>()->setCurrentTable(1);
+//    }
+//    else if(current == item_disp_vent_terminal_atten)     //置换通风末端衰减
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_disp_vent_terminal);
+//        ui->stackedWidget->currentWidget()->findChild<Widget_Disp_vent_terminal_inputTable*>()->setCurrentTable(1);
+//    }
+//    else if(current == item_other_send_terminal_atten)     //其他送风末端衰减
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_other_send_terminal);
+//        ui->stackedWidget->currentWidget()->findChild<Widget_Other_send_terminal_inputTable*>()->setCurrentTable(1);
+//    }
+//    else if(current == item_air_diff_relf_atten)     //末端布风器散流器反射衰减
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_air_diff);
+//        ui->stackedWidget->currentWidget()->findChild<Widget_air_diff_inputTable*>()->setCurrentTable(2);
+//    }
+//    else if(current == item_pump_relf_atten)     //抽送风头末端反射衰减
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_pump_send);
+//        ui->stackedWidget->currentWidget()->findChild<Widget_Pump_Send_inputTable*>()->setCurrentTable(2);
+//    }
+//    else if(current == item_staticBox_grille_relf_atten)     //回风箱＋格栅末端反射衰减
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_staticBox_grille);
+//        ui->stackedWidget->currentWidget()->findChild<Widget_static_box_grille_inputTable*>()->setCurrentTable(2);
+//    }
+//    else if(current == item_disp_vent_relf_atten)     //置换通风末端反射衰减
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_disp_vent_terminal);
+//        ui->stackedWidget->currentWidget()->findChild<Widget_Disp_vent_terminal_inputTable*>()->setCurrentTable(2);
+//    }
+//    else if(current == item_other_send_relf_atten)     //其他送风末端反射衰减
+//    {
+//        ui->stackedWidget->setCurrentWidget(ui->page_other_send_terminal);
+//        ui->stackedWidget->currentWidget()->findChild<Widget_Other_send_terminal_inputTable*>()->setCurrentTable(2);
+//    }
 
 }
 

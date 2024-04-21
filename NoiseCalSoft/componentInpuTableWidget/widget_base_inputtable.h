@@ -20,6 +20,11 @@ class Widget_base_inputTable : public QWidget
 {
     Q_OBJECT
 public:
+    enum mode
+    {
+        database,
+        project
+    };
     explicit Widget_base_inputTable(QWidget *parent = nullptr, bool setupUi = true);
     virtual ~Widget_base_inputTable(); // 虚析构函数
 
@@ -38,12 +43,16 @@ public:
     template<typename ComponentType, typename DialogType>
     void componentRevision(QVector<QTableWidget*> tableWidgets, QTableWidget *currentTableWidget, int row);
 
+    template<typename ComponentType, typename DialogType>
+    void componentRevision(QTableWidget* tableWidget, int mergeColCounts, int row);
+
     virtual void initTableWidget() = 0;
     virtual void clearTableFuc();
     // 加载组件到表格的纯虚函数，需要在子类中实现
     virtual void loadComponentToTable() = 0;
 
     void setTitle(const QString& title);
+    void mergeColumnsByNames(QTableWidget* table, const QStringList& columnNames, int mergeRowCount);
 
 public slots:
     virtual void onAdd() = 0;
@@ -58,6 +67,37 @@ public slots:
 protected:
     Ui::Widget_base_inputTable *ui;
 };
+
+template<typename ComponentType, typename DialogType>
+void Widget_base_inputTable::componentRevision(QTableWidget* tableWidget, int mergeColCounts, int row)
+{
+    QString uuid = tableWidget->item(row, tableWidget->columnCount() - 1)->text();
+    QSharedPointer<ComponentType> component = componentManager.findComponent(uuid).dynamicCast<ComponentType>();
+    if(!component)
+        return;
+    DialogType *dialog = new DialogType(this, row, *component);
+    if (dialog->exec() == QDialog::Accepted) {
+        QSharedPointer<ComponentType> newComponent = QSharedPointer<ComponentType>(static_cast<ComponentType*>(dialog->getComponent()));
+
+        if (newComponent && componentManager.updateComponent(uuid, newComponent)) {
+            int insertPosition = row; // 记录要插入新行的位置
+
+            //删除旧行
+            for(int i = mergeColCounts - 1; i >= 0; i--)
+            {
+                tableWidget->removeRow(row + i); // 从后往前删除
+            }
+
+            auto lists = newComponent->getComponentDataAsStringList();
+
+            for(int i = 0 ; i < mergeColCounts; i++)
+            {
+                addRowToTable(tableWidget, lists[i], insertPosition + i);
+            }
+        }
+        delete dialog; // Ensure dialog is deleted to avoid memory leak
+    }
+}
 
 template<typename ComponentType, typename DialogType>
 void Widget_base_inputTable::componentRevision(QTableWidget *tableWidget, int row, QString name)
