@@ -123,66 +123,6 @@ QPushButton
 font-family: '黑体';
 }</string>
     </property>
-    <widget class="QLabel" name="label_number">
-     <property name="geometry">
-      <rect>
-       <x>12</x>
-       <y>41</y>
-       <width>32</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>黑体</family>
-       <pointsize>-1</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>编号</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_5">
-     <property name="geometry">
-      <rect>
-       <x>420</x>
-       <y>41</y>
-       <width>32</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>黑体</family>
-       <pointsize>-1</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>品牌</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="lineEdit_number">
-     <property name="geometry">
-      <rect>
-       <x>51</x>
-       <y>41</y>
-       <width>141</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>31</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <family>黑体</family>
-       <pointsize>-1</pointsize>
-      </font>
-     </property>
-    </widget>
     <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
@@ -714,34 +654,6 @@ font-family: '黑体';
       </item>
      </layout>
     </widget>
-    <widget class="QLineEdit" name="lineEdit_brand">
-     <property name="geometry">
-      <rect>
-       <x>458</x>
-       <y>41</y>
-       <width>81</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>31</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>142</width>
-       <height>31</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <family>黑体</family>
-       <pointsize>-1</pointsize>
-      </font>
-     </property>
-    </widget>
     <widget class="QLineEdit" name="lineEdit_air_volume">
      <property name="geometry">
       <rect>
@@ -822,53 +734,6 @@ font-family: '黑体';
      </property>
      <property name="text">
       <string>静压(Pa)</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="lineEdit_model">
-     <property name="geometry">
-      <rect>
-       <x>251</x>
-       <y>41</y>
-       <width>143</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>31</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>143</width>
-       <height>31</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <family>黑体</family>
-       <pointsize>-1</pointsize>
-      </font>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_18">
-     <property name="geometry">
-      <rect>
-       <x>213</x>
-       <y>41</y>
-       <width>32</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>黑体</family>
-       <pointsize>-1</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>型号</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_16">
@@ -1522,7 +1387,7 @@ color: white;
     <widget class="QComboBox" name="comboBox_data_source">
      <property name="geometry">
       <rect>
-       <x>458</x>
+       <x>463</x>
        <y>81</y>
        <width>79</width>
        <height>31</height>
@@ -1556,6 +1421,183 @@ color: white;
        <string>设计预估</string>
       </property>
      </item>
+    </widget>
+    <widget class="QWidget" name="widget_number" native="true">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>40</y>
+       <width>182</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">#widget_number
+{
+	border:none;
+}</string>
+     </property>
+     <widget class="QLineEdit" name="lineEdit_number">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>0</y>
+        <width>141</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>31</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>-1</pointsize>
+       </font>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_number">
+      <property name="geometry">
+       <rect>
+        <x>1</x>
+        <y>0</y>
+        <width>32</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>-1</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>编号</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="widget_model" native="true">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>40</y>
+       <width>183</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">#widget_other
+{
+border:none;
+}</string>
+     </property>
+     <widget class="QLineEdit" name="lineEdit_model">
+      <property name="geometry">
+       <rect>
+        <x>39</x>
+        <y>0</y>
+        <width>143</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>31</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>143</width>
+        <height>31</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>-1</pointsize>
+       </font>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_18">
+      <property name="geometry">
+       <rect>
+        <x>1</x>
+        <y>0</y>
+        <width>32</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>-1</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>型号</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="widget_brand" native="true">
+     <property name="geometry">
+      <rect>
+       <x>420</x>
+       <y>40</y>
+       <width>125</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <widget class="QLineEdit" name="lineEdit_brand">
+      <property name="geometry">
+       <rect>
+        <x>43</x>
+        <y>0</y>
+        <width>81</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>31</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>142</width>
+        <height>31</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>-1</pointsize>
+       </font>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="geometry">
+       <rect>
+        <x>1</x>
+        <y>0</y>
+        <width>32</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>-1</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>品牌</string>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QLabel" name="label_15">

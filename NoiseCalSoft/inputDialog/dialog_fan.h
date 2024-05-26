@@ -40,6 +40,10 @@ private:
 public:
     QList<QStringList> getComponentDataAsStringList() const override;
     void* getComponent() override;
-    void switchToComponentDB();
+
+
+    // InputBaseDialog interface
+public:
+    void switchToCompontDB(bool inDB) override;
 };
 #endif // DIALOG_FAN_H

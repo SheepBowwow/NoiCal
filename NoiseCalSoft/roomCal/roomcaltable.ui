@@ -51,7 +51,7 @@ font-size: 14px;
 }</string>
    </property>
    <property name="currentIndex">
-    <number>20</number>
+    <number>4</number>
    </property>
    <widget class="QWidget" name="page_fan">
     <property name="minimumSize">
@@ -444,8 +444,86 @@ border-bottom:1px solid black;
         <property name="spacing">
          <number>0</number>
         </property>
-        <item row="2" column="1">
-         <widget class="QLineEdit" name="lineEdit_fan_63">
+        <item row="0" column="7">
+         <widget class="QLabel" name="label_36">
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border-left:1px solid black;</string>
+          </property>
+          <property name="text">
+           <string>4kHz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="label_30">
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border-left:1px solid black;
+</string>
+          </property>
+          <property name="text">
+           <string>63Hz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="9">
+         <widget class="QLabel" name="label_311">
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border-left:1px solid black;
+border-right:2px solid black;</string>
+          </property>
+          <property name="text">
+           <string>总值dB(A)</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QLabel" name="label_32">
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border-left:1px solid black;</string>
+          </property>
+          <property name="text">
+           <string>250Hz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="8">
+         <widget class="QLineEdit" name="lineEdit_fan_8k">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -497,122 +575,8 @@ border-right:none;
           </property>
          </widget>
         </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_29">
-          <property name="minimumSize">
-           <size>
-            <width>240</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>240</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border-left:2px solid black;</string>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="12">
-         <widget class="QLabel" name="label_38">
-          <property name="minimumSize">
-           <size>
-            <width>88</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>88</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border-left:1px solid black;
-border-right:2px solid black;</string>
-          </property>
-          <property name="text">
-           <string>来源</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="label_30">
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border-left:1px solid black;
-</string>
-          </property>
-          <property name="text">
-           <string>63Hz</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="12">
-         <widget class="QComboBox" name="comboBox_fan_data_source">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>88</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>88</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:2px solid black;
-border-bottom:2px solid black;</string>
-          </property>
-          <property name="currentIndex">
-           <number>-1</number>
-          </property>
-          <item>
-           <property name="text">
-            <string>厂家信息</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>设计预估</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="2" column="2">
-         <widget class="QLineEdit" name="lineEdit_fan_125">
+        <item row="2" column="5">
+         <widget class="QLineEdit" name="lineEdit_fan_1k">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -648,27 +612,8 @@ border-bottom:2px solid black;</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="3">
-         <widget class="QLabel" name="label_32">
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border-left:1px solid black;</string>
-          </property>
-          <property name="text">
-           <string>250Hz</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="3">
-         <widget class="QLineEdit" name="lineEdit_fan_250">
+        <item row="2" column="6">
+         <widget class="QLineEdit" name="lineEdit_fan_2k">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -685,27 +630,8 @@ border-bottom:2px solid black;</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="4">
-         <widget class="QLabel" name="label_33">
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border-left:1px solid black;</string>
-          </property>
-          <property name="text">
-           <string>500Hz</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="4">
-         <widget class="QLineEdit" name="lineEdit_fan_500">
+        <item row="2" column="2">
+         <widget class="QLineEdit" name="lineEdit_fan_125">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -741,8 +667,8 @@ border-bottom:2px solid black;</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="5">
-         <widget class="QLineEdit" name="lineEdit_fan_1k">
+        <item row="2" column="9">
+         <widget class="QLineEdit" name="lineEdit_fan_total">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -751,8 +677,27 @@ border-bottom:2px solid black;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">border:1px solid black;
-border-right:none;
+border-right:2px solid black;
 border-bottom:2px solid black;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="4">
+         <widget class="QLabel" name="label_33">
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border-left:1px solid black;</string>
+          </property>
+          <property name="text">
+           <string>500Hz</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -772,43 +717,6 @@ border-bottom:2px solid black;</string>
           </property>
           <property name="text">
            <string>2kHz</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="6">
-         <widget class="QLineEdit" name="lineEdit_fan_2k">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:2px solid black;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="7">
-         <widget class="QLabel" name="label_36">
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border-left:1px solid black;</string>
-          </property>
-          <property name="text">
-           <string>4kHz</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -852,8 +760,8 @@ border-bottom:2px solid black;</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="8">
-         <widget class="QLineEdit" name="lineEdit_fan_8k">
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="lineEdit_fan_63">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -870,27 +778,48 @@ border-bottom:2px solid black;</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="9">
-         <widget class="QLabel" name="label_311">
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_29">
+          <property name="minimumSize">
+           <size>
+            <width>240</width>
+            <height>41</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>240</width>
+            <height>41</height>
+           </size>
           </property>
           <property name="styleSheet">
-           <string notr="true">border-left:1px solid black;</string>
+           <string notr="true">border-left:2px solid black;</string>
           </property>
           <property name="text">
-           <string>总值dB(A)</string>
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="3">
+         <widget class="QLineEdit" name="lineEdit_fan_250">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:none;
+border-bottom:2px solid black;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
-        <item row="2" column="9">
-         <widget class="QLineEdit" name="lineEdit_fan_total">
+        <item row="2" column="4">
+         <widget class="QLineEdit" name="lineEdit_fan_500">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -3773,6 +3702,170 @@ border-bottom:1px solid black;
         <property name="spacing">
          <number>0</number>
         </property>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="lineEdit_circular_damper_63">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:none;
+border-bottom:none;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="lineEdit_circular_damper_after_63">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:none;
+border-bottom:2px solid black;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="9">
+         <widget class="QLineEdit" name="lineEdit_circular_damper_total">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:2px solid black;
+border-bottom:none;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_86">
+          <property name="minimumSize">
+           <size>
+            <width>240</width>
+            <height>41</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>240</width>
+            <height>41</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-left:2px solid black;
+border-bottom:2px solid black;
+border-right:none;
+</string>
+          </property>
+          <property name="text">
+           <string> 阀门后噪音量(dB) </string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="7">
+         <widget class="QLineEdit" name="lineEdit_circular_damper_4k">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:none;
+border-bottom:none;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="clearButtonEnabled">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="7">
+         <widget class="QLineEdit" name="lineEdit_circular_damper_after_4k">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:none;
+border-bottom:2px solid black;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QLineEdit" name="lineEdit_circular_damper_250">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:none;
+border-bottom:none;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <widget class="QLineEdit" name="lineEdit_circular_damper_after_125">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:none;
+border-bottom:2px solid black;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="0">
          <widget class="QLabel" name="label_76">
           <property name="minimumSize">
@@ -3795,6 +3888,43 @@ border-bottom:1px solid black;
           </property>
          </widget>
         </item>
+        <item row="0" column="8">
+         <widget class="QLabel" name="label_84">
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border-left:1px solid black;</string>
+          </property>
+          <property name="text">
+           <string>8kHz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="8">
+         <widget class="QLineEdit" name="lineEdit_circular_damper_8k">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:none;
+border-bottom:none;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="1">
          <widget class="QLabel" name="label_77">
           <property name="font">
@@ -3809,6 +3939,25 @@ border-bottom:1px solid black;
           </property>
           <property name="text">
            <string>63Hz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="5">
+         <widget class="QLabel" name="label_81">
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border-left:1px solid black;</string>
+          </property>
+          <property name="text">
+           <string>1kHz</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -3853,261 +4002,8 @@ border-bottom:1px solid black;
           </property>
          </widget>
         </item>
-        <item row="0" column="4">
-         <widget class="QLabel" name="label_80">
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border-left:1px solid black;</string>
-          </property>
-          <property name="text">
-           <string>500Hz</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="5">
-         <widget class="QLabel" name="label_81">
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border-left:1px solid black;</string>
-          </property>
-          <property name="text">
-           <string>1kHz</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="6">
-         <widget class="QLabel" name="label_82">
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border-left:1px solid black;</string>
-          </property>
-          <property name="text">
-           <string>2kHz</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="7">
-         <widget class="QLabel" name="label_83">
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border-left:1px solid black;</string>
-          </property>
-          <property name="text">
-           <string>4kHz</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="8">
-         <widget class="QLabel" name="label_84">
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border-left:1px solid black;</string>
-          </property>
-          <property name="text">
-           <string>8kHz</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="9">
-         <widget class="QLabel" name="label_315">
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border-left:1px solid black;</string>
-          </property>
-          <property name="text">
-           <string>总值dB(A)</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="10">
-         <widget class="QLabel" name="label_85">
-          <property name="minimumSize">
-           <size>
-            <width>88</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>88</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border-left:1px solid black;
-border-right:2px solid black;</string>
-          </property>
-          <property name="text">
-           <string>来源</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_87">
-          <property name="minimumSize">
-           <size>
-            <width>240</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>240</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-left:2px solid black;
-border-right:none;
-border-bottom:none;
-</string>
-          </property>
-          <property name="text">
-           <string>阀门气流噪声(dB)</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="lineEdit_circular_damper_63">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:none;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
         <item row="1" column="2">
          <widget class="QLineEdit" name="lineEdit_circular_damper_125">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:none;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="3">
-         <widget class="QLineEdit" name="lineEdit_circular_damper_250">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:none;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="4">
-         <widget class="QLineEdit" name="lineEdit_circular_damper_500">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:none;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="5">
-         <widget class="QLineEdit" name="lineEdit_circular_damper_1k">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -4142,116 +4038,26 @@ border-bottom:none;</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="7">
-         <widget class="QLineEdit" name="lineEdit_circular_damper_4k">
+        <item row="2" column="9">
+         <widget class="QLineEdit" name="lineEdit_circular_damper_after_total">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:none;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="clearButtonEnabled">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="8">
-         <widget class="QLineEdit" name="lineEdit_circular_damper_8k">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:none;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="9">
-         <widget class="QLineEdit" name="lineEdit_circular_damper_total">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:none;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="10">
-         <widget class="QComboBox" name="comboBox_circular_damper_data_source">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>88</width>
-            <height>41</height>
-           </size>
           </property>
           <property name="styleSheet">
            <string notr="true">border:1px solid black;
 border-right:2px solid black;
-border-bottom:none;</string>
+border-bottom:2px solid black;</string>
           </property>
-          <property name="currentIndex">
-           <number>-1</number>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
           </property>
-          <item>
-           <property name="text">
-            <string>厂家信息</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>设计预估</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>经验公式</string>
-           </property>
-          </item>
          </widget>
         </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_86">
-          <property name="minimumSize">
-           <size>
-            <width>240</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>240</width>
-            <height>41</height>
-           </size>
-          </property>
+        <item row="0" column="9">
+         <widget class="QLabel" name="label_315">
           <property name="font">
            <font>
             <family>黑体</family>
@@ -4259,50 +4065,30 @@ border-bottom:none;</string>
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-left:2px solid black;
-border-bottom:2px solid black;
-border-right:none;
-</string>
+           <string notr="true">border-left:1px solid black;
+border-right:2px solid black;</string>
           </property>
           <property name="text">
-           <string> 阀门后噪音量(dB) </string>
+           <string>总值dB(A)</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
-         <widget class="QLineEdit" name="lineEdit_circular_damper_after_63">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+        <item row="0" column="7">
+         <widget class="QLabel" name="label_83">
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:2px solid black;</string>
+           <string notr="true">border-left:1px solid black;</string>
           </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="2">
-         <widget class="QLineEdit" name="lineEdit_circular_damper_after_125">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:2px solid black;</string>
+          <property name="text">
+           <string>4kHz</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -4311,24 +4097,6 @@ border-bottom:2px solid black;</string>
         </item>
         <item row="2" column="3">
          <widget class="QLineEdit" name="lineEdit_circular_damper_after_250">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:2px solid black;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="4">
-         <widget class="QLineEdit" name="lineEdit_circular_damper_after_500">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -4381,24 +4149,6 @@ border-bottom:2px solid black;</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="7">
-         <widget class="QLineEdit" name="lineEdit_circular_damper_after_4k">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:2px solid black;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
         <item row="2" column="8">
          <widget class="QLineEdit" name="lineEdit_circular_damper_after_8k">
           <property name="sizePolicy">
@@ -4417,8 +4167,98 @@ border-bottom:2px solid black;</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="9">
-         <widget class="QLineEdit" name="lineEdit_circular_damper_after_total">
+        <item row="1" column="5">
+         <widget class="QLineEdit" name="lineEdit_circular_damper_1k">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:none;
+border-bottom:none;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="6">
+         <widget class="QLabel" name="label_82">
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border-left:1px solid black;</string>
+          </property>
+          <property name="text">
+           <string>2kHz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="4">
+         <widget class="QLineEdit" name="lineEdit_circular_damper_500">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:none;
+border-bottom:none;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_87">
+          <property name="minimumSize">
+           <size>
+            <width>240</width>
+            <height>41</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>240</width>
+            <height>41</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-left:2px solid black;
+border-right:none;
+border-bottom:none;
+</string>
+          </property>
+          <property name="text">
+           <string>阀门气流噪声(dB)</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="4">
+         <widget class="QLineEdit" name="lineEdit_circular_damper_after_500">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -4435,44 +4275,22 @@ border-bottom:2px solid black;</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="10">
-         <widget class="QLineEdit" name="lineEdit">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>88</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>88</width>
-            <height>41</height>
-           </size>
+        <item row="0" column="4">
+         <widget class="QLabel" name="label_80">
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">QLineEdit
-{
-font-family: '黑体';
-font-size: 25px;
-border:1px solid black;
-border-bottom:2px solid black;
-border-right:2px solid black;
-}</string>
+           <string notr="true">border-left:1px solid black;</string>
           </property>
           <property name="text">
-           <string>-</string>
+           <string>500Hz</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -28825,7 +28643,6 @@ border-bottom:1px solid black;</string>
   <tabstop>comboBox_fan_noise_locate</tabstop>
   <tabstop>lineEdit_fanCoil_static_press</tabstop>
   <tabstop>comboBox_fan_number</tabstop>
-  <tabstop>comboBox_fan_data_source</tabstop>
   <tabstop>lineEdit_fan_air_volume</tabstop>
   <tabstop>lineEdit_fan_model</tabstop>
   <tabstop>comboBox_VAV_terminal_number</tabstop>
@@ -28840,7 +28657,6 @@ border-bottom:1px solid black;</string>
   <tabstop>lineEdit_circular_damper_4k</tabstop>
   <tabstop>lineEdit_circular_damper_8k</tabstop>
   <tabstop>lineEdit_circular_damper_total</tabstop>
-  <tabstop>comboBox_circular_damper_data_source</tabstop>
   <tabstop>lineEdit_circular_damper_after_63</tabstop>
   <tabstop>lineEdit_circular_damper_after_125</tabstop>
   <tabstop>lineEdit_circular_damper_after_250</tabstop>
@@ -28850,7 +28666,6 @@ border-bottom:1px solid black;</string>
   <tabstop>lineEdit_circular_damper_after_4k</tabstop>
   <tabstop>lineEdit_circular_damper_after_8k</tabstop>
   <tabstop>lineEdit_circular_damper_after_total</tabstop>
-  <tabstop>lineEdit</tabstop>
   <tabstop>comboBox_rect_damper_angle</tabstop>
   <tabstop>comboBox_rect_damper_model</tabstop>
   <tabstop>lineEdit_rect_damper_63</tabstop>

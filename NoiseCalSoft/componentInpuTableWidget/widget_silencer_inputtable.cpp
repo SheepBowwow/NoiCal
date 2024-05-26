@@ -1,16 +1,13 @@
 #include "widget_silencer_inputtable.h"
-#include "ui_widget_silencer_inputtable.h"
+#include "ui_widget_base_inputtable.h"
 #include "inputDialog/dialog_silencer.h"
 #include <QQueue>
 
-Widget_Silencer_inputTable::Widget_Silencer_inputTable(QWidget *parent) :
-    Widget_base_inputTable(parent),
-    ui(new Ui::Widget_Silencer_inputTable)
+Widget_Silencer_inputTable::Widget_Silencer_inputTable(bool inComponentDB, const QString& type, QWidget *parent) :
+    Widget_base_inputTable(inComponentDB, parent),
+    silencer_type(type)
 {
-    ui->setupUi(this);
-
-    silencer_type = silencer_type_name::CIRCLE;
-    on_pushButton_circle_clicked();
+    setTitle(type);
     connect(ui->pushButton_add, &QPushButton::clicked, this, &Widget_Silencer_inputTable::onAdd);
     connect(ui->pushButton_del, &QPushButton::clicked, this, &Widget_Silencer_inputTable::onDel);
     connect(ui->pushButton_revise, &QPushButton::clicked, this, &Widget_Silencer_inputTable::onRevise);
@@ -24,56 +21,61 @@ Widget_Silencer_inputTable::~Widget_Silencer_inputTable()
 
 void Widget_Silencer_inputTable::initTableWidget()
 {
-    int colCount = 14;
-    QStringList headerText;
+    colCount = 14;
     headerText<< "" << "序号" << "型号" << "品牌" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
                     << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)"
                     << "来源" << "UUID";  //表头标题用QStringList来表示
-    int columnWidths[] = {30, 40, 180, 80, 55, 55, 55, 55, 55, 55, 55, 55, 60, 0};
+    columnWidths = {30, 40, 180, 80, 55, 55, 55, 55, 55, 55, 55, 55, 60, 0};
 
-    setTableWidget(ui->tableWidget_circle, headerText, columnWidths, colCount);
-    setTableWidget(ui->tableWidget_rect, headerText, columnWidths, colCount);
-    setTableWidget(ui->tableWidget_circle_elbow, headerText, columnWidths, colCount);
-    setTableWidget(ui->tableWidget_rect_elbow, headerText, columnWidths, colCount);
+    setTableWidget(ui->tableWidget, headerText, columnWidths, colCount);
+
     // 隐藏最后一列
-    ui->tableWidget_circle->setColumnHidden(colCount - 1, true);
-    ui->tableWidget_rect->setColumnHidden(colCount - 1, true);
-    ui->tableWidget_circle_elbow->setColumnHidden(colCount - 1, true);
-    ui->tableWidget_rect_elbow->setColumnHidden(colCount - 1, true);
+    ui->tableWidget->setColumnHidden(colCount - 1, true);
 }
 
 void Widget_Silencer_inputTable::onAdd()
 {
-    QTableWidget* tableWidget = ui->stackedWidget->currentWidget()->findChild<QTableWidget*>();
-    Dialog_silencer *dialog = new Dialog_silencer(silencer_type, nullptr);
-    QSharedPointer<Silencer> component;
+    if(inComponentDB)
+    {
+        QTableWidget* tableWidget = ui->tableWidget;
+        Dialog_silencer *dialog = new Dialog_silencer(silencer_type, nullptr);
+        QSharedPointer<Silencer> component;
 
-    if (dialog->exec() == QDialog::Accepted) {
-        if(Silencer* rawPointer = static_cast<Silencer*>(dialog->getComponent()))
-            component = QSharedPointer<Silencer>(rawPointer);
-        else
-            return;
-        component->table_id = QString::number(tableWidget->rowCount() + 1);
-        if (component != nullptr) {
-            auto lists = dialog->getComponentDataAsStringList();
+        if (dialog->exec() == QDialog::Accepted) {
+            if(Silencer* rawPointer = static_cast<Silencer*>(dialog->getComponent()))
+                component = QSharedPointer<Silencer>(rawPointer);
+            else
+                return;
+            component->table_id = QString::number(tableWidget->rowCount() + 1);
+            if (component != nullptr) {
+                auto lists = component->getComponentDataAsStringList(inComponentDB);
 
-            // 使用通用函数添加行
-            addRowToTable(tableWidget, lists[0]);
+                // 使用通用函数添加行
+                addRowToTable(tableWidget, lists[0]);
 
-            componentManager.addComponent(component);
+                componentManager.addComponent(component, inComponentDB);
+            }
         }
+    }
+    else
+    {
+        Widget_Silencer_inputTable* inputTable = new Widget_Silencer_inputTable(true, nullptr);
+        inputTable->initTableWidget();
+        inputTable->showConfirmButton();
+        inputTable->show();
+        inputTable->loadComponentToTable();
+        connect(inputTable, &Widget_base_inputTable::confirmed, this, &Widget_Silencer_inputTable::handleConfirmation);
     }
 }
 
 void Widget_Silencer_inputTable::onDel()
 {
-    QTableWidget* tableWidget = ui->stackedWidget->currentWidget()->findChild<QTableWidget*>();
-    deleteRowFromTable(tableWidget, 1);
+    deleteRowFromTable(ui->tableWidget, 1);
 }
 
 void Widget_Silencer_inputTable::onRevise()
 {
-    QTableWidget* tableWidget = ui->stackedWidget->currentWidget()->findChild<QTableWidget*>();
+    QTableWidget* tableWidget = ui->tableWidget;
     for (int row = 0; row < tableWidget->rowCount(); ++row)
     {
         // 假设你的复选框在第一列
@@ -97,102 +99,15 @@ void Widget_Silencer_inputTable::onOutput()
 
 }
 
-void Widget_Silencer_inputTable::on_pushButton_circle_clicked()
-{
-    ui->stackedWidget->setCurrentWidget(ui->page_circle);
-    silencer_type = silencer_type_name::CIRCLE;
-    ui->pushButton_circle->setStyleSheet("QPushButton { background-color: #E0EEF9; }");
-    ui->pushButton_rect->setStyleSheet("QPushButton { background-color: white; }");
-    ui->pushButton_circle_elbow->setStyleSheet("QPushButton { background-color: white; }");
-    ui->pushButton_rect_elbow->setStyleSheet("QPushButton { background-color: white; }");
-}
-
-
-void Widget_Silencer_inputTable::on_pushButton_rect_clicked()
-{
-    ui->stackedWidget->setCurrentWidget(ui->page_rect);
-    silencer_type = silencer_type_name::RECT;
-    ui->pushButton_circle->setStyleSheet("QPushButton { background-color: white; }");
-    ui->pushButton_rect->setStyleSheet("QPushButton { background-color: #E0EEF9; }");
-    ui->pushButton_circle_elbow->setStyleSheet("QPushButton { background-color: white; }");
-    ui->pushButton_rect_elbow->setStyleSheet("QPushButton { background-color: white; }");
-}
-
-
-void Widget_Silencer_inputTable::on_pushButton_circle_elbow_clicked()
-{
-    ui->stackedWidget->setCurrentWidget(ui->page_circle_elbow);
-    silencer_type = silencer_type_name::CIRCLE_ELBOW;
-    ui->pushButton_circle->setStyleSheet("QPushButton { background-color: white; }");
-    ui->pushButton_rect->setStyleSheet("QPushButton { background-color: white; }");
-    ui->pushButton_circle_elbow->setStyleSheet("QPushButton { background-color: #E0EEF9; }");
-    ui->pushButton_rect_elbow->setStyleSheet("QPushButton { background-color: white; }");
-}
-
-
-void Widget_Silencer_inputTable::on_pushButton_rect_elbow_clicked()
-{
-    ui->stackedWidget->setCurrentWidget(ui->page_rect_elbow);
-    silencer_type = silencer_type_name::RECT_ELBOW;
-    ui->pushButton_circle->setStyleSheet("QPushButton { background-color: white; }");
-    ui->pushButton_rect->setStyleSheet("QPushButton { background-color: white; }");
-    ui->pushButton_circle_elbow->setStyleSheet("QPushButton { background-color: white; }");
-    ui->pushButton_rect_elbow->setStyleSheet("QPushButton { background-color: #E0EEF9; }");
-}
-
-void Widget_Silencer_inputTable::clearTableFuc()
-{
-    // 定义一个Lambda表达式用于递归清空QTableWidgets
-    std::function<void(QWidget*)> clearAllTableWidgets = [&](QWidget* parent) {
-        if (!parent) return;
-
-        // 创建一个队列用于广度优先搜索
-        QQueue<QWidget*> queue;
-        queue.enqueue(parent);
-
-        while (!queue.isEmpty()) {
-            QWidget* currentWidget = queue.dequeue();
-
-            // 尝试将当前控件转换为QTableWidget
-            QTableWidget *tableWidget = qobject_cast<QTableWidget*>(currentWidget);
-            if (tableWidget) {
-                // 如果转换成功，清空QTableWidget
-                tableWidget->setRowCount(0);
-                tableWidget->clearContents(); // 清空内容但保留列头
-            } else {
-                // 如果当前控件不是QTableWidget，将它的子控件加入队列
-                const auto children = currentWidget->children();
-                for (QObject *child : children) {
-                    QWidget *childWidget = qobject_cast<QWidget*>(child);
-                    if (childWidget) {
-                        queue.enqueue(childWidget);
-                    }
-                }
-            }
-        }
-    };
-
-    // 使用定义的Lambda表达式从该窗口控件开始递归清空所有QTableWidget
-    clearAllTableWidgets(this);
-}
-
 void Widget_Silencer_inputTable::loadComponentToTable()
 {
-    auto componentList = ComponentManager::getInstance().getComponentsByType(component_type_name::SILENCER);
+    auto componentList = ComponentManager::getInstance().getComponentsByType(inComponentDB, component_type_name::SILENCER);
     for (const auto& component : componentList) {
-        if (auto silencerComponent = dynamic_cast<Circular_damper*>(component.data())) {
-            auto lists = silencerComponent->getComponentDataAsStringList();
-            QTableWidget* tableWidget = nullptr;
-            if(silencerComponent->typeName() == silencer_type_name::CIRCLE)
-                tableWidget = ui->tableWidget_circle;
-            else if(silencerComponent->typeName() == silencer_type_name::RECT)
-                tableWidget = ui->tableWidget_rect;
-            else if(silencerComponent->typeName() == silencer_type_name::CIRCLE_ELBOW)
-                tableWidget = ui->tableWidget_circle_elbow;
-            else if(silencerComponent->typeName() == silencer_type_name::RECT_ELBOW)
-                tableWidget = ui->tableWidget_rect_elbow;
-            else
+        if (auto silencerComponent = dynamic_cast<Silencer*>(component.data())) {
+            if(silencerComponent->silencer_type != silencer_type)
                 continue;
+            auto lists = silencerComponent->getComponentDataAsStringList(inComponentDB);
+            QTableWidget* tableWidget = ui->tableWidget;
 
             for (const auto& list : lists) {
                 addRowToTable(tableWidget, list);
@@ -201,3 +116,45 @@ void Widget_Silencer_inputTable::loadComponentToTable()
     }
 }
 
+void Widget_Silencer_inputTable::handleConfirmation(QSet<QString> uuids)
+{
+    for(auto& uuid : uuids)
+    {
+        QSharedPointer<ComponentBase> componentBase = ComponentManager::getInstance().findComponent(true, uuid);;
+        if(QSharedPointer<Silencer> component = qSharedPointerCast<Silencer>(componentBase))
+        {
+            // 使用深拷贝构造函数来创建一个新的 Fan 对象
+            QSharedPointer<Silencer> newComponent = QSharedPointer<Silencer>(new Silencer(*component));
+            if (newComponent != nullptr) {
+
+                auto lists = newComponent->getComponentDataAsStringList(false);
+
+                // 使用通用函数添加行
+                addRowToTable(ui->tableWidget, lists[0]);
+
+                componentManager.addComponent(newComponent, false);
+
+                // 重新编号
+                for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
+                    QTableWidgetItem* item = new QTableWidgetItem(QString::number(row + 1));
+                    ui->tableWidget->setItem(row, 1, item); // Assuming the sequence numbers are in the second column (index 1)
+                    item->setTextAlignment(Qt::AlignCenter);
+                    item->setFlags(Qt::ItemIsEditable);
+                    item->setBackground(QBrush(Qt::lightGray));
+                    item->setData(Qt::ForegroundRole, QColor(70, 70, 70));
+                }
+
+                // 更新组件信息
+                for (int row = 0; row < ui->tableWidget->rowCount(); row += 1) {
+                    QString uuid = ui->tableWidget->item(row, ui->tableWidget->columnCount() - 1)->text(); // 获取组件uuid
+                    QSharedPointer<ComponentBase> component = componentManager.findComponent(inComponentDB, uuid); // 查找组件
+
+                    if (component) {
+                        component->setTableID((QString::number(row + 1))); // 设置新的table_id，假设组件有这个方法
+                        componentManager.updateComponent(uuid, component, inComponentDB); // 更新组件
+                    }
+                }
+            }
+        }
+    }
+}

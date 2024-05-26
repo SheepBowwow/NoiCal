@@ -14,6 +14,7 @@ public:
     explicit InputBaseDialog(QWidget *parent = nullptr, QWidget *topWidget = nullptr);
     virtual ~InputBaseDialog();
     void setTopWidget(QWidget *topWidget);
+    virtual void switchToCompontDB(bool inDB) {};
     virtual void* getComponent() = 0; // 基类的 getComponent 声明为纯虚函数
     virtual QList<QStringList> getComponentDataAsStringList() const = 0; // 基类的 getComponentData 声明为纯虚函数
 

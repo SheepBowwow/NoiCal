@@ -11,6 +11,7 @@
 #include <QMessageBox>
 #include "globle_var.h"
 #include <QPushButton>
+#include "inputbasedialog.h"
 
 namespace Ui {
 class Widget_base_inputTable;
@@ -20,16 +21,12 @@ class Widget_base_inputTable : public QWidget
 {
     Q_OBJECT
 public:
-    enum mode
-    {
-        database,
-        project
-    };
-    explicit Widget_base_inputTable(QWidget *parent = nullptr, bool setupUi = true);
+    explicit Widget_base_inputTable(bool inComponentDB, QWidget *parent = nullptr);
     virtual ~Widget_base_inputTable(); // 虚析构函数
 
 
     void setTableWidget(QTableWidget *tableWidget, const QStringList &headerText,const int *columnWidths, int colCount);
+    void setTableWidget(QTableWidget *tableWidget, const QStringList &headerText, QVector<int> columnWidths, int colCount);
     void addRowToTable(QTableWidget *tableWidget, const QStringList &data, int position = -1);
     void deleteRowFromTable(QTableWidget *tableWidget, int deleteRowNum);
     void deleteRowFromTable(QTableWidget *tableWidget_noise, QTableWidget *tableWidget_atten, QTableWidget *tableWidget_refl);
@@ -44,15 +41,20 @@ public:
     void componentRevision(QVector<QTableWidget*> tableWidgets, QTableWidget *currentTableWidget, int row);
 
     template<typename ComponentType, typename DialogType>
-    void componentRevision(QTableWidget* tableWidget, int mergeColCounts, int row);
+    void componentRevision(QTableWidget* tableWidget, int mergeColCounts, int row, const QString& name = "");
 
     virtual void initTableWidget() = 0;
     virtual void clearTableFuc();
     // 加载组件到表格的纯虚函数，需要在子类中实现
     virtual void loadComponentToTable() = 0;
+    virtual void handleConfirmation(QSet<QString> uuids) = 0;
 
     void setTitle(const QString& title);
     void mergeColumnsByNames(QTableWidget* table, const QStringList& columnNames, int mergeRowCount);
+    void showConfirmButton();
+
+signals:
+    void confirmed(QSet<QString>);
 
 public slots:
     virtual void onAdd() = 0;
@@ -60,26 +62,50 @@ public slots:
     virtual void onRevise() = 0;
     virtual void onInput() = 0;
     virtual void onOutput() = 0;
+    void onSelectAll();
+    void onUnSelectAll();
+    virtual void onConfirm();
+    virtual void onFilter();
     virtual void clearTable();
     virtual void loadTable();
     void initialize() { initTableWidget(); };
 
 protected:
     Ui::Widget_base_inputTable *ui;
+    bool inComponentDB;
+    void filterByBrandModel(int brandIndex, int modelIndex, int mergeRowCount, QString brand, QString model);
+
+    QStringList mergeCols;
+    int mergeRowCount{1};
+    int colCount;
+    QVector<int> columnWidths; // 确保这是动态分配的或者足够大的静态数组
+    QStringList headerText;
+
+
+    // QWidget interface
+protected:
+    void resizeEvent(QResizeEvent *event) override;
 };
 
 template<typename ComponentType, typename DialogType>
-void Widget_base_inputTable::componentRevision(QTableWidget* tableWidget, int mergeColCounts, int row)
+void Widget_base_inputTable::componentRevision(QTableWidget* tableWidget, int mergeColCounts, int row, const QString& name)
 {
     QString uuid = tableWidget->item(row, tableWidget->columnCount() - 1)->text();
-    QSharedPointer<ComponentType> component = componentManager.findComponent(uuid).dynamicCast<ComponentType>();
+    QSharedPointer<ComponentType> component = componentManager.findComponent(inComponentDB, uuid).dynamicCast<ComponentType>();
     if(!component)
         return;
-    DialogType *dialog = new DialogType(this, row, *component);
+
+    DialogType *dialog = nullptr;
+    if(name != "")
+        dialog = new DialogType(name, this, row, *component);
+    else
+        dialog = new DialogType(this, row, *component);
+
+    dialog->switchToCompontDB(inComponentDB);
     if (dialog->exec() == QDialog::Accepted) {
         QSharedPointer<ComponentType> newComponent = QSharedPointer<ComponentType>(static_cast<ComponentType*>(dialog->getComponent()));
 
-        if (newComponent && componentManager.updateComponent(uuid, newComponent)) {
+        if (newComponent && componentManager.updateComponent(uuid, newComponent, inComponentDB)) {
             int insertPosition = row; // 记录要插入新行的位置
 
             //删除旧行
@@ -88,7 +114,7 @@ void Widget_base_inputTable::componentRevision(QTableWidget* tableWidget, int me
                 tableWidget->removeRow(row + i); // 从后往前删除
             }
 
-            auto lists = newComponent->getComponentDataAsStringList();
+            auto lists = newComponent->getComponentDataAsStringList(inComponentDB);
 
             for(int i = 0 ; i < mergeColCounts; i++)
             {
@@ -109,7 +135,7 @@ void Widget_base_inputTable::componentRevision(QTableWidget *tableWidget, int ro
         return;
 
     QString UUID = tableWidget->item(row, tableWidget->columnCount() - 1)->text();
-    auto component = componentManager.findComponent(UUID).dynamicCast<ComponentType>();
+    auto component = componentManager.findComponent(inComponentDB, UUID).dynamicCast<ComponentType>();
     if (!component)
         return;
 
@@ -119,7 +145,7 @@ void Widget_base_inputTable::componentRevision(QTableWidget *tableWidget, int ro
         ComponentType* updatedComponentRaw = static_cast<ComponentType*>(dialog->getComponent());
         // 将原始指针转换为QSharedPointer<ComponentBase>
         QSharedPointer<ComponentType> updatedComponent = QSharedPointer<ComponentType>(updatedComponentRaw);
-        if (componentManager.updateComponent(UUID, updatedComponent)) {
+        if (componentManager.updateComponent(UUID, updatedComponent, inComponentDB)) {
             int insertPosition = row; // 记录要插入新行的位置
             tableWidget->removeRow(row); // 再删除当前行
             auto lists = dialog->getComponentDataAsStringList();
@@ -138,7 +164,7 @@ void Widget_base_inputTable::componentRevision(QTableWidget *tableWidget, int ro
         return;
 
     QString UUID = tableWidget->item(row, tableWidget->columnCount() - 1)->text();
-    auto component = componentManager.findComponent(UUID).dynamicCast<ComponentType>();
+    auto component = componentManager.findComponent(inComponentDB, UUID).dynamicCast<ComponentType>();
     if (!component)
         return;
 
@@ -148,7 +174,7 @@ void Widget_base_inputTable::componentRevision(QTableWidget *tableWidget, int ro
         ComponentType* updatedComponentRaw = static_cast<ComponentType*>(dialog->getComponent());
         // 将原始指针转换为QSharedPointer<ComponentBase>
         QSharedPointer<ComponentType> updatedComponent = QSharedPointer<ComponentType>(updatedComponentRaw);
-        if (componentManager.updateComponent(UUID, updatedComponent)) {
+        if (componentManager.updateComponent(UUID, updatedComponent, inComponentDB)) {
             int insertPosition = row; // 记录要插入新行的位置
             tableWidget->removeRow(row); // 再删除当前行
             auto lists = dialog->getComponentDataAsStringList();
@@ -167,7 +193,7 @@ void Widget_base_inputTable::componentRevision(QVector<QTableWidget *> tableWidg
         return;
 
     QString UUID = currentTableWidget->item(row, currentTableWidget->columnCount() - 1)->text();
-    auto component = componentManager.findComponent(UUID).dynamicCast<ComponentType>();
+    auto component = componentManager.findComponent(inComponentDB, UUID).dynamicCast<ComponentType>();
     if (!component)
         return;
 
@@ -200,7 +226,7 @@ void Widget_base_inputTable::componentRevision(QVector<QTableWidget *> tableWidg
         return;
 
     QString UUID = currentTableWidget->item(row, currentTableWidget->columnCount() - 1)->text();
-    auto component = componentManager.findComponent(UUID).dynamicCast<ComponentType>();
+    auto component = componentManager.findComponent(inComponentDB, UUID).dynamicCast<ComponentType>();
     if (!component)
         return;
 

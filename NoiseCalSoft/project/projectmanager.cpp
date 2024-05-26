@@ -168,6 +168,7 @@ bool ProjectManager::setNoiseLimits(const QList<NoiseLimit> &noiseLimits)
 {
     this->noiseLimits = noiseLimits;
     DatabaseManager::getInstance().addNoiseLimitsToDatabase(noiseLimits, getPrjID());
+    return true; // 假设添加操作成功，返回true
 }
 
 /**

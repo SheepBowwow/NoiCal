@@ -9,7 +9,7 @@ class Widget_VAV_terminal_inputTable : public Widget_base_inputTable
     Q_OBJECT
 
 public:
-    explicit Widget_VAV_terminal_inputTable(QWidget *parent = nullptr);
+    explicit Widget_VAV_terminal_inputTable(bool inComponentDB, QWidget *parent = nullptr);
     ~Widget_VAV_terminal_inputTable();
 
 
@@ -23,6 +23,7 @@ public slots:
     void onRevise() override;
     void onInput() override;
     void onOutput() override;
+    void handleConfirmation(QSet<QString> uuids) override;
 
     // Widget_base_inputTable interface
 public:

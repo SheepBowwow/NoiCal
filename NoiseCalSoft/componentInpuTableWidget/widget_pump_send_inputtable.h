@@ -4,36 +4,21 @@
 #include <QWidget>
 #include "componentInpuTableWidget/widget_base_inputtable.h"
 
-namespace Ui {
-class Widget_Pump_Send_inputTable;
-}
-
 class Widget_Pump_Send_inputTable : public Widget_base_inputTable
 {
     Q_OBJECT
 
 public:
-    explicit Widget_Pump_Send_inputTable(QWidget *parent = nullptr);
+    explicit Widget_Pump_Send_inputTable(bool inComponentDB, const QString& type, QWidget *parent = nullptr);
     ~Widget_Pump_Send_inputTable();
-
-private:
-    Ui::Widget_Pump_Send_inputTable *ui;
 
     // Widget_base_inputTable interface
 public:
     void initTableWidget() override;
-    void setCurrentTable(const int& index);
-    enum pump_send_type
-    {
-        pump_noi,
-        send_noi,
-        pump_atten,
-        send_atten,
-        pump_refl,
-        send_refl
-    };
 
-    void switchPage(pump_send_type type);
+private:
+    QString type;
+    QStringList mergeCols;
 
 public slots:
     void onAdd() override;
@@ -41,13 +26,7 @@ public slots:
     void onRevise() override;
     void onInput() override;
     void onOutput() override;
-private slots:
-    void on_pushButton_pump_clicked();
-    void on_pushButton_send_clicked();
-
-    // Widget_base_inputTable interface
-public:
-    void clearTableFuc() override;
+    void handleConfirmation(QSet<QString> uuids) override;
 
     // Widget_base_inputTable interface
 public:

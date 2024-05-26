@@ -43,6 +43,10 @@ private:
 public:
     QList<QStringList> getComponentDataAsStringList() const override;
     void* getComponent() override;
+
+    // InputBaseDialog interface
+public:
+    void switchToCompontDB(bool inDB) override {};
 };
 
 #endif // DIALOG_RECT_DAMPER_H

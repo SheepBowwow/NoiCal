@@ -43,5 +43,6 @@
     </qresource>
     <qresource prefix="/databaseFile">
         <file>databaseFile/noi_cal_database_origin.db</file>
+        <file>databaseFile/components_database_origin.db</file>
     </qresource>
 </RCC>

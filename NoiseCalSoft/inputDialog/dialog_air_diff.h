@@ -57,6 +57,10 @@ private:
 public:
     QList<QStringList> getComponentDataAsStringList() const override;
     void* getComponent() override;
+
+    // InputBaseDialog interface
+public:
+    void switchToCompontDB(bool inDB) override {};
 };
 
 #endif // DIALOG_AIR_DIFF_H

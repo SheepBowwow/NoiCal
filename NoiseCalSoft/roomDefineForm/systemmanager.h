@@ -6,10 +6,10 @@
 
 namespace noise_src_component
 {
-const QString AIRCONDITION_SEND = QStringLiteral("空调器-送风机");
-const QString AIRCONDITION_EXHAUST = QStringLiteral("空调器-排风机");
-const QString FAN = QStringLiteral("独立风机");
-const QString FANCOIL = QStringLiteral("公共区域风机盘管");
+const QString AIRCONDITION_SINGLE = QStringLiteral("空调器(单风机)");
+const QString AIRCONDITION_DOUBLE = QStringLiteral("空调器(双风机)");
+const QString FAN = QStringLiteral("风机");
+const QString FANCOIL = QStringLiteral("风机盘管");
 }
 
 class SystemManager : public QObject

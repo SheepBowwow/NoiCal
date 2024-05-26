@@ -9,7 +9,7 @@ class Widget_fanCoil_inputTable : public Widget_base_inputTable
     Q_OBJECT
 
 public:
-    explicit Widget_fanCoil_inputTable(QWidget *parent = nullptr);
+    explicit Widget_fanCoil_inputTable(bool inComponentDB, QWidget *parent = nullptr);
     ~Widget_fanCoil_inputTable();
 
 
@@ -23,12 +23,21 @@ public slots:
     void onRevise() override;
     void onInput() override;
     void onOutput() override;
+    void handleConfirmation(QSet<QString> uuids) override;
+
 private:
-    void mergeCells(int startRow);
+    QStringList mergeCols;
+    int colCount;
+    QVector<int> columnWidths; // 确保这是动态分配的或者足够大的静态数组
+    QStringList headerText;
 
     // Widget_base_inputTable interface
 public:
     void loadComponentToTable() override;
+
+    // QWidget interface
+protected:
+    void resizeEvent(QResizeEvent *event) override;
 };
 
 #endif // WIDGET_FANCOIL_INPUTTABLE_H

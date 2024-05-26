@@ -146,71 +146,10 @@ QTableWidget::item:selected
      </property>
     </column>
    </widget>
-   <widget class="QWidget" name="layoutWidget_7">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>0</y>
-      <width>191</width>
-      <height>54</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_20">
-     <item>
-      <widget class="QLabel" name="label_20">
-       <property name="minimumSize">
-        <size>
-         <width>20</width>
-         <height>41</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>20</width>
-         <height>41</height>
-        </size>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLabel { 
-border: none; 
-background-color : rgb(105, 105, 105);
-}</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_cg1">
-       <property name="font">
-        <font>
-         <family>Microsoft YaHei</family>
-         <pointsize>24</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLabel { 
-border: none; 
-color : rgb(105, 105, 105);
-}</string>
-       </property>
-       <property name="text">
-        <string>定义房间</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignBottom|Qt::AlignHCenter</set>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
    <widget class="QPushButton" name="buttonadd">
     <property name="geometry">
      <rect>
-      <x>1090</x>
+      <x>1100</x>
       <y>20</y>
       <width>71</width>
       <height>31</height>
@@ -251,7 +190,7 @@ color: white;
    <widget class="QPushButton" name="buttondel">
     <property name="geometry">
      <rect>
-      <x>910</x>
+      <x>940</x>
       <y>20</y>
       <width>71</width>
       <height>31</height>
@@ -292,7 +231,7 @@ color: white;
    <widget class="QPushButton" name="buttonchange">
     <property name="geometry">
      <rect>
-      <x>1000</x>
+      <x>1020</x>
       <y>20</y>
       <width>71</width>
       <height>31</height>
@@ -328,6 +267,66 @@ color: white;
     </property>
     <property name="text">
      <string>修改</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_20">
+    <property name="geometry">
+     <rect>
+      <x>11</x>
+      <y>14</y>
+      <width>20</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>20</width>
+      <height>41</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>20</width>
+      <height>41</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel { 
+border: none; 
+background-color : rgb(105, 105, 105);
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_cg1">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>14</y>
+      <width>163</width>
+      <height>39</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Microsoft YaHei</family>
+      <pointsize>24</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel { 
+border: none; 
+color : rgb(105, 105, 105);
+}</string>
+    </property>
+    <property name="text">
+     <string>定义房间</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignBottom|Qt::AlignHCenter</set>
     </property>
    </widget>
   </widget>

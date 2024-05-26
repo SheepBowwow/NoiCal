@@ -38,12 +38,12 @@ void Form_system_list::on_buttonadd_clicked()
         }
     }
 
-    dialog_add_system *dialog= new dialog_add_system;
+    dialog_add_system *dialog = new dialog_add_system;
 
     if(dialog->exec()==QDialog::Accepted)
     {
         //设置插入行
-        int RowCount=(insertRow!=-1)? insertRow : ui->tableWidget->rowCount();
+        int RowCount=(insertRow !=- 1) ? insertRow : ui->tableWidget->rowCount();
         ui->tableWidget->insertRow(RowCount);
 
         // 添加复选框
@@ -57,9 +57,9 @@ void Form_system_list::on_buttonadd_clicked()
         ui->tableWidget->setCellWidget(RowCount, 0, widget);
 
         //添加内容
-        QTableWidgetItem *tbitem1=new QTableWidgetItem(QString(dialog->getType()));
-        QTableWidgetItem *tbitem2=new QTableWidgetItem(QString(dialog->getNumber()));
-        QTableWidgetItem *tbitem3=new QTableWidgetItem(QString(dialog->getModel()));
+        QTableWidgetItem *tbitem1 = new QTableWidgetItem(QString(dialog->getType()));
+        QTableWidgetItem *tbitem2 = new QTableWidgetItem(QString(dialog->getNumber()));
+        QTableWidgetItem *tbitem3 = new QTableWidgetItem(QString(dialog->getModel()));
         tbitem1->setFlags(Qt::ItemIsEditable); // 设置为只读
         tbitem1->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
         tbitem2->setFlags(Qt::ItemIsEditable); // 设置为只读
@@ -134,7 +134,7 @@ void Form_system_list::on_buttonchange_clicked()
         }
     }
 
-    if(insertRow==-1)return;
+    if(insertRow == -1)return;
 
     dialog_add_system *dialog = new dialog_add_system;
 

@@ -29,7 +29,7 @@ private slots:
 
     void on_comboBox_type_currentIndexChanged(int index);
 
-    void on_comboBox_numOrModel_currentTextChanged(const QString &arg1);
+    void on_comboBox_num_currentTextChanged(const QString &arg1);
 
 private:
     Ui::dialog_add_system *ui;
@@ -41,6 +41,10 @@ private:
 public:
     QList<QStringList> getComponentDataAsStringList() const override {};
     QString getComponentUUID() const;
+
+    // InputBaseDialog interface
+public:
+    void switchToCompontDB(bool inDB) override {};
 };
 
 #endif // DIALOG_ADD_SYSTEM_H

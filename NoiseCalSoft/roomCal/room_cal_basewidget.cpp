@@ -27,7 +27,7 @@ room_cal_baseWidget::room_cal_baseWidget(QWidget *parent, QString m_roomName) :
     if (!globalMenu) {
         globalMenu = new QMenu();
         // 添加初始的菜单项
-        globalMenu->addAction("声源噪音");
+        globalMenu->addAction("噪声源");
         globalMenu->addAction("气流噪音");
         globalMenu->addAction("噪音衰减+气流噪音");
         globalMenu->addAction("噪音衰减");
@@ -56,7 +56,7 @@ room_cal_baseWidget::~room_cal_baseWidget()
 
 void room_cal_baseWidget::handleMenuAction(QString actionName)
 {
-    if(actionName == "声源噪音" || actionName == "气流噪音" || actionName == "噪音衰减+气流噪音" || actionName == "噪音衰减" || actionName == "声压级计算")
+    if(actionName == "噪声源" || actionName == "气流噪音" || actionName == "噪音衰减+气流噪音" || actionName == "噪音衰减" || actionName == "声压级计算")
     {
         this->addTable(-1,actionName);
     }

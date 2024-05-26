@@ -1,11 +1,12 @@
 #include "widget_disp_vent_terminal_inputtable.h"
-#include "ui_widget_terminal_base_inputtable.h"
+#include "ui_widget_base_inputtable.h"
 #include "inputDialog/dialog_disp_vent_terminal.h"
 
-Widget_Disp_vent_terminal_inputTable::Widget_Disp_vent_terminal_inputTable(QWidget *parent)
-    : Widget_terminal_base_inputTable(parent)
+Widget_Disp_vent_terminal_inputTable::Widget_Disp_vent_terminal_inputTable(bool inComponentDB, QWidget *parent)
+    : Widget_base_inputTable(inComponentDB, parent)
 {
     setTitle("置换通风末端");
+    mergeRowCount = 3;
     //连接槽函数
     connect(ui->pushButton_add, &QPushButton::clicked, this, &Widget_Disp_vent_terminal_inputTable::onAdd);
     connect(ui->pushButton_del, &QPushButton::clicked, this, &Widget_Disp_vent_terminal_inputTable::onDel);
@@ -16,95 +17,84 @@ Widget_Disp_vent_terminal_inputTable::Widget_Disp_vent_terminal_inputTable(QWidg
 
 void Widget_Disp_vent_terminal_inputTable::initTableWidget()
 {
-    int colCount = 17;
-    QStringList headerText;
-    headerText<< "" << "序号" << "型号" << "品牌" << "末端\n类型" << "末端\n尺寸"  << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
-              << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)"
+    colCount = 18;
+    headerText<< "" << "序号" << "型号" << "品牌" << "末端\n类型" << "末端\n尺寸" << "数据类型" << "63Hz\n(dB)" << "125Hz\n(dB)"
+              << "250Hz\n(dB)" << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)"
               << "总值\ndB(A)" << "来源" << "UUID";  //表头标题用QStringList来表示
-    int columnWidths[] = {30, 40, 120, 80, 60, 80, 55, 55, 55, 55, 55, 55, 55, 55, 55, 60, 0};
-
-    setTableWidget(ui->tableWidget_noi, headerText, columnWidths, colCount);
+    QVector<int> widths = {30, 40, 120, 80, 60, 80, 80, 55, 55, 55, 55, 55, 55, 55, 55, 55, 60, 0};
+    columnWidths = widths;
+    setTableWidget(ui->tableWidget, headerText, columnWidths, colCount);
+    QStringList merge
+    {
+        "",
+        "序号",
+        "型号",
+        "品牌",
+        "末端\n类型",
+        "静压\n(Pa)",
+        "末端\n尺寸",
+        "UUID"
+    };
+    this->mergeCols = merge;
     // 隐藏最后一列
-    ui->tableWidget_noi->setColumnHidden(colCount - 1, true);
-
-    colCount = 16;
-    QStringList headerText_atten;
-    headerText_atten<< "" << "序号" << "型号" << "品牌" << "末端\n类型" << "末端\n尺寸"  << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
-                    << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)"
-                    << "来源" << "UUID";  //表头标题用QStringList来表示
-    int atten_columnWidths[] = {30, 40, 120, 80, 60, 80, 55, 55, 55, 55, 55, 55, 55, 55, 60, 0};
-
-    // 调用封装好的初始化表格函数
-    setTableWidget(ui->tableWidget_atten, headerText_atten, atten_columnWidths, colCount);
-    // 隐藏最后一列
-    ui->tableWidget_atten->setColumnHidden(colCount - 1, true);
-
-    colCount = 16;
-    QStringList headerText_refl;
-    headerText_refl<< "" << "序号" << "型号" << "品牌" << "末端\n类型" << "末端\n尺寸"  << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
-                   << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)"
-                   << "来源" << "UUID";  //表头标题用QStringList来表示
-    int refl_columnWidths[] = {30, 40, 120, 80, 60, 80, 55, 55, 55, 55, 55, 55, 55, 55, 60, 0};
-
-    // 调用封装好的初始化表格函数
-    setTableWidget(ui->tableWidget_refl, headerText_refl, refl_columnWidths, colCount);
-    // 隐藏最后一列
-    ui->tableWidget_refl->setColumnHidden(colCount - 1, true);
+    ui->tableWidget->setColumnHidden(colCount - 1, true);
 }
 
 void Widget_Disp_vent_terminal_inputTable::onAdd()
 {
-    QTableWidget *tableWidget_noise = ui->tableWidget_noi;
-    QTableWidget *tableWidget_atten = ui->tableWidget_atten;
-    QTableWidget *tableWidget_refl = ui->tableWidget_refl;
-    Dialog_disp_vent_terminal *dialog = new Dialog_disp_vent_terminal();
-    QSharedPointer<Disp_vent_terminal> component;
+    if(inComponentDB)
+    {
+        QTableWidget *tableWidget = ui->tableWidget;
+        Dialog_disp_vent_terminal *dialog = new Dialog_disp_vent_terminal(nullptr);
+        QSharedPointer<Disp_vent_terminal> component;
 
-    if (dialog->exec() == QDialog::Accepted) {
-        if(Disp_vent_terminal* rawPointer = static_cast<Disp_vent_terminal*>(dialog->getComponent()))
-            component = QSharedPointer<Disp_vent_terminal>(rawPointer);
-        else
-            return;
-        component->table_id = QString::number(tableWidget_noise->rowCount() + 1);
-        if (component != nullptr) {
-            auto lists = dialog->getComponentDataAsStringList();
-            // 使用通用函数添加行
-            addRowToTable(tableWidget_noise, lists[0]);
-            addRowToTable(tableWidget_atten, lists[1]);
-            addRowToTable(tableWidget_refl, lists[2]);
+        if (dialog->exec() == QDialog::Accepted) {
+            if(Disp_vent_terminal* rawPointer = static_cast<Disp_vent_terminal*>(dialog->getComponent()))
+                component = QSharedPointer<Disp_vent_terminal>(rawPointer);
+            else
+                return;
+            component->table_id = QString::number(tableWidget->rowCount() / 3 + 1);
+            if (component != nullptr) {
+                auto lists = component->getComponentDataAsStringList(inComponentDB);
+                // 使用通用函数添加行
+                addRowToTable(tableWidget, lists[0]);
+                addRowToTable(tableWidget, lists[1]);
+                addRowToTable(tableWidget, lists[2]);
 
-            componentManager.addComponent(component);
+                mergeColumnsByNames(tableWidget, mergeCols, 3);
+
+                componentManager.addComponent(component, inComponentDB);
+            }
         }
+    }
+    else
+    {
+        Widget_Disp_vent_terminal_inputTable* inputTable = new Widget_Disp_vent_terminal_inputTable(true, nullptr);
+        inputTable->initTableWidget();
+        inputTable->showConfirmButton();
+        inputTable->show();
+        inputTable->loadComponentToTable();
+        connect(inputTable, &Widget_base_inputTable::confirmed, this, &Widget_Disp_vent_terminal_inputTable::handleConfirmation);
     }
 }
 
 void Widget_Disp_vent_terminal_inputTable::onDel()
 {
-    deleteRowFromTable(ui->tableWidget_noi, ui->tableWidget_atten, ui->tableWidget_refl);
+    deleteRowFromTable(ui->tableWidget, 3);
+
+    mergeColumnsByNames(ui->tableWidget, mergeCols, 3);
 }
 
 void Widget_Disp_vent_terminal_inputTable::onRevise()
 {
-    QTableWidget* currentTableWidget = ui->stackedWidget->currentWidget()->findChild<QTableWidget*>();
-    QTableWidget* tableWidget_noise = ui->tableWidget_noi;
-    QTableWidget* tableWidget_atten = ui->tableWidget_atten;
-    QTableWidget* tableWidget_refl = ui->tableWidget_refl;
-
-    QVector<QTableWidget*> tableWidgets = {ui->tableWidget_noi, ui->tableWidget_atten, ui->tableWidget_refl};
-
-    for (int row = 0; row < currentTableWidget->rowCount(); ++row)
-    {
-        // 假设你的复选框在第一列
-        QWidget* widget = currentTableWidget->cellWidget(row, 0);
-        QCheckBox* checkBox = widget ? qobject_cast<QCheckBox*>(widget) : nullptr;
-        if(checkBox && checkBox->isChecked())
-        {
-            // 获取UUID，假设它在最后一列
-            QString UUID = currentTableWidget->item(row, currentTableWidget->columnCount() - 1)->text();
-            // 调用通用的修订函数，传入正确的类型参数
-            componentRevision<Disp_vent_terminal, Dialog_disp_vent_terminal>(tableWidgets,currentTableWidget,row);
+    for (int row = 0; row < ui->tableWidget->rowCount(); row += 3) {
+        QWidget* widget = ui->tableWidget->cellWidget(row, 0); // Assuming the checkbox is in the first column
+        QCheckBox* checkBox = widget ? widget->findChild<QCheckBox*>() : nullptr;
+        if (checkBox && checkBox->isChecked()) {
+            componentRevision<Disp_vent_terminal, Dialog_disp_vent_terminal>(ui->tableWidget, 3, row);
         }
     }
+    mergeColumnsByNames(ui->tableWidget, mergeCols, 3);
 }
 
 void Widget_Disp_vent_terminal_inputTable::onInput()
@@ -120,19 +110,67 @@ void Widget_Disp_vent_terminal_inputTable::onOutput()
 void Widget_Disp_vent_terminal_inputTable::loadComponentToTable()
 {
     // 从组件管理器获取所有的分散通风末端组件
-    auto componentList = ComponentManager::getInstance().getComponentsByType(component_type_name::DISP_VENT_TERMINAL);
+    auto componentList = ComponentManager::getInstance().getComponentsByType(inComponentDB, component_type_name::DISP_VENT_TERMINAL);
     for (const auto& component : componentList) {
         // 动态转换以确保组件类型正确
         if (auto dispVentTerminalComponent = dynamic_cast<Disp_vent_terminal*>(component.data())) {
             // 直接从组件获取数据
-            auto lists = dispVentTerminalComponent->getComponentDataAsStringList();
+            auto lists = dispVentTerminalComponent->getComponentDataAsStringList(inComponentDB);
 
             // 检查lists是否有足够的数据填充到三个表格中
             if (lists.size() >= 3) {
                 // 使用通用函数添加行到每个表格
-                addRowToTable(ui->tableWidget_noi, lists[0]);
-                addRowToTable(ui->tableWidget_atten, lists[1]);
-                addRowToTable(ui->tableWidget_refl, lists[2]);
+                addRowToTable(ui->tableWidget, lists[0]);
+                addRowToTable(ui->tableWidget, lists[1]);
+                addRowToTable(ui->tableWidget, lists[2]);
+            }
+        }
+    }
+    mergeColumnsByNames(ui->tableWidget, mergeCols, 3);
+}
+
+void Widget_Disp_vent_terminal_inputTable::handleConfirmation(QSet<QString> uuids)
+{
+    for(auto& uuid : uuids)
+    {
+        QSharedPointer<ComponentBase> componentBase = ComponentManager::getInstance().findComponent(true, uuid);;
+        if(QSharedPointer<Disp_vent_terminal> component = qSharedPointerCast<Disp_vent_terminal>(componentBase))
+        {
+            // 使用深拷贝构造函数来创建一个新的 Fan 对象
+            QSharedPointer<Disp_vent_terminal> newComponent = QSharedPointer<Disp_vent_terminal>(new Disp_vent_terminal(*component));
+            if (newComponent != nullptr) {
+
+                auto lists = newComponent->getComponentDataAsStringList(false);
+
+                // 使用通用函数添加行
+                addRowToTable(ui->tableWidget, lists[0]);
+                addRowToTable(ui->tableWidget, lists[1]);
+                addRowToTable(ui->tableWidget, lists[2]);
+
+                componentManager.addComponent(newComponent, false);
+
+                // 重新编号
+                for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
+                    QTableWidgetItem* item = new QTableWidgetItem(QString::number(row / 3 + 1));
+                    ui->tableWidget->setItem(row, 1, item); // Assuming the sequence numbers are in the second column (index 1)
+                    item->setTextAlignment(Qt::AlignCenter);
+                    item->setFlags(Qt::ItemIsEditable);
+                    item->setBackground(QBrush(Qt::lightGray));
+                    item->setData(Qt::ForegroundRole, QColor(70, 70, 70));
+                }
+
+                // 更新组件信息
+                for (int row = 0; row < ui->tableWidget->rowCount(); row += 3) {
+                    QString uuid = ui->tableWidget->item(row, ui->tableWidget->columnCount() - 1)->text(); // 获取组件uuid
+                    QSharedPointer<ComponentBase> component = componentManager.findComponent(inComponentDB, uuid); // 查找组件
+
+                    if (component) {
+                        component->setTableID((QString::number((row + 3) / 3))); // 设置新的table_id，假设组件有这个方法
+                        componentManager.updateComponent(uuid, component, inComponentDB); // 更新组件
+                    }
+                }
+
+                mergeColumnsByNames(ui->tableWidget, mergeCols, 3);
             }
         }
     }

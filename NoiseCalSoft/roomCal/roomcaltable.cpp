@@ -278,14 +278,14 @@ void RoomCalTable::on_comboBox_sound_type_currentTextChanged(const QString &arg1
         ui->comboBox_unit_name->addItem("风机盘管");
         ui->comboBox_unit_name->addItem("空调器");
 
-        ui->comboBox_fan_number->clear();
-        for(QString number: systemListMap[systemName]["风机"])
-        {
-            ui->comboBox_fan_number->addItem(number);
-        }
-        noi_after_cal_lineEdits = { ui->lineEdit_fan_63, ui->lineEdit_fan_125, ui->lineEdit_fan_250,ui->lineEdit_fan_500,
-                                        ui->lineEdit_fan_1k, ui->lineEdit_fan_2k, ui->lineEdit_fan_4k, ui->lineEdit_fan_8k,
-                                        ui->lineEdit_fan_total };
+        // ui->comboBox_fan_number->clear();
+        // for(QString number: systemListMap[systemName]["风机"])
+        // {
+        //     ui->comboBox_fan_number->addItem(number);
+        // }
+        // noi_after_cal_lineEdits = { ui->lineEdit_fan_63, ui->lineEdit_fan_125, ui->lineEdit_fan_250,ui->lineEdit_fan_500,
+        //                                 ui->lineEdit_fan_1k, ui->lineEdit_fan_2k, ui->lineEdit_fan_4k, ui->lineEdit_fan_8k,
+        //                                 ui->lineEdit_fan_total };
     }
     else if(arg1 == "气流噪音")
     {
@@ -344,24 +344,27 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
     this->currentComponent = QSharedPointer<ComponentBase>();
     if(arg1 == "风机")
     {
+        ui->comboBox_fan_number->blockSignals(true);
         ui->comboBox_fan_number->clear();
 
         QList<QString> list =
                 SystemManager::getInstance().getNoiseComponentsInSystem(systemName,noise_src_component::FAN);
         for(auto& uuid : list)
         {
-            auto component = ComponentManager::getInstance().findComponent(uuid);
+            auto component = ComponentManager::getInstance().findComponent(false, uuid);
             if(auto fan = dynamic_cast<Fan*>(component.data()))
             {
                 this->currentAllComponentList.append(component);
+                ui->comboBox_fan_number->addItem(fan->number);
             }
         }
-
+        ui->comboBox_fan_number->setCurrentIndex(-1);
         noi_after_cal_lineEdits = { ui->lineEdit_fan_63, ui->lineEdit_fan_125, ui->lineEdit_fan_250,ui->lineEdit_fan_500,
                                         ui->lineEdit_fan_1k, ui->lineEdit_fan_2k, ui->lineEdit_fan_4k, ui->lineEdit_fan_8k,
                                         ui->lineEdit_fan_total };
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_fan);
+        ui->comboBox_fan_number->blockSignals(false);
     }
     else if(arg1 == "空调器")
     {
@@ -373,10 +376,10 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                                         ui->lineEdit_aircondition_total };
 
         QList<QString> list_send =
-                SystemManager::getInstance().getNoiseComponentsInSystem(systemName, noise_src_component::AIRCONDITION_SEND);
+                SystemManager::getInstance().getNoiseComponentsInSystem(systemName, noise_src_component::AIRCONDITION_SINGLE);
         for(auto& uuid : list_send)
         {
-            auto component = ComponentManager::getInstance().findComponent(uuid);
+            auto component = ComponentManager::getInstance().findComponent(false, uuid);
             auto aircondition = qSharedPointerDynamicCast<Aircondition>(component);
             if(aircondition)
             {
@@ -389,10 +392,10 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
         }
 
         QList<QString> list_exhaust =
-                SystemManager::getInstance().getNoiseComponentsInSystem(systemName,noise_src_component::AIRCONDITION_EXHAUST);
+                SystemManager::getInstance().getNoiseComponentsInSystem(systemName,noise_src_component::AIRCONDITION_DOUBLE);
         for(auto& uuid : list_exhaust)
         {
-            auto component = ComponentManager::getInstance().findComponent(uuid);
+            auto component = ComponentManager::getInstance().findComponent(false, uuid);
             auto aircondition = qSharedPointerDynamicCast<Aircondition>(component);
             if(aircondition)
             {
@@ -415,7 +418,7 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                 SystemManager::getInstance().getNoiseComponentsInSystem(systemName,noise_src_component::FANCOIL);
         for(auto& uuid : list)
         {
-            auto component = ComponentManager::getInstance().findComponent(uuid);
+            auto component = ComponentManager::getInstance().findComponent(false, uuid);
             if(auto fanCoil = dynamic_cast<FanCoil*>(component.data()))
             {
                 ui->comboBox_fanCoil_model->addItem(fanCoil->model);
@@ -440,13 +443,14 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                           ui->lineEdit_VAV_terminal_total};
 
         this->currentAllComponentList =
-                ComponentManager::getInstance().getComponentsByType(component_type_name::VAV_TERMINAL);
+                ComponentManager::getInstance().getComponentsByType(false, component_type_name::VAV_TERMINAL);
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_VAV_terminal);
 
     }
     else if(arg1 == "阀门/圆形调风门")
     {
+        ui->comboBox_circular_damper_model->blockSignals(true);
         noi_after_cal_lineEdits = { ui->lineEdit_circular_damper_after_63, ui->lineEdit_circular_damper_after_125, ui->lineEdit_circular_damper_after_250,ui->lineEdit_circular_damper_after_500,
                                         ui->lineEdit_circular_damper_after_1k, ui->lineEdit_circular_damper_after_2k, ui->lineEdit_circular_damper_after_4k, ui->lineEdit_circular_damper_after_8k,
                                         ui->lineEdit_circular_damper_after_total};
@@ -456,8 +460,19 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                           ui->lineEdit_circular_damper_total};
 
         this->currentAllComponentList =
-                ComponentManager::getInstance().getComponentsByType(component_type_name::CIRCULAR_DAMPER);
-
+                ComponentManager::getInstance().getComponentsByType(false, component_type_name::CIRCULAR_DAMPER);
+        ui->comboBox_circular_damper_model->clear();
+        ui->comboBox_circular_damper_model->addItem("经验公式");
+        for(auto& component : currentAllComponentList)
+        {
+            // 尝试将component转换为Silencer类型的智能指针
+            if(auto circluar_damper = qSharedPointerDynamicCast<Circular_damper>(component))
+            {
+                ui->comboBox_circular_damper_model->addItem(circluar_damper->model);
+            }
+        }
+        ui->comboBox_circular_damper_model->setCurrentIndex(-1);
+        ui->comboBox_circular_damper_model->blockSignals(false);
         ui->stackedWidget_table->setCurrentWidget(ui->page_circular_damper);
     }
     else if(arg1 == "阀门/方形调风门")
@@ -472,7 +487,7 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
 
 
         this->currentAllComponentList =
-                ComponentManager::getInstance().getComponentsByType(component_type_name::RECT_DAMPER);
+                ComponentManager::getInstance().getComponentsByType(false, component_type_name::RECT_DAMPER);
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_rect_damper);
     }
@@ -496,7 +511,7 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
 
 
         this->currentAllComponentList =
-                ComponentManager::getInstance().getComponentsByType(component_type_name::AIRDIFF);
+                ComponentManager::getInstance().getComponentsByType(false, component_type_name::AIRDIFF);
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_air_diff);
     }
@@ -519,7 +534,7 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                                    ui->lineEdit_pump_noi_total};
 
         this->currentAllComponentList =
-                ComponentManager::getInstance().getComponentsByType(component_type_name::PUMPSEND);
+                ComponentManager::getInstance().getComponentsByType(false, component_type_name::PUMPSEND);
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_pump);
     }
@@ -542,7 +557,7 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                                    ui->lineEdit_send_noi_total};
 
         this->currentAllComponentList =
-                ComponentManager::getInstance().getComponentsByType(component_type_name::PUMPSEND);
+                ComponentManager::getInstance().getComponentsByType(false, component_type_name::PUMPSEND);
         ui->stackedWidget_table->setCurrentWidget(ui->page_send);
     }
     else if(arg1 == "末端/静压箱+格栅")
@@ -564,7 +579,7 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                                    ui->lineEdit_staticBox_grille_noi_total};
 
         this->currentAllComponentList =
-                ComponentManager::getInstance().getComponentsByType(component_type_name::STATICBOX_GRILLE);
+                ComponentManager::getInstance().getComponentsByType(false, component_type_name::STATICBOX_GRILLE);
         ui->stackedWidget_table->setCurrentWidget(ui->page_staticBox_grille);
     }
     else if(arg1 == "末端/置换通风末端")
@@ -586,7 +601,7 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                                    ui->lineEdit_disp_vent_terminal_noi_total};
 
         this->currentAllComponentList =
-                ComponentManager::getInstance().getComponentsByType(component_type_name::DISP_VENT_TERMINAL);
+                ComponentManager::getInstance().getComponentsByType(false, component_type_name::DISP_VENT_TERMINAL);
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_disp_vent_terminal);
     }
@@ -609,7 +624,7 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                                    ui->lineEdit_other_send_terminal_noi_total};
 
         this->currentAllComponentList =
-                ComponentManager::getInstance().getComponentsByType(component_type_name::OTHER_SEND_TERMINAL);
+                ComponentManager::getInstance().getComponentsByType(false, component_type_name::OTHER_SEND_TERMINAL);
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_other_send_terminal);
     }
@@ -624,7 +639,7 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                             ui->lineEdit_static_box_total};
 
         this->currentAllComponentList =
-                ComponentManager::getInstance().getComponentsByType(component_type_name::STATICBOX);
+                ComponentManager::getInstance().getComponentsByType(false, component_type_name::STATICBOX);
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_static_box);
     }
@@ -639,7 +654,7 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                             ui->lineEdit_multi_ranc_total};
 
         this->currentAllComponentList =
-                ComponentManager::getInstance().getComponentsByType(component_type_name::MULTI_RANC);
+                ComponentManager::getInstance().getComponentsByType(false, component_type_name::MULTI_RANC);
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_multi_ranc);
     }
@@ -655,7 +670,7 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
 
 
         this->currentAllComponentList =
-                ComponentManager::getInstance().getComponentsByType(component_type_name::TEE);
+                ComponentManager::getInstance().getComponentsByType(false, component_type_name::TEE);
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_tee);
     }
@@ -675,7 +690,7 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
 
 
         this->currentAllComponentList =
-                ComponentManager::getInstance().getComponentsByType(component_type_name::PIPE);
+                ComponentManager::getInstance().getComponentsByType(false, component_type_name::PIPE);
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_pipe);
     }
@@ -694,7 +709,7 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                                 ui->lineEdit_elbow_sum_total};
 
         this->currentAllComponentList =
-                ComponentManager::getInstance().getComponentsByType(component_type_name::ELBOW);
+                ComponentManager::getInstance().getComponentsByType(false, component_type_name::ELBOW);
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_elbow);
     }
@@ -709,7 +724,7 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                                         ui->lineEdit_reducer_total};
 
         this->currentAllComponentList =
-                ComponentManager::getInstance().getComponentsByType(component_type_name::REDUCER);
+                ComponentManager::getInstance().getComponentsByType(false, component_type_name::REDUCER);
         ui->stackedWidget_table->setCurrentWidget(ui->page_reducer);
     }
     else if(arg1 == "消音器")
@@ -721,7 +736,7 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                                         ui->lineEdit_silencer_1k, ui->lineEdit_silencer_2k, ui->lineEdit_silencer_4k, ui->lineEdit_silencer_8k, ui->lineEdit_silencer_total};
 
         this->currentAllComponentList =
-                ComponentManager::getInstance().getComponentsByType(component_type_name::SILENCER);
+                ComponentManager::getInstance().getComponentsByType(false, component_type_name::SILENCER);
 
 
         ui->stackedWidget_table->setCurrentWidget(ui->page_silencer);
@@ -856,7 +871,7 @@ void RoomCalTable::setSerialNum(int num)
  * 用于处理如果1~4部分录入，在这个界面更新, 如果修改的部件的uuid和当前的一样
  */
 void RoomCalTable::updateModelComboBoxItems(const QString &uuid) {
-    QSharedPointer<ComponentBase> changedComponent = ComponentManager::getInstance().findComponent(uuid);
+    QSharedPointer<ComponentBase> changedComponent = ComponentManager::getInstance().findComponent(false, uuid);
     bool isTypeSame = (changedComponent->typeName() == currentComponent->typeName());
     auto it = std::find_if(currentAllComponentList.begin(),currentAllComponentList.end(), [&](QSharedPointer<ComponentBase> component){
             return uuid == component->UUID;
@@ -1073,39 +1088,17 @@ void RoomCalTable::calVariations()
 
 /**********风机**********/
 #pragma region "fan"{
-void RoomCalTable::on_comboBox_fan_data_source_currentTextChanged(const QString &arg1)
-{
-    clearPage(ui->stackedWidget_table->currentWidget(), false);
-    currentComponentListByDataSource.clear();
-    for(auto& component : currentAllComponentList)
-    {
-        // 尝试将component转换为Silencer类型的智能指针
-        if(auto fan = qSharedPointerDynamicCast<Fan>(component))
-        {
-            if(fan->data_source == arg1)
-                currentComponentListByDataSource.append(component); // 直接添加component
-        }
-    }
-
-    for(auto& component : currentComponentListByDataSource)
-    {
-        if(auto fan = qSharedPointerDynamicCast<Fan>(component))
-            ui->comboBox_fan_number->addItem(fan->number);
-    }
-    ui->comboBox_fan_number->setCurrentIndex(-1);
-}
-
 //风机编号选择
 void RoomCalTable::on_comboBox_fan_number_currentTextChanged(const QString &arg1)
 {
-    auto it = std::find_if(this->currentComponentListByDataSource.begin(),this->currentComponentListByDataSource.end(), [&](const QSharedPointer<ComponentBase>& component){
+    auto it = std::find_if(this->currentAllComponentList.begin(),this->currentAllComponentList.end(), [&](const QSharedPointer<ComponentBase>& component){
         auto fan = qSharedPointerDynamicCast<Fan>(component);
         if(fan && fan->number == arg1)
             return true;
         return false;
     });
 
-    if(it != currentComponentListByDataSource.end())
+    if(it != currentAllComponentList.end())
     {
         if(auto fan = qSharedPointerDynamicCast<Fan>(*it))
         {
@@ -1457,67 +1450,13 @@ void RoomCalTable::circular_damper_noise_cal()
     }
 }
 
-void RoomCalTable::on_comboBox_circular_damper_data_source_currentTextChanged(const QString &arg1)
+void RoomCalTable::on_comboBox_circular_damper_model_currentTextChanged(const QString &arg1)
 {
-    clearPage(ui->stackedWidget_table->currentWidget(), false);
-    if(arg1 != "经验公式")
+    if(ui->comboBox_circular_damper_model->currentIndex() == -1)
+        return;
+
+    if(ui->comboBox_circular_damper_model->currentText() == "经验公式")
     {
-        ui->comboBox_circular_damper_model->setEnabled(true);
-        ui->comboBox_circular_damper_model->setStyleSheet("QComboBox { border:none;"
-                                                          "border-bottom:1px solid black;}");
-
-        // 隐藏下拉箭头
-        ui->comboBox_circular_damper_angle->setStyleSheet("QComboBox { combobox-popup: 0; border:none;"
-                                                          "border-bottom:1px solid black;"
-                                                          "font-family: '黑体';"
-                                                          "font-size: 14px;}"
-                                                          "QComboBox::drop-down { width:0px; }"); // CSS隐藏下拉箭头
-        // 防止显示下拉列表
-        ui->comboBox_circular_damper_angle->setEditable(true);
-        ui->comboBox_circular_damper_angle->lineEdit()->setReadOnly(true);
-
-        ui->lineEdit_circular_damper_diameter->setReadOnly(true);
-        ui->lineEdit_circular_damper_air_volume->setReadOnly(true);
-
-        disconnect(ui->comboBox_circular_damper_angle, &QComboBox::currentTextChanged, this, &RoomCalTable::circular_damper_noise_cal);
-        disconnect(ui->lineEdit_circular_damper_air_volume, &QLineEdit::textChanged, this, &RoomCalTable::circular_damper_noise_cal);
-        disconnect(ui->lineEdit_circular_damper_diameter, &QLineEdit::textChanged, this, &RoomCalTable::circular_damper_noise_cal);
-
-        clearPage(ui->stackedWidget_table->currentWidget(), false);
-        currentComponentListByDataSource.clear();
-        for(auto& component : currentAllComponentList)
-        {
-            // 尝试将component转换为Silencer类型的智能指针
-            if(auto circluar_damper = qSharedPointerDynamicCast<Circular_damper>(component))
-            {
-                if(circluar_damper->data_source == arg1)
-                    currentComponentListByDataSource.append(component); // 直接添加component
-            }
-        }
-
-        // 断开信号和槽的连接
-        disconnect(ui->comboBox_circular_damper_model, SIGNAL(currentTextChanged(QString)),
-                   this, SLOT(on_comboBox_circular_damper_model_currentTextChanged(QString)));
-
-        for(auto& component : currentComponentListByDataSource)
-        {
-            if(auto circluar_damper = qSharedPointerDynamicCast<Circular_damper>(component))
-                ui->comboBox_circular_damper_model->addItem(circluar_damper->model);
-        }
-        ui->comboBox_circular_damper_model->setCurrentIndex(-1);
-
-        // 重新连接信号和槽
-        connect(ui->comboBox_circular_damper_model, SIGNAL(currentTextChanged(QString)),
-                this, SLOT(on_comboBox_circular_damper_model_currentTextChanged(QString)));
-    }
-    else
-    {
-        ui->comboBox_circular_damper_model->setCurrentText("-");
-        ui->comboBox_circular_damper_model->setEnabled(false);
-        ui->comboBox_circular_damper_model->setStyleSheet("QComboBox { border:1px solid black ;background-color: rgb(240,240,240);"
-                                                          "font-family: '黑体';"
-                                                          "font-size: 14px;}");
-
         // 隐藏下拉箭头
         ui->comboBox_circular_damper_angle->setStyleSheet("QComboBox{border:none; "
                                                           "border-bottom:1px solid black;}"
@@ -1526,7 +1465,6 @@ void RoomCalTable::on_comboBox_circular_damper_data_source_currentTextChanged(co
         // 防止显示下拉列表
         ui->comboBox_circular_damper_angle->setMaxVisibleItems(10);
         ui->comboBox_circular_damper_angle->setEditable(false);
-        //ui->comboBox_circular_damper_angle->lineEdit()->setReadOnly(false);
 
         ui->lineEdit_circular_damper_diameter->setReadOnly(false);
         ui->lineEdit_circular_damper_air_volume->setReadOnly(false);
@@ -1534,22 +1472,34 @@ void RoomCalTable::on_comboBox_circular_damper_data_source_currentTextChanged(co
         connect(ui->comboBox_circular_damper_angle, &QComboBox::currentTextChanged, this, &RoomCalTable::circular_damper_noise_cal);
         connect(ui->lineEdit_circular_damper_air_volume, &QLineEdit::textChanged, this, &RoomCalTable::circular_damper_noise_cal);
         connect(ui->lineEdit_circular_damper_diameter, &QLineEdit::textChanged, this, &RoomCalTable::circular_damper_noise_cal);
-    }
-}
-
-void RoomCalTable::on_comboBox_circular_damper_model_currentTextChanged(const QString &arg1)
-{
-    if(ui->comboBox_circular_damper_model->currentIndex() == -1)
         return;
+    }
 
-    auto it = std::find_if(this->currentComponentListByDataSource.begin(),this->currentComponentListByDataSource.end(), [&](const QSharedPointer<ComponentBase>& component){
+    // 隐藏下拉箭头
+    ui->comboBox_circular_damper_angle->setStyleSheet("QComboBox { combobox-popup: 0; border:none;"
+                                                      "border-bottom:1px solid black;"
+                                                      "font-family: '黑体';"
+                                                      "font-size: 14px;}"
+                                                      "QComboBox::drop-down { width:0px; }"); // CSS隐藏下拉箭头
+    // 防止显示下拉列表
+    ui->comboBox_circular_damper_angle->setEditable(true);
+    ui->comboBox_circular_damper_angle->lineEdit()->setReadOnly(true);
+
+    ui->lineEdit_circular_damper_diameter->setReadOnly(true);
+    ui->lineEdit_circular_damper_air_volume->setReadOnly(true);
+
+    disconnect(ui->comboBox_circular_damper_angle, &QComboBox::currentTextChanged, this, &RoomCalTable::circular_damper_noise_cal);
+    disconnect(ui->lineEdit_circular_damper_air_volume, &QLineEdit::textChanged, this, &RoomCalTable::circular_damper_noise_cal);
+    disconnect(ui->lineEdit_circular_damper_diameter, &QLineEdit::textChanged, this, &RoomCalTable::circular_damper_noise_cal);
+
+    auto it = std::find_if(this->currentAllComponentList.begin(),this->currentAllComponentList.end(), [&](const QSharedPointer<ComponentBase>& component){
         auto damper = qSharedPointerDynamicCast<Circular_damper>(component);
         if(damper && damper->model == arg1)
             return true;
         return false;
     });
 
-    if(it != currentComponentListByDataSource.end())
+    if(it != currentAllComponentList.end())
     {
         if(auto damper = qSharedPointerDynamicCast<Circular_damper>(*it))
         {

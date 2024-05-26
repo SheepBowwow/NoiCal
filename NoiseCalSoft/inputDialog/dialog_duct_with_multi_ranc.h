@@ -41,6 +41,10 @@ private:
 public:
     QList<QStringList> getComponentDataAsStringList() const override;
     void* getComponent() override;
+
+    // InputBaseDialog interface
+public:
+    void switchToCompontDB(bool inDB) override {};
 };
 
 #endif // DIALOG_DUCT_WITH_MULTI_RANC_H

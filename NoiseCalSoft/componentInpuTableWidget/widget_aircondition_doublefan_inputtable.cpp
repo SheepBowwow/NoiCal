@@ -2,11 +2,11 @@
 #include "ui_widget_base_inputtable.h"
 #include "inputDialog/dialog_aircondition.h"
 
-Widget_aircondition_doubleFan_inputTable::Widget_aircondition_doubleFan_inputTable(QWidget *parent) :
-    Widget_base_inputTable(parent)
+Widget_aircondition_doubleFan_inputTable::Widget_aircondition_doubleFan_inputTable(bool inComponentDB, QWidget *parent) :
+    Widget_base_inputTable(inComponentDB, parent)
 {
     setTitle("空调器(双风机)");
-
+    mergeRowCount = 4;
     //连接槽函数
     connect(ui->pushButton_add, &QPushButton::clicked, this, &Widget_aircondition_doubleFan_inputTable::onAdd);
     connect(ui->pushButton_del, &QPushButton::clicked, this, &Widget_aircondition_doubleFan_inputTable::onDel);
@@ -25,7 +25,7 @@ void Widget_aircondition_doubleFan_inputTable::mergeCells(int startRow)
     QTableWidget *tableWidget = ui->tableWidget;
     for(int i = 0; i < tableWidget->columnCount(); i++)
     {
-        if(i == 7 || i == 2 || i == 5 || i == 6)
+        if(i == 7 || (i == 2 && !inComponentDB) || i == 5 || i == 6)
         {
             tableWidget->setSpan(startRow, i, 2, 1);
             tableWidget->setSpan(startRow + 2, i, 2, 1);
@@ -66,14 +66,14 @@ void Widget_aircondition_doubleFan_inputTable::loadComponentToTable()
     ui->tableWidget->setRowCount(0);
 
     // 获取所有Aircondition组件
-    auto componentList = ComponentManager::getInstance().getComponentsByType(component_type_name::AIRCONDITION);
+    auto componentList = ComponentManager::getInstance().getComponentsByType(inComponentDB, component_type_name::AIRCONDITION);
     for (const auto& component : componentList) {
         // 使用dynamic_cast尝试将ComponentBase转换为Aircondition指针
         if (auto airconditionComponent = dynamic_cast<Aircondition*>(component.data())) {
             // 确保fancount为2
             if (airconditionComponent->fan_counts == 2) {
                 // 获取组件数据
-                auto lists = airconditionComponent->getComponentDataAsStringList();
+                auto lists = airconditionComponent->getComponentDataAsStringList(inComponentDB);
 
                 // 添加数据到表格
                 int rowCount = ui->tableWidget->rowCount();
@@ -90,46 +90,74 @@ void Widget_aircondition_doubleFan_inputTable::loadComponentToTable()
 
 void Widget_aircondition_doubleFan_inputTable::initTableWidget()
 {
-    int colCount = 20;
+    if(!inComponentDB)
+    {
+        colCount = 20;
+        headerText << "" << "序号" << "编号" << "型号" << "品牌" << "风量\n(m³/h)" << "静压\n(Pa)" << "类型" << "噪音\n位置"
+                   << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)" << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)"
+                   << "4kHz\n(dB)" << "8kHz\n(dB)" << "总值\ndB(A)" << "来源" << "UUID";
+        // 设置每列的宽度
+        QVector<int> widths = {30, 40, 120, 120, 80, 55, 55, 55, 60, 55, 55, 55, 55, 55, 55, 55, 55, 55, 60, 0};
+        columnWidths = widths;
+    }
+    else
+    {
+        colCount = 19;
+        headerText << "" << "序号" << "型号" << "品牌" << "风量\n(m³/h)" << "静压\n(Pa)" << "类型" << "噪音\n位置" << "63Hz\n(dB)"
+                   << "125Hz\n(dB)" << "250Hz\n(dB)" << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)"
+                   << "8kHz\n(dB)" << "总值\ndB(A)" << "来源" << "UUID";
+        QVector<int> widths = {30, 40, 120, 80, 55, 55, 55, 60, 55, 55, 55, 55, 55, 55, 55, 55, 55, 60, 0};
+        columnWidths = widths;
+    }
 
-    QStringList headerText;
-    headerText << "" << "序号" << "编号" << "型号" << "品牌" << "风量\n(m³/h)" << "静压\n(Pa)" << "类型"
-               << "噪音\n位置" << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)"
-               << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)" << "4kHz\n(dB)" << "8kHz\n(dB)" << "总值\ndB(A)" << "来源" << "UUID";
-
-    int columnWidths[] = {30, 40, 120, 120, 80, 55, 55, 55, 60, 55, 55, 55, 55, 55, 55, 55, 55, 55, 60, 0};
+    // 调用封装好的初始化表格函数
     setTableWidget(ui->tableWidget, headerText, columnWidths, colCount);
+
     // 隐藏最后一列
     ui->tableWidget->setColumnHidden(colCount - 1, true);
 }
 
 void Widget_aircondition_doubleFan_inputTable::onAdd()
 {
-    QTableWidget *tableWidget = ui->tableWidget;
-    Dialog_aircondition *dialog = new Dialog_aircondition(nullptr, -1, 2);
-    QSharedPointer<Aircondition> component;
+    if(inComponentDB)
+    {
+        QTableWidget *tableWidget = ui->tableWidget;
+        Dialog_aircondition *dialog = new Dialog_aircondition(nullptr, -1, 2);
+        QSharedPointer<Aircondition> component;
 
-    int rowCount = tableWidget->rowCount(); //获取当前行数
-    if (dialog->exec() == QDialog::Accepted) {
-        if(Aircondition* rawPointer = static_cast<Aircondition*>(dialog->getComponent()))
-            component = QSharedPointer<Aircondition>(rawPointer);
-        else
-            return;
-        component->table_id = QString::number(tableWidget->rowCount() / 4 + 1);
-        if (component != nullptr) {
-            auto lists = dialog->getComponentDataAsStringList();
+        int rowCount = tableWidget->rowCount(); //获取当前行数
+        dialog->switchToCompontDB(inComponentDB);
+        if (dialog->exec() == QDialog::Accepted) {
+            if(Aircondition* rawPointer = static_cast<Aircondition*>(dialog->getComponent()))
+                component = QSharedPointer<Aircondition>(rawPointer);
+            else
+                return;
+            component->table_id = QString::number(tableWidget->rowCount() / 4 + 1);
+            if (component != nullptr) {
+                auto lists = component->getComponentDataAsStringList(inComponentDB);
 
-            // 使用通用函数添加行
-            addRowToTable(tableWidget, lists[0]);
-            addRowToTable(tableWidget, lists[1]);
-            addRowToTable(tableWidget, lists[2]);
-            addRowToTable(tableWidget, lists[3]);
+                // 使用通用函数添加行
+                addRowToTable(tableWidget, lists[0]);
+                addRowToTable(tableWidget, lists[1]);
+                addRowToTable(tableWidget, lists[2]);
+                addRowToTable(tableWidget, lists[3]);
 
-            componentManager.addComponent(component);
+                componentManager.addComponent(component, inComponentDB);
 
-            mergeCells(rowCount);
+                mergeCells(rowCount);
+            }
         }
     }
+    else
+    {
+        Widget_aircondition_doubleFan_inputTable* inputTable = new Widget_aircondition_doubleFan_inputTable(true, nullptr);
+        inputTable->initTableWidget();
+        inputTable->showConfirmButton();
+        inputTable->show();
+        inputTable->loadComponentToTable();
+        connect(inputTable, &Widget_base_inputTable::confirmed, this, &Widget_aircondition_doubleFan_inputTable::handleConfirmation);
+    }
+
 }
 
 void Widget_aircondition_doubleFan_inputTable::onDel()
@@ -142,6 +170,57 @@ void Widget_aircondition_doubleFan_inputTable::onDel()
     }
 }
 
+void Widget_aircondition_doubleFan_inputTable::handleConfirmation(QSet<QString> uuids)
+{
+    for(auto uuid : uuids)
+    {
+        QSharedPointer<ComponentBase> componentBase = ComponentManager::getInstance().findComponent(true, uuid);;
+        if(QSharedPointer<Aircondition> component = qSharedPointerCast<Aircondition>(componentBase))
+        {
+            // 使用深拷贝构造函数来创建一个新的 Fan 对象
+            QSharedPointer<Aircondition> newComponent = QSharedPointer<Aircondition>(new Aircondition(*component));
+            if (newComponent != nullptr) {
+
+                auto lists = newComponent->getComponentDataAsStringList(false);
+
+                // 使用通用函数添加行
+                addRowToTable(ui->tableWidget, lists[0]);
+                addRowToTable(ui->tableWidget, lists[1]);
+                addRowToTable(ui->tableWidget, lists[2]);
+                addRowToTable(ui->tableWidget, lists[3]);
+
+                componentManager.addComponent(newComponent, false);
+
+                // 重新编号
+                for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
+                    QTableWidgetItem* item = new QTableWidgetItem(QString::number(4 == 1 ? (row + 1) : (row / 4 + 1)));
+                    ui->tableWidget->setItem(row, 1, item); // Assuming the sequence numbers are in the second column (index 1)
+                    item->setTextAlignment(Qt::AlignCenter);
+                    item->setFlags(Qt::ItemIsEditable);
+                    item->setBackground(QBrush(Qt::lightGray));
+                    item->setData(Qt::ForegroundRole, QColor(70, 70, 70));
+                }
+
+                // 更新组件信息
+                for (int row = 0; row < ui->tableWidget->rowCount(); row+=4) {
+                    QString uuid = ui->tableWidget->item(row, ui->tableWidget->columnCount() - 1)->text(); // 获取组件uuid
+                    QSharedPointer<ComponentBase> component = componentManager.findComponent(inComponentDB, uuid); // 查找组件
+
+                    if (component) {
+                        component->setTableID((QString::number((row + 4) / 4))); // 设置新的table_id，假设组件有这个方法
+                        componentManager.updateComponent(uuid, component, inComponentDB); // 更新组件
+                    }
+                }
+
+                for(int i = 0; i < ui->tableWidget->rowCount(); i += 4)
+                {
+                    mergeCells(i);
+                }
+            }
+        }
+    }
+}
+
 void Widget_aircondition_doubleFan_inputTable::onRevise()
 {
     for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
@@ -149,13 +228,13 @@ void Widget_aircondition_doubleFan_inputTable::onRevise()
         QCheckBox* checkBox = widget ? widget->findChild<QCheckBox*>() : nullptr;
         if (checkBox && checkBox->isChecked()) {
             QString uuid = ui->tableWidget->item(row, ui->tableWidget->columnCount() - 1)->text();
-            QSharedPointer<Aircondition> component = componentManager.findComponent(uuid).dynamicCast<Aircondition>();
+            QSharedPointer<Aircondition> component = componentManager.findComponent(inComponentDB, uuid).dynamicCast<Aircondition>();
 
             Dialog_aircondition *dialog = new Dialog_aircondition(this, row, 2, *component);
             if (dialog->exec() == QDialog::Accepted) {
                 QSharedPointer<Aircondition> newComponent = QSharedPointer<Aircondition>(static_cast<Aircondition*>(dialog->getComponent()));
 
-                if (newComponent && componentManager.updateComponent(uuid, newComponent)) {
+                if (newComponent && componentManager.updateComponent(uuid, newComponent, inComponentDB)) {
                     int insertPosition = row; // 记录要插入新行的位置
 
                     // 删除旧行

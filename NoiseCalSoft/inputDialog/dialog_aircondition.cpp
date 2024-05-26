@@ -218,6 +218,20 @@ void* Dialog_aircondition::getComponent()
     return component == nullptr ? nullptr : component;
 }
 
+void Dialog_aircondition::switchToCompontDB(bool inDB)
+{
+    if(inDB)
+    {
+        ui->lineEdit_send_number->setText("-");
+        ui->widget_send_number->hide();
+        ui->widget_send_other->move(QPoint(ui->widget_send_number->x(), ui->widget_send_number->y()));
+
+        ui->lineEdit_exhaust_number->setText("-");
+        ui->widget_exhaust_number->hide();
+        ui->widget_exhaust_other->move(QPoint(ui->widget_exhaust_number->x(), ui->widget_exhaust_number->y()));
+    }
+}
+
 void Dialog_aircondition::on_close_clicked()
 {
     this->close();

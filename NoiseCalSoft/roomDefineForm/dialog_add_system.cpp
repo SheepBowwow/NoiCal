@@ -13,8 +13,7 @@ dialog_add_system::dialog_add_system(QWidget *parent) :
     setWindowFlag(Qt::FramelessWindowHint);  // 写在窗口类构造函数里，隐藏边框
     setTopWidget(ui->widget_top);
     ui->comboBox_type->setCurrentIndex(-1);
-    ui->comboBox_type->lineEdit()->setPlaceholderText(QStringLiteral("请选择设备类型"));
-    ui->comboBox_numOrModel->lineEdit()->setPlaceholderText(QStringLiteral("请选择设备编号"));
+    ui->comboBox_model->setVisible(false);
 }
 
 
@@ -26,13 +25,14 @@ dialog_add_system::~dialog_add_system()
 void dialog_add_system::setvalues(int type_index, QString number, QString model)
 {
     ui->comboBox_type->setCurrentIndex(type_index);
-    ui->comboBox_numOrModel->setCurrentText(number);
+    ui->comboBox_num->setCurrentText(number);
     ui->lineEdit_model->setText(model);
+    ui->comboBox_model->setCurrentText(model);
 }
 
 QString dialog_add_system::getType()
 {
-    if(ui->comboBox_type->currentIndex()!=-1)
+    if(ui->comboBox_type->currentIndex() != -1)
         return ui->comboBox_type->currentText();
     return QString("");
 }
@@ -42,15 +42,15 @@ QString dialog_add_system::getNumber()
     if(getType() == noise_src_component::FANCOIL)
         return ui->lineEdit_model->text();
 
-    if(ui->comboBox_numOrModel->currentIndex()!=-1)
-        return ui->comboBox_numOrModel->currentText();
+    if(ui->comboBox_num->currentIndex()!=-1)
+        return ui->comboBox_num->currentText();
     return QString("");
 }
 
 QString dialog_add_system::getModel()
 {
     if(getType() == noise_src_component::FANCOIL)
-        return ui->comboBox_numOrModel->currentText();
+        return ui->comboBox_model->currentText();
     return ui->lineEdit_model->text();
 }
 
@@ -61,7 +61,9 @@ QString dialog_add_system::getComponentUUID() const
 
 void dialog_add_system::on_pushButton_queding_clicked()
 {
-    if(ui->comboBox_numOrModel->currentIndex() == -1 || ui->comboBox_type->currentIndex() == -1)
+    if( ui->comboBox_type->currentIndex() == -1
+        || (ui->comboBox_type->currentIndex() != 1 && ui->comboBox_num->currentIndex() == -1)
+        || (ui->comboBox_type->currentIndex() == 1 && ui->comboBox_model->currentIndex() == -1))
     {
         QMessageBox msgBox;
         msgBox.setWindowTitle("警告"); // 设置对话框的标题
@@ -89,99 +91,94 @@ void dialog_add_system::on_close_clicked()
 
 void dialog_add_system::on_comboBox_type_currentIndexChanged(int index)
 {
-
-    if(index == 0 || index == 1)
+    if(index == 0)
     {
-        ui->comboBox_numOrModel->clear();
-        ui->label_model->setText("型号");
-        ui->label_num->setText("编号");
-        ui->lineEdit_model->setStyleSheet("");
+        ui->comboBox_num->blockSignals(true);
+        ui->comboBox_num->clear();
         ui->lineEdit_model->clear();
-        ui->comboBox_numOrModel->lineEdit()->setPlaceholderText(QStringLiteral("请选择设备编号"));
+        ui->comboBox_model->clear();
+        ui->label_num->setVisible(true);
+        ui->comboBox_num->setVisible(true);
+        ui->lineEdit_model->setVisible(true);
+        ui->comboBox_model->setVisible(false);
 
         QList<QSharedPointer<ComponentBase>> components =
-                ComponentManager::getInstance().getComponentsByType(component_type_name::AIRCONDITION);
-        for(auto &component: components)
-        {
-            if(auto aircondition = dynamic_cast<Aircondition*>(component.data()))
-            {
-                if(index == 0)
-                    ui->comboBox_numOrModel->addItem(aircondition->send_number);
-                else if(index == 1 && aircondition->fan_counts == 2)
-                    ui->comboBox_numOrModel->addItem(aircondition->exhaust_number);
-            }
-        }
-        ui->comboBox_numOrModel->setCurrentIndex(-1);
-    }
-    else if(index == 2)
-    {
-        ui->comboBox_numOrModel->clear();
-        ui->label_model->setText("型号");
-        ui->label_num->setText("编号");
-        ui->lineEdit_model->setStyleSheet("");
-        ui->lineEdit_model->clear();
-        ui->comboBox_numOrModel->lineEdit()->setPlaceholderText(QStringLiteral("请选择设备编号"));
-
-        QList<QSharedPointer<ComponentBase>> components =
-                ComponentManager::getInstance().getComponentsByType(component_type_name::FAN);
+            ComponentManager::getInstance().getComponentsByType(false, component_type_name::FAN);
         for(auto &component: components)
         {
             if(auto fan = dynamic_cast<Fan*>(component.data()))
             {
-                ui->comboBox_numOrModel->addItem(fan->number);
+                ui->comboBox_num->addItem(fan->number);
             }
         }
-        ui->comboBox_numOrModel->setCurrentIndex(-1);
+        ui->comboBox_num->setCurrentIndex(-1);
+        ui->comboBox_num->blockSignals(false);
     }
-    else if(index == 3)
+    else if(index == 1)
     {
-        ui->comboBox_numOrModel->clear();
-        ui->label_model->setText("编号");
-        ui->label_num->setText("型号");
-        ui->lineEdit_model->setStyleSheet("QLineEdit{background-color: rgb(240, 240, 240); "
-                                          "border: 1px solid #9C9C9C;}");
-        ui->lineEdit_model->setReadOnly(true);
-        ui->lineEdit_model->setText("-");
-        ui->comboBox_numOrModel->lineEdit()->setPlaceholderText(QStringLiteral("请选择设备型号"));
+        ui->comboBox_model->blockSignals(true);
+        ui->comboBox_num->clear();
+        ui->lineEdit_model->clear();
+        ui->comboBox_model->clear();
+        ui->label_num->setVisible(false);
+        ui->comboBox_num->setVisible(false);
+        ui->lineEdit_model->setVisible(false);
+        ui->comboBox_model->setVisible(true);
 
         QList<QSharedPointer<ComponentBase>> components =
-                ComponentManager::getInstance().getComponentsByType(component_type_name::FANCOIL);
+            ComponentManager::getInstance().getComponentsByType(false, component_type_name::FANCOIL);
         for(auto &component: components)
         {
             if(auto fanCoil = dynamic_cast<FanCoil*>(component.data()))
             {
-                ui->comboBox_numOrModel->addItem(fanCoil->model);
+                ui->comboBox_model->addItem(fanCoil->model);
             }
         }
-        ui->comboBox_numOrModel->setCurrentIndex(-1);
+        ui->comboBox_model->setCurrentIndex(-1);
+        ui->comboBox_model->blockSignals(false);
     }
-    ui->lineEdit_model->clear();
-}
-
-
-void dialog_add_system::on_comboBox_numOrModel_currentTextChanged(const QString &arg1)
-{
-    ui->lineEdit_model->clear();
-    if(ui->comboBox_type->currentIndex() == 0 || ui->comboBox_type->currentIndex() == 1)
+    else if(index == 2 || index == 3)
     {
+        ui->comboBox_num->blockSignals(true);
+        ui->comboBox_num->clear();
+        ui->lineEdit_model->clear();
+        ui->comboBox_model->clear();
+        ui->label_num->setVisible(true);
+        ui->comboBox_num->setVisible(true);
+        ui->lineEdit_model->setVisible(true);
+        ui->comboBox_model->setVisible(false);
+
         QList<QSharedPointer<ComponentBase>> components =
-                ComponentManager::getInstance().getComponentsByType(component_type_name::AIRCONDITION);
+                ComponentManager::getInstance().getComponentsByType(false, component_type_name::AIRCONDITION);
         for(auto &component: components)
         {
             if(auto aircondition = dynamic_cast<Aircondition*>(component.data()))
             {
-                if(aircondition->send_number == arg1 || aircondition->exhaust_number == arg1)
+                QString item = aircondition->send_number;
+                if(index == 2 && aircondition->fan_counts == 1)
                 {
-                    ui->lineEdit_model->setText(aircondition->model);
-                    componentUUID = aircondition->UUID;
+                    ui->comboBox_num->addItem(item);
+                }
+                else if(index == 3 && aircondition->fan_counts == 2)
+                {
+                    item += (" & " + aircondition->exhaust_number);
+                    ui->comboBox_num->addItem(item);
                 }
             }
         }
+        ui->comboBox_num->setCurrentIndex(-1);
+        ui->comboBox_num->blockSignals(false);
     }
-    if(ui->comboBox_type->currentIndex() == 2)
+}
+
+
+void dialog_add_system::on_comboBox_num_currentTextChanged(const QString &arg1)
+{
+    ui->lineEdit_model->clear();
+    if(ui->comboBox_type->currentIndex() == 0)
     {
         QList<QSharedPointer<ComponentBase>> components =
-                ComponentManager::getInstance().getComponentsByType(component_type_name::FAN);
+            ComponentManager::getInstance().getComponentsByType(false, component_type_name::FAN);
         for(auto &component: components)
         {
             if(auto fan = dynamic_cast<Fan*>(component.data()))
@@ -194,18 +191,18 @@ void dialog_add_system::on_comboBox_numOrModel_currentTextChanged(const QString 
             }
         }
     }
-    if(ui->comboBox_type->currentIndex() == 3)
+    else if(ui->comboBox_type->currentIndex() == 2 || ui->comboBox_type->currentIndex() == 3)
     {
         QList<QSharedPointer<ComponentBase>> components =
-                ComponentManager::getInstance().getComponentsByType(component_type_name::FANCOIL);
+            ComponentManager::getInstance().getComponentsByType(false, component_type_name::AIRCONDITION);
         for(auto &component: components)
         {
-            if(auto fanCoil = dynamic_cast<FanCoil*>(component.data()))
+            if(auto aircondition = dynamic_cast<Aircondition*>(component.data()))
             {
-                if(fanCoil->model == arg1)
+                if(aircondition->send_number == arg1 || (aircondition->send_number + " & " + aircondition->exhaust_number) == arg1)
                 {
-                    componentUUID = fanCoil->UUID;
-                    ui->lineEdit_model->setText("-");
+                    ui->lineEdit_model->setText(aircondition->model);
+                    componentUUID = aircondition->UUID;
                 }
             }
         }

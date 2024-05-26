@@ -23,17 +23,17 @@ public:
     }
 
     // 添加组件
-    void addComponent(const QSharedPointer<ComponentBase>& component, bool updateOrLoad = false);
+    void addComponent(const QSharedPointer<ComponentBase>& component, bool inComponentDB, bool updateOrLoad = false);
     // 删除组件
-    bool removeComponent(const QString& uuid, bool update = false);
+    bool removeComponent(const QString& uuid, bool inComponentDB, bool update = false);
     // 查找组件
-    QSharedPointer<ComponentBase> findComponent(const QString& uuid) const;
+    QSharedPointer<ComponentBase> findComponent(bool inComponentDB, const QString& uuid) const;
 
     // 获取特定类型的所有组件
-    QList<QSharedPointer<ComponentBase>> getComponentsByType(const QString& type) const;
+    QList<QSharedPointer<ComponentBase>> getComponentsByType(bool inComponentDB, const QString& type) const;
 
     // 修改组件
-    bool updateComponent(const QString& uuid, const QSharedPointer<ComponentBase>& newComponent);
+    bool updateComponent(const QString& uuid, const QSharedPointer<ComponentBase>& newComponent, bool inComponentDB);
 
     void clearCurrentPrjComponents();
 
@@ -51,6 +51,8 @@ private:
 
     QHash<QString, QSharedPointer<ComponentBase>> components;   //用来存放所有部件的hash, key: UUID, value: Component
     QHash<QString, QList<QSharedPointer<ComponentBase>>> componentsByType;  //不同种类的容器
+    QHash<QString, QSharedPointer<ComponentBase>> DBcomponents;   //用来存放部件数据库所有部件的hash, key: UUID, value: Component
+    QHash<QString, QList<QSharedPointer<ComponentBase>>> DBcomponentsByType;  //部件数据库种不同种类的容器
 };
 
 #endif // COMPONENTMANAGER_H

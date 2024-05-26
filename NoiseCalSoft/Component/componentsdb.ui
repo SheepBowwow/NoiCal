@@ -10,6 +10,12 @@
     <height>754</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -28,6 +34,12 @@
    </property>
    <item>
     <widget class="QTreeWidget" name="treeWidget">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="minimumSize">
       <size>
        <width>192</width>
@@ -85,7 +97,8 @@ QHeaderView::section {
      <widget class="QWidget" name="page_circular_damper"/>
      <widget class="QWidget" name="page_rect_damper"/>
      <widget class="QWidget" name="page_air_diff"/>
-     <widget class="QWidget" name="page_pump_send"/>
+     <widget class="QWidget" name="page_pump"/>
+     <widget class="QWidget" name="page_send"/>
      <widget class="QWidget" name="page_staticBox_grille"/>
      <widget class="QWidget" name="page_disp_vent_terminal"/>
      <widget class="QWidget" name="page_other_send_terminal"/>
@@ -95,7 +108,10 @@ QHeaderView::section {
      <widget class="QWidget" name="page_pipe"/>
      <widget class="QWidget" name="page_elbow"/>
      <widget class="QWidget" name="page_reducer"/>
-     <widget class="QWidget" name="page_silencer"/>
+     <widget class="QWidget" name="page_circular_silencer"/>
+     <widget class="QWidget" name="page_rect_silencer"/>
+     <widget class="QWidget" name="page_circular_silencer_elbow"/>
+     <widget class="QWidget" name="page_rect_silencer_elbow"/>
     </widget>
    </item>
   </layout>

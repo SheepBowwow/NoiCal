@@ -4,17 +4,40 @@
 #include "project/projectmanager.h"
 #include "Component/ComponentManager.h"
 #include <QQueue>
+#include <QComboBox>
+#include <QLabel>
 
-Widget_base_inputTable::Widget_base_inputTable(QWidget *parent,  bool setupUi) :
+Widget_base_inputTable::Widget_base_inputTable(bool inComponentDB, QWidget *parent) :
     QWidget(parent),
+    inComponentDB(inComponentDB),
     ui(new Ui::Widget_base_inputTable)
 {
-    if (setupUi) {
-        ui->setupUi(this);
+    ui->setupUi(this);
+
+    // 假设horizontalLayout包含一个按钮和一个弹簧
+    ui->pushButton_confirm->hide(); // 隐藏按钮
+
+    // 假设horizontalLayout是在verticalLayout中
+    // 我们需要找到并移除弹簧，因为弹簧不能直接隐藏
+    for (int i = 0; i < ui->horizontalLayout_confirm->count(); ++i) {
+        QLayoutItem* item = ui->horizontalLayout_confirm->itemAt(i);
+        if (item->spacerItem()) {
+            ui->horizontalLayout_confirm->removeItem(item);
+            delete item; // 删除弹簧
+            break;
+        }
     }
+
+    // 假设我们还想确保布局适当地调整大小
+    ui->widget->layout()->invalidate(); // 标记布局需要重新计算
+    ui->widget->layout()->update(); // 请求更新布局
 
     connect(&ProjectManager::getInstance(), &ProjectManager::clearTable, this, &Widget_base_inputTable::clearTable);
     connect(&ComponentManager::getInstance(),&ComponentManager::loadComponentsDone, this, &Widget_base_inputTable::loadTable);
+    connect(ui->pushButton_filter, &QPushButton::clicked, this, &Widget_base_inputTable::onFilter);
+    connect(ui->pushButton_confirm, &QPushButton::clicked, this, &Widget_base_inputTable::onConfirm);
+    connect(ui->pushButton_selectAll, &QPushButton::clicked, this, &Widget_base_inputTable::onSelectAll);
+    connect(ui->pushButton_unSelectAll, &QPushButton::clicked, this, &Widget_base_inputTable::onUnSelectAll);
 }
 
 Widget_base_inputTable::~Widget_base_inputTable()
@@ -74,6 +97,79 @@ void Widget_base_inputTable::loadTable()
     loadComponentToTable();
 }
 
+void Widget_base_inputTable::filterByBrandModel(int brandIndex, int modelIndex, int mergeRowCount, QString brand, QString model)
+{
+    // 如果选择所有品牌，取消所有隐藏并返回
+    if (brand == "所有品牌") {
+        for (int i = 0; i < ui->tableWidget->rowCount(); ++i) {
+            ui->tableWidget->setRowHidden(i, false);
+        }
+    }
+    else
+    {
+        // 遍历表格中的行，考虑mergeRowCount定义的行合并
+        for (int i = 0; i < ui->tableWidget->rowCount(); i += mergeRowCount) {
+            bool match = true;
+
+            // 检查当前行和下一行是否匹配品牌
+            for (int j = 0; j < mergeRowCount; ++j) {
+                int currentRow = i + j;
+                if (currentRow >= ui->tableWidget->rowCount()) break;
+
+                QTableWidgetItem *brandItem = ui->tableWidget->item(currentRow, brandIndex);
+                QTableWidgetItem *modelItem = ui->tableWidget->item(currentRow, modelIndex);
+
+                // 检查品牌匹配，如果品牌匹配且未选择所有型号，则检查型号
+                if (!brandItem || brandItem->text() != brand || (model != "所有型号" && (!modelItem || modelItem->text() != model))) {
+                    match = false;
+                    break;
+                }
+            }
+
+            // 根据匹配结果显示或隐藏整个逻辑行
+            for (int j = 0; j < mergeRowCount; ++j) {
+                int currentRow = i + j;
+                if (currentRow >= ui->tableWidget->rowCount()) break;
+
+                ui->tableWidget->setRowHidden(currentRow, !match);
+            }
+        }
+    }
+
+    int visibleIndex = 0;  // 用于给可见行编号，起始编号为0
+    // 重新编号
+    for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
+        if (!ui->tableWidget->isRowHidden(row))
+        {
+            QTableWidgetItem* item = new QTableWidgetItem(QString::number(mergeRowCount == 1 ? (visibleIndex++ + 1) : (visibleIndex++ / mergeRowCount + 1)));
+            ui->tableWidget->setItem(row, 1, item); // Assuming the sequence numbers are in the second column (index 1)
+            item->setTextAlignment(Qt::AlignCenter);
+            item->setFlags(Qt::ItemIsEditable);
+            item->setBackground(QBrush(Qt::lightGray));
+            item->setData(Qt::ForegroundRole, QColor(70, 70, 70));
+        }
+    }
+}
+
+void Widget_base_inputTable::resizeEvent(QResizeEvent *event)
+{
+    QWidget::resizeEvent(event); // Call the base class implementation
+
+    if (!ui->tableWidget)
+        return;
+
+    double totalWidth = 0;
+    for (int i = 0; i < colCount; ++i)
+    {
+        totalWidth += columnWidths[i];
+    }
+    for (int i = 0; i < colCount; ++i)
+    {
+        int columnWidth = static_cast<int>(static_cast<double>(columnWidths[i]) * ui->tableWidget->width() / totalWidth);
+        ui->tableWidget->setColumnWidth(i, columnWidth);
+    }
+}
+
 /**
  * 函数简介: 初始化表格
  * 参数说明:
@@ -96,7 +192,6 @@ void Widget_base_inputTable::setTableWidget(QTableWidget *tableWidget, const QSt
     {
         totalWidth += columnWidths[i];
     }
-
     for (int i = 0; i < colCount; ++i)
     {
         double ratio = static_cast<double>(columnWidths[i]) / totalWidth;
@@ -106,6 +201,45 @@ void Widget_base_inputTable::setTableWidget(QTableWidget *tableWidget, const QSt
 
     tableWidget->horizontalHeader()->setStretchLastSection(true);
     tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
+
+    // 强制更新表格布局
+    tableWidget->update();
+}
+
+/**
+ * 函数简介: 初始化表格
+ * 参数说明:
+ *  - tableWidget : 要操作的表格
+ *  - headerText : 表头文本
+ *  - columnWidths : 列宽比
+ *  - colCount : 列数
+ * 返回值: void
+ */
+void Widget_base_inputTable::setTableWidget(QTableWidget *tableWidget, const QStringList &headerText, QVector<int> columnWidths, int colCount)
+{
+    tableWidget->setColumnCount(colCount);
+    tableWidget->setRowCount(0);
+    tableWidget->setHorizontalHeaderLabels(headerText);
+    tableWidget->verticalHeader()->setVisible(false);
+    tableWidget->setSelectionMode(QAbstractItemView::NoSelection);
+    tableWidget->setFocusPolicy(Qt::NoFocus);
+    int totalWidth = 0;
+    for (int i = 0; i < colCount; ++i)
+    {
+        totalWidth += columnWidths[i];
+    }
+    for (int i = 0; i < colCount; ++i)
+    {
+        double ratio = static_cast<double>(columnWidths[i]) / totalWidth;
+        int columnWidth = static_cast<int>(ratio * tableWidget->width());
+        tableWidget->setColumnWidth(i, columnWidth);
+    }
+
+    tableWidget->horizontalHeader()->setStretchLastSection(true);
+    tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
+
+    // 强制更新表格布局
+    tableWidget->update();
 }
 
 /**
@@ -175,7 +309,9 @@ void Widget_base_inputTable::deleteRowFromTable(QTableWidget *tableWidget, int d
     for (int i = 0; i < selectedRows.size(); ++i)
     {
         int row = selectedRows[i];
-        confirmationMessage += QString::number((row + deleteRowNum) / deleteRowNum) + "\n"; // 从1开始计数
+        QString rowNum = QString::number((row + deleteRowNum) / deleteRowNum);
+        if(!confirmationMessage.contains(rowNum))
+            confirmationMessage += rowNum + "\n"; // 从1开始计数
     }
 
     QMessageBox msgBox;
@@ -193,7 +329,7 @@ void Widget_base_inputTable::deleteRowFromTable(QTableWidget *tableWidget, int d
         {
             int row = selectedRows[i];
             UUID = tableWidget->item(row, tableWidget->columnCount() - 1)->text();
-            componentManager.removeComponent(UUID);
+            componentManager.removeComponent(UUID, inComponentDB);
             tableWidget->removeRow(row);
             if(deleteRowNum != 1)
             {
@@ -203,7 +339,6 @@ void Widget_base_inputTable::deleteRowFromTable(QTableWidget *tableWidget, int d
                 }
             }
         }
-
 
         // 重新编号
         for (int row = 0; row < tableWidget->rowCount(); ++row) {
@@ -218,13 +353,17 @@ void Widget_base_inputTable::deleteRowFromTable(QTableWidget *tableWidget, int d
         // 更新组件信息
         for (int row = 0; row < tableWidget->rowCount(); row+=deleteRowNum) {
             QString uuid = tableWidget->item(row, tableWidget->columnCount() - 1)->text(); // 获取组件uuid
-            QSharedPointer<ComponentBase> component = componentManager.findComponent(uuid); // 查找组件
+            QSharedPointer<ComponentBase> component = componentManager.findComponent(inComponentDB, uuid); // 查找组件
 
             if (component) {
                 component->setTableID((QString::number((row + deleteRowNum) / deleteRowNum))); // 设置新的table_id，假设组件有这个方法
-                componentManager.updateComponent(uuid, component); // 更新组件
+                componentManager.updateComponent(uuid, component, inComponentDB); // 更新组件
             }
         }
+
+        // 清除选中状态和焦点
+        tableWidget->clearSelection();
+        tableWidget->clearFocus();
     }
     else if (msgBox.clickedButton() == noButton)
     {
@@ -282,7 +421,7 @@ void Widget_base_inputTable::deleteRowFromTable(QTableWidget *tableWidget_noise,
         {
             int row = selectedRows[i];
             UUID = tableWidget_noise->item(row , tableWidget_noise->columnCount() - 1)->text();
-            ComponentManager::getInstance().removeComponent(UUID);
+            ComponentManager::getInstance().removeComponent(UUID, inComponentDB);
             tableWidget_noise->removeRow(row);
             tableWidget_atten->removeRow(row);
             tableWidget_refl->removeRow(row);
@@ -305,11 +444,11 @@ void Widget_base_inputTable::deleteRowFromTable(QTableWidget *tableWidget_noise,
         // 更新组件信息
         for (int row = 0; row < tableWidget_noise->rowCount(); row++) {
             QString uuid = tableWidget_noise->item(row, tableWidget_noise->columnCount() - 1)->text(); // 获取组件uuid
-            QSharedPointer<ComponentBase> component = componentManager.findComponent(uuid); // 查找组件
+            QSharedPointer<ComponentBase> component = componentManager.findComponent(inComponentDB, uuid); // 查找组件
 
             if (component) {
                 component->setTableID(QString::number(row + 1)); // 设置新的table_id，假设组件有这个方法
-                componentManager.updateComponent(uuid, component); // 更新组件
+                componentManager.updateComponent(uuid, component, inComponentDB); // 更新组件
             }
         }
     }
@@ -371,4 +510,169 @@ void Widget_base_inputTable::mergeColumnsByNames(QTableWidget* table, const QStr
             table->setCellWidget(row, 0, widget);
         }
     }
+}
+
+void Widget_base_inputTable::showConfirmButton()
+{
+    // 显示之前隐藏的按钮
+    ui->pushButton_confirm->show();
+    ui->pushButton_input->hide();
+    ui->pushButton_output->hide();
+    ui->pushButton_revise->hide();
+    ui->pushButton_del->hide();
+    ui->pushButton_add->hide();
+
+    // 重新添加弹簧到水平布局
+    QSpacerItem* spacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+    ui->horizontalLayout_confirm->addSpacerItem(spacer);
+    ui->horizontalLayout_confirm->addWidget(ui->pushButton_confirm); // 确保按钮在水平布局中的正确位置
+
+    // 假设我们还想确保布局适当地调整大小
+    ui->widget->layout()->invalidate(); // 标记布局需要重新计算
+    ui->widget->layout()->update(); // 请求更新布局
+}
+
+void Widget_base_inputTable::onSelectAll()
+{
+    for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
+        QWidget* widget = ui->tableWidget->cellWidget(row, 0); // Assuming the checkbox is in the first column (index 0)
+        QCheckBox* checkBox = widget->findChild<QCheckBox*>(); // Find the checkbox within the widget
+
+        if (checkBox) {
+            checkBox->setChecked(true);
+        }
+    }
+}
+
+void Widget_base_inputTable::onUnSelectAll()
+{
+    for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
+        QWidget* widget = ui->tableWidget->cellWidget(row, 0); // Assuming the checkbox is in the first column (index 0)
+        QCheckBox* checkBox = widget->findChild<QCheckBox*>(); // Find the checkbox within the widget
+
+        if (checkBox) {
+            checkBox->setChecked(false);
+        }
+    }
+}
+
+void Widget_base_inputTable::onConfirm()
+{
+    QSet<QString> uuids;
+    int colCount = ui->tableWidget->columnCount();
+    // 重新编号
+    for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
+        QWidget* widget = ui->tableWidget->cellWidget(row, 0); // Assuming the checkbox is in the first column (index 0)
+        QCheckBox* checkBox = widget->findChild<QCheckBox*>(); // Find the checkbox within the widget
+
+        if (checkBox && checkBox->isChecked()) {
+            QString uuid = ui->tableWidget->item(row, colCount - 1)->text();
+            uuids.insert(uuid);
+        }
+    }
+    this->close();
+
+    emit confirmed(uuids);
+}
+
+void Widget_base_inputTable::onFilter()
+{
+    QString selectedBrand;
+    QString selectedModel;
+    QDialog* dialog = new QDialog(nullptr);
+    dialog->setWindowTitle("筛选");
+    // 创建标签和下拉选择框
+    QLabel *modelLabel = new QLabel("型号:");
+    QComboBox *modelComboBox = new QComboBox();
+    int modelIndex = -1;
+    for (int i = 0; i < ui->tableWidget->columnCount(); ++i) {
+        if (ui->tableWidget->horizontalHeaderItem(i)->text() == "型号") {
+            modelIndex = i;
+            break;
+        }
+    }
+    modelComboBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    QLabel *brandLabel = new QLabel("品牌:");
+    QComboBox *brandComboBox = new QComboBox();
+    int brandIndex = -1;
+    for (int i = 0; i < ui->tableWidget->columnCount(); ++i) {
+        if (ui->tableWidget->horizontalHeaderItem(i)->text() == "品牌") {
+            brandIndex = i;
+            break;
+        }
+    }
+    brandComboBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    brandComboBox->addItem("所有品牌");
+    for(int i = 0; i < ui->tableWidget->rowCount(); i++)
+    {
+        QString brand = ui->tableWidget->item(i, brandIndex)->text();
+        if(brandComboBox->findText(brand) == -1)
+            brandComboBox->addItem(brand);
+    }
+    brandComboBox->setCurrentIndex(-1);
+    connect(brandComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            [=, this](int index) {
+        if (index < 0 || brandIndex == -1 || modelIndex == -1) return;  // 验证索引有效性
+
+        QString selectedBrand = brandComboBox->itemText(index);
+        modelComboBox->clear();  // 清空型号下拉列表
+        modelComboBox->addItem("所有型号");
+        // 遍历表格，寻找匹配的型号
+        for (int i = 0; i < ui->tableWidget->rowCount(); ++i) {
+            QTableWidgetItem* brandItem = ui->tableWidget->item(i, brandIndex);
+            if (brandItem && (brandItem->text() == selectedBrand)) {
+                QTableWidgetItem* modelItem = ui->tableWidget->item(i, modelIndex);
+                if (modelItem && modelComboBox->findText(modelItem->text()) == -1) {
+                    modelComboBox->addItem(modelItem->text());
+                }
+            }
+        }
+    });
+
+    // 创建确认按钮
+    QPushButton *confirmButton = new QPushButton("确认");
+    connect(confirmButton, &QPushButton::clicked, dialog, &QDialog::accept);
+
+    // 创建水平布局来放置型号标签和下拉框
+    QHBoxLayout *modelLayout = new QHBoxLayout;
+    modelLayout->addWidget(modelLabel);
+    modelLayout->addWidget(modelComboBox);
+
+    // 创建水平布局来放置品牌标签和下拉框
+    QHBoxLayout *brandLayout = new QHBoxLayout;
+    brandLayout->addWidget(brandLabel);
+    brandLayout->addWidget(brandComboBox);
+
+    // 创建水平布局来放置确认按钮
+    QHBoxLayout *buttonLayout = new QHBoxLayout;
+    // 创建一个弹簧
+    QSpacerItem *spacer = new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Minimum);
+    // 将弹簧添加到布局中
+    buttonLayout->addSpacerItem(spacer);
+    // 将确认按钮添加到布局中
+    buttonLayout->addWidget(confirmButton);
+
+    // 创建垂直布局来组合以上布局
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->addLayout(brandLayout);
+    mainLayout->addLayout(modelLayout);
+    mainLayout->addLayout(buttonLayout);
+
+    // 设置对话框的主布局
+    dialog->setLayout(mainLayout);
+
+    if(dialog->exec() == QDialog::Accepted)
+    {
+        // 在对话框被接受后保存数据
+        selectedBrand = brandComboBox->currentText();
+        selectedModel = modelComboBox->currentText();
+
+        // 现在可以使用 selectedBrand 和 selectedModel 进行其他操作
+        qDebug() << "Selected Brand: " << selectedBrand;
+        qDebug() << "Selected Model: " << selectedModel;
+
+        filterByBrandModel(brandIndex, modelIndex, mergeRowCount, selectedBrand, selectedModel);
+    }
+    delete dialog;
 }

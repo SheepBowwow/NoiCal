@@ -48,6 +48,10 @@ private:
     // InputBaseDialog interface
 public:
     QList<QStringList> getComponentDataAsStringList() const override {};
+
+    // InputBaseDialog interface
+public:
+    void switchToCompontDB(bool inDB) override {};
 };
 
 #endif // DIALOG_ADDROOM_H

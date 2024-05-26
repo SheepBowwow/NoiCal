@@ -9,7 +9,7 @@ class Widget_aircondition_doubleFan_inputTable : public Widget_base_inputTable
     Q_OBJECT
 
 public:
-    explicit Widget_aircondition_doubleFan_inputTable(QWidget *parent = nullptr);
+    explicit Widget_aircondition_doubleFan_inputTable(bool inComponentDB, QWidget *parent = nullptr);
     ~Widget_aircondition_doubleFan_inputTable();
 
     // Widget_base_inputTable interface
@@ -22,6 +22,7 @@ public slots:
     void onRevise() override;
     void onInput() override;
     void onOutput() override;
+    void handleConfirmation(QSet<QString> uuids) override;
 
 private:
     void mergeCells(int startRow);

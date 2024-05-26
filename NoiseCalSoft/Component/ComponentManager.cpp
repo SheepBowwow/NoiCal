@@ -8,10 +8,18 @@
  * @param component
  * @param update
  */
-void ComponentManager::addComponent(const QSharedPointer<ComponentBase> &component, bool updateOrLoad)
+void ComponentManager::addComponent(const QSharedPointer<ComponentBase> &component, bool inComponentDB, bool updateOrLoad)
 {
-    components[component->UUID] = component;
-    componentsByType[component->typeName()].append(component);
+    if(!inComponentDB)
+    {
+        components[component->UUID] = component;
+        componentsByType[component->typeName()].append(component);
+    }
+    else
+    {
+        DBcomponents[component->UUID] = component;
+        DBcomponentsByType[component->typeName()].append(component);
+    }
 
     if(!updateOrLoad)
     {
@@ -21,7 +29,7 @@ void ComponentManager::addComponent(const QSharedPointer<ComponentBase> &compone
         auto addFunc = addFuncMap.find(component->typeName());
         qDebug() << addFunc.key();
         // 检查是否找到并尝试执行添加到数据库的函数
-        if (addFunc != addFuncMap.end() && addFunc.value()(*component)) {
+        if (addFunc != addFuncMap.end() && addFunc.value()(*component, inComponentDB)) {
             qDebug() << component->typeName() << "added to database successfully.";
         } else {
             qDebug() << "Failed to add" << component->typeName() << "to database.";
@@ -37,42 +45,76 @@ void ComponentManager::addComponent(const QSharedPointer<ComponentBase> &compone
  * @param update 是否为更新部件调用
  * @return
  */
-bool ComponentManager::removeComponent(const QString &uuid, bool update)
+bool ComponentManager::removeComponent(const QString &uuid, bool inComponentDB, bool update)
 {
-    if (!components.contains(uuid)) return false;
-    auto component = components[uuid];
-    components.remove(uuid);
-    componentsByType[component->typeName()].removeOne(component);
+    QString typeName;
+    QHash<QString, QSharedPointer<ComponentBase>>* container;
+    QHash<QString, QList<QSharedPointer<ComponentBase>>>* containerBytype;
+    if(!inComponentDB)
+    {
+        container = &components;
+        containerBytype = &componentsByType;
+    }
+    else
+    {
+        container = &DBcomponents;
+        containerBytype = &DBcomponentsByType;
+    }
+
+    if (!container->contains(uuid)) return false;
+    auto component = (*container)[uuid];
+    container->remove(uuid);
+    if(!(*containerBytype)[component->typeName()].removeOne(component))
+    {
+        qDebug() << "Failed to remove component from list";
+    }
+    typeName = component->typeName();
+
 
     if(!update)
-        DatabaseManager::getInstance().delComponentInDatabase(component->typeName(), uuid);
+        DatabaseManager::getInstance().delComponentInDatabase(typeName, uuid, inComponentDB);
     emit componentsUpdate(uuid);
     return true;
 }
 
-QSharedPointer<ComponentBase> ComponentManager::findComponent(const QString &uuid) const
+QSharedPointer<ComponentBase> ComponentManager::findComponent(bool inComponentDB, const QString &uuid) const
 {
-    return components.value(uuid, QSharedPointer<ComponentBase>(nullptr));
+    if(!inComponentDB)
+        return components.value(uuid, QSharedPointer<ComponentBase>(nullptr));
+    else
+        return DBcomponents.value(uuid, QSharedPointer<ComponentBase>(nullptr));
 }
 
-QList<QSharedPointer<ComponentBase> > ComponentManager::getComponentsByType(const QString &type) const
+QList<QSharedPointer<ComponentBase> > ComponentManager::getComponentsByType(bool inComponentDB, const QString &type) const
 {
-    return componentsByType.value(type, QList<QSharedPointer<ComponentBase>>());
+    QList<QSharedPointer<ComponentBase> > res;
+    if(inComponentDB)
+        res = DBcomponentsByType.value(type, QList<QSharedPointer<ComponentBase>>());
+    else
+        res = componentsByType.value(type, QList<QSharedPointer<ComponentBase>>());
+    return res;
 }
 
-bool ComponentManager::updateComponent(const QString &uuid, const QSharedPointer<ComponentBase> &newComponent)
+bool ComponentManager::updateComponent(const QString &uuid, const QSharedPointer<ComponentBase> &newComponent, bool inComponentDB)
 {
-    if (!components.contains(uuid)) return false;
+    if(!inComponentDB)
+    {
+        if (!components.contains(uuid)) return false;
+    }
+    else
+    {
+        if (!DBcomponents.contains(uuid)) return false;
+    }
     // 首先删除旧组件
-    removeComponent(uuid, true);
+    removeComponent(uuid, inComponentDB ,true);
     // 添加新组件
-    addComponent(newComponent, true);
+    addComponent(newComponent, inComponentDB, true);
     // 查找并尝试执行添加到数据库的函数
     const auto& updateFuncMap = DatabaseManager::getInstance().getComponentUpdateFuncMap();
     // 然后在这个引用上调用 find()
     auto updateFunc = updateFuncMap.find(newComponent->typeName());
     // 检查是否找到并尝试执行添加到数据库的函数
-    if (updateFunc != updateFuncMap.end() && updateFunc.value()(*newComponent)) {
+    if (updateFunc != updateFuncMap.end() && updateFunc.value()(*newComponent, inComponentDB)) {
         qDebug() << newComponent->typeName() << "update to database successfully.";
     } else {
         qDebug() << "Failed to update" << newComponent->typeName() << "to database.";
@@ -89,7 +131,7 @@ void ComponentManager::clearCurrentPrjComponents()
 
 void ComponentManager::loadComponentToHash()
 {
-    DatabaseManager::getInstance().loadComponentsFromDatabase();
+    DatabaseManager::getInstance().loadComponentsFromPrjDB();
 
     emit loadComponentsDone();
 }

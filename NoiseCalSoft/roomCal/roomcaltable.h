@@ -139,15 +139,11 @@ private slots:
 
     void on_comboBox_aircondition_fan_type_currentIndexChanged(int index);
 
-    void on_comboBox_fan_data_source_currentTextChanged(const QString &arg1);
-
     void on_comboBox_fanCoil_data_source_currentTextChanged(const QString &arg1);
 
     void on_comboBox_aircondition_data_source_currentTextChanged(const QString &arg1);
 
     void on_comboBox_VAV_terminal_data_source_currentTextChanged(const QString &arg1);
-
-    void on_comboBox_circular_damper_data_source_currentTextChanged(const QString &arg1);
 
     void on_comboBox_circular_damper_model_currentTextChanged(const QString &arg1);
 

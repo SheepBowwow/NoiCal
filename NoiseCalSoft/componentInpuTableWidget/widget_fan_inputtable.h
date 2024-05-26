@@ -9,7 +9,7 @@ class Widget_fan_inputTable : public Widget_base_inputTable
     Q_OBJECT
 
 public:
-    explicit Widget_fan_inputTable(QWidget *parent = nullptr);
+    explicit Widget_fan_inputTable(bool inComponentDB, QWidget *parent = nullptr);
     ~Widget_fan_inputTable();
 
     // Widget_base_inputTable interface
@@ -21,9 +21,8 @@ public slots:
     void onDel() override;
     void onRevise() override;
     void onInput() override;
-    void onOutput() override;
-private:
-    QStringList mergeCols;
+    void onOutput() override;    
+    void handleConfirmation(QSet<QString> uuids) override;
 
     // Widget_base_inputTable interface
 public:

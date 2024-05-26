@@ -53,6 +53,17 @@ void* Dialog_VAV_terminal::getComponent()
     return component == nullptr ? nullptr : component;
 }
 
+void Dialog_VAV_terminal::switchToCompontDB(bool inDB)
+{
+    if(inDB)
+    {
+        ui->lineEdit_number->setText("-");
+        ui->widget_number->hide();
+        ui->widget_brand->move(QPoint(ui->widget_model->x(), ui->widget_model->y()));
+        ui->widget_model->move(QPoint(ui->widget_number->x(), ui->widget_number->y()));
+    }
+}
+
 // 槽函数实现
 void Dialog_VAV_terminal::calTotalNoise() {
     // 处理进口噪声的计算和显示

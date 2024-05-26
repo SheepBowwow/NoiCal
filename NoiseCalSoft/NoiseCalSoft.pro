@@ -37,7 +37,6 @@ SOURCES += \
     componentInpuTableWidget/widget_static_box_grille_inputtable.cpp \
     componentInpuTableWidget/widget_static_box_inputtable.cpp \
     componentInpuTableWidget/widget_tee_inputtable.cpp \
-    componentInpuTableWidget/widget_terminal_base_inputtable.cpp \
     componentInpuTableWidget/widget_vav_terminal_inputtable.cpp \
     database/DatabaseOperations.cpp \
     databasemanager.cpp \
@@ -103,7 +102,6 @@ HEADERS += \
     componentInpuTableWidget/widget_static_box_grille_inputtable.h \
     componentInpuTableWidget/widget_static_box_inputtable.h \
     componentInpuTableWidget/widget_tee_inputtable.h \
-    componentInpuTableWidget/widget_terminal_base_inputtable.h \
     componentInpuTableWidget/widget_vav_terminal_inputtable.h \
     database/DatabaseOperations.h \
     databasemanager.h \
@@ -148,9 +146,6 @@ HEADERS += \
 FORMS += \
     Component/componentsdb.ui \
     componentInpuTableWidget/widget_base_inputtable.ui \
-    componentInpuTableWidget/widget_pump_send_inputtable.ui \
-    componentInpuTableWidget/widget_silencer_inputtable.ui \
-    componentInpuTableWidget/widget_terminal_base_inputtable.ui \
     inputDialog/dialog_air_diff.ui \
     inputDialog/dialog_aircondition.ui \
     inputDialog/dialog_circular_damper.ui \

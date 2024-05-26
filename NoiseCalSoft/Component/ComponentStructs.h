@@ -45,7 +45,7 @@ public:
     QString data_source;    //来源
 
     virtual QString typeName() const = 0;
-    virtual QList<QStringList> getComponentDataAsStringList() const = 0;
+    virtual QList<QStringList> getComponentDataAsStringList(bool inDB = false) const = 0;
 
     // 构造函数
     ComponentBase(const QString& model, const QString& brand, const QString& table_id,
@@ -55,8 +55,28 @@ public:
         this->UUID = UUID.isEmpty() ? QUuid::createUuid().toString(QUuid::WithoutBraces) : UUID;
     }
 
+    //拷贝构造函数
+    ComponentBase(const ComponentBase& other)
+        : model(other.model), brand(other.brand), table_id(other.table_id),
+          UUID(QUuid::createUuid().toString(QUuid::WithoutBraces)), data_source(other.data_source) {}
+    //=操作符重载
+    ComponentBase& operator=(const ComponentBase& other) {
+        if (this != &other) {
+            model = other.model;
+            brand = other.brand;
+            table_id = other.table_id;
+            UUID = QUuid::createUuid().toString(QUuid::WithoutBraces);
+            data_source = other.data_source;
+        }
+        return *this;
+    }
+
     // 默认构造函数（如果需要的话，允许创建没有初始信息的对象）
     ComponentBase() = default;
+
+    bool operator==(const ComponentBase &other) const {
+        return UUID == other.UUID;
+    }
 
     // 虚析构函数，保证派生类的正确析构
     virtual ~ComponentBase() = default;
@@ -121,7 +141,7 @@ public:
     QString refl_data_source;    //来源
 
     virtual QString typeName() const = 0;
-    virtual QList<QStringList> getComponentDataAsStringList() const = 0;
+    virtual QList<QStringList> getComponentDataAsStringList(bool inDB = false) const = 0;
 
     Terminal() = default;
 
@@ -160,7 +180,7 @@ public:
     array<QString, 9> noi;  // 噪音
 
     virtual QString typeName() const = 0;
-    virtual QList<QStringList> getComponentDataAsStringList() const = 0;
+    virtual QList<QStringList> getComponentDataAsStringList(bool inDB = false) const = 0;
 
     Valve() = default;
 
@@ -193,7 +213,7 @@ public:
     array<QString, 8> atten;  //衰减
 
     virtual QString typeName() const = 0;
-    virtual QList<QStringList> getComponentDataAsStringList() const = 0;
+    virtual QList<QStringList> getComponentDataAsStringList(bool inDB = false) const = 0;
 
     Branch() = default;
 
@@ -266,6 +286,27 @@ typedef struct Fan : ComponentBase
     {
     }
 
+    //拷贝构造
+    Fan(const Fan& other) : ComponentBase(other) {
+        number = other.number.isEmpty() ? "-" : other.number;
+        air_volume = other.air_volume;
+        static_pressure = other.static_pressure;
+        noi_in = other.noi_in;
+        noi_out = other.noi_out;
+    }
+
+    //=操作符重载
+    Fan& operator=(const Fan& other) {
+        if (this != &other) {
+            ComponentBase::operator=(other);
+            number = other.number.isEmpty() ? "-" : other.number;
+            air_volume = other.air_volume;
+            static_pressure = other.static_pressure;
+            noi_in = other.noi_in;
+            noi_out = other.noi_out;
+        }
+        return *this;
+    }
     // ComponentBase interface
 public:
     QString typeName() const override{
@@ -274,14 +315,14 @@ public:
 
     // ComponentBase interface
 public:
-    QList<QStringList> getComponentDataAsStringList() const override
+    QList<QStringList> getComponentDataAsStringList(bool inDB = false) const override
     {
         QList<QStringList> dataLists;
         QStringList data_in = {
             table_id,
             number,
-            model,
             brand,
+            model,
             air_volume,
             static_pressure,
             "进口",
@@ -297,8 +338,8 @@ public:
         QStringList data_out = {
             table_id,
             number,
-            model,
             brand,
+            model,
             air_volume,
             static_pressure,
             "出口",
@@ -311,6 +352,12 @@ public:
 
         data_out.push_back(data_source);
         data_out.push_back(UUID);
+
+        if(inDB)
+        {
+            data_in.removeOne(number);
+            data_out.removeOne(number);
+        }
 
         dataLists.append(data_in);
         dataLists.append(data_out);
@@ -381,7 +428,7 @@ public:
 
     // ComponentBase interface
 public:
-    QList<QStringList> getComponentDataAsStringList() const override
+    QList<QStringList> getComponentDataAsStringList(bool inDB = false) const override
     {
         QList<QStringList> dataLists;
         QStringList data_in = {
@@ -532,7 +579,7 @@ public:
     }
     // ComponentBase interface
 public:
-    QList<QStringList> getComponentDataAsStringList() const override
+    QList<QStringList> getComponentDataAsStringList(bool inDB = false) const override
     {
         QList<QStringList> dataLists;
 
@@ -571,6 +618,12 @@ public:
 
         data_send_out.push_back(data_source);
         data_send_out.push_back(UUID);
+
+        if(inDB)
+        {
+            data_send_in.removeOne(send_number);
+            data_send_out.removeOne(send_number);
+        }
 
         dataLists.append(data_send_in);
         dataLists.append(data_send_out);
@@ -612,6 +665,12 @@ public:
 
             data_exhaust_out.push_back(data_source);
             data_exhaust_out.push_back(UUID);
+
+            if(inDB)
+            {
+                data_exhaust_in.removeOne(exhaust_number);
+                data_exhaust_out.removeOne(exhaust_number);
+            }
 
             dataLists.append(data_exhaust_in);
             dataLists.append(data_exhaust_out);
@@ -669,7 +728,7 @@ public:
 
     // ComponentBase interface
 public:
-    QList<QStringList> getComponentDataAsStringList() const override
+    QList<QStringList> getComponentDataAsStringList(bool inDB = false) const override
     {
         QList<QStringList> dataLists;
         QStringList data = {
@@ -688,6 +747,11 @@ public:
 
         data.push_back(data_source);
         data.push_back(UUID);
+
+        if(inDB)
+        {
+            data.removeOne(number);
+        }
 
         dataLists.append(data);
         return dataLists;
@@ -745,7 +809,7 @@ public:
 
     // ComponentBase interface
 public:
-    QList<QStringList> getComponentDataAsStringList() const override
+    QList<QStringList> getComponentDataAsStringList(bool inDB = false) const override
     {
         QList<QStringList> dataLists;
         QStringList data = {
@@ -823,7 +887,7 @@ public:
 
     // ComponentBase interface
 public:
-    QList<QStringList> getComponentDataAsStringList() const override
+    QList<QStringList> getComponentDataAsStringList(bool inDB = false) const override
     {
         QList<QStringList> dataLists;
         QStringList data = {
@@ -929,7 +993,7 @@ public:
     }
     // ComponentBase interface
 public:
-    QList<QStringList> getComponentDataAsStringList() const override
+    QList<QStringList> getComponentDataAsStringList(bool inDB = false) const override
     {
         QList<QStringList> dataLists;
         QStringList data_noise = {
@@ -1075,7 +1139,7 @@ public:
 
     // ComponentBase interface
 public:
-    QList<QStringList> getComponentDataAsStringList() const override
+    QList<QStringList> getComponentDataAsStringList(bool inDB = false) const override
     {
         QList<QStringList> dataLists;
         QStringList data_noise = {
@@ -1083,7 +1147,8 @@ public:
             model,
             brand,
             terminal_shape,
-            terminal_size
+            terminal_size,
+            "气流噪音"
         };
 
         // 迭代 noi_out 数组来填充 QStringList
@@ -1099,7 +1164,8 @@ public:
             model,
             brand,
             terminal_shape,
-            terminal_size
+            terminal_size,
+            "末端衰减"
         };
 
         // 迭代 noi_out 数组来填充 QStringList
@@ -1107,6 +1173,7 @@ public:
             data_atten.append(noi_value);
         }
 
+        data_atten.push_back("-");
         data_atten.append(atten_data_source);
         data_atten.append(UUID);
 
@@ -1115,7 +1182,8 @@ public:
             model,
             brand,
             terminal_shape,
-            terminal_size
+            terminal_size,
+            "反射衰减"
         };
 
         // 迭代 noi_out 数组来填充 QStringList
@@ -1123,6 +1191,7 @@ public:
             data_refl.push_back(noi_value);
         }
 
+        data_refl.push_back("-");
         data_refl.push_back(refl_data_source);
         data_refl.push_back(UUID);
 
@@ -1211,7 +1280,7 @@ public:
 
     // ComponentBase interface
 public:
-    QList<QStringList> getComponentDataAsStringList() const override
+    QList<QStringList> getComponentDataAsStringList(bool inDB = false) const override
     {
         QList<QStringList> dataLists;
         QStringList data_noise = {
@@ -1222,6 +1291,7 @@ public:
             grille_brand,
             terminal_shape,
             terminal_size,
+            "气流噪音"
         };
 
         // 迭代 noi_out 数组来填充 QStringList
@@ -1241,6 +1311,7 @@ public:
             grille_brand,
             terminal_shape,
             terminal_size,
+            "噪音衰减"
         };
 
         // 迭代 noi_out 数组来填充 QStringList
@@ -1248,6 +1319,7 @@ public:
             data_atten.push_back(noi_value);
         }
 
+        data_atten.push_back("-");
         data_atten.push_back(atten_data_source);
         data_atten.push_back(UUID);
 
@@ -1266,6 +1338,7 @@ public:
             data_refl.push_back(noi_value);
         }
 
+        data_refl.push_back("-");
         data_refl.push_back(refl_data_source);
         data_refl.push_back(UUID);
 
@@ -1337,7 +1410,7 @@ public:
 
     // ComponentBase interface
 public:
-    QList<QStringList> getComponentDataAsStringList() const override
+    QList<QStringList> getComponentDataAsStringList(bool inDB = false) const override
     {
         QList<QStringList> dataLists;
         QStringList data_noise = {
@@ -1345,7 +1418,8 @@ public:
             model,
             brand,
             terminal_shape,
-            terminal_size
+            terminal_size,
+            "气流噪音"
         };
 
         // 迭代 noi_out 数组来填充 QStringList
@@ -1362,7 +1436,8 @@ public:
             model,
             brand,
             terminal_shape,
-            terminal_size
+            terminal_size,
+            "噪音衰减"
         };
 
         // 迭代 noi_out 数组来填充 QStringList
@@ -1370,6 +1445,7 @@ public:
             data_atten.push_back(noi_value);
         }
 
+        data_atten.push_back("-");
         data_atten.push_back(atten_data_source);
         data_atten.push_back(UUID);
 
@@ -1378,7 +1454,8 @@ public:
             model,
             brand,
             terminal_shape,
-            terminal_size
+            terminal_size,
+            "反射衰减"
         };
 
         // 迭代 noi_out 数组来填充 QStringList
@@ -1386,6 +1463,7 @@ public:
             data_refl.push_back(noi_value);
         }
 
+        data_refl.push_back("-");
         data_refl.push_back(refl_data_source);
         data_refl.push_back(UUID);
 
@@ -1467,7 +1545,7 @@ public:
 
     // ComponentBase interface
 public:
-    QList<QStringList> getComponentDataAsStringList() const override
+    QList<QStringList> getComponentDataAsStringList(bool inDB = false) const override
     {
         QList<QStringList> dataLists;
         QStringList data_noise = {
@@ -1475,7 +1553,8 @@ public:
             model,
             brand,
             terminal_shape,
-            terminal_size
+            terminal_size,
+            "气流噪音"
         };
 
         // 迭代 noi_out 数组来填充 QStringList
@@ -1493,7 +1572,8 @@ public:
             model,
             brand,
             terminal_shape,
-            terminal_size
+            terminal_size,
+            "噪音衰减"
         };
 
         // 迭代 noi_out 数组来填充 QStringList
@@ -1501,6 +1581,7 @@ public:
             data_atten.push_back(noi_value);
         }
 
+        data_atten.push_back("-");
         data_atten.push_back(atten_data_source);
         data_atten.push_back(remark);
         data_atten.push_back(UUID);
@@ -1510,7 +1591,8 @@ public:
             model,
             brand,
             terminal_shape,
-            terminal_size
+            terminal_size,
+            "反射衰减"
         };
 
         // 迭代 noi_out 数组来填充 QStringList
@@ -1518,6 +1600,7 @@ public:
             data_refl.push_back(noi_value);
         }
 
+        data_refl.push_back("-");
         data_refl.push_back(refl_data_source);
         data_refl.push_back(remark);
         data_refl.push_back(UUID);
@@ -1572,7 +1655,7 @@ public:
 
     // ComponentBase interface
 public:
-    QList<QStringList> getComponentDataAsStringList() const override
+    QList<QStringList> getComponentDataAsStringList(bool inDB = false) const override
     {
         QList<QStringList> dataLists;
         QStringList data = {
@@ -1639,7 +1722,7 @@ public:
 
     // ComponentBase interface
 public:
-    QList<QStringList> getComponentDataAsStringList() const override
+    QList<QStringList> getComponentDataAsStringList(bool inDB = false) const override
     {
         QList<QStringList> dataLists;
         QStringList data = {
@@ -1705,7 +1788,7 @@ public:
 
     // ComponentBase interface
 public:
-    QList<QStringList> getComponentDataAsStringList() const override
+    QList<QStringList> getComponentDataAsStringList(bool inDB = false) const override
     {
         QList<QStringList> dataLists;
         QStringList data = {
@@ -1783,7 +1866,7 @@ public:
 
     // ComponentBase interface
 public:
-    QList<QStringList> getComponentDataAsStringList() const override
+    QList<QStringList> getComponentDataAsStringList(bool inDB = false) const override
     {
         QList<QStringList> dataLists;
         QStringList data = {
@@ -1860,7 +1943,7 @@ public:
 
     // ComponentBase interface
 public:
-    QList<QStringList> getComponentDataAsStringList() const override
+    QList<QStringList> getComponentDataAsStringList(bool inDB = false) const override
     {
         QList<QStringList> dataLists;
         QStringList data = {
@@ -1939,7 +2022,7 @@ public:
 
     // ComponentBase interface
 public:
-    QList<QStringList> getComponentDataAsStringList() const override
+    QList<QStringList> getComponentDataAsStringList(bool inDB = false) const override
     {
         QList<QStringList> dataLists;
         QStringList data = {
@@ -2011,7 +2094,7 @@ public:
 
     // ComponentBase interface
 public:
-    QList<QStringList> getComponentDataAsStringList() const override
+    QList<QStringList> getComponentDataAsStringList(bool inDB = false) const override
     {
         QList<QStringList> dataLists;
         QStringList data = {

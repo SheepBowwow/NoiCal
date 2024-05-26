@@ -9,13 +9,17 @@ class Widget_air_diff_inputTable : public Widget_base_inputTable
 {
     Q_OBJECT
 public:
-    Widget_air_diff_inputTable(QWidget *parent = nullptr);
+    Widget_air_diff_inputTable(bool inComponentDB, QWidget *parent = nullptr);
 
 
 
     // Widget_base_inputTable interface
 public:
     void initTableWidget() override;
+    void filterByBrandModel(int air_distributor_brandIndex, int air_distributor_modelIndex,
+                            int diffuser_brandIndex, int diffuser_modelIndex,
+                            QString air_distributor_brand, QString air_distributor_model,
+                            QString diffuser_brand, QString diffuser_model);
 
 public slots:
     void onAdd() override;
@@ -23,12 +27,15 @@ public slots:
     void onRevise() override;
     void onInput() override;
     void onOutput() override;
+    void onFilter() override;
+    void handleConfirmation(QSet<QString> uuids) override;
 
-private:
-    QStringList mergeCols;
     // Widget_base_inputTable interface
 public:
     void loadComponentToTable() override;
+
+private:
+    QDialog* dialog;
 };
 
 #endif // WIDGET_AIR_DIFF_INPUTTABLE_H

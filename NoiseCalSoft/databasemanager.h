@@ -15,18 +15,22 @@ extern QHash<QString, QString> typeNameToTableName;
 
 
 // 定义函数指针类型，用于添加到数据库的操作
-using AddToDatabaseFunc = std::function<bool(const ComponentBase&)>;
-using UpdateToDatabaseFunc = std::function<bool(const ComponentBase&)>;
+using AddToDatabaseFunc = std::function<bool(const ComponentBase&, bool)>;
+using UpdateToDatabaseFunc = std::function<bool(const ComponentBase&, bool)>;
 
 class DatabaseManager {
 public:
     static DatabaseManager& getInstance() {
-        static DatabaseManager instance("database\\noi_cal_database.db"); // 使用实际的数据库路径
+        static DatabaseManager instance;
         return instance;
     }
 
-    QSqlDatabase& getDB() {
-        return db;
+    QSqlDatabase& getProject_db() {
+        return project_db;
+    }
+
+    QSqlDatabase& getComponent_db() {
+        return component_db;
     }
 
     // 新增成员函数：从project_basicInfo表中加载projectID
@@ -39,7 +43,7 @@ public:
     void registerAddFunctions();
     void registerUpdateFunctions();
 
-    void delComponentInDatabase(const QString& componentName ,const QString &UUID);
+    void delComponentInDatabase(const QString& componentName , const QString &UUID, bool componentDB);
     bool delProjectInDatabase(const QString& prjID);
     bool addProjectInfoToDatabase(const ProjectInfo& projectInfo, bool initProject = false);
     bool updateProjectInfoInDatabase(const ProjectInfo &projectInfo);
@@ -49,16 +53,18 @@ public:
     bool addAttachmentToDatabase(const ProjectAttachment &attachment, const QString &projectID);
     bool delAttachmentInDatabase(const QString& attachmentName,  const QString &projectID);
     bool isProjectExist(const QString& prjID);
-    void loadComponentsFromDatabase();
+    void loadComponentsFromPrjDB();
+    void loadComponentsFromComponentDB();
 
     QMap<QString, AddToDatabaseFunc> getComponentAddFuncMap() const;
 
     QMap<QString, AddToDatabaseFunc> getComponentUpdateFuncMap() const;
 
 private:
-    QSqlDatabase db;
+    QSqlDatabase project_db;
+    QSqlDatabase component_db;
     // 私有构造函数
-    DatabaseManager(const QString& dbName);
+    DatabaseManager();  // 移除参数
     ~DatabaseManager();
     DatabaseManager(const DatabaseManager&) = delete;
     DatabaseManager& operator=(const DatabaseManager&) = delete;

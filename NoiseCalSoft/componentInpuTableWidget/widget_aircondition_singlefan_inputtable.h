@@ -9,7 +9,7 @@ class Widget_aircondition_singleFan_inputTable : public Widget_base_inputTable
     Q_OBJECT
 
 public:
-    explicit Widget_aircondition_singleFan_inputTable(QWidget *parent = nullptr);
+    explicit Widget_aircondition_singleFan_inputTable(bool inComponentDB, QWidget *parent = nullptr);
     ~Widget_aircondition_singleFan_inputTable();
 
     // Widget_base_inputTable interface
@@ -22,11 +22,11 @@ public slots:
     void onRevise() override;
     void onInput() override;
     void onOutput() override;
+    void handleConfirmation(QSet<QString> uuids) override;
+
     // Widget_base_inputTable interface
 public:
     void loadComponentToTable() override;
-private:
-    void mergeCells(int startRow);
 };
 
 #endif // WIDGET_AIRCONDITION_SINGLEFAN_INPUTTABLE_H

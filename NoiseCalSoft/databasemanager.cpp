@@ -29,7 +29,7 @@ QHash<QString, QString> typeNameToTableName = {
     {component_type_name::SILENCER, "silencer"}
 };
 
-DatabaseManager::DatabaseManager(const QString& dbName) {
+DatabaseManager::DatabaseManager() {
     // 获取应用数据的路径
     QString dataDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     // 创建项目名文件夹的路径
@@ -42,7 +42,8 @@ DatabaseManager::DatabaseManager(const QString& dbName) {
     }
 
     // 在项目文件夹内构建数据库文件的完整路径
-    QString dbPath = projectDirPath + "/noi_cal_database.db";  // 修改了文件名以符合你的需求
+    QString dbPath = projectDirPath + "/noi_cal_database.db";
+    QString component_dbPath = projectDirPath + "/components_database.db";
 
     // 检查数据库文件是否已经存在
     if (!QFile::exists(dbPath)) {
@@ -51,19 +52,43 @@ DatabaseManager::DatabaseManager(const QString& dbName) {
         // 确保目标数据库文件是可写的
         QFile::setPermissions(dbPath, QFile::ReadOwner | QFile::WriteOwner);
     }
+
+    // 检查数据库文件是否已经存在
+    if (!QFile::exists(component_dbPath)) {
+        // 从资源中复制数据库文件到目标位置，注意资源文件的路径也进行了相应的调整
+        QFile::copy(":/databaseFile/databaseFile/components_database_origin.db", component_dbPath); // 修改了资源路径和文件名
+        // 确保目标数据库文件是可写的
+        QFile::setPermissions(component_dbPath, QFile::ReadOwner | QFile::WriteOwner);
+    }
+
     // 连接到数据库
-    db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(dbPath);
-    if (!db.open()) {
-        qDebug() << "Error opening database:" << db.lastError();
+    project_db = QSqlDatabase::addDatabase("QSQLITE", "Connection_noi_cal");
+    project_db.setDatabaseName(dbPath);
+    if (!project_db.open()) {
+        qDebug() << "Error opening database:" << project_db.lastError();
         return;
     }
     else
     {
         // 数据库成功打开后，启用外键支持
-        QSqlQuery query;
-        if (!query.exec("PRAGMA foreign_keys=ON;")) {
-            qDebug() << "无法启用外键支持：" << query.lastError().text();
+        QSqlQuery queryPrj(project_db);
+        if (!queryPrj.exec("PRAGMA foreign_keys=ON;")) {
+            qDebug() << "无法启用外键支持：" << queryPrj.lastError().text();
+        }
+    }
+
+    component_db = QSqlDatabase::addDatabase("QSQLITE", "Connection_components");
+    component_db.setDatabaseName(component_dbPath);
+    if (!component_db.open()) {
+        qDebug() << "Error opening database:" << component_db.lastError();
+        return;
+    }
+    else
+    {
+        // 数据库成功打开后，启用外键支持
+        QSqlQuery queryPrj(component_db);
+        if (!queryPrj.exec("PRAGMA foreign_keys=ON;")) {
+            qDebug() << "无法启用外键支持：" << queryPrj.lastError().text();
         }
     }
 
@@ -83,7 +108,7 @@ QMap<QString, AddToDatabaseFunc> DatabaseManager::getComponentAddFuncMap() const
 }
 
 DatabaseManager::~DatabaseManager() {
-    db.close();
+    project_db.close();
 }
 
 /**
@@ -92,14 +117,14 @@ DatabaseManager::~DatabaseManager() {
  */
 QSet<QString> DatabaseManager::loadProjectIDs() {
     QSet<QString> projectIDs;
-    if (db.isOpen()) {
-        QSqlQuery query(db);
-        if (query.exec("SELECT projectID FROM project_basicInfo")) {
-            while (query.next()) {
-                projectIDs.insert(query.value(0).toString());
+    if (project_db.isOpen()) {
+        QSqlQuery queryPrj(project_db);
+        if (queryPrj.exec("SELECT projectID FROM project_basicInfo")) {
+            while (queryPrj.next()) {
+                projectIDs.insert(queryPrj.value(0).toString());
             }
         } else {
-            qDebug() << "查询失败：" << query.lastError();
+            qDebug() << "查询失败：" << queryPrj.lastError();
         }
     }
     return projectIDs;
@@ -107,30 +132,30 @@ QSet<QString> DatabaseManager::loadProjectIDs() {
 
 ProjectInfo DatabaseManager::getProjectInfoFromDB(const QString &projectID) const
 {
-    if (!db.isOpen()) {
+    if (!project_db.isOpen()) {
         // 处理连接失败
         return ProjectInfo(); // 返回默认构造的空结构体
     }
 
     // 准备查询
-    QSqlQuery query;
-    query.prepare("SELECT projectID, project_name, ship_num, shipyard, project_manager, class_soc "
+    QSqlQuery queryPrj(project_db);
+    queryPrj.prepare("SELECT projectID, project_name, ship_num, shipyard, project_manager, class_soc "
                   "FROM project_basicInfo "
                   "WHERE projectID = :projectID");
 
     // 绑定参数
-    query.bindValue(":projectID", projectID);
+    queryPrj.bindValue(":projectID", projectID);
 
     // 执行查询
-    if (!query.exec()) {
+    if (!queryPrj.exec()) {
         // 处理查询失败
-        qDebug() << "Query failed:" << query.lastError().text();
+        qDebug() << "queryPrj failed:" << queryPrj.lastError().text();
         return ProjectInfo(); // 返回默认构造的空结构体
     }
 
     // 获取查询结果
-    if (query.next()) {
-        QSqlRecord record = query.record();
+    if (queryPrj.next()) {
+        QSqlRecord record = queryPrj.record();
 
         // 从记录中提取数据
         QString prjID = record.value("projectID").toString();
@@ -152,22 +177,22 @@ bool DatabaseManager::getProjectAttachments(const QString &projectID, QList<Proj
 {
     attachments.clear(); // 确保开始时列表是空的
 
-    if (!db.isOpen()) {
+    if (!project_db.isOpen()) {
         // 可以在这里打印日志或设置错误信息
         return false;
     }
 
-    QSqlQuery query(db);
-    query.prepare("SELECT table_id, attachment_name, attachment_path FROM project_attachmentInfo WHERE projectID = :projectID ORDER BY table_id ASC");
-    query.bindValue(":projectID", projectID);
+    QSqlQuery queryPrj(project_db);
+    queryPrj.prepare("SELECT table_id, attachment_name, attachment_path FROM project_attachmentInfo WHERE projectID = :projectID ORDER BY table_id ASC");
+    queryPrj.bindValue(":projectID", projectID);
 
-    if (!query.exec()) {
+    if (!queryPrj.exec()) {
         // 可以在这里打印日志或设置错误信息
         return false;
     }
 
-    while (query.next()) {
-        QSqlRecord record = query.record();
+    while (queryPrj.next()) {
+        QSqlRecord record = queryPrj.record();
         ProjectAttachment attachment{
             record.value("table_id").toString(),
                     record.value("attachment_name").toString(),
@@ -183,23 +208,23 @@ bool DatabaseManager::getProjectDrawings(const QString &projectID, QList<Drawing
 {
     drawings.clear(); // 确保开始时列表是空的
 
-    if (!db.isOpen()) {
+    if (!project_db.isOpen()) {
         // 可以在这里打印日志或设置错误信息
         return false;
     }
 
-    QSqlQuery query(db);
-    query.prepare("SELECT table_id, drawing_num, drawing_name FROM project_drawing "
+    QSqlQuery queryPrj(project_db);
+    queryPrj.prepare("SELECT table_id, drawing_num, drawing_name FROM project_drawing "
                   "WHERE projectID = :projectID ORDER BY table_id ASC");
-    query.bindValue(":projectID", projectID);
+    queryPrj.bindValue(":projectID", projectID);
 
-    if (!query.exec()) {
+    if (!queryPrj.exec()) {
         // 可以在这里打印日志或设置错误信息
         return false;
     }
 
-    while (query.next()) {
-        QSqlRecord record = query.record();
+    while (queryPrj.next()) {
+        QSqlRecord record = queryPrj.record();
         Drawing drawing{
             record.value("table_id").toString(),
                     record.value("drawing_num").toString(),
@@ -215,23 +240,23 @@ bool DatabaseManager::getProjectNoiseLimit(const QString &projectID, QList<Noise
 {
     noiseLimits.clear(); // 确保开始时列表是空的
 
-    if (!db.isOpen()) {
+    if (!project_db.isOpen()) {
         // 可以在这里打印日志或设置错误信息
         return false;
     }
 
-    QSqlQuery query(db);
-    query.prepare("SELECT table_id, room_type, noise_limit, premises_type "
+    QSqlQuery queryPrj(project_db);
+    queryPrj.prepare("SELECT table_id, room_type, noise_limit, premises_type "
                   "FROM project_noiseLimit WHERE projectID = :projectID ORDER BY table_id ASC");
-    query.bindValue(":projectID", projectID);
+    queryPrj.bindValue(":projectID", projectID);
 
-    if (!query.exec()) {
+    if (!queryPrj.exec()) {
         // 可以在这里打印日志或设置错误信息
         return false;
     }
 
-    while (query.next()) {
-        QSqlRecord record = query.record();
+    while (queryPrj.next()) {
+        QSqlRecord record = queryPrj.record();
         NoiseLimit noiseLimit{
             record.value("table_id").toString(),
                     record.value("room_type").toString(),
@@ -259,152 +284,152 @@ bool DatabaseManager::getProjectNoiseLimit(const QString &projectID, QList<Noise
  */
 void DatabaseManager::registerAddFunctions()
 {
-    componentAddFuncMap[component_type_name::FAN] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateFanToDatabase(component, this->db);
+    componentAddFuncMap[component_type_name::FAN] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateFanToDatabase(component, componentDB ? this->component_db : this->project_db);
     };
 
-    componentAddFuncMap[component_type_name::FANCOIL] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateFanCoilToDatabase(component, this->db);
+    componentAddFuncMap[component_type_name::FANCOIL] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateFanCoilToDatabase(component, componentDB ? this->component_db : this->project_db);
     };
 
-    componentAddFuncMap[component_type_name::AIRCONDITION] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateAirConditionToDatabase(component, this->db);
+    componentAddFuncMap[component_type_name::AIRCONDITION] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateAirConditionToDatabase(component, componentDB ? this->component_db : this->project_db);
     };
 
-    componentAddFuncMap[component_type_name::VAV_TERMINAL] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateVAVTerminalToDatabase(component, this->db);
+    componentAddFuncMap[component_type_name::VAV_TERMINAL] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateVAVTerminalToDatabase(component, componentDB ? this->component_db : this->project_db);
     };
 
-    componentAddFuncMap[component_type_name::CIRCULAR_DAMPER] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateCircularDamperToDatabase(component, this->db);
+    componentAddFuncMap[component_type_name::CIRCULAR_DAMPER] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateCircularDamperToDatabase(component, componentDB ? this->component_db : this->project_db);
     };
 
-    componentAddFuncMap[component_type_name::RECT_DAMPER] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateRectDamperToDatabase(component, this->db);
+    componentAddFuncMap[component_type_name::RECT_DAMPER] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateRectDamperToDatabase(component, componentDB ? this->component_db : this->project_db);
     };
 
-    componentAddFuncMap[component_type_name::AIRDIFF] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateAirDiffToDatabase(component, this->db);
+    componentAddFuncMap[component_type_name::AIRDIFF] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateAirDiffToDatabase(component, componentDB ? this->component_db : this->project_db);
     };
 
-    componentAddFuncMap[component_type_name:: PUMPSEND] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdatePumpSendToDatabase(component, this->db);
+    componentAddFuncMap[component_type_name:: PUMPSEND] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdatePumpSendToDatabase(component, componentDB ? this->component_db : this->project_db);
     };
 
-    componentAddFuncMap[component_type_name::STATICBOX_GRILLE] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateStaticBoxGrilleToDatabase(component, this->db);
+    componentAddFuncMap[component_type_name::STATICBOX_GRILLE] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateStaticBoxGrilleToDatabase(component, componentDB ? this->component_db : this->project_db);
     };
 
-    componentAddFuncMap[component_type_name::DISP_VENT_TERMINAL] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateDispVentTerminalToDatabase(component, this->db);
+    componentAddFuncMap[component_type_name::DISP_VENT_TERMINAL] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateDispVentTerminalToDatabase(component, componentDB ? this->component_db : this->project_db);
     };
 
-    componentAddFuncMap[component_type_name::OTHER_SEND_TERMINAL] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateOtherSendTerminalToDatabase(component, this->db);
+    componentAddFuncMap[component_type_name::OTHER_SEND_TERMINAL] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateOtherSendTerminalToDatabase(component, componentDB ? this->component_db : this->project_db);
     };
 
-    componentAddFuncMap[component_type_name::STATICBOX] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateStaticBoxToDatabase(component, this->db);
+    componentAddFuncMap[component_type_name::STATICBOX] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateStaticBoxToDatabase(component, componentDB ? this->component_db : this->project_db);
     };
 
-    componentAddFuncMap[component_type_name::MULTI_RANC] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateMultiRancToDatabase(component, this->db);
+    componentAddFuncMap[component_type_name::MULTI_RANC] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateMultiRancToDatabase(component, componentDB ? this->component_db : this->project_db);
     };
 
-    componentAddFuncMap[component_type_name::TEE] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateTeeToDatabase(component, this->db);
+    componentAddFuncMap[component_type_name::TEE] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateTeeToDatabase(component, componentDB ? this->component_db : this->project_db);
     };
 
-    componentAddFuncMap[component_type_name::PIPE] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdatePipeToDatabase(component, this->db);
+    componentAddFuncMap[component_type_name::PIPE] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdatePipeToDatabase(component, componentDB ? this->component_db : this->project_db);
     };
 
-    componentAddFuncMap[component_type_name::ELBOW] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateElbowToDatabase(component, this->db);
+    componentAddFuncMap[component_type_name::ELBOW] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateElbowToDatabase(component, componentDB ? this->component_db : this->project_db);
     };
 
-    componentAddFuncMap[component_type_name::REDUCER] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateReducerToDatabase(component, this->db);
+    componentAddFuncMap[component_type_name::REDUCER] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateReducerToDatabase(component, componentDB ? this->component_db : this->project_db);
     };
 
-    componentAddFuncMap[component_type_name::SILENCER] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateSilencerToDatabase(component, this->db);
+    componentAddFuncMap[component_type_name::SILENCER] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateSilencerToDatabase(component, componentDB ? this->component_db : this->project_db);
     };
 
 }
 
 void DatabaseManager::registerUpdateFunctions()
 {
-    componentUpdateFuncMap[component_type_name::FAN] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateFanToDatabase(component, this->db, true);
+    componentUpdateFuncMap[component_type_name::FAN] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateFanToDatabase(component, componentDB ? this->component_db : this->project_db, true);
     };
 
-    componentUpdateFuncMap[component_type_name::FANCOIL] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateFanCoilToDatabase(component, this->db, true);
+    componentUpdateFuncMap[component_type_name::FANCOIL] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateFanCoilToDatabase(component, componentDB ? this->component_db : this->project_db, true);
     };
 
-    componentUpdateFuncMap[component_type_name::AIRCONDITION] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateAirConditionToDatabase(component, this->db, true);
+    componentUpdateFuncMap[component_type_name::AIRCONDITION] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateAirConditionToDatabase(component, componentDB ? this->component_db : this->project_db, true);
     };
 
-    componentUpdateFuncMap[component_type_name::VAV_TERMINAL] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateVAVTerminalToDatabase(component, this->db, true);
+    componentUpdateFuncMap[component_type_name::VAV_TERMINAL] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateVAVTerminalToDatabase(component, componentDB ? this->component_db : this->project_db, true);
     };
 
-    componentUpdateFuncMap[component_type_name::CIRCULAR_DAMPER] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateCircularDamperToDatabase(component, this->db, true);
+    componentUpdateFuncMap[component_type_name::CIRCULAR_DAMPER] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateCircularDamperToDatabase(component, componentDB ? this->component_db : this->project_db, true);
     };
 
-    componentUpdateFuncMap[component_type_name::RECT_DAMPER] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateRectDamperToDatabase(component, this->db, true);
+    componentUpdateFuncMap[component_type_name::RECT_DAMPER] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateRectDamperToDatabase(component, componentDB ? this->component_db : this->project_db, true);
     };
 
-    componentUpdateFuncMap[component_type_name::AIRDIFF] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateAirDiffToDatabase(component, this->db, true);
+    componentUpdateFuncMap[component_type_name::AIRDIFF] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateAirDiffToDatabase(component, componentDB ? this->component_db : this->project_db, true);
     };
 
-    componentUpdateFuncMap[component_type_name:: PUMPSEND] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdatePumpSendToDatabase(component, this->db, true);
+    componentUpdateFuncMap[component_type_name:: PUMPSEND] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdatePumpSendToDatabase(component, componentDB ? this->component_db : this->project_db, true);
     };
 
-    componentUpdateFuncMap[component_type_name::STATICBOX_GRILLE] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateStaticBoxGrilleToDatabase(component, this->db, true);
+    componentUpdateFuncMap[component_type_name::STATICBOX_GRILLE] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateStaticBoxGrilleToDatabase(component, componentDB ? this->component_db : this->project_db, true);
     };
 
-    componentUpdateFuncMap[component_type_name::DISP_VENT_TERMINAL] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateDispVentTerminalToDatabase(component, this->db, true);
+    componentUpdateFuncMap[component_type_name::DISP_VENT_TERMINAL] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateDispVentTerminalToDatabase(component, componentDB ? this->component_db : this->project_db, true);
     };
 
-    componentUpdateFuncMap[component_type_name::OTHER_SEND_TERMINAL] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateOtherSendTerminalToDatabase(component, this->db, true);
+    componentUpdateFuncMap[component_type_name::OTHER_SEND_TERMINAL] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateOtherSendTerminalToDatabase(component, componentDB ? this->component_db : this->project_db, true);
     };
 
-    componentUpdateFuncMap[component_type_name::STATICBOX] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateStaticBoxToDatabase(component, this->db, true);
+    componentUpdateFuncMap[component_type_name::STATICBOX] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateStaticBoxToDatabase(component, componentDB ? this->component_db : this->project_db, true);
     };
 
-    componentUpdateFuncMap[component_type_name::MULTI_RANC] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateMultiRancToDatabase(component, this->db, true);
+    componentUpdateFuncMap[component_type_name::MULTI_RANC] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateMultiRancToDatabase(component, componentDB ? this->component_db : this->project_db, true);
     };
 
-    componentUpdateFuncMap[component_type_name::TEE] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateTeeToDatabase(component, this->db, true);
+    componentUpdateFuncMap[component_type_name::TEE] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateTeeToDatabase(component, componentDB ? this->component_db : this->project_db, true);
     };
 
-    componentUpdateFuncMap[component_type_name::PIPE] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdatePipeToDatabase(component, this->db, true);
+    componentUpdateFuncMap[component_type_name::PIPE] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdatePipeToDatabase(component, componentDB ? this->component_db : this->project_db, true);
     };
 
-    componentUpdateFuncMap[component_type_name::ELBOW] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateElbowToDatabase(component, this->db, true);
+    componentUpdateFuncMap[component_type_name::ELBOW] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateElbowToDatabase(component, componentDB ? this->component_db : this->project_db, true);
     };
 
-    componentUpdateFuncMap[component_type_name::REDUCER] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateReducerToDatabase(component, this->db, true);
+    componentUpdateFuncMap[component_type_name::REDUCER] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateReducerToDatabase(component, componentDB ? this->component_db : this->project_db, true);
     };
 
-    componentUpdateFuncMap[component_type_name::SILENCER] = [this](const ComponentBase& component) -> bool {
-        return DBComponentAddOperations::addOrUpdateSilencerToDatabase(component, this->db, true);
+    componentUpdateFuncMap[component_type_name::SILENCER] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateSilencerToDatabase(component, componentDB ? this->component_db : this->project_db, true);
     };
 
 }
@@ -415,9 +440,9 @@ void DatabaseManager::registerUpdateFunctions()
  * @param componentName
  * @param UUID
  */
-void DatabaseManager::delComponentInDatabase(const QString& componentName ,const QString &UUID)
+void DatabaseManager::delComponentInDatabase(const QString& componentName ,const QString &UUID, bool componentDB)
 {
-    DBComponentDelOperations::deleteComponentFromDatabase(typeNameToTableName[componentName], UUID, this->db);
+    DBComponentDelOperations::deleteComponentFromDatabase(typeNameToTableName[componentName], UUID, componentDB ? this->component_db : this->project_db);
 }
 
 bool DatabaseManager::delProjectInDatabase(const QString &prjID)
@@ -429,20 +454,20 @@ bool DatabaseManager::delProjectInDatabase(const QString &prjID)
     }
 
     // 准备 SQL DELETE 语句
-    QSqlQuery query;
-    query.prepare("DELETE FROM project_basicInfo WHERE projectID = :projectID");
+    QSqlQuery queryPrj;
+    queryPrj.prepare("DELETE FROM project_basicInfo WHERE projectID = :projectID");
 
     // 绑定要删除的项目的 projectID
-    query.bindValue(":projectID", prjID);
+    queryPrj.bindValue(":projectID", prjID);
 
     // 执行查询
-    if (!query.exec()) {
-        qDebug() << "Failed to delete project from database:" << query.lastError().text();
+    if (!queryPrj.exec()) {
+        qDebug() << "Failed to delete project from database:" << queryPrj.lastError().text();
         return false;
     }
 
     // 检查是否有行被成功删除
-    if (query.numRowsAffected() <= 0) {
+    if (queryPrj.numRowsAffected() <= 0) {
         qDebug() << "No rows affected. Possibly the project ID does not exist.";
         return false;
     }
@@ -452,31 +477,31 @@ bool DatabaseManager::delProjectInDatabase(const QString &prjID)
 
 bool DatabaseManager::addProjectInfoToDatabase(const ProjectInfo &projectInfo, bool initProject)
 {
-    if (!db.isOpen()) {
+    if (!project_db.isOpen()) {
         qDebug() << "数据库未打开";
         return false;
     }
 
-    QSqlQuery query;
+    QSqlQuery queryPrj(project_db);
     // 无条件准备完整查询
-    query.prepare("INSERT INTO project_basicInfo (projectID, project_name, ship_num, shipyard, project_manager, class_soc) "
+    queryPrj.prepare("INSERT INTO project_basicInfo (projectID, project_name, ship_num, shipyard, project_manager, class_soc) "
                   "VALUES (:projectID, :project_name, :ship_num, :shipyard, :project_manager, :class_soc)");
 
     if (initProject) {
         // 仅绑定projectID进行部分插入
-        query.bindValue(":projectID", projectInfo.prjID);
+        queryPrj.bindValue(":projectID", projectInfo.prjID);
     } else {
         // 绑定所有变量进行完整插入
-        query.bindValue(":projectID", projectInfo.prjID);
-        query.bindValue(":project_name", projectInfo.prjName);
-        query.bindValue(":ship_num", projectInfo.shipNum);
-        query.bindValue(":shipyard", projectInfo.shipyard);
-        query.bindValue(":project_manager", projectInfo.prjManager);
-        query.bindValue(":class_soc", projectInfo.classSoc);
+        queryPrj.bindValue(":projectID", projectInfo.prjID);
+        queryPrj.bindValue(":project_name", projectInfo.prjName);
+        queryPrj.bindValue(":ship_num", projectInfo.shipNum);
+        queryPrj.bindValue(":shipyard", projectInfo.shipyard);
+        queryPrj.bindValue(":project_manager", projectInfo.prjManager);
+        queryPrj.bindValue(":class_soc", projectInfo.classSoc);
     }
 
-    if (!query.exec()) {
-        qDebug() << "插入项目基本信息失败：" << query.lastError().text();
+    if (!queryPrj.exec()) {
+        qDebug() << "插入项目基本信息失败：" << queryPrj.lastError().text();
         return false;
     }
 
@@ -494,7 +519,7 @@ bool DatabaseManager::updateProjectInfoInDatabase(const ProjectInfo &projectInfo
     }
 
     // 获取数据库连接
-    QSqlDatabase& db = DatabaseManager::getInstance().getDB();
+    QSqlDatabase& db = DatabaseManager::getInstance().getProject_db();
 
     // 检查数据库是否打开
     if (!db.isOpen()) {
@@ -502,21 +527,21 @@ bool DatabaseManager::updateProjectInfoInDatabase(const ProjectInfo &projectInfo
         return false;
     }
 
-    QSqlQuery query(db);
+    QSqlQuery queryPrj(db);
     // 准备更新语句，更新项目信息但不包括prjID
-    query.prepare("UPDATE project_basicInfo SET project_name = :prjName, ship_num = :shipNum, shipyard = :shipyard, project_manager = :prjManager, class_soc = :classSoc WHERE projectID = :prjID");
+    queryPrj.prepare("UPDATE project_basicInfo SET project_name = :prjName, ship_num = :shipNum, shipyard = :shipyard, project_manager = :prjManager, class_soc = :classSoc WHERE projectID = :prjID");
 
     // 绑定需要更新的值
-    query.bindValue(":prjName", projectInfo.prjName);
-    query.bindValue(":shipNum", projectInfo.shipNum);
-    query.bindValue(":shipyard", projectInfo.shipyard);
-    query.bindValue(":prjManager", projectInfo.prjManager);
-    query.bindValue(":classSoc", projectInfo.classSoc);
-    query.bindValue(":prjID", projectInfo.prjID);
+    queryPrj.bindValue(":prjName", projectInfo.prjName);
+    queryPrj.bindValue(":shipNum", projectInfo.shipNum);
+    queryPrj.bindValue(":shipyard", projectInfo.shipyard);
+    queryPrj.bindValue(":prjManager", projectInfo.prjManager);
+    queryPrj.bindValue(":classSoc", projectInfo.classSoc);
+    queryPrj.bindValue(":prjID", projectInfo.prjID);
 
     // 执行查询
-    if (!query.exec()) {
-        qDebug() << "Failed to update project information: " << query.lastError();
+    if (!queryPrj.exec()) {
+        qDebug() << "Failed to update project information: " << queryPrj.lastError();
         return false;
     }
 
@@ -531,7 +556,7 @@ bool DatabaseManager::updateProjectIDInDatabase(const QString &old_prjID, const 
         return false;
     }
 
-    QSqlDatabase& db = getDB();
+    QSqlDatabase& db = getProject_db();
 
     // 检查数据库是否打开
     if (!db.isOpen()) {
@@ -539,18 +564,18 @@ bool DatabaseManager::updateProjectIDInDatabase(const QString &old_prjID, const 
         return false;
     }
 
-    QSqlQuery query(db);
+    QSqlQuery queryPrj(db);
     // 开始一个事务
     db.transaction();
 
     // 准备更新语句
-    query.prepare("UPDATE project_basicInfo SET projectID = :new_prjID WHERE projectID = :old_prjID");
-    query.bindValue(":new_prjID", new_prjID);
-    query.bindValue(":old_prjID", old_prjID);
+    queryPrj.prepare("UPDATE project_basicInfo SET projectID = :new_prjID WHERE projectID = :old_prjID");
+    queryPrj.bindValue(":new_prjID", new_prjID);
+    queryPrj.bindValue(":old_prjID", old_prjID);
 
     // 尝试执行更新
-    if (!query.exec()) {
-        qDebug() << "Failed to update project ID from" << old_prjID << "to" << new_prjID << ":" << query.lastError().text();
+    if (!queryPrj.exec()) {
+        qDebug() << "Failed to update project ID from" << old_prjID << "to" << new_prjID << ":" << queryPrj.lastError().text();
         db.rollback(); // 如果失败，回滚事务
         return false;
     }
@@ -583,111 +608,110 @@ bool DatabaseManager::updateProjectIDInDatabase(const QString &old_prjID, const 
 void DatabaseManager::addDrawingsToDatabase(const QList<Drawing> &drawings, const QString &projectID)
 {
     // 开始一个事务
-    db.transaction();
+    project_db.transaction();
 
     // 首先，检查projectID在project_basicInfo表中是否存在
-    QSqlQuery checkQuery(getDB());
-    checkQuery.prepare("SELECT COUNT(*) FROM project_basicInfo WHERE projectID = :projectID");
-    checkQuery.bindValue(":projectID", projectID);
-    if (!checkQuery.exec()) {
-        qDebug() << "Failed to check projectID existence:" << checkQuery.lastError().text();
-        db.rollback(); // 回滚事务
+    QSqlQuery checkqueryPrj(getProject_db());
+    checkqueryPrj.prepare("SELECT COUNT(*) FROM project_basicInfo WHERE projectID = :projectID");
+    checkqueryPrj.bindValue(":projectID", projectID);
+    if (!checkqueryPrj.exec()) {
+        qDebug() << "Failed to check projectID existence:" << checkqueryPrj.lastError().text();
+        project_db.rollback(); // 回滚事务
         return; // 提前退出
     }
-    checkQuery.next();
-    if (checkQuery.value(0).toInt() == 0) {
+    checkqueryPrj.next();
+    if (checkqueryPrj.value(0).toInt() == 0) {
         qDebug() << "projectID" << projectID << "does not exist in project_basicInfo.";
         QMessageBox::critical(nullptr,"错误","请先完善并保存\n左侧\"工程信息\"后操作");
-        db.rollback(); // 回滚事务
+        project_db.rollback(); // 回滚事务
         return; // 提前退出
     }
 
     // 项目ID存在，继续执行删除与项目编号相同的所有项
-    QSqlQuery query(getDB());
-    query.prepare("DELETE FROM project_drawing WHERE projectID = :projectID");
-    query.bindValue(":projectID", projectID);
-    if (!query.exec()) {
-        qDebug() << "Failed to delete existing drawings for projectID" << projectID << ":" << query.lastError().text();
-        db.rollback(); // 回滚事务
+    QSqlQuery queryPrj(getProject_db());
+    queryPrj.prepare("DELETE FROM project_drawing WHERE projectID = :projectID");
+    queryPrj.bindValue(":projectID", projectID);
+    if (!queryPrj.exec()) {
+        qDebug() << "Failed to delete existing drawings for projectID" << projectID << ":" << queryPrj.lastError().text();
+        project_db.rollback(); // 回滚事务
         return; // 提前退出
     }
 
     // 然后，插入新的drawing项
     for (const Drawing &drawing : drawings) {
-        query.prepare("INSERT INTO project_drawing (table_id, drawing_num, drawing_name, projectID) VALUES (:table_id, :drawing_num, :drawing_name, :projectID)");
-        query.bindValue(":table_id", drawing.tableID);
-        query.bindValue(":drawing_num", drawing.drawingNum);
-        query.bindValue(":drawing_name", drawing.drawingName);
-        query.bindValue(":projectID", projectID);
+        queryPrj.prepare("INSERT INTO project_drawing (table_id, drawing_num, drawing_name, projectID) VALUES (:table_id, :drawing_num, :drawing_name, :projectID)");
+        queryPrj.bindValue(":table_id", drawing.tableID);
+        queryPrj.bindValue(":drawing_num", drawing.drawingNum);
+        queryPrj.bindValue(":drawing_name", drawing.drawingName);
+        queryPrj.bindValue(":projectID", projectID);
 
-        if (!query.exec()) {
-            qDebug() << "Failed to insert drawing into database:" << query.lastError().text();
-            db.rollback(); // 如果有错误，回滚事务
+        if (!queryPrj.exec()) {
+            qDebug() << "Failed to insert drawing into database:" << queryPrj.lastError().text();
+            project_db.rollback(); // 如果有错误，回滚事务
             return; // 提前退出
         }
     }
 
     // 提交事务
-    if (!db.commit()) {
-        qDebug() << "Transaction commit failed:" << db.lastError().text();
-        db.rollback();
+    if (!project_db.commit()) {
+        qDebug() << "Transaction commit failed:" << project_db.lastError().text();
+        project_db.rollback();
     }
 }
 
 void DatabaseManager::addNoiseLimitsToDatabase(const QList<NoiseLimit> &noiseLimits, const QString &projectID)
 {
-    if (!db.isOpen()) {
+    if (!project_db.isOpen()) {
         // 尝试打开数据库，或者至少记录一个错误
         qDebug() << "数据库未打开";
         return;
     }
 
     // 开始一个事务
-    db.transaction();
+    project_db.transaction();
 
-    if(!isProjectExist(projectID))
-    {
+    if (!isProjectExist(projectID)) {
         QMessageBox::critical(nullptr, "错误", "请先完善并保存\n\"工程信息\"后操作");
-        db.rollback(); // 回滚事务
+        project_db.rollback(); // 回滚事务
         return; // 提前退出
     }
 
     // 项目ID存在，继续执行删除与项目编号相同的所有噪声限制项
-    QSqlQuery query(getDB());
-    query.prepare("DELETE FROM project_noiseLimit WHERE projectID = :projectID");
-    query.bindValue(":projectID", projectID);
-    if (!query.exec()) {
-        qDebug() << "Failed to delete existing noise limits for projectID" << projectID << ":" << query.lastError().text();
-        db.rollback(); // 回滚事务
+    QSqlQuery queryPrj(getProject_db());
+    queryPrj.prepare("DELETE FROM project_noiseLimit WHERE projectID = :projectID");
+    queryPrj.bindValue(":projectID", projectID);
+    if (!queryPrj.exec()) {
+        qDebug() << "Failed to delete existing noise limits for projectID" << projectID << ":" << queryPrj.lastError().text();
+        project_db.rollback(); // 回滚事务
         return; // 提前退出
     }
 
     // 然后，插入新的噪声限制项
     for (const NoiseLimit &limit : noiseLimits) {
-        query.prepare("INSERT INTO project_noiseLimit (table_id, room_type, noise_limit, premises_type, projectID) VALUES (:table_id, :room_type, :noise_limit, :premises_type, :projectID)");
-        query.bindValue(":table_id", limit.tableID);
-        query.bindValue(":room_type", limit.roomType);
-        query.bindValue(":noise_limit", limit.noiseLimit);
-        query.bindValue(":premises_type", limit.premissType);
-        query.bindValue(":projectID", projectID);
+        queryPrj.prepare("INSERT INTO project_noiseLimit (table_id, room_type, noise_limit, premises_type, projectID) VALUES (:table_id, :room_type, :noise_limit, :premises_type, :projectID)");
+        queryPrj.bindValue(":table_id", limit.tableID);
+        queryPrj.bindValue(":room_type", limit.roomType);
+        queryPrj.bindValue(":noise_limit", limit.noiseLimit);
+        queryPrj.bindValue(":premises_type", limit.premissType);
+        queryPrj.bindValue(":projectID", projectID);
 
-        if (!query.exec()) {
-            qDebug() << "Failed to insert noise limit into database:" << query.lastError().text();
-            db.rollback(); // 如果有错误，回滚事务
+        if (!queryPrj.exec()) {
+            qDebug() << "Failed to insert noise limit into database:" << queryPrj.lastError().text();
+            project_db.rollback(); // 如果有错误，回滚事务
             return; // 提前退出
         }
     }
 
     // 提交事务
-    if (!db.commit()) {
-        qDebug() << "Transaction commit failed:" << db.lastError().text();
-        db.rollback();
+    if (!project_db.commit()) {
+        qDebug() << "Transaction commit failed:" << project_db.lastError().text();
+        project_db.rollback();
     }
 }
 
 bool DatabaseManager::addAttachmentToDatabase(const ProjectAttachment &attachment, const QString &projectID)
 {
-    if (!db.isOpen()) {
+    if (!project_db.isOpen()) {
         // 尝试打开数据库，或者至少记录一个错误
         qDebug() << "数据库未打开";
         return false;
@@ -700,20 +724,20 @@ bool DatabaseManager::addAttachmentToDatabase(const ProjectAttachment &attachmen
     }
 
     // 准备一个插入SQL命令
-    QSqlQuery query;
-    query.prepare("INSERT INTO project_attachmentInfo (table_id, attachment_name, attachment_path, projectID) "
+    QSqlQuery queryPrj;
+    queryPrj.prepare("INSERT INTO project_attachmentInfo (table_id, attachment_name, attachment_path, projectID) "
                   "VALUES (:tableID, :attachName, :attachPath, :projectID)");
 
     // 绑定结构体中的值到SQL命令参数
-    query.bindValue(":tableID", attachment.tableID);
-    query.bindValue(":attachName", attachment.attachName);
-    query.bindValue(":attachPath", attachment.attachPath);
-    query.bindValue(":projectID", projectID);
+    queryPrj.bindValue(":tableID", attachment.tableID);
+    queryPrj.bindValue(":attachName", attachment.attachName);
+    queryPrj.bindValue(":attachPath", attachment.attachPath);
+    queryPrj.bindValue(":projectID", projectID);
 
     // 执行SQL命令
-    if (!query.exec()) {
+    if (!queryPrj.exec()) {
         // 如果执行失败，记录错误
-        qDebug() << "添加附件到数据库失败：" << query.lastError().text();
+        qDebug() << "添加附件到数据库失败：" << queryPrj.lastError().text();
         return false;
     }
 
@@ -722,28 +746,28 @@ bool DatabaseManager::addAttachmentToDatabase(const ProjectAttachment &attachmen
 
 bool DatabaseManager::delAttachmentInDatabase(const QString &attachmentName, const QString &projectID)
 {
-    if (!db.isOpen()) {
+    if (!project_db.isOpen()) {
         qDebug() << "数据库未打开";
         return false;
     }
 
     // 准备一个删除SQL命令
-    QSqlQuery query;
-    query.prepare("DELETE FROM project_attachmentInfo WHERE attachment_name = :attachName AND projectID = :projectID");
+    QSqlQuery queryPrj;
+    queryPrj.prepare("DELETE FROM project_attachmentInfo WHERE attachment_name = :attachName AND projectID = :projectID");
 
     // 绑定给定的附件名和项目ID到SQL命令的参数
-    query.bindValue(":attachName", attachmentName);
-    query.bindValue(":projectID", projectID);
+    queryPrj.bindValue(":attachName", attachmentName);
+    queryPrj.bindValue(":projectID", projectID);
 
     // 执行SQL命令
-    if (!query.exec()) {
+    if (!queryPrj.exec()) {
         // 如果执行失败，记录错误并返回false
-        qDebug() << "删除附件失败：" << query.lastError().text();
+        qDebug() << "删除附件失败：" << queryPrj.lastError().text();
         return false;
     }
 
     // 检查是否真的有行被删除了（可选）
-    if (query.numRowsAffected() <= 0) {
+    if (queryPrj.numRowsAffected() <= 0) {
         qDebug() << "未找到匹配的附件进行删除";
         return false;
     }
@@ -755,7 +779,7 @@ bool DatabaseManager::delAttachmentInDatabase(const QString &attachmentName, con
 bool DatabaseManager::isProjectExist(const QString &prjID)
 {
     // 获取数据库连接
-    QSqlDatabase& db = getDB();
+    QSqlDatabase& db = getProject_db();
 
     // 检查数据库是否打开
     if (!db.isOpen()) {
@@ -763,41 +787,116 @@ bool DatabaseManager::isProjectExist(const QString &prjID)
         return false;
     }
 
-    QSqlQuery query(db);
+    QSqlQuery queryPrj(db);
     // 准备SQL查询语句，用于检查指定的prjID是否存在
-    query.prepare("SELECT 1 FROM project_basicInfo WHERE projectID = :prjID");
+    queryPrj.prepare("SELECT 1 FROM project_basicInfo WHERE projectID = :prjID");
     // 绑定参数
-    query.bindValue(":prjID", prjID);
+    queryPrj.bindValue(":prjID", prjID);
 
     // 执行查询
-    if (query.exec()) {
+    if (queryPrj.exec()) {
         // 查询成功，检查是否有结果
-        if (query.next()) {
-            // 如果有结果，说明找到了对应的prjID，返回true
+        if (queryPrj.next()) {
             return true;
         }
     } else {
         // 查询失败，打印错误信息
-        qDebug() << "Query failed: " << query.lastError();
+        qDebug() << "queryPrj failed: " << queryPrj.lastError();
     }
 
     // 默认返回false，表示没有找到对应的prjID
     return false;
 }
 
-void DatabaseManager::loadComponentsFromDatabase()
+void DatabaseManager::loadComponentsFromPrjDB()
 {
     // 遍历所有组件类型的名称
     for (auto it = typeNameToTableName.constBegin(); it != typeNameToTableName.constEnd(); ++it) {
         const QString& componentTypeName = it.key();
         const QString& tableName = it.value();
 
-        QSqlQuery query;
-        query.prepare("SELECT * FROM " + tableName + " WHERE projectID = :projectID");
-        query.bindValue(":projectID", ProjectManager::getInstance().getPrjID());
+        if(!ProjectManager::getInstance().getPrjID().trimmed().isEmpty())
+        {
+            QSqlQuery queryPrj(project_db);
+            queryPrj.prepare("SELECT * FROM " + tableName + " WHERE projectID = :projectID");
+            queryPrj.bindValue(":projectID", ProjectManager::getInstance().getPrjID());
+
+            if (!queryPrj.exec()) {
+                qDebug() << "queryPrj failed for table" << tableName << ":" << queryPrj.lastError().text();
+                continue;
+            }
+
+            while (queryPrj.next()) {
+                QSqlRecord record = queryPrj.record();
+
+                // 动态创建组件对象
+                QSharedPointer<ComponentBase> component;
+
+                if (componentTypeName == component_type_name::FAN) {
+                    component = QSharedPointer<ComponentBase>(new Fan(record));
+                } else if (componentTypeName == component_type_name::FANCOIL) {
+                    component = QSharedPointer<ComponentBase>(new FanCoil(record));
+                } else if (componentTypeName == component_type_name::AIRCONDITION) {
+                    component = QSharedPointer<ComponentBase>(new Aircondition(record));
+                } else if (componentTypeName == component_type_name::VAV_TERMINAL) {
+                    component = QSharedPointer<ComponentBase>(new VAV_terminal(record));
+                } else if (componentTypeName == component_type_name::CIRCULAR_DAMPER) {
+                    component = QSharedPointer<ComponentBase>(new Circular_damper(record));
+                } else if (componentTypeName == component_type_name::RECT_DAMPER) {
+                    component = QSharedPointer<ComponentBase>(new Rect_damper(record));
+                } else if (componentTypeName == component_type_name::AIRDIFF) {
+                    component = QSharedPointer<ComponentBase>(new AirDiff(record));
+                } else if (componentTypeName == component_type_name::PUMPSEND) {
+                    component = QSharedPointer<ComponentBase>(new PumpSend(record));
+                } else if (componentTypeName == component_type_name::STATICBOX_GRILLE) {
+                    component = QSharedPointer<ComponentBase>(new StaticBox_grille(record));
+                } else if (componentTypeName == component_type_name::DISP_VENT_TERMINAL) {
+                    component = QSharedPointer<ComponentBase>(new Disp_vent_terminal(record));
+                } else if (componentTypeName == component_type_name::OTHER_SEND_TERMINAL) {
+                    component = QSharedPointer<ComponentBase>(new Other_send_terminal(record));
+                } else if (componentTypeName == component_type_name::STATICBOX) {
+                    component = QSharedPointer<ComponentBase>(new Static_box(record));
+                } else if (componentTypeName == component_type_name::MULTI_RANC) {
+                    component = QSharedPointer<ComponentBase>(new Multi_ranc(record));
+                } else if (componentTypeName == component_type_name::TEE) {
+                    component = QSharedPointer<ComponentBase>(new Tee(record));
+                } else if (componentTypeName == component_type_name::PIPE) {
+                    component = QSharedPointer<ComponentBase>(new Pipe(record));
+                } else if (componentTypeName == component_type_name::ELBOW) {
+                    component = QSharedPointer<ComponentBase>(new Elbow(record));
+                } else if (componentTypeName == component_type_name::REDUCER) {
+                    component = QSharedPointer<ComponentBase>(new Reducer(record));
+                } else if (componentTypeName == component_type_name::SILENCER) {
+                    component = QSharedPointer<ComponentBase>(new Silencer(record));
+                } else {
+                    qDebug() << "Unknown component type name:" << componentTypeName;
+                    continue;
+                }
+
+                // 将组件添加到管理器中
+                if (component) {
+                    ComponentManager::getInstance().addComponent(component, false, true);
+                } else {
+                    qDebug() << "Failed to create component for table" << tableName;
+                }
+            }
+        }
+    }
+
+}
+
+void DatabaseManager::loadComponentsFromComponentDB()
+{
+    // 遍历所有组件类型的名称
+    for (auto it = typeNameToTableName.constBegin(); it != typeNameToTableName.constEnd(); ++it) {
+        const QString& componentTypeName = it.key();
+        const QString& tableName = it.value();
+
+        QSqlQuery query(component_db);
+        query.prepare("SELECT * FROM " + tableName);
 
         if (!query.exec()) {
-            qDebug() << "Query failed for table" << tableName << ":" << query.lastError().text();
+            qDebug() << "query failed for table" << tableName << ":" << query.lastError().text();
             continue;
         }
 
@@ -850,7 +949,7 @@ void DatabaseManager::loadComponentsFromDatabase()
 
             // 将组件添加到管理器中
             if (component) {
-                ComponentManager::getInstance().addComponent(component, true);
+                ComponentManager::getInstance().addComponent(component, true, true);
             } else {
                 qDebug() << "Failed to create component for table" << tableName;
             }

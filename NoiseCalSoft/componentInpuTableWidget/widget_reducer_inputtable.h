@@ -9,7 +9,7 @@ class Widget_Reducer_inputTable : public Widget_base_inputTable
 {
     Q_OBJECT
 public:
-    Widget_Reducer_inputTable(QWidget* parent = nullptr);
+    Widget_Reducer_inputTable(bool inComponentDB, QWidget* parent = nullptr);
 
 
     // Widget_base_inputTable interface
@@ -22,6 +22,7 @@ public slots:
     void onRevise() override;
     void onInput() override;
     void onOutput() override;
+    void handleConfirmation(QSet<QString> uuids) override;
 
     // Widget_base_inputTable interface
 public:

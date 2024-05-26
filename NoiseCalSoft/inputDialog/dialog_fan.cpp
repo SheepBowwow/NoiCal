@@ -1,4 +1,4 @@
-#include "inputDialog/dialog_fan.h"
+ #include "inputDialog/dialog_fan.h"
 #include "ui_dialog_fan.h"
 #include "calFunction/cal_function.h"
 
@@ -9,7 +9,6 @@ Dialog_fan::Dialog_fan(QWidget *parent, int editRow,  const Fan& data) :
 {
     ui->setupUi(this);
     setTopWidget(ui->widget_top);  // 设置顶部部件
-
     noi_in_lineEdits = { ui->lineEdit_in_63, ui->lineEdit_in_125, ui->lineEdit_in_250, ui->lineEdit_in_500,
                        ui->lineEdit_in_1k, ui->lineEdit_in_2k, ui->lineEdit_in_4k, ui->lineEdit_in_8k,
                        ui->lineEdit_in_total };
@@ -88,7 +87,6 @@ void Dialog_fan::on_pushButton_confirm_clicked()
                 noi_in,
                 noi_out);
 
-
     this->accept(); // 关闭对话框
 }
 
@@ -111,6 +109,17 @@ bool Dialog_fan::check_lineedit()
 void* Dialog_fan::getComponent()
 {
     return component == nullptr ? nullptr : component;
+}
+
+void Dialog_fan::switchToCompontDB(bool inDB)
+{
+    if(inDB)
+    {
+        ui->lineEdit_number->setText("-");
+        ui->widget_number->hide();
+        ui->widget_brand->move(QPoint(ui->widget_model->x(), ui->widget_model->y()));
+        ui->widget_model->move(QPoint(ui->widget_number->x(), ui->widget_number->y()));
+    }
 }
 
 void Dialog_fan::on_close_clicked()
