@@ -50,6 +50,21 @@ public:
     void setNoiseLimit();
     void setPrjBasicInfo();
 
+    /*  调用函数可创建树状列表，并生成对应页面
+    **  item与page对应关系存储在map_system_systemlist_form等map中
+    **  后续可以在这些容器中找到存在的page
+    **
+    **/
+    QTreeWidgetItem* create_zsq(QString zsq_name);
+    QTreeWidgetItem* create_system(QTreeWidgetItem* zsq_item,QString sys_name);
+
+    QTreeWidgetItem* create_room(QTreeWidgetItem* sys_item,QString roomid);
+    QVector<QTreeWidgetItem*> create_pipe(QTreeWidgetItem* room_item,QStringList pipename);
+
+    QTreeWidgetItem* create_outer(QTreeWidgetItem* outersys_item,QString outerid);
+    QVector<QTreeWidgetItem*> create_outer_pipe(QTreeWidgetItem* outer_item,QStringList outer_pipename);
+    QTreeWidgetItem* create_classic_room(QString croom_name);
+
 protected:
     void mouseMoveEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
@@ -291,8 +306,9 @@ private:
 
     /**************容器*********************/
     QVector<QTreeWidgetItem *> vec_zsq;                        //保存主竖区item
-
     QVector<QTreeWidgetItem *> vec_system;                     //保存系统item
+    QVector<QTreeWidgetItem *> vec_outersys;                     //保存室外item(指的是主竖区下个层级的室外)
+    QVector<QTreeWidgetItem *> vec_room;                     //保存房间item
     QVector<QTreeWidgetItem *> vec_outer;                     //保存室外item
 
     QMap<QTreeWidgetItem *,QTreeWidgetItem *> map_zsq67;       // 第六项的主竖区和第七项的主竖区对应关系
@@ -300,12 +316,23 @@ private:
     QMap<QTreeWidgetItem *,QTreeWidgetItem *> map_system67;       // 第六项的系统和第七项的系统对应关系
     QMap<QTreeWidgetItem *,QTreeWidgetItem *> map_system68;       // 第六项的系统和第八项的系统对应关系
     QVector<QTreeWidgetItem *> vec_zfg;         // 保存主风管item,方便右键点击
-    QMap<QTreeWidgetItem *,QWidget *> map_zfg_pag;    // *************主风管与page对应关系
 
     QMap<QString,QVector<QWidget *>> map_roomid_zfgpage;           //房间编号对应的主风管page 一对多关系
-
     QVector<QWidget *> vec_roomzfg;
     QVector<QTreeWidgetItem *> vec_classicroom;                     //保存典型房间item
+    //2024.5.25
+    QMap<QTreeWidgetItem *,QWidget *> map_system_systemlist_form;       //第6项，系统item->系统清单的page
+    QMap<QTreeWidgetItem *,QWidget *> map_system_roomdefine_form;       //第7项，系统item->定义房间的page
+    QMap<QTreeWidgetItem *,QWidget *> map_outersys_outerdefine_form;             //第7项，室外item->室外的page
+
+    QMap<QTreeWidgetItem *,QWidget *> map_roompipe_roomcal_form;        //第8项，主风管item->主风管的page
+    QMap<QTreeWidgetItem *,QWidget *> map_room_roomcaltotal_form;  //第8项，房间噪音item->房间噪音的page
+
+    QMap<QTreeWidgetItem *,QWidget *> map_outerpipe_roomcal_form;        //第8项，支管item->支管的page
+    QMap<QTreeWidgetItem *,QWidget *> map_outer_before_form;          //第8项，汇合前叠加的item->汇合前叠加的page
+    QMap<QTreeWidgetItem *,QWidget *> map_outer_after_form;       //第8项，汇合后叠加的item->汇合后叠加的page
+    QMap<QTreeWidgetItem *,QWidget *> map_outer_outercaltotal_form;      //第8项，室外噪音的item->室外噪音的page
+
     /**************容器*********************/
 
     QTreeWidgetItem *item_room_calculate;                             // 8.噪音计算
