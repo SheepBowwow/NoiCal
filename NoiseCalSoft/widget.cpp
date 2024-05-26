@@ -783,6 +783,297 @@ void Widget::setPrjBasicInfo()
     ui->lineEdit_class_soc->setText(prjInfo.classSoc);
 }
 
+
+// 创建主竖区item，同时把item保存到vec_zsq中，使右键点击的时候识别到该item并进行弹窗
+QTreeWidgetItem* Widget::create_zsq(QString zsq_name)
+{
+    QTreeWidgetItem *treeitem=new QTreeWidgetItem(item_system_list,QStringList(zsq_name));
+    QTreeWidgetItem *treeitemcp1=new QTreeWidgetItem(item_room_define,QStringList(zsq_name));
+    QTreeWidgetItem *treeitemcp2=new QTreeWidgetItem(QStringList(zsq_name));
+
+    //  保证典型房间一直在最后一行
+    int n=item_room_calculate->childCount();
+    int insertIndex = qMax(0, n - 1);
+    item_room_calculate->insertChild(insertIndex, treeitemcp2);
+
+    map_zsq67.insert(treeitem,treeitemcp1);  // 保存第6项和第7项主竖区对应关系
+    map_zsq68.insert(treeitem,treeitemcp2);  // 保存第6项和第8项主竖区对应关系
+    vec_zsq.append(treeitem);
+
+    connect(ui->treeWidget,&QTreeWidget::itemClicked,this,[=](QTreeWidgetItem *item1,int n){
+        if(item1 == treeitemcp1 || item1 == treeitem || item1 == treeitemcp1)     //     点击甲板会显示空白
+            ui->stackedWidget->setCurrentWidget(ui->page_white);
+    });
+    return treeitem;
+
+}
+// 添加系统（系统清单、计算房间）、室外系统和form的映射
+QTreeWidgetItem* Widget::create_system(QTreeWidgetItem* zsq_item,QString sys_name)
+{
+    Form_system_list *form_sl;
+    Form_room_define *form;
+    Form_room_define *formouter;
+
+    QTreeWidgetItem *sys_item = new QTreeWidgetItem(zsq_item,QStringList(sys_name));
+    vec_system.append(sys_item);  // 添加到容器记录
+
+    // 添加室外的时候先判断之前有没有
+    int flag=0;
+    for(int i=0;i<map_zsq67.value(zsq_item)->childCount();i++){
+        if (map_zsq67.value(zsq_item)->child(i)->text(0) == "室外") {
+            flag=1;
+        }
+    }
+    if(flag==0){
+        QTreeWidgetItem *treeitem_outer1=new QTreeWidgetItem(map_zsq67.value(zsq_item),QStringList("室外"));
+        QTreeWidgetItem *treeitem_outer2=new QTreeWidgetItem(map_zsq68.value(zsq_item),QStringList("室外"));
+        vec_outersys.append(treeitem_outer2);
+        formouter=new Form_room_define;
+        formouter->change_outer(); // 设置为室外界面
+        formouter->setjiabanItem(treeitem_outer2);   // 房间位于该“室外”下
+        ui->stackedWidget->addWidget(formouter);
+        // 关联form发出的添加房间、删除房间信号
+        connect(formouter,SIGNAL(roomadd(QTreeWidgetItem*,QString,int, QString, QString)),
+                this,SLOT(upDateTreeItem8(QTreeWidgetItem*,QString,int, QString, QString)));
+        connect(formouter,SIGNAL(roomdel(QTreeWidgetItem*,QString)),
+                this,SLOT(delroom(QTreeWidgetItem*,QString)));
+
+        connect(ui->treeWidget,&QTreeWidget::itemClicked,this,[=](QTreeWidgetItem *item1,int n){
+            if(item1==treeitem_outer1)     //     点击"室外"会显示添加的页面
+                ui->stackedWidget->setCurrentWidget(formouter);
+        });
+
+        //2024.5.25
+        map_outersys_outerdefine_form.insert(treeitem_outer1,formouter);
+    }
+
+    //在78项下添加
+    int indexToInsert1 = map_zsq67.value(zsq_item)->childCount() - 1; // 始终在室外之前添加
+    QTreeWidgetItem *treeitemcp1=new QTreeWidgetItem(QStringList(sys_name)); // 系统item
+    map_zsq67.value(zsq_item)->insertChild(indexToInsert1, treeitemcp1);
+    int indexToInsert2 = map_zsq68.value(zsq_item)->childCount() - 1; // 始终在室外之前添加
+    QTreeWidgetItem *treeitemcp2=new QTreeWidgetItem(QStringList(sys_name));
+    map_zsq68.value(zsq_item)->insertChild(indexToInsert2, treeitemcp2);
+    map_system67.insert(sys_item,treeitemcp1);
+    map_system68.insert(sys_item,treeitemcp2);
+
+    //  添加系统同时在6、7项的系统编号下添加界面
+    //6
+    form_sl = new Form_system_list(sys_name);
+    ui->stackedWidget->addWidget(form_sl);
+    connect(ui->treeWidget,&QTreeWidget::itemClicked,this,[=](QTreeWidgetItem *item1,int n){
+        if(item1 == sys_item)     //     点击系统会显示系统清单界面
+            ui->stackedWidget->setCurrentWidget(form_sl);
+    });
+    vec_system.append(sys_item);
+
+    //7
+    form=new Form_room_define;
+    form->setjiabanItem(treeitemcp2);   // 房间位于的系统item
+    ui->stackedWidget->addWidget(form);
+    // 关联form发出的添加房间、删除房间信号
+    connect(form,SIGNAL(roomadd(QTreeWidgetItem*,QString,int, QString, QString)),
+            this,SLOT(upDateTreeItem8(QTreeWidgetItem*,QString,int, QString, QString)));
+    connect(form,SIGNAL(roomdel(QTreeWidgetItem*,QString)),
+            this,SLOT(delroom(QTreeWidgetItem*,QString)));
+
+    connect(ui->treeWidget,&QTreeWidget::itemClicked,this,[=](QTreeWidgetItem *item1,int n){
+        if(item1==treeitemcp1)     //     点击系统会显示添加的页面
+            ui->stackedWidget->setCurrentWidget(form);
+    });
+
+    //2024.5.25保存item与form的映射，后续可通过遍历去找form
+    map_system_roomdefine_form.insert(treeitemcp1,form);
+    map_system_systemlist_form.insert(sys_item,form_sl);
+
+    return sys_item;
+
+}
+
+QTreeWidgetItem* Widget::create_room(QTreeWidgetItem* sys_item,QString roomid)
+{
+    QTreeWidgetItem *room_item=new QTreeWidgetItem(sys_item,QStringList(roomid));
+    return room_item;
+
+}
+// 添加主风管、房间噪音和form的映射
+QVector<QTreeWidgetItem*> Widget::create_pipe(QTreeWidgetItem* room_item,QStringList pipename)
+{
+    QVector<QTreeWidgetItem*> pipe_items;
+    int num=pipename.count();
+
+    for(int i=0;i<num;i++)
+    {
+        room_cal_baseWidget *pipe_page = new room_cal_baseWidget; // 创建 房间主风管 页面对象
+
+        // 将页面添加到堆栈窗口部件
+        ui->stackedWidget->addWidget(pipe_page);
+
+        // 主风管还要关联对应page页面
+        QTreeWidgetItem *pipe_item = new QTreeWidgetItem(room_item,QStringList(pipename.at(i)));
+        vec_zfg.append(pipe_item);     // 保存主风管ID
+
+        // 关联页面和子项
+
+        connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
+            if (itemClicked == pipe_item)
+            {
+                // 设置当前页面为对应的页面
+                ui->stackedWidget->setCurrentWidget(pipe_page);
+                if(pipe_page->flag_firstopen)
+                {
+                    Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
+                    box->setlabeltext("主风管命名");
+                    if(box->exec()==QDialog::Accepted)
+                    {
+                        pipe_item->setText(0,box->getname());
+                        pipe_page->setMainDuctNumber(box->getname());    //room_cal_table设置名称
+                    }
+                    pipe_page->flag_firstopen=0;
+                }
+            }
+        });
+        pipe_items.append(pipe_item);
+        map_roompipe_roomcal_form.insert(pipe_item,pipe_page);
+    }
+
+    QTreeWidgetItem *pipe_total_item=new QTreeWidgetItem(room_item,QStringList("房间噪音"));
+
+    //房间噪音item对应的page页面
+    room_cal_total *pipe_total_page = new room_cal_total;
+    ui->stackedWidget->addWidget(pipe_total_page);
+    connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
+        if (itemClicked == pipe_total_item)
+        {
+            // 设置当前页面为对应的页面
+            ui->stackedWidget->setCurrentWidget(pipe_total_page);
+        }
+    });
+    pipe_items.append(pipe_total_item);
+    map_room_roomcaltotal_form.insert(pipe_total_item,pipe_total_page);
+
+    return pipe_items;
+}
+
+QTreeWidgetItem *Widget::create_outer(QTreeWidgetItem *outersys_item, QString outerid)
+{
+    QTreeWidgetItem *outer_item=new QTreeWidgetItem(outersys_item,QStringList(outerid));
+    return outer_item;
+}
+// 添加支风管、室外噪音、汇合前、汇合后和form的映射
+QVector<QTreeWidgetItem*> Widget::create_outer_pipe(QTreeWidgetItem* outer_item,QStringList outer_pipename)
+{
+    QVector<QTreeWidgetItem*> outer_pipe_items;
+    int num=outer_pipename.count();
+
+    for(int i=0;i<num;i++)
+    {
+        room_cal_baseWidget *pipe_page = new room_cal_baseWidget; // 创建 房间主风管 页面对象
+        pipe_page->change_outer_cal(); // 改变为室外页面
+
+        // 将页面添加到堆栈窗口部件
+        ui->stackedWidget->addWidget(pipe_page);
+
+        // 主风管还要关联对应page页面
+        QString name=outer_pipename[i];
+        QTreeWidgetItem *outer_pipe_item = new QTreeWidgetItem(outer_item,QStringList(name));
+        vec_zfg.append(outer_pipe_item);     // 保存主风管ID
+
+        // 关联页面和子项
+
+        connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
+            if (itemClicked == outer_pipe_item)
+            {
+                // 设置当前页面为对应的页面
+                ui->stackedWidget->setCurrentWidget(pipe_page);
+                if(pipe_page->flag_firstopen)
+                {
+                    Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
+                    box->setlabeltext("主风管命名");
+                    if(box->exec()==QDialog::Accepted)
+                    {
+                        outer_pipe_item->setText(0,box->getname());
+                        pipe_page->setMainDuctNumber(box->getname());    //room_cal_table设置名称
+                    }
+                    pipe_page->flag_firstopen=0;
+                }
+            }
+        });
+        //2024.5.26
+        outer_pipe_items.append(outer_pipe_item);//添加到返回容器
+        map_outerpipe_roomcal_form.insert(outer_pipe_item,pipe_page);
+        qDebug()<<"map_outerpipe_roomcal_form.insert";
+    }
+
+    if(num>=2){
+        QTreeWidgetItem *pipeb_item=new QTreeWidgetItem(outer_item,QStringList("汇合前叠加"));
+        //汇合前叠加item对应的page页面
+        outer_before *page1 = new outer_before;
+        ui->stackedWidget->addWidget(page1);
+        connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
+            if (itemClicked == pipeb_item)
+            {
+                // 设置当前页面为对应的页面
+                ui->stackedWidget->setCurrentWidget(page1);
+            }
+        });
+
+        QTreeWidgetItem *pipea_item=new QTreeWidgetItem(outer_item,QStringList("汇合后总管"));
+        //汇合后总管item对应的page页面
+        outer_after *page2 = new outer_after;
+        ui->stackedWidget->addWidget(page2);
+        connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
+            if (itemClicked == pipea_item)
+            {
+                // 设置当前页面为对应的页面
+                ui->stackedWidget->setCurrentWidget(page2);
+            }
+        });
+        //2024.5.26
+        outer_pipe_items.append(pipeb_item);//添加到返回容器
+        outer_pipe_items.append(pipea_item);//添加到返回容器
+        map_outer_before_form.insert(pipeb_item,page1);
+        map_outer_after_form.insert(pipea_item,page2);
+    }
+
+
+    QTreeWidgetItem *pipe_total_item=new QTreeWidgetItem(outer_item,QStringList("室外噪音"));
+    //室外噪音item对应的page页面
+    room_cal_total *page = new room_cal_total;
+    page->change_outer_cal();
+
+    ui->stackedWidget->addWidget(page);
+    connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
+        if (itemClicked == pipe_total_item)
+        {
+            // 设置当前页面为对应的页面
+            ui->stackedWidget->setCurrentWidget(page);
+        }
+    });
+    //2024.5.26
+    outer_pipe_items.append(pipe_total_item);//添加到返回容器
+    map_outer_outercaltotal_form.insert(pipe_total_item,page);
+    return outer_pipe_items;
+
+}
+
+QTreeWidgetItem* Widget::create_classic_room(QString croom_name)
+{
+    QTreeWidgetItem *treeitem=new QTreeWidgetItem(item_cabin_classic,QStringList(croom_name));
+    vec_classicroom.append(treeitem);
+    room_cal_baseWidget *page = new room_cal_baseWidget(nullptr,croom_name);
+    ui->stackedWidget->addWidget(page);
+
+    page->addMenuAction(croom_name);
+
+    connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
+        if (itemClicked == treeitem)
+        {
+            ui->stackedWidget->setCurrentWidget(page);
+        }
+    });
+}
+
 void Widget::setBasicPageWhenSwitchPrj()
 {
     setAttachmentTable();
@@ -1088,7 +1379,6 @@ void Widget::clearTable()
 
 
 
-
 // 右键点击响应
 void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
 {
@@ -1097,28 +1387,12 @@ void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
         if(item==item_system_list) //  点击了6.系统清单
         {
             if(actAddzsq==menusystemlist->exec(QCursor::pos()))   // 弹出添加主竖区菜单
-            {     
+            {
                 Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
                 box->setlabeltext("主竖区");
                 if(box->exec()==QDialog::Accepted)
                 {
-                    QTreeWidgetItem *treeitem=new QTreeWidgetItem(item_system_list,QStringList(box->getname()));
-                    QTreeWidgetItem *treeitemcp1=new QTreeWidgetItem(item_room_define,QStringList(box->getname()));
-                    QTreeWidgetItem *treeitemcp2=new QTreeWidgetItem(QStringList(box->getname()));
-
-                    int n=item_room_calculate->childCount();    //  保证典型房间一直在最后一行
-                    int insertIndex = qMax(0, n - 1);
-                    item_room_calculate->insertChild(insertIndex, treeitemcp2);
-
-                    map_zsq67.insert(treeitem,treeitemcp1);  // 保存第6项和第7项主竖区对应关系
-                    map_zsq68.insert(treeitem,treeitemcp2);  // 保存第6项和第8项主竖区对应关系
-                    vec_zsq.append(treeitem);
-
-                    connect(ui->treeWidget,&QTreeWidget::itemClicked,this,[=](QTreeWidgetItem *item1,int n){
-                        if(item1 == treeitemcp1 || item1 == treeitem || item1 == treeitemcp1)     //     点击甲板会显示空白
-                            ui->stackedWidget->setCurrentWidget(ui->page_white);
-                    });
-
+                    create_zsq(box->getname());
                     return;
                 }
             }
@@ -1128,76 +1402,12 @@ void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
         {
             QAction *act=menuzsq->exec(QCursor::pos());
             Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
-            if(actAddsystem==act)   // 添加系统
+            if(actAddsystem==act)   // 添加系统,同时添加对应form
             {
                 box->setlabeltext("系统编号");
                 if(box->exec()==QDialog::Accepted)
                 {
-                    QTreeWidgetItem *treeitemsystem = new QTreeWidgetItem(item,QStringList(box->getname()));
-                    vec_system.append(treeitemsystem);  // 添加到容器记录
-
-                    // 添加室外的时候先判断之前有没有
-                    int flag=0;
-                    for(int i=0;i<map_zsq67.value(item)->childCount();i++){
-                        if (map_zsq67.value(item)->child(i)->text(0) == "室外") {
-                                    flag=1;
-                                }
-                    }
-                    if(flag==0){
-                        QTreeWidgetItem *treeitem_outer1=new QTreeWidgetItem(map_zsq67.value(item),QStringList("室外"));
-                        QTreeWidgetItem *treeitem_outer2=new QTreeWidgetItem(map_zsq68.value(item),QStringList("室外"));
-                        vec_outer.append(treeitem_outer2);
-                        Form_room_define *formouter=new Form_room_define;
-                        formouter->change_outer(); // 设置为室外界面
-                        formouter->setjiabanItem(treeitem_outer2);   // 房间位于该“室外”下
-                        ui->stackedWidget->addWidget(formouter);
-                        // 关联form发出的添加房间、删除房间信号
-                        connect(formouter,SIGNAL(roomadd(QTreeWidgetItem*,QString,int, QString, QString)),
-                                this,SLOT(upDateTreeItem8(QTreeWidgetItem*,QString,int, QString, QString)));
-                        connect(formouter,SIGNAL(roomdel(QTreeWidgetItem*,QString)),
-                                this,SLOT(delroom(QTreeWidgetItem*,QString)));
-
-                        connect(ui->treeWidget,&QTreeWidget::itemClicked,this,[=](QTreeWidgetItem *item1,int n){
-                            if(item1==treeitem_outer1)     //     点击"室外"会显示添加的页面
-                                ui->stackedWidget->setCurrentWidget(formouter);
-                        });
-                    }
-
-
-                    int indexToInsert1 = map_zsq67.value(item)->childCount() - 1; // 始终在室外之前添加
-                    QTreeWidgetItem *treeitemcp1=new QTreeWidgetItem(QStringList(box->getname())); // 系统item
-                    map_zsq67.value(item)->insertChild(indexToInsert1, treeitemcp1);
-
-                    int indexToInsert2 = map_zsq68.value(item)->childCount() - 1; // 始终在室外之前添加
-                    QTreeWidgetItem *treeitemcp2=new QTreeWidgetItem(QStringList(box->getname()));
-                    map_zsq68.value(item)->insertChild(indexToInsert2, treeitemcp2);
-
-                    map_system67.insert(treeitemsystem,treeitemcp1);
-                    map_system68.insert(treeitemsystem,treeitemcp2);
-                    //  添加系统同时在6、7项的系统编号下添加界面
-                    //6
-                    Form_system_list *form_sl = new Form_system_list(box->getname());
-                    ui->stackedWidget->addWidget(form_sl);
-                    connect(ui->treeWidget,&QTreeWidget::itemClicked,this,[=](QTreeWidgetItem *item1,int n){
-                        if(item1 == treeitemsystem)     //     点击系统会显示系统清单界面
-                            ui->stackedWidget->setCurrentWidget(form_sl);
-                    });
-                    vec_system.append(treeitemsystem);
-
-                    //7
-                    Form_room_define *form=new Form_room_define;
-                    form->setjiabanItem(treeitemcp2);   // 房间位于这一系统下
-                    ui->stackedWidget->addWidget(form);
-                    // 关联form发出的添加房间、删除房间信号
-                    connect(form,SIGNAL(roomadd(QTreeWidgetItem*,QString,int, QString, QString)),
-                            this,SLOT(upDateTreeItem8(QTreeWidgetItem*,QString,int, QString, QString)));
-                    connect(form,SIGNAL(roomdel(QTreeWidgetItem*,QString)),
-                            this,SLOT(delroom(QTreeWidgetItem*,QString)));
-
-                    connect(ui->treeWidget,&QTreeWidget::itemClicked,this,[=](QTreeWidgetItem *item1,int n){
-                        if(item1==treeitemcp1)     //     点击甲板会显示添加的页面
-                            ui->stackedWidget->setCurrentWidget(form);
-                    });
+                    create_system(item,box->getname());
                 }
             }
             if(actModzsqname==act)
@@ -1205,6 +1415,8 @@ void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
                 box->setlabeltext("修改名称");
                 if(box->exec()==QDialog::Accepted)
                 {
+                    QString oldname=item->text(0);
+
                     item->setText(0,box->getname());
                     map_zsq67.value(item)->setText(0,box->getname());
                     map_zsq68.value(item)->setText(0,box->getname());
@@ -1224,25 +1436,27 @@ void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
         if(vec_system.contains(item))
         {
             QAction *act=menusystem->exec(QCursor::pos());
-            if(actModsystemname==act)
+            if(actModsystemname==act) //修改名称
             {
                 Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
                 box->setlabeltext("修改系统名称");
                 if(box->exec()==QDialog::Accepted)
                 {
+                    QString oldname=item->text(0);
+
                     item->setText(0,box->getname());
                     map_system67.value(item)->setText(0,box->getname());
                     map_system68.value(item)->setText(0,box->getname());
 
                 }
             }
-            if(actDelsystem==act)
+            if(actDelsystem==act)   //删除系统
             {
+
                 delete(item);
+                //如果系统删除之前就剩一个了,要删除室外项
                 if(map_system67.value(item)->parent()->childCount()<=2){
                     delete(map_system67.value(item)->parent()->child(1));
-                }
-                if(map_system68.value(item)->parent()->childCount()<=2){
                     delete(map_system68.value(item)->parent()->child(1));
                 }
                 delete(map_system67.value(item));
@@ -1261,19 +1475,7 @@ void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
                 box->setlabeltext("典型房间类型");
                 if(box->exec()==QDialog::Accepted)
                 {
-                    QTreeWidgetItem *treeitem=new QTreeWidgetItem(item_cabin_classic,QStringList(box->getname()));
-                    vec_classicroom.append(treeitem);
-                    room_cal_baseWidget *page = new room_cal_baseWidget(nullptr,box->getname());
-                    ui->stackedWidget->addWidget(page);
-
-                    page->addMenuAction(box->getname());
-
-                    connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
-                        if (itemClicked == treeitem)
-                        {
-                            ui->stackedWidget->setCurrentWidget(page);
-                        }
-                    });
+                    create_classic_room(box->getname());
                 }
             }
         }
@@ -1321,121 +1523,83 @@ void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
     }
 }
 
-//  在第7项定义房间后，主界面接收到信号，更新第八项房间底下的主风管信息 房间编号，主风管数量
+//  在第7项定义房间后，主界面接收到信号，item就是第八项系统item
+// 添加第八项房间底下的主风管item，并生成对应form
 void Widget::upDateTreeItem8(QTreeWidgetItem *item,QString roomid,int num, QString jiaban, QString limit) //
 {
-    QTreeWidgetItem *treeitemfj=new QTreeWidgetItem(item,QStringList(roomid));
-    QString systemName = item->text(0);     //获取系统编号
-    QString zhushuqu = item->parent()->text(0);     //获取主竖区
-    for(int i=0;i<num;i++)
+    if(vec_outersys.contains(item))
     {
-        room_cal_baseWidget *page = new room_cal_baseWidget; // 创建 房间主风管 页面对象
-
-        if(vec_outer.contains(item)){
-            page->change_outer_cal(); // 改变为室外页面
+        QStringList pipename;
+        for(int i=0;i<num;i++){
+            pipename<<"噪音源支管"+QString::number(i+1);
         }
-        page->setInfo(zhushuqu,jiaban,roomid,limit,QString::number(num));   //设置信息
-        page->setSystemName(systemName);   //设置系统名
-        // 保存 房间编号下的主风管page
-        map_roomid_zfgpage[roomid].push_back(page);
+        QVector<QTreeWidgetItem *> pipe_items;
 
-        // 将页面添加到堆栈窗口部件
-        ui->stackedWidget->addWidget(page);
+        QTreeWidgetItem *outer_item=create_outer(item,roomid);
+        pipe_items=create_outer_pipe(outer_item,pipename);
 
-        // 主风管还要关联对应page页面
-        QString str=page->title_label;  // 获取是该叫"主风管"还是"噪音源支管"
-        QTreeWidgetItem *treeitemfg = new QTreeWidgetItem(treeitemfj,QStringList(str+QString::number(i+1)));
-        vec_zfg.append(treeitemfg);     // 保存主风管ID
-        map_zfg_pag.insert(treeitemfg,page);
+        // 给每个新生成的form设置信息
+        for (QTreeWidgetItem *pipe_item : pipe_items) {
+            //
+            if(map_outerpipe_roomcal_form.contains(pipe_item)){
+                QWidget *widget=map_outerpipe_roomcal_form.value(pipe_item);
+                //把对应的QWidget界面转换为具体的子类
+                room_cal_baseWidget *pipe_page=dynamic_cast<room_cal_baseWidget*>(widget);
+                pipe_page->setInfo(item->parent()->text(0),jiaban,roomid,limit,QString::number(num));
 
-        // 关联页面和子项
-        connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
-            if (itemClicked == treeitemfg)
-            {
-                // 设置当前页面为对应的页面
-                ui->stackedWidget->setCurrentWidget(page);
-                if(page->flag_firstopen)
-                {
-                    Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
-                    box->setlabeltext("主风管命名");
-                    if(box->exec()==QDialog::Accepted)
-                    {
-                        treeitemfg->setText(0,box->getname());
-                        page->setMainDuctNumber(box->getname());    //room_cal_table设置名称
-                    }
-                    page->flag_firstopen=0;
-                }
             }
-        });
-        }
-
-        //如果是室外，汇合前叠加”、“汇合后总管”及“室外噪音”
-        if(vec_outer.contains(item)){
-            if(num>=2){
-                QTreeWidgetItem *treeitem_before=new QTreeWidgetItem(treeitemfj,QStringList("汇合前叠加"));
-                //汇合前叠加item对应的page页面
-                outer_before *page1 = new outer_before;
-                page1->setInfo(zhushuqu,jiaban,roomid,limit,QString::number(num));   //设置信息
-                ui->stackedWidget->addWidget(page1);
-                connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
-                    if (itemClicked == treeitem_before)
-                    {
-                        // 设置当前页面为对应的页面
-                        ui->stackedWidget->setCurrentWidget(page1);
-                    }
-                });
-
-                QTreeWidgetItem *treeitem_after=new QTreeWidgetItem(treeitemfj,QStringList("汇合后总管"));
-                //汇合后总管item对应的page页面
-                outer_after *page2 = new outer_after;
-                page2->setInfo(zhushuqu,jiaban,roomid,limit,QString::number(num));   //设置信息
-                ui->stackedWidget->addWidget(page2);
-                connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
-                    if (itemClicked == treeitem_after)
-                    {
-                        // 设置当前页面为对应的页面
-                        ui->stackedWidget->setCurrentWidget(page2);
-                    }
-                });
+            //
+            if(map_outer_before_form.contains(pipe_item)){
+                QWidget *widget=map_outer_before_form.value(pipe_item);
+                outer_before *pipe_page=dynamic_cast<outer_before*>(widget);
+                pipe_page->setInfo(item->parent()->text(0),jiaban,roomid,limit,QString::number(num));
             }
-
-
-            QTreeWidgetItem *treeitem_outer=new QTreeWidgetItem(treeitemfj,QStringList("室外噪音"));
-            //室外噪音item对应的page页面
-            room_cal_total *page = new room_cal_total;
-            page->change_outer_cal();
-
-            ui->stackedWidget->addWidget(page);
-            connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
-                if (itemClicked == treeitem_outer)
-                {
-                    // 设置当前页面为对应的页面
-                    ui->stackedWidget->setCurrentWidget(page);
-                }
-            });
+            if(map_outer_after_form.contains(pipe_item)){
+                QWidget *widget=map_outer_after_form.value(pipe_item);
+                outer_after *pipe_page=dynamic_cast<outer_after*>(widget);
+                pipe_page->setInfo(item->parent()->text(0),jiaban,roomid,limit,QString::number(num));
+            }
+            //
+            if(map_outer_outercaltotal_form.contains(pipe_item)){
+                QWidget *widget=map_outer_outercaltotal_form.value(pipe_item);
+                room_cal_total *pipe_page=dynamic_cast<room_cal_total*>(widget);
+                pipe_page->setInfo(item->parent()->text(0),jiaban,roomid,limit,QString::number(num));
+            }
+            //
         }
-        else{
-            QTreeWidgetItem *treeitemtotals=new QTreeWidgetItem(treeitemfj,QStringList("房间噪音"));
+        //
 
-            //房间噪音item对应的page页面
-            room_cal_total *page = new room_cal_total;
-            page->setInfo(zhushuqu,jiaban,roomid,limit,QString::number(num));   //设置信息
-            ui->stackedWidget->addWidget(page);
-            connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
-                if (itemClicked == treeitemtotals)
-                {
-                    // 设置当前页面为对应的页面
-                    ui->stackedWidget->setCurrentWidget(page);
-                }
-            });
-
+    }
+    else{
+        QStringList pipename;
+        for(int i=0;i<num;i++){
+            pipename<<"主风管"+QString::number(i+1);
         }
+        QVector<QTreeWidgetItem *> pipe_items;
+
+        QTreeWidgetItem *room_item=create_room(item,roomid);
+        pipe_items=create_pipe(room_item,pipename);
+
+        // 给每个新生成的form设置信息
+        for (QTreeWidgetItem *pipe_item : pipe_items) {
+            if(map_roompipe_roomcal_form.contains(pipe_item)){
+                QWidget *widget=map_roompipe_roomcal_form.value(pipe_item);
+                room_cal_baseWidget *pipe_page=dynamic_cast<room_cal_baseWidget*>(widget);
+                pipe_page->setInfo(item->parent()->text(0),jiaban,roomid,limit,QString::number(num));
+            }
+            if(map_room_roomcaltotal_form.contains(pipe_item)){
+                QWidget *widget=map_room_roomcaltotal_form.value(pipe_item);
+                room_cal_total *pipe_page=dynamic_cast<room_cal_total*>(widget);
+                pipe_page->setInfo(item->parent()->text(0),jiaban,roomid,limit,QString::number(num));
+            }
+        }
+        //
+    }
 
 }
 
 void Widget::delroom(QTreeWidgetItem* item_system,QString roomid)
 {
-    map_roomid_zfgpage.remove(roomid);      //删除 房间编号下对应的主风管page页面 容器记录
 
     for(int i=0;i<item_system->childCount();i++)         // 遍历房间
     {
@@ -1444,8 +1608,8 @@ void Widget::delroom(QTreeWidgetItem* item_system,QString roomid)
             QTreeWidgetItem* itemfj=item_system->child(i);
             for(int j=0;j<itemfj->childCount();j++) // 首先删除房间下的主风管以及页面
             {
-                delete map_zfg_pag.value(itemfj->child(j)); //释放主风管关联的page
-                map_zfg_pag.remove(itemfj->child(j));      // 删除记录
+                delete map_roompipe_roomcal_form.value(itemfj->child(j)); //释放主风管关联的page
+                map_roompipe_roomcal_form.remove(itemfj->child(j));      // 删除记录
                 vec_zfg.removeOne(itemfj->child(j));
             }
             delete item_system->child(i);            // 系统下的房间子项全部移走
@@ -1453,6 +1617,7 @@ void Widget::delroom(QTreeWidgetItem* item_system,QString roomid)
         }
     }
 }
+
 
 void Widget::initRightButtonMenu()
 {
