@@ -234,6 +234,8 @@ private slots:
 
     void on_pushButton_database_clicked();
 
+    void on_pushButton_test_addRoom_clicked();
+
 private:
     Ui::Widget *ui;
     QTreeWidgetItem *item_prj;   //工程

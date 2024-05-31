@@ -289,7 +289,7 @@ void room_cal_baseWidget::setMainDuctNumber(QString number) //设置主风管编
     ui->lineEdit_main_duct_number->setText(number);
 }
 
-void room_cal_baseWidget::setSystemName(QString systemName) //设置主风管编号
+void room_cal_baseWidget::setSystemName(QString systemName) //设置系统名
 {
     this->systemName = systemName;
 }

@@ -265,7 +265,7 @@ void Widget::on_pushButto_prj_manage_clicked()
 
 void Widget::on_pushButton_noi_limit_add_clicked()
 {
-    if(ProjectManager::getInstance().getPrjID().trimmed().isEmpty())
+    if(!ProjectManager::getInstance().isProjectOpened())
     {
         QMessageBox::critical(this, "错误", "当前未打开任何项目");
         return;
@@ -353,7 +353,7 @@ void Widget::on_pushButton_noi_limit_del_clicked()
 
 void Widget::on_pushButton_drawing_list_add_clicked()
 {
-    if(ProjectManager::getInstance().getPrjID().trimmed().isEmpty())
+    if(!ProjectManager::getInstance().isProjectOpened())
     {
         QMessageBox::critical(this, "错误", "当前未打开任何项目");
         return;
@@ -438,7 +438,7 @@ void Widget::on_pushButton_prj_revise_clicked()
 
 void Widget::on_pushButton_prj_info_save_clicked()
 {
-    if(ProjectManager::getInstance().getPrjID().trimmed().isEmpty())
+    if(!ProjectManager::getInstance().isProjectOpened())
     {
         QMessageBox::critical(this, "错误", "当前未打开任何项目");
         return;
@@ -512,7 +512,7 @@ void Widget::initTableWidget_project_attachment()
 //项目附件添加
 void Widget::on_pushButton_project_attachment_add_clicked()
 {
-    if(ProjectManager::getInstance().getPrjID().trimmed().isEmpty())
+    if(!ProjectManager::getInstance().isProjectOpened())
     {
         QMessageBox::critical(this, "错误", "当前未打开任何项目");
         return;
@@ -900,12 +900,12 @@ QTreeWidgetItem* Widget::create_room(QTreeWidgetItem* sys_item,QString roomid)
 QVector<QTreeWidgetItem*> Widget::create_pipe(QTreeWidgetItem* room_item,QStringList pipename)
 {
     QVector<QTreeWidgetItem*> pipe_items;
-    int num=pipename.count();
+    int num = pipename.count();
 
     for(int i=0;i<num;i++)
     {
         room_cal_baseWidget *pipe_page = new room_cal_baseWidget; // 创建 房间主风管 页面对象
-
+        pipe_page->setSystemName(room_item->parent()->text(0));
         // 将页面添加到堆栈窗口部件
         ui->stackedWidget->addWidget(pipe_page);
 
@@ -975,7 +975,7 @@ QVector<QTreeWidgetItem*> Widget::create_outer_pipe(QTreeWidgetItem* outer_item,
         ui->stackedWidget->addWidget(pipe_page);
 
         // 主风管还要关联对应page页面
-        QString name=outer_pipename[i];
+        QString name = outer_pipename[i];
         QTreeWidgetItem *outer_pipe_item = new QTreeWidgetItem(outer_item,QStringList(name));
         vec_zfg.append(outer_pipe_item);     // 保存主风管ID
 
@@ -1087,7 +1087,7 @@ void Widget::setBasicPageWhenSwitchPrj()
  */
 void Widget::on_pushButton_drawing_list_save_clicked()
 {
-    if(ProjectManager::getInstance().getPrjID().trimmed().isEmpty())
+    if(!ProjectManager::getInstance().isProjectOpened())
     {
         QMessageBox::critical(this, "错误", "当前未打开任何项目");
         return;
@@ -1185,7 +1185,7 @@ void Widget::initTableWidget_drawing_list()
 
 void Widget::on_pushButton_noi_limit_save_clicked()
 {
-    if(ProjectManager::getInstance().getPrjID().trimmed().isEmpty())
+    if(!ProjectManager::getInstance().isProjectOpened())
     {
         QMessageBox::critical(this, "错误", "当前未打开任何项目");
         return;
@@ -1309,7 +1309,7 @@ double Widget::getNoiseLimitByName(const QString& name)
 //输入模块按钮
 void Widget::on_pushButton_input_clicked()
 {
-    if(ProjectManager::getInstance().getPrjID().trimmed().isEmpty())
+    if(!ProjectManager::getInstance().isProjectOpened())
     {
         QMessageBox::critical(this, "错误", "当前未打开任何项目");
         return;
@@ -2084,7 +2084,7 @@ void Widget::on_close_clicked()//点击关闭按钮
 /**************树列表************/
 void Widget::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous)
 {
-    if(ProjectManager::getInstance().getPrjID().trimmed().isEmpty())
+    if(!ProjectManager::getInstance().isProjectOpened())
     {
         QMessageBox::critical(this, "错误", "当前未打开任何项目");
         return;
@@ -2873,4 +2873,16 @@ void Widget::LoadExeclData_noisourse(QTableWidget *table,int spancolfirst,int sp
 
 #pragma end}
 /******************导入导出表格********************/
+
+
+void Widget::on_pushButton_test_addRoom_clicked()
+{
+    if(!ProjectManager::getInstance().isProjectOpened())
+    {
+        QMessageBox::critical(this, "错误", "当前未打开任何项目");
+        return;
+    }
+    QTreeWidgetItem* treeItem = create_zsq("MVZ1");
+    QTreeWidgetItem* sysItem = create_system(treeItem ,"SYS1");
+}
 

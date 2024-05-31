@@ -31,6 +31,8 @@ private slots:
 
     void on_comboBox_num_currentTextChanged(const QString &arg1);
 
+    void on_comboBox_model_currentTextChanged(const QString &arg1);
+
 private:
     Ui::dialog_add_system *ui;
     virtual void * getComponent() override {};

@@ -7,6 +7,12 @@ ProjectManager::ProjectManager()
     this->projectIDs = DatabaseManager::getInstance().loadProjectIDs();
 }
 
+bool ProjectManager::isProjectOpened()
+{
+    //如果项目id为空就是没有打开项目
+    return !this->getPrjID().trimmed().isEmpty();
+}
+
 ProjectInfo ProjectManager::getPrjInfo() const
 {
     return prjInfo;

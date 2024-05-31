@@ -75,6 +75,8 @@ public:
     ProjectManager(ProjectManager const&) = delete; // Delete copy constructor
     void operator=(ProjectManager const&) = delete; // Delete copy assignment operator
 
+    bool isProjectOpened(); //返回当前是否有项目打开
+
     QSet<QString> getProjectIDs() const;
 
     void setPrjInfo(const ProjectInfo &newPrjInfo);

@@ -208,3 +208,23 @@ void dialog_add_system::on_comboBox_num_currentTextChanged(const QString &arg1)
         }
     }
 }
+
+void dialog_add_system::on_comboBox_model_currentTextChanged(const QString &arg1)
+{
+    if(ui->comboBox_type->currentIndex() == 1)
+    {
+        QList<QSharedPointer<ComponentBase>> components =
+            ComponentManager::getInstance().getComponentsByType(false, component_type_name::FANCOIL);
+        for(auto &component: components)
+        {
+            if(auto fanCoil = dynamic_cast<FanCoil*>(component.data()))
+            {
+                if(fanCoil->model == arg1)
+                {
+                    componentUUID = fanCoil->UUID;
+                }
+            }
+        }
+    }
+}
+
