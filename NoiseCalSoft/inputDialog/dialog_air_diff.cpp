@@ -62,6 +62,8 @@ Dialog_air_diff::Dialog_air_diff(QWidget *parent, int editRow, const AirDiff& da
         ui->comboBox_noi_data_source->setCurrentText(data.noi_data_source);
         ui->comboBox_atten_data_source->setCurrentText(data.atten_data_source);
         ui->comboBox_refl_data_source->setCurrentText(data.refl_data_source);
+        table_id = data.table_id;
+        UUID = data.UUID;
 
         for (size_t i = 0; i < data.noi.size(); ++i) {
             noi_lineEdits[i]->setText(data.noi[i]);

@@ -1232,7 +1232,7 @@ void RoomCalTable::calVariations()
                 variations = QVector<QString>(8,QString());
                 return;
             }
-            variations[i] = atten_lineEdits[i]->text();
+            variations[i] = QString::number(-atten_lineEdits[i]->text().toDouble(),'f',2);
         }
     }
     else if(!terminal_atten_lineEdits.empty() && !terminal_refl_lineEdits.empty() && !terminal_noi_lineEdits.empty())
@@ -1254,7 +1254,7 @@ void RoomCalTable::calVariations()
 
             double sup_noi = 10 * log10(pow(10,noi / 10) + pow(10, last_noi / 10));
 
-            variations[i] = QString::number(sup_noi - atten - refl ,'f',1);
+            variations[i] = QString::number(sup_noi - atten - refl ,'f',2);
         }
     }
     else if(!each_atten_lineEdits.empty() && !sum_atten_lineEdits.empty())
@@ -1271,14 +1271,14 @@ void RoomCalTable::calVariations()
             if(ui->lineEdit_pipe_length && ui->lineEdit_pipe_length->text() != "")
             {
                 double each_atten = each_atten_lineEdits[i]->text().toDouble();
-                sum_atten_lineEdits[i]->setText(QString::number(each_atten * ui->lineEdit_pipe_length->text().toInt(),'f',1));
-                variations[i] = QString::number(each_atten * ui->lineEdit_pipe_length->text().toInt(),'f',1);
+                sum_atten_lineEdits[i]->setText(QString::number(each_atten * ui->lineEdit_pipe_length->text().toInt(),'f',2));
+                variations[i] = QString::number(-each_atten * ui->lineEdit_pipe_length->text().toInt(),'f',2);
             }
             else if(ui->lineEdit_elbow_count && ui->lineEdit_elbow_count->text() != "")
             {
-                 double each_atten = each_atten_lineEdits[i]->text().toDouble();
-                 sum_atten_lineEdits[i]->setText(QString::number(each_atten * ui->lineEdit_elbow_count->text().toInt(),'f',1));
-                 variations[i] = QString::number(each_atten * ui->lineEdit_elbow_count->text().toInt(),'f',1);
+                 double each_atten = -each_atten_lineEdits[i]->text().toDouble();
+                 sum_atten_lineEdits[i]->setText(QString::number(each_atten * ui->lineEdit_elbow_count->text().toInt(),'f',2));
+                 variations[i] = QString::number(-each_atten * ui->lineEdit_elbow_count->text().toInt(),'f',2);
             }
             else
             {
@@ -1294,7 +1294,7 @@ void RoomCalTable::calVariations()
         {
             return;
         }
-        noi_after_cal_lineEdits[i]->setText(QString::number(variations[i].toDouble() + noise_before_cal[i].toDouble(),'f',1));
+        noi_after_cal_lineEdits[i]->setText(QString::number(variations[i].toDouble() + noise_before_cal[i].toDouble(),'f',2));
         lineEdits[i] = noi_after_cal_lineEdits[i];
     }
     noi_after_cal_lineEdits[8]->setText(QString::number(calNoiseTotalValue(lineEdits),'f' ,1)); //总值

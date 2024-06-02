@@ -613,12 +613,29 @@ bool addOrUpdateAirDiffToDatabase(const ComponentBase& component, QSqlDatabase& 
     query.bindValue(":refl_data_source", diffuser->refl_data_source);
     query.bindValue(":UUID", diffuser->UUID);
 
+    // Output the bound values for debugging
+    qDebug() << "projectID:" << ProjectManager::getInstance().getPrjID();
+    qDebug() << "table_id:" << diffuser->table_id;
+    qDebug() << "air_distributor_model:" << diffuser->air_distributor_model;
+    qDebug() << "air_distributor_brand:" << diffuser->air_distributor_brand;
+    qDebug() << "diffuser_model:" << diffuser->diffuser_model;
+    qDebug() << "diffuser_brand:" << diffuser->diffuser_brand;
+    qDebug() << "terminal_shape:" << diffuser->terminal_shape;
+    qDebug() << "terminal_size:" << diffuser->terminal_size;
+    qDebug() << "noise_json:" << noiseJsonString;
+    qDebug() << "atten_json:" << attenJsonString;
+    qDebug() << "refl_json:" << reflJsonString;
+    qDebug() << "noi_data_source:" << diffuser->noi_data_source;
+    qDebug() << "atten_data_source:" << diffuser->atten_data_source;
+    qDebug() << "refl_data_source:" << diffuser->refl_data_source;
+    qDebug() << "UUID:" << diffuser->UUID;
+
     // Execute the insert operation
     if (!query.exec()) {
         qWarning() << "Insert operation failed:" << query.lastError();
         return false;
     }
-
+    qDebug() << "Executed query:" << query.lastQuery();
     return true;
 }
 

@@ -102,14 +102,11 @@ array<double, 8> calTerminalReflNoise(ShapType shape, const double& dimension1, 
 
 array<double, 8> calBranchNoise(double q1, double q)
 {
-    array<double, 8> res;
-
     double noise = 10 * log10(q1 / q);
 
-
-    for(int i = 0; i < 8; i++)
-    {
-        res[i] = -noise;
+    array<double, 8> res;
+    for(int i = 0; i < res.size(); i++) {
+        res[i] = noise;
     }
 
     return res;
@@ -153,10 +150,6 @@ array<double, 8> calElbowNoise(ShapType shape, double dimension)
         }
 
         results[i] = result;
-    }
-    for(auto& num : results)
-    {
-        num = -num;
     }
 
     return results;
@@ -235,10 +228,6 @@ array<double, 8> caPipeNoise(ShapType shape, const double& dimension1, const dou
             results = {0.98, 0.66, 0.33, 0.33, 0.33, 0.33, 0.33, 0.33};
         }
     }
-    for(auto& num : results)
-    {
-        num = -num;
-    }
     return results;
 }
 
@@ -271,9 +260,8 @@ array<double, 8> calReducerNoise(const QString& type, double dimension1, double 
 
     noise = 10 * log10((pow((s2/s1 + 1),2)) / (4 * (s2 / s1)));
 
-    for(int i = 0; i < 8; i++)
-    {
-        results[i] = -noise;
+    for(int i = 0; i < results.size(); i++) {
+        results[i] = noise;
     }
     return results;
 }

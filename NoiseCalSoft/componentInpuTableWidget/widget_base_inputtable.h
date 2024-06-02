@@ -121,6 +121,7 @@ void Widget_base_inputTable::componentRevision(QTableWidget* tableWidget, int me
                 addRowToTable(tableWidget, lists[i], insertPosition + i);
             }
         }
+
         delete dialog; // Ensure dialog is deleted to avoid memory leak
     }
 }
