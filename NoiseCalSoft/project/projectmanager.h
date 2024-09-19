@@ -57,7 +57,7 @@ struct NoiseLimit
     QString tableID;        //表格序号
     QString roomType;       //房间类型
     QString noiseLimit;     //噪声限值
-    QString premissType;    //处所类型
+    QString placeType;    //处所类型
 };
 
 

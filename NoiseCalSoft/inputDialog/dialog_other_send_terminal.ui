@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>611</width>
-    <height>851</height>
+    <height>821</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,7 +37,7 @@ font-size: 14px;
      <x>0</x>
      <y>30</y>
      <width>611</width>
-     <height>821</height>
+     <height>791</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -50,7 +50,7 @@ border: 1px solid #000000;
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>590</y>
+      <y>560</y>
       <width>611</width>
       <height>231</height>
      </rect>
@@ -103,7 +103,7 @@ border: 1px solid #000000;
       <x>0</x>
       <y>60</y>
       <width>611</width>
-      <height>531</height>
+      <height>501</height>
      </rect>
     </property>
     <property name="minimumSize">
@@ -148,7 +148,7 @@ font-family: '黑体';
      <property name="geometry">
       <rect>
        <x>240</x>
-       <y>40</y>
+       <y>10</y>
        <width>41</width>
        <height>31</height>
       </rect>
@@ -167,7 +167,7 @@ font-family: '黑体';
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>40</y>
+       <y>10</y>
        <width>41</width>
        <height>31</height>
       </rect>
@@ -186,7 +186,7 @@ font-family: '黑体';
      <property name="geometry">
       <rect>
        <x>290</x>
-       <y>40</y>
+       <y>10</y>
        <width>101</width>
        <height>31</height>
       </rect>
@@ -202,7 +202,7 @@ font-family: '黑体';
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>372</y>
+       <y>342</y>
        <width>111</width>
        <height>41</height>
       </rect>
@@ -221,7 +221,7 @@ font-family: '黑体';
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>151</y>
+       <y>121</y>
        <width>81</width>
        <height>41</height>
       </rect>
@@ -240,7 +240,7 @@ font-family: '黑体';
      <property name="geometry">
       <rect>
        <x>11</x>
-       <y>301</y>
+       <y>271</y>
        <width>501</width>
        <height>72</height>
       </rect>
@@ -735,7 +735,7 @@ font-family: '黑体';
      <property name="geometry">
       <rect>
        <x>11</x>
-       <y>410</y>
+       <y>380</y>
        <width>501</width>
        <height>72</height>
       </rect>
@@ -1230,7 +1230,7 @@ font-family: '黑体';
      <property name="geometry">
       <rect>
        <x>11</x>
-       <y>188</y>
+       <y>158</y>
        <width>581</width>
        <height>72</height>
       </rect>
@@ -1785,7 +1785,7 @@ font-family: '黑体';
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>263</y>
+       <y>233</y>
        <width>81</width>
        <height>41</height>
       </rect>
@@ -1804,7 +1804,7 @@ font-family: '黑体';
      <property name="geometry">
       <rect>
        <x>60</x>
-       <y>40</y>
+       <y>10</y>
        <width>161</width>
        <height>31</height>
       </rect>
@@ -1820,7 +1820,7 @@ font-family: '黑体';
      <property name="geometry">
       <rect>
        <x>270</x>
-       <y>120</y>
+       <y>90</y>
        <width>291</width>
        <height>31</height>
       </rect>
@@ -1834,7 +1834,7 @@ font-family: '黑体';
       <string notr="true">background-color: rgb(255, 255, 255);</string>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="page_rect">
       <widget class="QLineEdit" name="lineEdit_width">
@@ -1875,7 +1875,7 @@ font-family: '黑体';
       <widget class="QLabel" name="label_27">
        <property name="geometry">
         <rect>
-         <x>160</x>
+         <x>150</x>
          <y>0</y>
          <width>61</width>
          <height>31</height>
@@ -1950,7 +1950,7 @@ font-family: '黑体';
      <property name="geometry">
       <rect>
        <x>100</x>
-       <y>120</y>
+       <y>90</y>
        <width>151</width>
        <height>31</height>
       </rect>
@@ -2007,7 +2007,7 @@ border: 1px solid #DCDCDC;
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>120</y>
+       <y>90</y>
        <width>81</width>
        <height>31</height>
       </rect>
@@ -2026,7 +2026,7 @@ border: 1px solid #DCDCDC;
      <property name="geometry">
       <rect>
        <x>490</x>
-       <y>490</y>
+       <y>460</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -2057,36 +2057,11 @@ color: white;
       <string>确认</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_41">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>81</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>黑体</family>
-       <pointsize>-1</pointsize>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">border: 1px solid #000000;</string>
-     </property>
-     <property name="text">
-      <string>厂家信息</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
     <widget class="QLabel" name="label_42">
      <property name="geometry">
       <rect>
        <x>100</x>
-       <y>263</y>
+       <y>233</y>
        <width>41</width>
        <height>41</height>
       </rect>
@@ -2105,7 +2080,7 @@ color: white;
      <property name="geometry">
       <rect>
        <x>180</x>
-       <y>377</y>
+       <y>347</y>
        <width>91</width>
        <height>31</height>
       </rect>
@@ -2136,7 +2111,7 @@ color: white;
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>157</y>
+       <y>127</y>
        <width>91</width>
        <height>31</height>
       </rect>
@@ -2162,7 +2137,7 @@ color: white;
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>267</y>
+       <y>237</y>
        <width>91</width>
        <height>31</height>
       </rect>
@@ -2188,7 +2163,7 @@ color: white;
      <property name="geometry">
       <rect>
        <x>100</x>
-       <y>153</y>
+       <y>123</y>
        <width>41</width>
        <height>41</height>
       </rect>
@@ -2207,7 +2182,7 @@ color: white;
      <property name="geometry">
       <rect>
        <x>130</x>
-       <y>373</y>
+       <y>343</y>
        <width>41</width>
        <height>41</height>
       </rect>
@@ -2226,7 +2201,7 @@ color: white;
      <property name="geometry">
       <rect>
        <x>60</x>
-       <y>80</y>
+       <y>50</y>
        <width>331</width>
        <height>31</height>
       </rect>
@@ -2242,7 +2217,7 @@ color: white;
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>80</y>
+       <y>50</y>
        <width>41</width>
        <height>31</height>
       </rect>

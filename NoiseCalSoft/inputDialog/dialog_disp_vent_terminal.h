@@ -47,6 +47,8 @@ private slots:
     void on_radioButton_rect_clicked();
 
     // InputBaseDialog interface
+    void on_comboBox_refl_data_source_currentIndexChanged(int index);
+
 public:
     QList<QStringList> getComponentDataAsStringList() const override;
     void* getComponent() override;

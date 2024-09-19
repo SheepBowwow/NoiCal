@@ -9,7 +9,7 @@ namespace Ui {
 class ComponentsDB;
 }
 
-class ComponentsDB : public QDialog
+class ComponentsDB : public QWidget
 {
     Q_OBJECT
 

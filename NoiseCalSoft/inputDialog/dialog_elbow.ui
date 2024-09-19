@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>631</width>
-    <height>571</height>
+    <height>531</height>
    </rect>
   </property>
   <property name="font">
@@ -75,7 +75,7 @@ background-color: rgb(157, 196, 229);
      <x>0</x>
      <y>30</y>
      <width>631</width>
-     <height>331</height>
+     <height>291</height>
     </rect>
    </property>
    <property name="font">
@@ -95,7 +95,7 @@ border: 1px solid #000000;
       <x>0</x>
       <y>60</y>
       <width>631</width>
-      <height>271</height>
+      <height>231</height>
      </rect>
     </property>
     <property name="font">
@@ -135,7 +135,7 @@ font-family: '黑体';
      <property name="geometry">
       <rect>
        <x>230</x>
-       <y>90</y>
+       <y>60</y>
        <width>301</width>
        <height>31</height>
       </rect>
@@ -329,7 +329,7 @@ border: 1px solid #DCDCDC;
      <property name="geometry">
       <rect>
        <x>80</x>
-       <y>90</y>
+       <y>60</y>
        <width>131</width>
        <height>31</height>
       </rect>
@@ -386,7 +386,7 @@ border: 1px solid #DCDCDC;
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>140</y>
+       <y>110</y>
        <width>511</width>
        <height>72</height>
       </rect>
@@ -881,7 +881,7 @@ border: 1px solid #DCDCDC;
      <property name="geometry">
       <rect>
        <x>540</x>
-       <y>230</y>
+       <y>190</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -913,37 +913,11 @@ color: white;
       <string>确认</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_26">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>81</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>黑体</family>
-       <pointsize>-1</pointsize>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">border: 1px solid #000000;
-</string>
-     </property>
-     <property name="text">
-      <string>厂家信息</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
     <widget class="QLabel" name="label_30">
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>40</y>
+       <y>10</y>
        <width>41</width>
        <height>31</height>
       </rect>
@@ -962,7 +936,7 @@ color: white;
      <property name="geometry">
       <rect>
        <x>80</x>
-       <y>40</y>
+       <y>10</y>
        <width>111</width>
        <height>31</height>
       </rect>
@@ -978,7 +952,7 @@ color: white;
      <property name="geometry">
       <rect>
        <x>220</x>
-       <y>40</y>
+       <y>10</y>
        <width>41</width>
        <height>31</height>
       </rect>
@@ -997,7 +971,7 @@ color: white;
      <property name="geometry">
       <rect>
        <x>270</x>
-       <y>40</y>
+       <y>10</y>
        <width>111</width>
        <height>31</height>
       </rect>
@@ -1013,7 +987,7 @@ color: white;
      <property name="geometry">
       <rect>
        <x>460</x>
-       <y>40</y>
+       <y>10</y>
        <width>91</width>
        <height>31</height>
       </rect>
@@ -1039,7 +1013,7 @@ color: white;
      <property name="geometry">
       <rect>
        <x>410</x>
-       <y>40</y>
+       <y>10</y>
        <width>41</width>
        <height>31</height>
       </rect>
@@ -1058,7 +1032,7 @@ color: white;
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>90</y>
+       <y>60</y>
        <width>41</width>
        <height>31</height>
       </rect>
@@ -1139,7 +1113,7 @@ color : rgb(105, 105, 105);
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>360</y>
+     <y>320</y>
      <width>631</width>
      <height>211</height>
     </rect>

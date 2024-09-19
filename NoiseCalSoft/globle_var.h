@@ -13,14 +13,6 @@ typedef struct _Project
     QString prj_name;   //项目名
 }Project;
 
-//噪声要求处的房间
-struct Room
-{
-    QString name;   //房间类型
-    QString noise;  //噪音限值
-    QString type;   //处所类型
-};
-
 extern int noise_saved_row;     //保存的行数
 
 extern QMenu *globalMenu;       //主风管处的菜单
@@ -36,8 +28,6 @@ extern QMap<QString,QMap<QString,QVector<QString>>> systemListMap; //第一个QS
 extern QString reportPath;
 
 extern ComponentManager& componentManager;
-
-extern QVector<Room> rooms;
 
 extern QMap<QString,QString> projectAttachmentMap;     //项目附件，用于附件名称和附件路径的对应
 

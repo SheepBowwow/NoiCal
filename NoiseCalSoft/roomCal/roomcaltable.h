@@ -41,18 +41,6 @@ public:
     }
 };
 
-struct Aircondition_in_calTable : public Aircondition
-{
-    QString send_or_exhaust;
-
-    Aircondition_in_calTable(const Aircondition& ac)
-        : Aircondition(ac) // 调用基类的拷贝构造函数来复制属性
-    {
-    }
-
-    Aircondition_in_calTable() = default;
-};
-
 namespace Ui {
 class RoomCalTable;
 }
@@ -75,6 +63,11 @@ public:
     QVector<QString> noise_before_cal;        //当前计算前(增加或衰减)的噪音量
     QVector<QString> variations;        //噪音变化量,和下一个表格相关
     QVector<QString> noise_after_cal;        //当前计算后(增加或衰减)的噪音量
+    void callSetTableInfoFunc(const RoomCalTableType &type, QJsonObject jsonObj);
+    void createTableInfoJsonObj(RoomCalTableType& type, QJsonObject& jsonObj);
+    bool isTableCompleted();
+    bool isRoomCalTable();
+    bool isNoiseTable();
 
 signals:
     void addBeforeClicked(int index);
@@ -107,6 +100,13 @@ private slots:
     void elbow_atten_cal();
     void reducer_atten_cal();
 
+    void roomLess425Cal();
+    void roomMore425Cal();
+    void roomNoFurnitureCal();
+    void roomOpenCal();
+    void roomGapTuyereCal();
+    void roomRainCal();
+
     void on_stackedWidget_table_currentChanged(int arg1);
 
     void on_comboBox_sound_type_currentTextChanged(const QString &arg1);
@@ -125,7 +125,7 @@ private slots:
 
     void on_comboBox_aircondition_number_currentTextChanged(const QString &arg1);
 
-    void on_comboBox_VAV_terminal_number_currentTextChanged(const QString &arg1);
+    void on_comboBox_VAV_terminal_model_currentTextChanged(const QString &arg1);
 
     void on_comboBox_air_distributor_model_currentTextChanged(const QString &arg1);
 
@@ -136,8 +136,6 @@ private slots:
     void on_comboBox_fanCoil_noise_locate_currentIndexChanged(int index);
 
     void on_comboBox_aircondition_noise_locate_currentIndexChanged(int index);
-
-    void on_comboBox_aircondition_fan_type_currentIndexChanged(int index);
 
     void on_comboBox_circular_damper_model_currentTextChanged(const QString &arg1);
 
@@ -201,6 +199,9 @@ private:
     QTimer debounceTimer;  // 定时器,用于处理短时间内有多个绑定的lineedit文本改变的信号
     bool updateModelComboBox = false;   //用来更新model，on_comboBox_unit_name_currentTextChanged利用这个函数而不清空当前界面
     std::pair<int, int> splitDimension(const QString &size);    //用来分割矩形的size
+    void registerSetTableInfoFuncMap();
+    void registerCreateTableInfoJsonFuncMap();
+    void initRoomCalSlotFuncConn();
 
 private:
     void clearPageControlVectors();
@@ -213,19 +214,21 @@ private:
     QVector<QLineEdit*> each_atten_lineEdits;       //1米直管或单个弯头衰减
     QVector<QLineEdit*> sum_atten_lineEdits;       //衰减汇总
     QVector<QLineEdit*> atten_lineEdits;       //衰减
+    QVector<QLineEdit*> noi_input_room_lineEdits;       //进入房间噪音声功率(dB)
+    QVector<QLineEdit*> room_noi_revise_lineEdits;       // 房间声压与声功率修正(dB)
+    QVector<QLineEdit*> test_point_noi_lineEdits;       //衰减
+    QLineEdit*  A_weighted_noi_lineEdit;                //A级计权噪音
     QVector<QLineEdit*> currentConnectedLineEdits;  //用来保存当前连接的lineEdit
     /**
      * @brief currentAllComponentList
      * 一级列表，用来存放所有该部件的列表
      */
     QList<QSharedPointer<ComponentBase>> currentAllComponentList;
-    /**
-     * @brief currentComponentListByDataSource
-     * 二级列表，选择来源之后确定哪些在列表里
-     */
-    QList<QSharedPointer<ComponentBase>> currentComponentListByDataSource;
 
     QSharedPointer<ComponentBase> currentComponent;
+
+    QMap<RoomCalTableType, std::function<void(QJsonObject)>> setTableInfoFunc;
+    QMap<RoomCalTableType, std::function<void(QJsonObject&)>> createTableInfoJsonFunc;
 };
 
 #endif // ROOMCALTABLE_H

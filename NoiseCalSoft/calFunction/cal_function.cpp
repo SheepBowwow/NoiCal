@@ -1,5 +1,6 @@
 #include "calFunction/cal_function.h"
 #define Pi 3.14159265358979323846
+#include <QDebug>
 
 // 注意：此函数的声明需要修改为返回double类型，以便返回计算结果
 double calNoiseTotalValue(const array<QLineEdit*, 9>& lineEdits) {
@@ -264,4 +265,140 @@ array<double, 8> calReducerNoise(const QString& type, double dimension1, double 
         results[i] = noise;
     }
     return results;
+}
+
+//计算总值
+double noiseSuperposition(double num1, double num2)
+{
+    double tmp1 = pow(10, num1 / 10);
+    double tmp2 = pow(10, num2 / 10);
+
+    // 计算总值
+    return 10.0 * log10(tmp1 + tmp2);
+
+}
+
+array<double, 8> calRoomLess425Revise(const QString &test_distance_str, const QString &volume_str)
+{
+    array<double, 8> res;
+    double f[] = {63,125,250,500,1000,2000,4000,8000};
+    double test_distance = test_distance_str.toDouble();
+    double volume = volume_str.toDouble();
+    for(auto i = 0; i < 8; i++) {
+        res[i] = - 10 * log10(test_distance) - 5 * log10(volume) - 3 * log10(f[i]) + 12;
+    }
+
+    return res;
+}
+
+array<double, 8> calRoomMore425Revise(const QString &test_distance_str)
+{
+    array<double, 8> res;
+    double test_distance = test_distance_str.toDouble();
+    if(test_distance < 0.9 || test_distance > 1.5) {
+        qDebug() << "test_distance 不在 0.9 和 1.5 之间";
+        return res;
+    }
+    array<double, 8> C;
+    array<double, 8> C1 = {5, 5, 6, 6, 6, 7, 10, 0};
+    array<double, 8> C2 = {6, 7, 7, 7, 8, 9, 12, 0};
+    array<double, 8> C3 = {7, 8, 8, 8, 9, 11, 14, 0};
+    if(test_distance == 0.9 || test_distance == 1) {
+        C = C1;
+    }
+    else if(test_distance == 1.2) {
+        C = C2;
+    }
+    else if(test_distance == 1.5) {
+        C = C3;
+    }
+    else if(test_distance > 0.9 && test_distance < 1.2) {
+        for(auto i = 0; i < 8; i++) {
+            C[i] = C1[i] + (test_distance - 0.9) * (C2[i] - C1[i]) / (1.2 - 0.9);
+        }
+    }
+    else if(test_distance > 1.2 && test_distance < 1.5) {
+        for(auto i = 0; i < 8; i++) {
+            C[i] = C2[i] + (test_distance - 1.2) * (C3[i] - C2[i]) / (1.5 - 1.2);
+        }
+    }
+
+    for(auto i = 0; i < 8; i++) {
+        res[i] = - C[i] - 5;
+    }
+
+    return res;
+}
+
+array<double, 8> calRoomNoFurnitureRevise(const QString &test_distance_str,
+                                          const QString &angle_str, const QString &absorption_rate_str, const QString &area_str)
+{
+    array<double, 8> res;
+    double S = area_str.toDouble();
+    double r = test_distance_str.toDouble();
+    double Q = angle_str.toDouble();
+    double a = absorption_rate_str.toDouble();
+    double R = S * a / (1 - a);
+
+    for(auto i = 0; i < 8; i++) {
+        res[i] = log10(Q / 4 * Pi * r * r + 4 / R);
+    }
+
+    return res;
+}
+
+array<double, 8> calRoomOpenRevise(const QString &test_distance_str, const QString &angle_str)
+{
+    array<double, 8> res;
+    double r = test_distance_str.toDouble();
+    double Q = angle_str.toDouble();
+
+    for(auto i = 0; i < 8; i++) {
+        res[i] = log10(Q / 4 * Pi * r * r);
+    }
+
+    return res;
+}
+
+array<double, 8> calRoomGapTuyereRevise(const QString &test_distance_str,
+                                        const QString &angle_str, const QString &absorption_rate_str, const QString &area_str,
+                                        const QString &gap_length_str)
+{
+    array<double, 8> res;
+    double S = area_str.toDouble();
+    double r = test_distance_str.toDouble();
+    double Q = angle_str.toDouble();
+    double a = absorption_rate_str.toDouble();
+    double R = S * a / (1 - a);
+    double L = gap_length_str.toDouble();
+
+    for(auto i = 0; i < 8; i++) {
+        res[i] = log10(Q / Pi * r * L + 4 / R);
+    }
+
+    return res;
+}
+
+array<double, 8> calRoomRainRevise(const QString &test_distance_str, const QString &rain_area_str)
+{
+    array<double, 8> res;
+    //9.3 < area < 14
+    array<double, 8> D1 = {2, 3, 4, 5, 6, 7, 8, 0};
+    //18.5 < area < 23
+    array<double, 8> D2 = {3, 4, 5, 6, 7, 8, 9, 0};
+    array<double, 8> D;
+    double area = rain_area_str.toDouble();
+    if(area > 9.3 && area < 14) {
+        D = D1;
+    } else if(area > 18.5 && area < 23) {
+        D = D2;
+    } else {
+        qDebug() << "area is illegal";
+    }
+
+    for(auto i = 0; i < 8; i++) {
+        res[i] = - D[i];
+    }
+
+    return res;
 }

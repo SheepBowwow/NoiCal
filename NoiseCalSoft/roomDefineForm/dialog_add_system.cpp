@@ -2,7 +2,7 @@
 #include "ui_dialog_add_system.h"
 #include "Component/ComponentStructs.h"
 #include "Component/ComponentManager.h"
-#include "roomDefineForm/systemmanager.h"
+#include "roomDefineForm/roomcalinfomanager.h"
 #include <QMessageBox>
 
 dialog_add_system::dialog_add_system(QWidget *parent) :
@@ -22,9 +22,9 @@ dialog_add_system::~dialog_add_system()
     delete ui;
 }
 
-void dialog_add_system::setvalues(int type_index, QString number, QString model)
+void dialog_add_system::setvalues(QString type, QString number, QString model)
 {
-    ui->comboBox_type->setCurrentIndex(type_index);
+    ui->comboBox_type->setCurrentText(type);
     ui->comboBox_num->setCurrentText(number);
     ui->lineEdit_model->setText(model);
     ui->comboBox_model->setCurrentText(model);
@@ -40,9 +40,9 @@ QString dialog_add_system::getType()
 QString dialog_add_system::getNumber()
 {
     if(getType() == noise_src_component::FANCOIL)
-        return ui->lineEdit_model->text();
+        return "-";
 
-    if(ui->comboBox_num->currentIndex()!=-1)
+    if(ui->comboBox_num->currentIndex() != -1)
         return ui->comboBox_num->currentText();
     return QString("");
 }
@@ -59,7 +59,7 @@ QString dialog_add_system::getComponentUUID() const
     return componentUUID;
 }
 
-void dialog_add_system::on_pushButton_queding_clicked()
+void dialog_add_system::on_pushButton_confirm_clicked()
 {
     if( ui->comboBox_type->currentIndex() == -1
         || (ui->comboBox_type->currentIndex() != 1 && ui->comboBox_num->currentIndex() == -1)

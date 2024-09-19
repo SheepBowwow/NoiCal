@@ -16,12 +16,6 @@
         <file>image/Q1.jpg</file>
         <file>image/terminal_refl_formula_descr1.jpg</file>
         <file>image/terminal_refl_formula_descr2.jpg</file>
-        <file>image/higer425.png</file>
-        <file>image/lower425.png</file>
-        <file>image/noFurniture.png</file>
-        <file>image/open.png</file>
-        <file>image/rainFan.png</file>
-        <file>image/slotFan.png</file>
         <file>image/logo.png</file>
         <file>image/cover.png</file>
         <file>image/dictionary.png</file>
@@ -37,6 +31,16 @@
         <file>image/static_box_descri.png</file>
         <file>image/tee_descri.png</file>
         <file>image/pipe_descri.png</file>
+        <file>image/checked.png</file>
+        <file>image/hover_checked.png</file>
+        <file>image/hover_unchecked.png</file>
+        <file>image/unchecked.png</file>
+        <file>image/room_gap_tuyere.png</file>
+        <file>image/room_less425.png</file>
+        <file>image/room_more425.png</file>
+        <file>image/room_noFurniture.png</file>
+        <file>image/room_open.png</file>
+        <file>image/room_rain.png</file>
     </qresource>
     <qresource prefix="/qt/etc">
         <file>qt.conf</file>

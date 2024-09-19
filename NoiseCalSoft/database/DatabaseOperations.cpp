@@ -326,14 +326,14 @@ bool addOrUpdateVAVTerminalToDatabase(const ComponentBase& component, QSqlDataba
     {
         if (update) {
             query.prepare("UPDATE vav_terminal "
-                          "SET projectID=:projectID, table_id=:table_id, number=:number, model=:model, "
+                          "SET projectID=:projectID, table_id=:table_id, model=:model, "
                           "valve_angle=:valve_angle, air_volume=:air_volume, brand=:brand, noise_json=:noise_json, "
                           "data_source=:data_source "
                           "WHERE UUID=:UUID");
         } else {
-            query.prepare("INSERT INTO vav_terminal (projectID, table_id, number, model, "
+            query.prepare("INSERT INTO vav_terminal (projectID, table_id, model, "
                           "valve_angle, air_volume, brand, noise_json, data_source, UUID) "
-                          "VALUES (:projectID, :table_id, :number, :model, :valve_angle, "
+                          "VALUES (:projectID, :table_id, :model, :valve_angle, "
                           ":air_volume, :brand, :noise_json, :data_source, :UUID)");
         }
     }
@@ -356,7 +356,6 @@ bool addOrUpdateVAVTerminalToDatabase(const ComponentBase& component, QSqlDataba
     // 绑定值
     query.bindValue(":projectID", ProjectManager::getInstance().getPrjID()); // 假设ProjectManager::getInstance().getPrjID()是已经在某处定义好的当前项目ID
     query.bindValue(":table_id", vavTerminal->table_id.toInt());
-    query.bindValue(":number", vavTerminal->number);
     query.bindValue(":model", vavTerminal->model);
     query.bindValue(":valve_angle", vavTerminal->angle);
     query.bindValue(":air_volume", vavTerminal->air_volume);
@@ -852,16 +851,16 @@ bool addOrUpdateDispVentTerminalToDatabase(const ComponentBase& component, QSqlD
         if (update) {
             query.prepare("UPDATE disp_vent_terminal "
                           "SET projectID=:projectID, table_id=:table_id, model=:model, terminal_shape=:terminal_shape, "
-                          "terminal_size=:terminal_size, brand=:brand, nosie_json=:nosie_json, atten_json=:atten_json, "
+                          "terminal_size=:terminal_size, brand=:brand, noise_json=:noise_json, atten_json=:atten_json, "
                           "refl_json=:refl_json, noi_data_source=:noi_data_source, atten_data_source=:atten_data_source, "
                           "refl_data_source=:refl_data_source "
                           "WHERE UUID=:UUID");
         } else {
             query.prepare("INSERT INTO disp_vent_terminal (projectID, table_id, model, terminal_shape, "
-                          "terminal_size, brand, nosie_json, atten_json, refl_json, noi_data_source, "
+                          "terminal_size, brand, noise_json, atten_json, refl_json, noi_data_source, "
                           "atten_data_source, refl_data_source, UUID) "
                           "VALUES (:projectID, :table_id, :model, :terminal_shape, :terminal_size, "
-                          ":brand, :nosie_json, :atten_json, :refl_json, :noi_data_source, :atten_data_source, "
+                          ":brand, :noise_json, :atten_json, :refl_json, :noi_data_source, :atten_data_source, "
                           ":refl_data_source, :UUID)");
         }
     }
@@ -870,16 +869,16 @@ bool addOrUpdateDispVentTerminalToDatabase(const ComponentBase& component, QSqlD
         if (update) {
             query.prepare("UPDATE disp_vent_terminal "
                           "SET table_id=:table_id, model=:model, terminal_shape=:terminal_shape, "
-                          "terminal_size=:terminal_size, brand=:brand, nosie_json=:nosie_json, atten_json=:atten_json, "
+                          "terminal_size=:terminal_size, brand=:brand, noise_json=:noise_json, atten_json=:atten_json, "
                           "refl_json=:refl_json, noi_data_source=:noi_data_source, atten_data_source=:atten_data_source, "
                           "refl_data_source=:refl_data_source "
                           "WHERE UUID=:UUID");
         } else {
             query.prepare("INSERT INTO disp_vent_terminal (table_id, model, terminal_shape, "
-                          "terminal_size, brand, nosie_json, atten_json, refl_json, noi_data_source, "
+                          "terminal_size, brand, noise_json, atten_json, refl_json, noi_data_source, "
                           "atten_data_source, refl_data_source, UUID) "
                           "VALUES (:table_id, :model, :terminal_shape, :terminal_size, "
-                          ":brand, :nosie_json, :atten_json, :refl_json, :noi_data_source, :atten_data_source, "
+                          ":brand, :noise_json, :atten_json, :refl_json, :noi_data_source, :atten_data_source, "
                           ":refl_data_source, :UUID)");
         }
     }
@@ -891,7 +890,7 @@ bool addOrUpdateDispVentTerminalToDatabase(const ComponentBase& component, QSqlD
     query.bindValue(":terminal_shape", terminal->terminal_shape);
     query.bindValue(":terminal_size", terminal->terminal_size);
     query.bindValue(":brand", terminal->brand);
-    query.bindValue(":nosie_json", noiseJsonString);  // Note the typo in column name 'nosie_json' should match the table's column
+    query.bindValue(":noise_json", noiseJsonString);  // Note the typo in column name 'noise_json' should match the table's column
     query.bindValue(":atten_json", attenJsonString);
     query.bindValue(":refl_json", reflJsonString);
     query.bindValue(":noi_data_source", terminal->noi_data_source);
@@ -946,7 +945,7 @@ bool addOrUpdateOtherSendTerminalToDatabase(const ComponentBase& component, QSql
                           "WHERE UUID=:UUID");
         } else {
             query.prepare("INSERT INTO other_send_terminal (projectID, table_id, model, terminal_shape, "
-                          "terminal_size, brand, nosie_json, atten_json, refl_json, noi_data_source, "
+                          "terminal_size, brand, noise_json, atten_json, refl_json, noi_data_source, "
                           "atten_data_source, refl_data_source, remark, UUID) "
                           "VALUES (:projectID, :table_id, :model, :terminal_shape, :terminal_size, "
                           ":brand, :noise_json, :atten_json, :refl_json, :noi_data_source, :atten_data_source, "
@@ -964,7 +963,7 @@ bool addOrUpdateOtherSendTerminalToDatabase(const ComponentBase& component, QSql
                           "WHERE UUID=:UUID");
         } else {
             query.prepare("INSERT INTO other_send_terminal (table_id, model, terminal_shape, "
-                          "terminal_size, brand, nosie_json, atten_json, refl_json, noi_data_source, "
+                          "terminal_size, brand, noise_json, atten_json, refl_json, noi_data_source, "
                           "atten_data_source, refl_data_source, remark, UUID) "
                           "VALUES (:table_id, :model, :terminal_shape, :terminal_size, "
                           ":brand, :noise_json, :atten_json, :refl_json, :noi_data_source, :atten_data_source, "

@@ -149,7 +149,7 @@ bool ProjectManager::removeAttachmentInList(const QString &attachmentName)
     }
     if(!DatabaseManager::getInstance().delAttachmentInDatabase(attachmentName, getPrjID()))
     {
-        qDebug() << "添加附件到数据库失败";
+        qDebug() << "删除附件失败";
         return false;
     }
     return true;

@@ -102,7 +102,7 @@ void Dialog_circular_damper::on_pushButton_confirm_clicked()
     }
 
     /**点击确认前检查，数据是否填完整**/
-    if(check_lineedit()==false){
+    if(check_lineedit() == false){
         QMessageBox::information(this,"提示","内容未填写完整");
         return;
     }

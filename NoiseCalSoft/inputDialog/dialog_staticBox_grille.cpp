@@ -305,3 +305,25 @@ QList<QStringList> Dialog_staticBox_grille::getComponentDataAsStringList() const
 
     return dataLists;
 }
+
+void Dialog_staticBox_grille::on_comboBox_refl_data_source_currentIndexChanged(int index)
+{
+    if(index != 2)
+    {
+        for(auto& lineEdit : refl_lineEdits)
+        {
+            lineEdit->clear();
+            lineEdit->setReadOnly(false);
+        }
+    }
+    else
+    {
+        for(auto& lineEdit : refl_lineEdits)
+        {
+            lineEdit->clear();
+            lineEdit->setText("-");
+            lineEdit->setReadOnly(true);
+        }
+    }
+}
+

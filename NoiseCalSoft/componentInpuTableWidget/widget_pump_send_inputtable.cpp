@@ -74,7 +74,7 @@ void Widget_Pump_Send_inputTable::onAdd()
     }
     else
     {
-        Widget_Pump_Send_inputTable* inputTable = new Widget_Pump_Send_inputTable(true, nullptr);
+        Widget_Pump_Send_inputTable* inputTable = new Widget_Pump_Send_inputTable(true, this->type);
         inputTable->initTableWidget();
         inputTable->showConfirmButton();
         inputTable->show();

@@ -7,6 +7,9 @@
 #include <QStandardPaths>
 #include <QSqlRecord>
 #include "Component/ComponentManager.h"
+#include "roomDefineForm/roomcalinfomanager.h"
+#include "roomCal/room_cal_basewidget.h"
+#include <QCoreApplication>
 
 QHash<QString, QString> typeNameToTableName = {
     {component_type_name::FAN, "fan"},
@@ -30,25 +33,25 @@ QHash<QString, QString> typeNameToTableName = {
 };
 
 DatabaseManager::DatabaseManager() {
-    // 获取应用数据的路径
-    QString dataDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    // 创建项目名文件夹的路径
-    QString projectDirPath = dataDir;
+    // 获取当前应用程序的路径，即可执行文件所在的目录
+    QString appDir = QCoreApplication::applicationDirPath();
+    // 创建 database 文件夹的路径，在 bin 目录下
+    QString projectDirPath = appDir + "/database";
 
-    // 使用QDir创建文件夹
+    // 使用 QDir 创建文件夹
     QDir dir;
     if (!dir.exists(projectDirPath)) {
         dir.mkpath(projectDirPath);
     }
 
-    // 在项目文件夹内构建数据库文件的完整路径
+    // 在 database 文件夹内构建数据库文件的完整路径
     QString dbPath = projectDirPath + "/noi_cal_database.db";
     QString component_dbPath = projectDirPath + "/components_database.db";
 
     // 检查数据库文件是否已经存在
     if (!QFile::exists(dbPath)) {
         // 从资源中复制数据库文件到目标位置，注意资源文件的路径也进行了相应的调整
-        QFile::copy(":/databaseFile/databaseFile/noi_cal_database_origin.db", dbPath); // 修改了资源路径和文件名
+        QFile::copy(":/databaseFile/databaseFile/noi_cal_database_origin.db", dbPath);
         // 确保目标数据库文件是可写的
         QFile::setPermissions(dbPath, QFile::ReadOwner | QFile::WriteOwner);
     }
@@ -56,7 +59,7 @@ DatabaseManager::DatabaseManager() {
     // 检查数据库文件是否已经存在
     if (!QFile::exists(component_dbPath)) {
         // 从资源中复制数据库文件到目标位置，注意资源文件的路径也进行了相应的调整
-        QFile::copy(":/databaseFile/databaseFile/components_database_origin.db", component_dbPath); // 修改了资源路径和文件名
+        QFile::copy(":/databaseFile/databaseFile/components_database_origin.db", component_dbPath);
         // 确保目标数据库文件是可写的
         QFile::setPermissions(component_dbPath, QFile::ReadOwner | QFile::WriteOwner);
     }
@@ -67,9 +70,7 @@ DatabaseManager::DatabaseManager() {
     if (!project_db.open()) {
         qDebug() << "Error opening database:" << project_db.lastError();
         return;
-    }
-    else
-    {
+    } else {
         // 数据库成功打开后，启用外键支持
         QSqlQuery queryPrj(project_db);
         if (!queryPrj.exec("PRAGMA foreign_keys=ON;")) {
@@ -82,16 +83,13 @@ DatabaseManager::DatabaseManager() {
     if (!component_db.open()) {
         qDebug() << "Error opening database:" << component_db.lastError();
         return;
-    }
-    else
-    {
+    } else {
         // 数据库成功打开后，启用外键支持
         QSqlQuery queryPrj(component_db);
         if (!queryPrj.exec("PRAGMA foreign_keys=ON;")) {
             qDebug() << "无法启用外键支持：" << queryPrj.lastError().text();
         }
     }
-
 
     registerAddFunctions();
     registerUpdateFunctions();
@@ -246,7 +244,7 @@ bool DatabaseManager::getProjectNoiseLimit(const QString &projectID, QList<Noise
     }
 
     QSqlQuery queryPrj(project_db);
-    queryPrj.prepare("SELECT table_id, room_type, noise_limit, premises_type "
+    queryPrj.prepare("SELECT table_id, room_type, noise_limit, place_type "
                   "FROM project_noiseLimit WHERE projectID = :projectID ORDER BY table_id ASC");
     queryPrj.bindValue(":projectID", projectID);
 
@@ -261,7 +259,7 @@ bool DatabaseManager::getProjectNoiseLimit(const QString &projectID, QList<Noise
             record.value("table_id").toString(),
                     record.value("room_type").toString(),
                     record.value("noise_limit").toString(), // 注意：根据实际数据类型，可能需要调整
-                    record.value("premises_type").toString()};
+                    record.value("place_type").toString()};
         noiseLimits.append(noiseLimit);
     }
 
@@ -688,11 +686,11 @@ void DatabaseManager::addNoiseLimitsToDatabase(const QList<NoiseLimit> &noiseLim
 
     // 然后，插入新的噪声限制项
     for (const NoiseLimit &limit : noiseLimits) {
-        queryPrj.prepare("INSERT INTO project_noiseLimit (table_id, room_type, noise_limit, premises_type, projectID) VALUES (:table_id, :room_type, :noise_limit, :premises_type, :projectID)");
+        queryPrj.prepare("INSERT INTO project_noiseLimit (table_id, room_type, noise_limit, place_type, projectID) VALUES (:table_id, :room_type, :noise_limit, :place_type, :projectID)");
         queryPrj.bindValue(":table_id", limit.tableID);
         queryPrj.bindValue(":room_type", limit.roomType);
         queryPrj.bindValue(":noise_limit", limit.noiseLimit);
-        queryPrj.bindValue(":premises_type", limit.premissType);
+        queryPrj.bindValue(":place_type", limit.placeType);
         queryPrj.bindValue(":projectID", projectID);
 
         if (!queryPrj.exec()) {
@@ -724,7 +722,7 @@ bool DatabaseManager::addAttachmentToDatabase(const ProjectAttachment &attachmen
     }
 
     // 准备一个插入SQL命令
-    QSqlQuery queryPrj;
+    QSqlQuery queryPrj(project_db);
     queryPrj.prepare("INSERT INTO project_attachmentInfo (table_id, attachment_name, attachment_path, projectID) "
                   "VALUES (:tableID, :attachName, :attachPath, :projectID)");
 
@@ -742,6 +740,7 @@ bool DatabaseManager::addAttachmentToDatabase(const ProjectAttachment &attachmen
     }
 
     qDebug() << "成功添加附件信息到数据库";
+    return true;
 }
 
 bool DatabaseManager::delAttachmentInDatabase(const QString &attachmentName, const QString &projectID)
@@ -752,7 +751,7 @@ bool DatabaseManager::delAttachmentInDatabase(const QString &attachmentName, con
     }
 
     // 准备一个删除SQL命令
-    QSqlQuery queryPrj;
+    QSqlQuery queryPrj(project_db);
     queryPrj.prepare("DELETE FROM project_attachmentInfo WHERE attachment_name = :attachName AND projectID = :projectID");
 
     // 绑定给定的附件名和项目ID到SQL命令的参数
@@ -955,4 +954,1435 @@ void DatabaseManager::loadComponentsFromComponentDB()
             }
         }
     }
+}
+
+bool DatabaseManager::addMVZToDatabase(const MVZ *&mvz)
+{
+    if (!project_db.isOpen()) {
+        // 尝试打开数据库，或者至少记录一个错误
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    // 准备一个插入SQL命令
+    QSqlQuery queryPrj(project_db);
+    queryPrj.prepare("INSERT INTO mvzs (name, item_index, project_id) "
+                     "VALUES (:name, :item_index, :project_id)");
+
+    // 绑定结构体中的值到SQL命令参数
+    queryPrj.bindValue(":name", mvz->name);
+    queryPrj.bindValue(":item_index", mvz->getItemIndex());
+    queryPrj.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 执行SQL命令
+    if (!queryPrj.exec()) {
+        // 如果执行失败，记录错误
+        qDebug() << "添加主竖区到数据库失败：" << queryPrj.lastError().text();
+        return false;
+    }
+
+    qDebug() << "成功添加主竖区到数据库";
+    return true;
+}
+
+bool DatabaseManager::delMVZInDatabase(const MVZ *&mvz)
+{
+    if (!project_db.isOpen()) {
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    // 开始一个事务
+    QSqlQuery queryPrj(project_db);
+    if (!queryPrj.exec("BEGIN TRANSACTION")) {
+        qDebug() << "无法开始事务：" << queryPrj.lastError().text();
+        return false;
+    }
+
+    // 准备一个删除SQL命令
+    queryPrj.prepare("DELETE FROM mvzs WHERE name = :name AND project_id = :project_id");
+    queryPrj.bindValue(":name", mvz->name);
+    queryPrj.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 执行删除SQL命令
+    if (!queryPrj.exec()) {
+        qDebug() << "删除主竖区失败：" << queryPrj.lastError().text();
+        queryPrj.exec("ROLLBACK");
+        return false;
+    }
+
+    // 检查是否真的有行被删除了（可选）
+    if (queryPrj.numRowsAffected() <= 0) {
+        qDebug() << "未找到匹配的主竖区进行删除";
+        queryPrj.exec("ROLLBACK");
+        return false;
+    }
+
+    // 更新 item_index
+    queryPrj.prepare("UPDATE mvzs SET item_index = item_index - 1 WHERE project_id = :projectID AND item_index > :itemIndex");
+    queryPrj.bindValue(":projectID", ProjectManager::getInstance().getPrjID());
+    queryPrj.bindValue(":itemIndex", mvz->getItemIndex());
+
+    // 执行更新SQL命令
+    if (!queryPrj.exec()) {
+        qDebug() << "更新 item_index 失败：" << queryPrj.lastError().text();
+        queryPrj.exec("ROLLBACK");
+        return false;
+    }
+
+    // 提交事务
+    if (!queryPrj.exec("COMMIT")) {
+        qDebug() << "无法提交事务：" << queryPrj.lastError().text();
+        return false;
+    }
+
+    // 如果一切顺利，返回true
+    return true;
+}
+
+bool DatabaseManager::updateMVZInDatabase(const QString &old_MVZName, const QString &new_MVZName)
+{
+    QSqlQuery queryPrj(project_db);
+    // 开始一个事务
+    project_db.transaction();
+
+    // 准备更新语句
+    queryPrj.prepare("UPDATE mvzs SET name = :new_MVZName WHERE name = :old_MVZName AND project_id = :project_id");
+    queryPrj.bindValue(":old_MVZName", old_MVZName);
+    queryPrj.bindValue(":new_MVZName", new_MVZName);
+    queryPrj.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 尝试执行更新
+    if (!queryPrj.exec()) {
+        qDebug() << "Failed to update MVZName from" << old_MVZName << "to" << new_MVZName << ":" << queryPrj.lastError().text();
+        project_db.rollback(); // 如果失败，回滚事务
+        return false;
+    }
+
+    // 提交事务
+    if (!project_db.commit()) {
+        qDebug() << "Transaction commit failed:" << project_db.lastError().text();
+        project_db.rollback(); // 如果提交失败，回滚事务
+        return false;
+    }
+
+    return true;
+}
+
+bool DatabaseManager::getMVZNamesFromDB(QList<QString>& MVZNames) {
+    if (!project_db.isOpen()) {
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    QSqlQuery queryPrj(project_db);
+
+    // 准备查询语句
+    queryPrj.prepare("SELECT name FROM mvzs WHERE project_id = :project_id ORDER BY item_index");
+    queryPrj.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 尝试执行查询
+    if (!queryPrj.exec()) {
+        qDebug() << "Failed to fetch MVZ names:" << queryPrj.lastError().text();
+        return false;
+    }
+
+    // 清空MVZNames列表
+    MVZNames.clear();
+
+    // 遍历查询结果，将每个名称添加到MVZNames列表中
+    while (queryPrj.next()) {
+        MVZNames.append(queryPrj.value(0).toString());
+    }
+
+    return true;
+}
+
+bool DatabaseManager::addSystemToDatabase(const System *&system)
+{
+    if (!project_db.isOpen()) {
+        // 尝试打开数据库，或者至少记录一个错误
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    // 准备一个插入SQL命令
+    QSqlQuery queryPrj(project_db);
+    queryPrj.prepare("INSERT INTO systems (name, item_index, mvz_id) "
+                     "VALUES (:name, :item_index, "
+                     "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id))");
+
+    // 绑定结构体中的值到SQL命令参数
+    queryPrj.bindValue(":name", system->name);
+    queryPrj.bindValue(":item_index", system->getItemIndex());
+    queryPrj.bindValue(":MVZName", system->getParentMVZName());
+    queryPrj.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 执行SQL命令
+    if (!queryPrj.exec()) {
+        // 如果执行失败，记录错误
+        qDebug() << "添加系统到数据库失败：" << queryPrj.lastError().text();
+        return false;
+    }
+
+    qDebug() << "成功添加系统到数据库";
+    return true;
+}
+
+bool DatabaseManager::delSystemInDatabase(const System *&system)
+{
+    if (!project_db.isOpen()) {
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    // 开始一个事务
+    QSqlQuery queryPrj(project_db);
+    if (!queryPrj.exec("BEGIN TRANSACTION")) {
+        qDebug() << "无法开始事务：" << queryPrj.lastError().text();
+        return false;
+    }
+
+    // 准备一个删除SQL命令
+    queryPrj.prepare("DELETE FROM systems WHERE name = :name AND mvz_id = "
+                     "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id)");
+    queryPrj.bindValue(":name", system->name);
+    queryPrj.bindValue(":MVZName", system->getParentMVZName());
+    queryPrj.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 执行删除SQL命令
+    if (!queryPrj.exec()) {
+        qDebug() << "删除系统失败：" << queryPrj.lastError().text();
+        queryPrj.exec("ROLLBACK");
+        return false;
+    }
+
+    // 检查是否真的有行被删除了（可选）
+    if (queryPrj.numRowsAffected() <= 0) {
+        qDebug() << "未找到匹配的系统进行删除";
+        queryPrj.exec("ROLLBACK");
+        return false;
+    }
+
+    // 更新 item_index
+    queryPrj.prepare("UPDATE systems SET item_index = item_index - 1 WHERE item_index > :itemIndex AND mvz_id = "
+                     "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id)");
+    queryPrj.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+    queryPrj.bindValue(":MVZName", system->getParentMVZName());
+    queryPrj.bindValue(":itemIndex", system->getItemIndex());
+
+    // 执行更新SQL命令
+    if (!queryPrj.exec()) {
+        qDebug() << "更新 item_index 失败：" << queryPrj.lastError().text();
+        queryPrj.exec("ROLLBACK");
+        return false;
+    }
+
+    // 提交事务
+    if (!queryPrj.exec("COMMIT")) {
+        qDebug() << "无法提交事务：" << queryPrj.lastError().text();
+        return false;
+    }
+
+    // 如果一切顺利，返回true
+    return true;
+}
+
+bool DatabaseManager::updateSystemInDatabase(const QString &MVZName, const QString &old_systemName, const QString &new_systemName)
+{
+    QSqlQuery queryPrj(project_db);
+    // 开始一个事务
+    project_db.transaction();
+
+    // 准备更新语句
+    queryPrj.prepare("UPDATE systems SET name = :new_systemName WHERE name = :old_systemName AND mvz_id = "
+                     "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id)");
+    queryPrj.bindValue(":old_systemName", old_systemName);
+    queryPrj.bindValue(":new_systemName", new_systemName);
+    queryPrj.bindValue(":MVZName", MVZName);
+    queryPrj.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 尝试执行更新
+    if (!queryPrj.exec()) {
+        qDebug() << "Failed to update systemName from" << old_systemName << "to" << new_systemName << ":" << queryPrj.lastError().text();
+        project_db.rollback(); // 如果失败，回滚事务
+        return false;
+    }
+
+    // 提交事务
+    if (!project_db.commit()) {
+        qDebug() << "Transaction commit failed:" << project_db.lastError().text();
+        project_db.rollback(); // 如果提交失败，回滚事务
+        return false;
+    }
+
+    return true;
+}
+
+bool DatabaseManager::getSystemNamesFromDB(const QString& MVZName, QList<QString> &systemNames)
+{
+    if (!project_db.isOpen()) {
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    QSqlQuery queryPrj(project_db);
+
+    // 准备查询语句
+    queryPrj.prepare("SELECT name FROM systems WHERE mvz_id = "
+                     "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id) "
+                     "ORDER BY item_index");
+    queryPrj.bindValue(":MVZName", MVZName);
+    queryPrj.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 尝试执行查询
+    if (!queryPrj.exec()) {
+        qDebug() << "Failed to fetch system names:" << queryPrj.lastError().text();
+        return false;
+    }
+
+    // 清空MVZNames列表
+    systemNames.clear();
+
+    // 遍历查询结果，将每个名称添加到MVZNames列表中
+    while (queryPrj.next()) {
+        systemNames.append(queryPrj.value(0).toString());
+    }
+
+    return true;
+}
+
+bool DatabaseManager::addSystemCompToDatabase(const System*& system, const SystemListComp *&comp)
+{
+    if (!project_db.isOpen()) {
+        // 尝试打开数据库，或者至少记录一个错误
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    // 准备一个插入SQL命令
+    QSqlQuery query(project_db);
+    query.prepare("INSERT INTO system_comp_list (table_index, type, number, model, system_id) "
+                     "VALUES (:table_index, :type, :number, :model, "
+                     "(SELECT id FROM systems WHERE name = :systemName AND mvz_id = "
+                     "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id)))");
+
+    // 绑定结构体中的值到SQL命令参数
+    query.bindValue(":table_index", comp->table_index);
+    query.bindValue(":type", comp->type);
+    query.bindValue(":number", comp->number);
+    query.bindValue(":model", comp->model);
+    query.bindValue(":systemName", system->name);
+    query.bindValue(":MVZName", system->getParentMVZName());
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 执行SQL命令
+    if (!query.exec()) {
+        // 如果执行失败，记录错误
+        qDebug() << "添加系统清单部件到数据库失败：" << query.lastError().text();
+        return false;
+    }
+
+    qDebug() << "成功添加系统清单部件到数据库";
+    return true;
+}
+
+bool DatabaseManager::delSystemCompInDatabase(const System*& system, const SystemListComp *&comp)
+{
+    if (!project_db.isOpen()) {
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    // 开始一个事务
+    QSqlQuery query(project_db);
+    if (!query.exec("BEGIN TRANSACTION")) {
+        qDebug() << "无法开始事务：" << query.lastError().text();
+        return false;
+    }
+
+    // 准备一个删除SQL命令
+    query.prepare("DELETE FROM system_comp_list WHERE table_index = :table_index AND type = :type AND number = :number AND model = :model AND system_id = "
+                  "(SELECT id FROM systems WHERE name = :systemName AND mvz_id = "
+                  "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id))");
+    query.bindValue(":table_index", comp->table_index);
+    query.bindValue(":type", comp->type);
+    query.bindValue(":number", comp->number);
+    query.bindValue(":model", comp->model);
+    query.bindValue(":systemName", system->name);
+    query.bindValue(":MVZName", system->getParentMVZName());
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 执行删除SQL命令
+    if (!query.exec()) {
+        qDebug() << "删除系统组件失败：" << query.lastError().text();
+        query.exec("ROLLBACK");
+        return false;
+    }
+
+    // 检查是否真的有行被删除了
+    if (query.numRowsAffected() <= 0) {
+        qDebug() << "未找到匹配的系统组件进行删除";
+        query.exec("ROLLBACK");
+        return false;
+    }
+
+    // 更新 table_index
+    query.prepare("UPDATE system_comp_list SET table_index = table_index - 1 WHERE table_index > :table_index AND system_id = "
+                  "(SELECT id FROM systems WHERE name = :systemName AND mvz_id = "
+                  "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id))");
+    query.bindValue(":table_index", comp->table_index);
+    query.bindValue(":systemName", system->name);
+    query.bindValue(":MVZName", system->getParentMVZName());
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 执行更新SQL命令
+    if (!query.exec()) {
+        qDebug() << "更新 table_index 失败：" << query.lastError().text();
+        query.exec("ROLLBACK");
+        return false;
+    }
+
+    // 提交事务
+    if (!query.exec("COMMIT")) {
+        qDebug() << "无法提交事务：" << query.lastError().text();
+        return false;
+    }
+
+    // 如果一切顺利，返回true
+    return true;
+}
+
+bool DatabaseManager::updateSystemCompInDatabase(const System*& system, const SystemListComp *&old_comp, const SystemListComp *&new_comp)
+{
+    if (!project_db.isOpen()) {
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    // 开始一个事务
+    QSqlQuery query(project_db);
+    if (!query.exec("BEGIN TRANSACTION")) {
+        qDebug() << "无法开始事务：" << query.lastError().text();
+        return false;
+    }
+
+    // 准备一个更新SQL命令
+    query.prepare("UPDATE system_comp_list SET table_index = :new_table_index, type = :new_type, number = :new_number, model = :new_model "
+                  "WHERE table_index = :old_table_index AND type = :old_type AND number = :old_number AND model = :old_model AND system_id = "
+                  "(SELECT id FROM systems WHERE name = :systemName AND mvz_id = "
+                  "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id))");
+
+    // 绑定新组件的值到SQL命令参数
+    query.bindValue(":new_table_index", new_comp->table_index);
+    query.bindValue(":new_type", new_comp->type);
+    query.bindValue(":new_number", new_comp->number);
+    query.bindValue(":new_model", new_comp->model);
+
+    // 绑定旧组件的值到SQL命令参数
+    query.bindValue(":old_table_index", old_comp->table_index);
+    query.bindValue(":old_type", old_comp->type);
+    query.bindValue(":old_number", old_comp->number);
+    query.bindValue(":old_model", old_comp->model);
+
+    // 绑定系统的信息
+    query.bindValue(":systemName", system->name);
+    query.bindValue(":MVZName", system->getParentMVZName());
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 执行更新SQL命令
+    if (!query.exec()) {
+        qDebug() << "更新系统组件失败：" << query.lastError().text();
+        query.exec("ROLLBACK");
+        return false;
+    }
+
+    // 提交事务
+    if (!query.exec("COMMIT")) {
+        qDebug() << "无法提交事务：" << query.lastError().text();
+        return false;
+    }
+
+    qDebug() << "成功更新系统组件";
+    return true;
+}
+
+bool DatabaseManager::getSystemCompsFromDB(const System*& system, QList<SystemListCompDBData> &systemComps)
+{
+    if (!project_db.isOpen()) {
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    QSqlQuery query(project_db);
+
+    // 准备查询语句
+    query.prepare("SELECT type, number, model FROM system_comp_list WHERE system_id = "
+                     "(SELECT id FROM systems WHERE name = :systemName AND mvz_id = "
+                     "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id)) "
+                     "ORDER BY table_index");
+    query.bindValue(":systemName", system->name);
+    query.bindValue(":MVZName", system->getParentMVZName());
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 尝试执行查询
+    if (!query.exec()) {
+        qDebug() << "Failed to fetch systemList comps:" << query.lastError().text();
+        return false;
+    }
+
+    // 清空MVZNames列表
+    systemComps.clear();
+
+    // 遍历查询结果，将每个名称添加到MVZNames列表中
+    while (query.next()) {
+        QString type = query.value("type").toString();
+        QString number = query.value("number").toString();
+        QString model = query.value("model").toString();
+
+        SystemListCompDBData data{type, number, model};
+
+        systemComps.append(data);
+    }
+
+    return true;
+}
+
+bool DatabaseManager::addRoomToDatabase(const Room *&room)
+{
+    if (!project_db.isOpen()) {
+        // 尝试打开数据库，或者至少记录一个错误
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    // 准备一个插入SQL命令
+    QSqlQuery query(project_db);
+    query.prepare("INSERT INTO rooms (system_id, item_index, number, name, deck, duct_num, place_type, room_type, noise_limit, "
+                  "is_cal, reference_room_number) "
+                  "VALUES ((SELECT id FROM systems WHERE name = :systemName AND mvz_id = "
+                  "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id)), "
+                  ":item_index, :number, :name, :deck, :duct_num, :place_type, :room_type, :noise_limit, :is_cal, :referenceRoomNumber)");
+
+    // 绑定结构体中的值到SQL命令参数
+    query.bindValue(":systemName", room->systemName);
+    query.bindValue(":MVZName", room->MVZName);
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+    query.bindValue(":item_index", room->getItemIndex());
+    query.bindValue(":number", room->number);
+    query.bindValue(":name", room->name);
+    query.bindValue(":deck", room->deck);
+    query.bindValue(":duct_num", room->ductNum);
+    query.bindValue(":place_type", room->placeType);
+    query.bindValue(":room_type", room->roomType);
+    query.bindValue(":noise_limit", room->limit);
+    query.bindValue(":is_cal", room->isCal);
+    query.bindValue(":referenceRoomNumber", room->referenceRoomNumber);
+
+    // 执行SQL命令
+    if (!query.exec()) {
+        // 如果执行失败，记录错误
+        qDebug() << "添加房间到数据库失败：" << query.lastError().text();
+        return false;
+    }
+
+    qDebug() << "成功添加房间到数据库";
+    return true;
+}
+
+bool DatabaseManager::delRoomInDatabase(const Room *&room)
+{
+    if (!project_db.isOpen()) {
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    // 开始一个事务
+    QSqlQuery query(project_db);
+    if (!query.exec("BEGIN TRANSACTION")) {
+        qDebug() << "无法开始事务：" << query.lastError().text();
+        return false;
+    }
+
+    // 准备一个删除SQL命令
+    query.prepare("DELETE FROM rooms WHERE number = :number AND system_id = "
+                  "(SELECT id FROM systems WHERE name = :systemName AND mvz_id = "
+                  "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id))");
+    query.bindValue(":number", room->number);
+    query.bindValue(":systemName", room->systemName);
+    query.bindValue(":MVZName", room->MVZName);
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 执行删除SQL命令
+    if (!query.exec()) {
+        qDebug() << "删除房间失败：" << query.lastError().text();
+        query.exec("ROLLBACK");
+        return false;
+    }
+
+    // 检查是否真的有行被删除了
+    if (query.numRowsAffected() <= 0) {
+        qDebug() << "未找到匹配的房间进行删除";
+        query.exec("ROLLBACK");
+        return false;
+    }
+
+    // 更新 item_index
+    query.prepare("UPDATE rooms SET item_index = item_index - 1 WHERE item_index > :item_index AND system_id = "
+                  "(SELECT id FROM systems WHERE name = :systemName AND mvz_id = "
+                  "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id))");
+    query.bindValue(":item_index", room->getItemIndex());
+    query.bindValue(":systemName", room->systemName);
+    query.bindValue(":MVZName", room->MVZName);
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 执行更新SQL命令
+    if (!query.exec()) {
+        qDebug() << "更新 item_index 失败：" << query.lastError().text();
+        query.exec("ROLLBACK");
+        return false;
+    }
+
+    // 提交事务
+    if (!query.exec("COMMIT")) {
+        qDebug() << "无法提交事务：" << query.lastError().text();
+        return false;
+    }
+
+    // 如果一切顺利，返回true
+    return true;
+}
+
+bool DatabaseManager::updateRoomInDatabase(const System *&system, const Room *&old_room, const Room *&new_room)
+{
+    if (!project_db.isOpen()) {
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    // 开始一个事务
+    QSqlQuery query(project_db);
+    if (!query.exec("BEGIN TRANSACTION")) {
+        qDebug() << "无法开始事务：" << query.lastError().text();
+        return false;
+    }
+
+    // 准备一个更新SQL命令
+    query.prepare("UPDATE rooms SET number = :new_number, name = :new_name, deck = :new_deck, "
+                  "duct_num = :new_duct_num, place_type = :new_place_type, room_type = :new_room_type, "
+                  "noise_limit = :new_noise_limit , is_cal = :new_is_cal, reference_room_number = :new_reference_room_number "
+                  "WHERE number = :old_number AND system_id = "
+                  "(SELECT id FROM systems WHERE name = :systemName AND mvz_id = "
+                  "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id))");
+
+    // 绑定新房间的值到SQL命令参数
+    query.bindValue(":new_number", new_room->number);
+    query.bindValue(":new_name", new_room->name);
+    query.bindValue(":new_deck", new_room->deck);
+    query.bindValue(":new_duct_num", new_room->ductNum);
+    query.bindValue(":new_place_type", new_room->placeType);
+    query.bindValue(":new_room_type", new_room->roomType);
+    query.bindValue(":new_noise_limit", new_room->limit);
+    query.bindValue(":new_is_cal", new_room->isCal);
+    query.bindValue(":new_reference_room_number", new_room->referenceRoomNumber);
+
+    // 绑定旧房间的值到SQL命令参数
+    query.bindValue(":old_number", old_room->number);
+
+    // 绑定系统的信息
+    query.bindValue(":systemName", system->name);
+    query.bindValue(":MVZName", system->getParentMVZName());
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 执行更新SQL命令
+    if (!query.exec()) {
+        qDebug() << "更新房间失败：" << query.lastError().text();
+        query.exec("ROLLBACK");
+        return false;
+    }
+
+    // 提交事务
+    if (!query.exec("COMMIT")) {
+        qDebug() << "无法提交事务：" << query.lastError().text();
+        return false;
+    }
+
+    qDebug() << "成功更新房间";
+    return true;
+
+}
+
+bool DatabaseManager::getRoomsFromDB(const System*& system, QList<RoomDBData>& rooms)
+{
+    if (!project_db.isOpen()) {
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    QSqlQuery query(project_db);
+
+    // 准备查询语句
+    query.prepare("SELECT number, name, deck, duct_num, place_type, room_type, noise_limit, is_cal, reference_room_number "
+                  "FROM rooms WHERE system_id = "
+                  "(SELECT id FROM systems WHERE name = :systemName AND mvz_id = "
+                  "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id)) "
+                  "ORDER BY item_index");
+    query.bindValue(":systemName", system->name);
+    query.bindValue(":MVZName", system->getParentMVZName());
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 尝试执行查询
+    if (!query.exec()) {
+        qDebug() << "获取房间信息失败：" << query.lastError().text();
+        return false;
+    }
+
+    // 清空房间列表
+    rooms.clear();
+
+    // 遍历查询结果，将每个房间信息添加到房间列表中
+    while (query.next()) {
+        QString number = query.value("number").toString();
+        QString name = query.value("name").toString();
+        QString deck = query.value("deck").toString();
+        int ductNum = query.value("duct_num").toInt();
+        QString placeType = query.value("place_type").toString();
+        QString roomType = query.value("room_type").toString();
+        double limit = query.value("noise_limit").toDouble();
+        QString isCal = query.value("is_cal").toString();
+        QString referenceRoomNumber = query.value("reference_room_number").toString();
+
+        RoomDBData data{number, name, deck, ductNum, placeType, roomType, limit, isCal, referenceRoomNumber};
+
+        rooms.append(data);
+    }
+
+    return true;
+}
+
+bool DatabaseManager::addOuterToDatabase(const Outer *&outer)
+{
+    if (!project_db.isOpen()) {
+        // 尝试打开数据库，或者至少记录一个错误
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    // 准备一个插入SQL命令
+    QSqlQuery query(project_db);
+    query.prepare("INSERT INTO outers (mvz_id, item_index, number, name, deck, duct_num, noise_limit, "
+                  "is_cal, reference_outer_number) "
+                  "VALUES ((SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id), "
+                  ":item_index, :number, :name, :deck, :duct_num, :noise_limit, :is_cal, :reference_outer_number)");
+
+    // 绑定结构体中的值到SQL命令参数
+    query.bindValue(":MVZName", outer->MVZName);
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+    query.bindValue(":item_index", outer->getItemIndex());
+    query.bindValue(":number", outer->number);
+    query.bindValue(":name", outer->name);
+    query.bindValue(":deck", outer->deck);
+    query.bindValue(":duct_num", outer->ductNum);
+    query.bindValue(":noise_limit", outer->limit);
+    query.bindValue(":is_cal", outer->isCal);
+    query.bindValue(":reference_outer_number", outer->referenceOuterNumber);
+
+    // 执行SQL命令
+    if (!query.exec()) {
+        // 如果执行失败，记录错误
+        qDebug() << "添加室外到数据库失败：" << query.lastError().text();
+        return false;
+    }
+
+    qDebug() << "成功添加室外到数据库";
+    return true;
+}
+
+bool DatabaseManager::delOuterInDatabase(const Outer *&outer)
+{
+    if (!project_db.isOpen()) {
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    // 开始一个事务
+    QSqlQuery query(project_db);
+    if (!query.exec("BEGIN TRANSACTION")) {
+        qDebug() << "无法开始事务：" << query.lastError().text();
+        return false;
+    }
+
+    // 准备一个删除SQL命令
+    query.prepare("DELETE FROM outers WHERE number = :number AND mvz_id = "
+                  "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id)");
+    query.bindValue(":number", outer->number);
+    query.bindValue(":MVZName", outer->MVZName);
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 执行删除SQL命令
+    if (!query.exec()) {
+        qDebug() << "删除室外失败：" << query.lastError().text();
+        query.exec("ROLLBACK");
+        return false;
+    }
+
+    // 检查是否真的有行被删除了
+    if (query.numRowsAffected() <= 0) {
+        qDebug() << "未找到匹配的室外进行删除";
+        query.exec("ROLLBACK");
+        return false;
+    }
+
+    // 更新 item_index
+    query.prepare("UPDATE outers SET item_index = item_index - 1 WHERE item_index > :item_index AND mvz_id = "
+                  "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id)");
+    query.bindValue(":item_index", outer->getItemIndex());
+    query.bindValue(":MVZName", outer->MVZName);
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 执行更新SQL命令
+    if (!query.exec()) {
+        qDebug() << "更新 item_index 失败：" << query.lastError().text();
+        query.exec("ROLLBACK");
+        return false;
+    }
+
+    // 提交事务
+    if (!query.exec("COMMIT")) {
+        qDebug() << "无法提交事务：" << query.lastError().text();
+        return false;
+    }
+
+    // 如果一切顺利，返回true
+    return true;
+}
+
+bool DatabaseManager::updateOuterInDatabase(const Outer *&old_outer, const Outer *&new_outer)
+{
+    if (!project_db.isOpen()) {
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    // 开始一个事务
+    QSqlQuery query(project_db);
+    if (!query.exec("BEGIN TRANSACTION")) {
+        qDebug() << "无法开始事务：" << query.lastError().text();
+        return false;
+    }
+
+    // 准备一个更新SQL命令
+    query.prepare("UPDATE outers SET number = :new_number, name = :new_name, deck = :new_deck, "
+                  "duct_num = :new_duct_num, noise_limit = :new_noise_limit, is_cal = :new_is_cal, "
+                  "reference_outer_number = :new_reference_outer_number"
+                  "WHERE number = :old_number AND mvz_id = "
+                  "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id)");
+
+    // 绑定新房间的值到SQL命令参数
+    query.bindValue(":new_number", new_outer->number);
+    query.bindValue(":new_name", new_outer->name);
+    query.bindValue(":new_deck", new_outer->deck);
+    query.bindValue(":new_duct_num", new_outer->ductNum);
+    query.bindValue(":new_noise_limit", new_outer->limit);
+    query.bindValue(":new_is_cal", new_outer->isCal);
+    query.bindValue(":new_reference_outer_number", new_outer->referenceOuterNumber);
+
+    // 绑定旧房间的值到SQL命令参数
+    query.bindValue(":old_number", old_outer->number);
+
+    // 绑定系统的信息
+    query.bindValue(":MVZName", old_outer->MVZName);
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 执行更新SQL命令
+    if (!query.exec()) {
+        qDebug() << "更新室外失败：" << query.lastError().text();
+        query.exec("ROLLBACK");
+        return false;
+    }
+
+    // 提交事务
+    if (!query.exec("COMMIT")) {
+        qDebug() << "无法提交事务：" << query.lastError().text();
+        return false;
+    }
+
+    qDebug() << "成功更新室外";
+    return true;
+}
+
+bool DatabaseManager::getOutersFromDB(const MVZ *&mvz, QList<OuterDBData> &outers)
+{
+    if (!project_db.isOpen()) {
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    QSqlQuery query(project_db);
+
+    // 准备查询语句
+    query.prepare("SELECT number, name, deck, duct_num, noise_limit, is_cal, reference_outer_number "
+                  "FROM outers WHERE mvz_id = "
+                  "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id) "
+                  "ORDER BY item_index");
+    query.bindValue(":MVZName", mvz->name);
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 尝试执行查询
+    if (!query.exec()) {
+        qDebug() << "获取房间信息失败：" << query.lastError().text();
+        return false;
+    }
+
+    // 清空房间列表
+    outers.clear();
+
+    // 遍历查询结果，将每个房间信息添加到房间列表中
+    while (query.next()) {
+        QString number = query.value("number").toString();
+        QString name = query.value("name").toString();
+        QString deck = query.value("deck").toString();
+        int ductNum = query.value("duct_num").toInt();
+        double limit = query.value("noise_limit").toDouble();
+        QString isCal = query.value("is_cal").toString();
+        QString referenceNumber = query.value("reference_outer_number").toString();
+
+        OuterDBData data{number, name, deck, ductNum, "外部区域", "室外", limit, isCal, referenceNumber};
+
+        outers.append(data);
+    }
+
+    return true;
+}
+
+bool DatabaseManager::addDuctToDatabase(bool isOuter, const Duct *&duct)
+{
+    if (!project_db.isOpen()) {
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    QSqlQuery query(project_db);
+    if (!query.exec("BEGIN TRANSACTION")) {
+        qDebug() << "无法开始事务：" << query.lastError().text();
+        return false;
+    }
+
+    // Prepare insert statement for outer or room duct
+    if (isOuter) {
+        query.prepare("INSERT INTO outer_ducts (outer_id, item_index, number, air_volume, is_named) "
+                      "VALUES ((SELECT id FROM outers WHERE number = :outerNumber AND mvz_id = "
+                      "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id)), "
+                      ":item_index, :number, :air_volume, :is_named)");
+        query.bindValue(":outerNumber", duct->getParentRoomOrOuterNumber());
+        query.bindValue(":MVZName", duct->getParentMVZName());
+    } else {
+        query.prepare("INSERT INTO room_ducts (room_id, item_index, number, air_volume, is_named) "
+                      "VALUES ((SELECT id FROM rooms WHERE number = :roomNumber AND system_id = "
+                      "(SELECT id FROM systems WHERE name = :SystemName AND mvz_id = "
+                      "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id))), "
+                      ":item_index, :number, :air_volume, :is_named)");
+        query.bindValue(":roomNumber", duct->getParentRoomOrOuterNumber());
+        query.bindValue(":MVZName", duct->getParentMVZName());
+        query.bindValue(":SystemName", duct->getParentSystemName());
+    }
+
+    // Bind values to the query
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+    query.bindValue(":item_index", duct->getItemIndex());
+    query.bindValue(":number", duct->number);
+    query.bindValue(":air_volume", duct->airVolume);
+    query.bindValue(":is_named", duct->ductCalPage->isNamed ? 1 : 0);
+
+    // Execute the insert statement
+    if (!query.exec()) {
+        qDebug() << "添加风管到数据库失败：" << query.lastError().text();
+        query.exec("ROLLBACK");
+        return false;
+    }
+
+    // Prepare update statement to increment duct_num in the corresponding table
+    if (isOuter) {
+        query.prepare("UPDATE outers SET duct_num = duct_num + 1 WHERE number = :outerNumber AND mvz_id = "
+                      "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id)");
+        query.bindValue(":outerNumber", duct->getParentRoomOrOuterNumber());
+        query.bindValue(":MVZName", duct->getParentMVZName());
+    } else {
+        query.prepare("UPDATE rooms SET duct_num = duct_num + 1 WHERE number = :roomNumber AND system_id = "
+                      "(SELECT id FROM systems WHERE name = :SystemName AND mvz_id = "
+                      "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id))");
+        query.bindValue(":roomNumber", duct->getParentRoomOrOuterNumber());
+        query.bindValue(":MVZName", duct->getParentMVZName());
+        query.bindValue(":SystemName", duct->getParentSystemName());
+    }
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // Execute the update statement
+    if (!query.exec()) {
+        qDebug() << "更新房间或室外的 duct_num 失败：" << query.lastError().text();
+        query.exec("ROLLBACK");
+        return false;
+    }
+
+    // Commit the transaction
+    if (!query.exec("COMMIT")) {
+        qDebug() << "无法提交事务：" << query.lastError().text();
+        return false;
+    }
+
+    qDebug() << "成功添加风管到数据库，并更新了 duct_num";
+    return true;
+}
+
+bool DatabaseManager::delDuctInDatabase(bool isOuter, const Duct *&duct)
+{
+    if (!project_db.isOpen()) {
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    // 开始一个事务
+    QSqlQuery query(project_db);
+    if (!query.exec("BEGIN TRANSACTION")) {
+        qDebug() << "无法开始事务：" << query.lastError().text();
+        return false;
+    }
+
+    // 准备一个删除SQL命令
+    if (isOuter) {
+        query.prepare("DELETE FROM outer_ducts WHERE number = :number AND outer_id = "
+                      "(SELECT id FROM outers WHERE number = :outerNumber AND mvz_id = "
+                      "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id))");
+        query.bindValue(":outerNumber", duct->getParentRoomOrOuterNumber());
+        query.bindValue(":MVZName", duct->getParentMVZName());
+    } else {
+        query.prepare("DELETE FROM room_ducts WHERE number = :number AND room_id = "
+                      "(SELECT id FROM rooms WHERE number = :roomNumber AND system_id = "
+                      "(SELECT id FROM systems WHERE name = :SystemName AND mvz_id = "
+                      "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id)))");
+        query.bindValue(":roomNumber", duct->getParentRoomOrOuterNumber());
+        query.bindValue(":MVZName", duct->getParentMVZName());
+        query.bindValue(":SystemName", duct->getParentSystemName());
+    }
+    query.bindValue(":number", duct->number);
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 执行删除SQL命令
+    if (!query.exec()) {
+        qDebug() << "删除风管失败：" << query.lastError().text();
+        query.exec("ROLLBACK");
+        return false;
+    }
+
+    // 检查是否真的有行被删除了
+    if (query.numRowsAffected() <= 0) {
+        qDebug() << "未找到匹配的风管进行删除";
+        query.exec("ROLLBACK");
+        return false;
+    }
+
+    // 更新 item_index
+    if (isOuter) {
+        query.prepare("UPDATE outer_ducts SET item_index = item_index - 1 WHERE item_index > :item_index AND outer_id = "
+                      "(SELECT id FROM outers WHERE number = :outerNumber AND mvz_id = "
+                      "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id))");
+        query.bindValue(":outerNumber", duct->getParentRoomOrOuterNumber());
+        query.bindValue(":MVZName", duct->getParentMVZName());
+    } else {
+        query.prepare("UPDATE room_ducts SET item_index = item_index - 1 WHERE item_index > :item_index AND room_id = "
+                      "(SELECT id FROM rooms WHERE number = :roomNumber AND system_id = "
+                      "(SELECT id FROM systems WHERE name = :SystemName AND mvz_id = "
+                      "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id)))");
+        query.bindValue(":roomNumber", duct->getParentRoomOrOuterNumber());
+        query.bindValue(":MVZName", duct->getParentMVZName());
+        query.bindValue(":SystemName", duct->getParentSystemName());
+    }
+    query.bindValue(":item_index", duct->getItemIndex());
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 执行更新SQL命令
+    if (!query.exec()) {
+        qDebug() << "更新 item_index 失败：" << query.lastError().text();
+        query.exec("ROLLBACK");
+        return false;
+    }
+
+    // 更新 duct_num
+    if (isOuter) {
+        query.prepare("UPDATE outers SET duct_num = duct_num - 1 WHERE number = :outerNumber AND mvz_id = "
+                      "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id)");
+        query.bindValue(":outerNumber", duct->getParentRoomOrOuterNumber());
+        query.bindValue(":MVZName", duct->getParentMVZName());
+    } else {
+        query.prepare("UPDATE rooms SET duct_num = duct_num - 1 WHERE number = :roomNumber AND system_id = "
+                      "(SELECT id FROM systems WHERE name = :SystemName AND mvz_id = "
+                      "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id))");
+        query.bindValue(":roomNumber", duct->getParentRoomOrOuterNumber());
+        query.bindValue(":MVZName", duct->getParentMVZName());
+        query.bindValue(":SystemName", duct->getParentSystemName());
+    }
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 执行更新 duct_num SQL命令
+    if (!query.exec()) {
+        qDebug() << "更新 duct_num 失败：" << query.lastError().text();
+        query.exec("ROLLBACK");
+        return false;
+    }
+
+    // 提交事务
+    if (!query.exec("COMMIT")) {
+        qDebug() << "无法提交事务：" << query.lastError().text();
+        return false;
+    }
+
+    // 如果一切顺利，返回true
+    return true;
+}
+
+bool DatabaseManager::updateDuctInDatabase(bool isOuter, const Duct *&old_duct, const Duct *&new_duct)
+{
+    if (!project_db.isOpen()) {
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    // 开始一个事务
+    QSqlQuery query(project_db);
+    if (!query.exec("BEGIN TRANSACTION")) {
+        qDebug() << "无法开始事务：" << query.lastError().text();
+        return false;
+    }
+
+    // 准备一个更新SQL命令
+    if (isOuter) {
+        query.prepare("UPDATE outer_ducts SET number = :new_number, air_volume = :new_air_volume, is_named = :new_is_named "
+                      "WHERE number = :old_number AND outer_id = "
+                      "(SELECT id FROM outers WHERE number = :outerNumber AND mvz_id = "
+                      "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id))");
+        query.bindValue(":outerNumber", old_duct->getParentRoomOrOuterNumber());
+        query.bindValue(":MVZName", old_duct->getParentMVZName());
+    } else {
+        query.prepare("UPDATE room_ducts SET number = :new_number, air_volume = :new_air_volume, is_named = :new_is_named "
+                      "WHERE number = :old_number AND room_id = "
+                      "(SELECT id FROM rooms WHERE number = :roomNumber AND system_id = "
+                      "(SELECT id FROM systems WHERE name = :SystemName AND mvz_id = "
+                      "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id)))");
+        query.bindValue(":roomNumber", old_duct->getParentRoomOrOuterNumber());
+        query.bindValue(":MVZName", old_duct->getParentMVZName());
+        query.bindValue(":SystemName", old_duct->getParentSystemName());
+    }
+
+    // 绑定新风管的值到SQL命令参数
+    query.bindValue(":new_number", new_duct->number);
+    query.bindValue(":new_air_volume", new_duct->airVolume);
+    query.bindValue(":new_is_named", new_duct->ductCalPage->isNamed ? 1 : 0);
+
+    // 绑定旧风管的值到SQL命令参数
+    query.bindValue(":old_number", old_duct->number);
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 执行更新SQL命令
+    if (!query.exec()) {
+        qDebug() << "更新风管失败：" << query.lastError().text();
+        query.exec("ROLLBACK");
+        return false;
+    }
+
+    // 提交事务
+    if (!query.exec("COMMIT")) {
+        qDebug() << "无法提交事务：" << query.lastError().text();
+        return false;
+    }
+
+    qDebug() << "成功更新风管";
+    return true;
+}
+
+bool DatabaseManager::getRoomDuctsFromDB(const Room *&room, QList<DuctDBData> &ducts)
+{
+    if (!project_db.isOpen()) {
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    QSqlQuery query(project_db);
+
+    // 准备查询语句
+    query.prepare("SELECT number, air_volume, is_named "
+                  "FROM room_ducts WHERE room_id = "
+                  "(SELECT id FROM rooms WHERE number = :RoomNumber AND system_id = "
+                  "(SELECT id FROM systems WHERE name = :SystemName AND mvz_id = "
+                  "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id))) "
+                  "ORDER BY item_index");
+    query.bindValue(":RoomNumber", room->number);
+    query.bindValue(":SystemName", room->systemName);
+    query.bindValue(":MVZName", room->MVZName);
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 尝试执行查询
+    if (!query.exec()) {
+        qDebug() << "获取房间风管信息失败：" << query.lastError().text();
+        return false;
+    }
+
+    // 清空风管列表
+    ducts.clear();
+
+    // 遍历查询结果，将每个风管信息添加到风管列表中
+    while (query.next()) {
+        QString number = query.value("number").toString();
+        double airVolume = query.value("air_volume").toDouble();
+        bool isNamed = query.value("is_named").toBool();
+
+        DuctDBData data{number, airVolume, isNamed};
+
+        ducts.append(data);
+    }
+
+    return true;
+}
+
+bool DatabaseManager::getOuterDuctsFromDB(const Outer *&outer, QList<DuctDBData> &ducts)
+{
+    if (!project_db.isOpen()) {
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    QSqlQuery query(project_db);
+
+    // 准备查询语句
+    query.prepare("SELECT number, air_volume, is_named "
+                  "FROM outer_ducts WHERE outer_id = "
+                  "(SELECT id FROM outers WHERE number = :OuterNumber AND mvz_id = "
+                  "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id)) "
+                  "ORDER BY item_index");
+    query.bindValue(":OuterNumber", outer->number);
+    query.bindValue(":MVZName", outer->MVZName);
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+
+    // 尝试执行查询
+    if (!query.exec()) {
+        qDebug() << "获取室外风管信息失败：" << query.lastError().text();
+        return false;
+    }
+
+    // 清空风管列表
+    ducts.clear();
+
+    // 遍历查询结果，将每个风管信息添加到风管列表中
+    while (query.next()) {
+        QString number = query.value("number").toString();
+        double airVolume = query.value("air_volume").toDouble();
+        bool isNamed = query.value("is_named").toBool();
+
+        DuctDBData data{number, airVolume, isNamed};
+
+        ducts.append(data);
+    }
+
+    return true;
+}
+
+bool DatabaseManager::namedDuct(bool isOuter, const QString& old_number, const Duct *&duct)
+{
+    if (!project_db.isOpen()) {
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    QSqlQuery query(project_db);
+
+    // 开始一个事务
+    if (!query.exec("BEGIN TRANSACTION")) {
+        qDebug() << "无法开始事务：" << query.lastError().text();
+        return false;
+    }
+
+    // 准备一个更新SQL命令
+    if (isOuter) {
+        query.prepare("UPDATE outer_ducts SET is_named = :is_named, number =:number WHERE number = :old_number AND outer_id = "
+                      "(SELECT id FROM outers WHERE number = :outerNumber AND mvz_id = "
+                      "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id))");
+        query.bindValue(":outerNumber", duct->getParentRoomOrOuterNumber());
+    } else {
+        query.prepare("UPDATE room_ducts SET is_named = :is_named, number =:number WHERE number = :old_number AND room_id = "
+                      "(SELECT id FROM rooms WHERE number = :roomNumber AND system_id = "
+                      "(SELECT id FROM systems WHERE name = :SystemName AND mvz_id = "
+                      "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id)))");
+        query.bindValue(":roomNumber", duct->getParentRoomOrOuterNumber());
+        query.bindValue(":SystemName", duct->getParentSystemName());
+    }
+
+    query.bindValue(":MVZName", duct->getParentMVZName());
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+    query.bindValue(":number", duct->number);
+    query.bindValue(":old_number", old_number);
+    query.bindValue(":is_named", 1);  // 设置为1
+
+    // 执行更新SQL命令
+    if (!query.exec()) {
+        qDebug() << "更新风管 is_named 失败：" << query.lastError().text();
+        query.exec("ROLLBACK");
+        return false;
+    }
+
+    // 提交事务
+    if (!query.exec("COMMIT")) {
+        qDebug() << "无法提交事务：" << query.lastError().text();
+        return false;
+    }
+
+    qDebug() << "成功更新风管 is_named";
+    return true;
+}
+
+bool DatabaseManager::addDuctCalTableToDatabase(bool isOuter, int tableIndex, const QString &type,
+                                      const QString &tableJsonData, const QString &MVZName,
+                                      const QString &systemName, const QString &roomOrOuterNumber,
+                                      const QString &ductNumber)
+{
+    if (!project_db.isOpen()) {
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    QSqlQuery query(project_db);
+    if (!query.exec("BEGIN TRANSACTION")) {
+        qDebug() << "无法开始事务：" << query.lastError().text();
+        return false;
+    }
+
+    // 准备插入语句用于 outer_ducts_cal_tables 或 room_ducts_cal_tables
+    if (isOuter) {
+        query.prepare("INSERT INTO outer_ducts_cal_tables (table_index, type, table_json_data, outer_duct_id) "
+                      "VALUES (:table_index, :type, :table_json_data, "
+                      "(SELECT id FROM outer_ducts WHERE number = :roomOrOuterNumber AND "
+                      "outer_id = (SELECT id FROM outers WHERE number = :outerNumber AND mvz_id = "
+                      "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id))))");
+    } else {
+        query.prepare("INSERT INTO room_ducts_cal_tables (table_index, type, table_json_data, room_duct_id) "
+                      "VALUES (:table_index, :type, :table_json_data, "
+                      "(SELECT id FROM room_ducts WHERE number = :ductNumber AND "
+                      "room_id = (SELECT id FROM rooms WHERE number = :roomOrOuterNumber AND system_id = "
+                      "(SELECT id FROM systems WHERE name = :SystemName AND mvz_id = "
+                      "(SELECT id FROM mvzs WHERE name = :MVZName AND project_id = :project_id)))))");
+        query.bindValue(":SystemName", systemName);
+    }
+
+    // 绑定值到查询
+    query.bindValue(":table_index", tableIndex);
+    query.bindValue(":type", type);
+    query.bindValue(":table_json_data", tableJsonData);
+    query.bindValue(":project_id", ProjectManager::getInstance().getPrjID());
+    query.bindValue(":MVZName", MVZName);
+    query.bindValue(":roomOrOuterNumber", roomOrOuterNumber);
+    query.bindValue(":ductNumber", ductNumber);
+
+    // 执行插入语句
+    if (!query.exec()) {
+        qDebug() << "添加风管计算表到数据库失败：" << query.lastError().text();
+        query.exec("ROLLBACK");
+        return false;
+    }
+
+    // 提交事务
+    if (!query.exec("COMMIT")) {
+        qDebug() << "无法提交事务：" << query.lastError().text();
+        return false;
+    }
+
+    qDebug() << "成功添加风管计算表到数据库";
+    return true;
+}
+
+bool DatabaseManager::removeDuctCalTableFromDatabase(bool isOuter, const QString &ductNumber)
+{
+    if (!project_db.isOpen()) {
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    QSqlQuery query(project_db);
+
+    // 开始事务
+    if (!query.exec("BEGIN TRANSACTION")) {
+        qDebug() << "无法开始事务：" << query.lastError().text();
+        return false;
+    }
+
+    if (isOuter) {
+        // 使用子查询直接删除 outer_ducts_cal_tables 中的项
+        query.prepare("DELETE FROM outer_ducts_cal_tables WHERE outer_duct_id = ("
+                      "SELECT id FROM outer_ducts WHERE number = :ductNumber)");
+    } else {
+        // 使用子查询直接删除 room_ducts_cal_tables 中的项
+        query.prepare("DELETE FROM room_ducts_cal_tables WHERE room_duct_id = ("
+                      "SELECT id FROM room_ducts WHERE number = :ductNumber)");
+    }
+
+    // 绑定值到查询
+    query.bindValue(":ductNumber", ductNumber);
+
+    // 执行删除操作
+    if (!query.exec()) {
+        qDebug() << "删除风管计算表失败：" << query.lastError().text();
+        query.exec("ROLLBACK");
+        return false;
+    }
+
+    // 提交事务
+    if (!query.exec("COMMIT")) {
+        qDebug() << "无法提交事务：" << query.lastError().text();
+        return false;
+    }
+
+    qDebug() << "成功删除风管计算表";
+    return true;
+}
+
+bool DatabaseManager::getDuctCalTableFromDatabase(bool isOuter, const QString &ductNumber, QList<DuctCalTableDBData> &ductCalTables)
+{
+    if (!project_db.isOpen()) {
+        qDebug() << "数据库未打开";
+        return false;
+    }
+
+    QSqlQuery query(project_db);
+
+    if (isOuter) {
+        // 获取 outer_ducts_cal_tables 的数据，并按 table_index 正序排序
+        query.prepare("SELECT type, table_json_data FROM outer_ducts_cal_tables WHERE outer_duct_id = ("
+                      "SELECT id FROM outer_ducts WHERE number = :ductNumber) "
+                      "ORDER BY table_index ASC");
+    } else {
+        // 获取 room_ducts_cal_tables 的数据，并按 table_index 正序排序
+        query.prepare("SELECT type, table_json_data FROM room_ducts_cal_tables WHERE room_duct_id = ("
+                      "SELECT id FROM room_ducts WHERE number = :ductNumber) "
+                      "ORDER BY table_index ASC");
+    }
+
+    // 绑定值到查询
+    query.bindValue(":ductNumber", ductNumber);
+
+    // 执行查询
+    if (!query.exec()) {
+        qDebug() << "获取风管计算表数据失败：" << query.lastError().text();
+        return false;
+    }
+
+    // 清空传入的列表以确保没有旧数据
+    ductCalTables.clear();
+
+    // 遍历查询结果并填充到列表中
+    while (query.next()) {
+        DuctCalTableDBData data;
+        data.type = query.value("type").toString();
+        data.jsonString = query.value("table_json_data").toString();
+        ductCalTables.append(data);
+    }
+
+    qDebug() << "成功获取风管计算表数据";
+    return true;
 }

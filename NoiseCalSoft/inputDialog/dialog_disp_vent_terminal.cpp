@@ -281,3 +281,25 @@ QList<QStringList> Dialog_disp_vent_terminal::getComponentDataAsStringList() con
     return dataLists;
 }
 
+
+void Dialog_disp_vent_terminal::on_comboBox_refl_data_source_currentIndexChanged(int index)
+{
+    if(index != 2)
+    {
+        for(auto& lineEdit : refl_lineEdits)
+        {
+            lineEdit->clear();
+            lineEdit->setReadOnly(false);
+        }
+    }
+    else
+    {
+        for(auto& lineEdit : refl_lineEdits)
+        {
+            lineEdit->clear();
+            lineEdit->setText("-");
+            lineEdit->setReadOnly(true);
+        }
+    }
+}
+

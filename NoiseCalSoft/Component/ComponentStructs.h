@@ -10,6 +10,7 @@
 #include <QJsonArray>
 #include <QSqlRecord>
 #include <QVariant>
+#include "global_constant.h"
 
 using std::array;
 using std::unique_ptr;
@@ -310,7 +311,7 @@ typedef struct Fan : ComponentBase
     // ComponentBase interface
 public:
     QString typeName() const override{
-        return component_type_name::FAN;
+        return componentTypeToString(ComponentType::FAN);
     }
 
     // ComponentBase interface
@@ -682,8 +683,6 @@ public:
 
 typedef struct VAV_terminal : Valve
 {
-    QString number;  // 编号
-
     // 使用Valve的默认构造函数并初始化number
     VAV_terminal() = default;
 
@@ -696,7 +695,6 @@ typedef struct VAV_terminal : Valve
         this->data_source = record.value("data_source").toString();
 
         // VAV_terminal specific member variables
-        this->number = record.value("number").toString();
         this->angle = record.value("valve_angle").toString(); // Assuming real is stored as double in QSqlRecord
         this->air_volume = record.value("air_volume").toString(); // Assuming real is stored as double in QSqlRecord
 
@@ -709,16 +707,14 @@ typedef struct VAV_terminal : Valve
     VAV_terminal(const QString& model, const QString& brand, const QString& table_id,
                  const QString& UUID, const QString& data_source,
                  const QString& angle, const QString& air_volume,
-                 const array<QString, 9>& noi, const QString& number)
-        : Valve(model, brand, table_id, data_source, UUID, angle, air_volume, noi),
-          number(number) {}
+                 const array<QString, 9>& noi)
+        : Valve(model, brand, table_id, data_source, UUID, angle, air_volume, noi) {}
 
     // 使用Valve的不包含噪音数组的构造函数初始化基类部分，并初始化number
     VAV_terminal(const QString& model, const QString& brand, const QString& table_id,
                  const QString& UUID, const QString& data_source,
-                 const QString& angle, const QString& air_volume, const QString& number)
-        : Valve(model, brand, table_id, data_source, UUID, angle, air_volume),
-          number(number) {}
+                 const QString& angle, const QString& air_volume)
+        : Valve(model, brand, table_id, data_source, UUID, angle, air_volume) {}
 
     // ComponentBase interface
 public:
@@ -733,7 +729,6 @@ public:
         QList<QStringList> dataLists;
         QStringList data = {
             table_id,
-            number,
             model,
             brand,
             angle,
@@ -747,11 +742,6 @@ public:
 
         data.push_back(data_source);
         data.push_back(UUID);
-
-        if(inDB)
-        {
-            data.removeOne(number);
-        }
 
         dataLists.append(data);
         return dataLists;
@@ -1237,8 +1227,8 @@ typedef struct StaticBox_grille : Terminal
         this->refl = deserializeAtten(reflJson);
 
         // StaticBox_grille specific member variables
-        this->staticBox_model = record.value("staticBox_model").toString();
-        this->staticBox_brand = record.value("staticBox_brand").toString();
+        this->staticBox_model = record.value("static_box_model").toString();
+        this->staticBox_brand = record.value("static_box_brand").toString();
         this->grille_model = record.value("grille_model").toString();
         this->grille_brand = record.value("grille_brand").toString();
     }
@@ -1331,6 +1321,7 @@ public:
             grille_brand,
             terminal_shape,
             terminal_size,
+            "反射衰减"
         };
 
         // 迭代 noi_out 数组来填充 QStringList

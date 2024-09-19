@@ -17,7 +17,6 @@ Dialog_VAV_terminal::Dialog_VAV_terminal(QWidget *parent, int editRow,  const VA
 
     if(editRow != -1)
     {
-        ui->lineEdit_number->setText(data.number);
         ui->lineEdit_brand->setText(data.brand);
         ui->lineEdit_model->setText(data.model);
         ui->comboBox_angle->setCurrentText(data.angle);
@@ -53,17 +52,6 @@ void* Dialog_VAV_terminal::getComponent()
     return component == nullptr ? nullptr : component;
 }
 
-void Dialog_VAV_terminal::switchToCompontDB(bool inDB)
-{
-    if(inDB)
-    {
-        ui->lineEdit_number->setText("-");
-        ui->widget_number->hide();
-        ui->widget_brand->move(QPoint(ui->widget_model->x(), ui->widget_model->y()));
-        ui->widget_model->move(QPoint(ui->widget_number->x(), ui->widget_number->y()));
-    }
-}
-
 // 槽函数实现
 void Dialog_VAV_terminal::calTotalNoise() {
     // 处理进口噪声的计算和显示
@@ -86,7 +74,6 @@ QList<QStringList> Dialog_VAV_terminal::getComponentDataAsStringList() const
     QList<QStringList> dataLists;
     QStringList data = {
         component->table_id,
-        component->number,
         component->model,
         component->brand,
         component->angle,
@@ -129,8 +116,7 @@ void Dialog_VAV_terminal::on_pushButton_confirm_clicked()
                 ui->comboBox_data_source->currentText(),
                 ui->comboBox_angle->currentText(),
                 ui->lineEdit_air_volume->text(),
-                noi,
-                ui->lineEdit_number->text());
+                noi);
 
     this->accept(); // 关闭对话框
 }
@@ -143,8 +129,7 @@ bool Dialog_VAV_terminal::check_lineedit()
     }
     if(ui->lineEdit_model->text().isEmpty()||
             ui->lineEdit_brand->text().isEmpty()||
-            ui->lineEdit_air_volume->text().isEmpty()||
-            ui->lineEdit_number->text().isEmpty())
+            ui->lineEdit_air_volume->text().isEmpty())
         return false;
     return true;
 }
