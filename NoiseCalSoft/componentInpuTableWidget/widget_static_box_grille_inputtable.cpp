@@ -21,7 +21,7 @@ void Widget_static_box_grille_inputTable::initTableWidget()
     headerText<< "" << "序号" << "静压箱型号" << "静压箱品牌" << "格栅型号" << "格栅品牌" << "末端\n类型" << "末端\n尺寸" << "数据类型"
               << "63Hz\n(dB)" << "125Hz\n(dB)" << "250Hz\n(dB)" << "500Hz\n(dB)" << "1kHz\n(dB)" << "2kHz\n(dB)"
               << "4kHz\n(dB)" << "8kHz\n(dB)" << "总值\ndB(A)" << "来源" << "UUID";  //表头标题用QStringList来表示
-    QVector<int> widths = {30, 40, 120, 100, 120, 100, 50, 70, 80, 55, 55, 55, 55, 55, 55, 55, 55, 55, 60, 0};
+    QVector<int> widths = {30, 40, 120, 100, 120, 100, 50, 70, 80, 55, 55, 55, 55, 55, 55, 55, 55, 55, 70, 0};
     columnWidths = widths;
     setTableWidget(ui->tableWidget, headerText, columnWidths, colCount);
     QStringList merge

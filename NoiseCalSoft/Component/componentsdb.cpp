@@ -21,7 +21,7 @@
 #include "componentInpuTableWidget/widget_silencer_inputtable.h"
 
 ComponentsDB::ComponentsDB(QWidget *parent) :
-    QDialog(parent),
+    QWidget(parent),
     ui(new Ui::ComponentsDB)
 {
     ui->setupUi(this);
@@ -36,7 +36,7 @@ ComponentsDB::ComponentsDB(QWidget *parent) :
     }
 
     this->setWindowTitle("数据库");
-    this->setWindowFlags(Qt::WindowCloseButtonHint);
+    this->setWindowFlags(Qt::WindowCloseButtonHint | Qt::Window);
 }
 
 ComponentsDB::~ComponentsDB()
@@ -46,7 +46,7 @@ ComponentsDB::~ComponentsDB()
 
 void ComponentsDB::initTree()
 {
-    item_sound_sorce_noise = new QTreeWidgetItem(QStringList("1.噪声源"));   //1音源噪音
+    item_sound_sorce_noise = new QTreeWidgetItem(QStringList("1.噪音源"));   //1音源噪音
     item_fan_noise = new QTreeWidgetItem(item_sound_sorce_noise,QStringList("风机"));   //1.1风机噪音
     item_fan_coil_noise = new QTreeWidgetItem(item_sound_sorce_noise,QStringList("风机盘管"));   //1.2风机盘管噪音
     item_aircondition_noise_single_fan = new QTreeWidgetItem(item_sound_sorce_noise,QStringList("空调器(单风机)"));   //1.3空调器噪音(单风机)

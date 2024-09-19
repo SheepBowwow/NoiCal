@@ -10,6 +10,8 @@ CONFIG += warn_off
 QMAKE_CXXFLAGS += -Wall
 QMAKE_CXXFLAGS += -Wno-unknown-pragmas
 
+DESTDIR = ./bin
+
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
@@ -40,6 +42,7 @@ SOURCES += \
     componentInpuTableWidget/widget_vav_terminal_inputtable.cpp \
     database/DatabaseOperations.cpp \
     databasemanager.cpp \
+    global_constant.cpp \
     globle_var.cpp \
     inputDialog/dialog_air_diff.cpp \
     inputDialog/dialog_aircondition.cpp \
@@ -63,17 +66,17 @@ SOURCES += \
     inputbasedialog.cpp \
     main.cpp \
     project/projectmanager.cpp \
-    roomCal/outer_after.cpp \
-    roomCal/outer_before.cpp \
+    roomCal/outer_after_widget.cpp \
+    roomCal/outer_before_widget.cpp \
     roomCal/room_cal_basewidget.cpp \
-    roomCal/room_cal_total.cpp \
+    roomCal/room_cal_total_widget.cpp \
     roomCal/roomcaltable.cpp \
+    roomDefineForm/dialog_add_room.cpp \
     roomDefineForm/dialog_add_system.cpp \
-    roomDefineForm/dialog_add_zhushuqu.cpp \
-    roomDefineForm/dialog_addroom.cpp \
-    roomDefineForm/form_room_define.cpp \
-    roomDefineForm/form_system_list.cpp \
-    roomDefineForm/systemmanager.cpp \
+    roomDefineForm/dialog_set_name.cpp \
+    roomDefineForm/room_define_widget.cpp \
+    roomDefineForm/roomcalinfomanager.cpp \
+    roomDefineForm/systemcomp_list_widget.cpp \
     subclass/clickablecombobox.cpp \
     widget.cpp \
     wordEngine/wordengine.cpp
@@ -128,17 +131,17 @@ HEADERS += \
     inputDialog/dialog_vav_terminal.h \
     inputbasedialog.h \
     project/projectmanager.h \
-    roomCal/outer_after.h \
-    roomCal/outer_before.h \
+    roomCal/outer_after_widget.h \
+    roomCal/outer_before_widget.h \
     roomCal/room_cal_basewidget.h \
-    roomCal/room_cal_total.h \
+    roomCal/room_cal_total_widget.h \
     roomCal/roomcaltable.h \
+    roomDefineForm/dialog_add_room.h \
     roomDefineForm/dialog_add_system.h \
-    roomDefineForm/dialog_add_zhushuqu.h \
-    roomDefineForm/dialog_addroom.h \
-    roomDefineForm/form_room_define.h \
-    roomDefineForm/form_system_list.h \
-    roomDefineForm/systemmanager.h \
+    roomDefineForm/dialog_set_name.h \
+    roomDefineForm/room_define_widget.h \
+    roomDefineForm/roomcalinfomanager.h \
+    roomDefineForm/systemcomp_list_widget.h \
     subclass/clickablecombobox.h \
     widget.h \
     wordEngine/wordengine.h
@@ -165,16 +168,16 @@ FORMS += \
     inputDialog/dialog_static_box.ui \
     inputDialog/dialog_tee.ui \
     inputDialog/dialog_vav_terminal.ui \
-    roomCal/outer_after.ui \
-    roomCal/outer_before.ui \
+    roomCal/outer_after_widget.ui \
+    roomCal/outer_before_widget.ui \
     roomCal/room_cal_basewidget.ui \
-    roomCal/room_cal_total.ui \
+    roomCal/room_cal_total_widget.ui \
     roomCal/roomcaltable.ui \
+    roomDefineForm/dialog_add_room.ui \
     roomDefineForm/dialog_add_system.ui \
-    roomDefineForm/dialog_add_zhushuqu.ui \
-    roomDefineForm/dialog_addroom.ui \
-    roomDefineForm/form_room_define.ui \
-    roomDefineForm/form_system_list.ui \
+    roomDefineForm/dialog_set_name.ui \
+    roomDefineForm/room_define_widget.ui \
+    roomDefineForm/systemcomp_list_widget.ui \
     widget.ui
 
 # Default rules for deployment.

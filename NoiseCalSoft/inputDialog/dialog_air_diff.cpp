@@ -352,10 +352,11 @@ void Dialog_air_diff::on_comboBox_refl_data_source_currentIndexChanged(int index
         for(auto& lineEdit : refl_lineEdits)
         {
             lineEdit->clear();
+            lineEdit->setText("-");
             lineEdit->setReadOnly(true);
         }
     }
 
-    calReflAtten();
+    //calReflAtten();
 }
 

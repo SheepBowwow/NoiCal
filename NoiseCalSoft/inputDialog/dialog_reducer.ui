@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>651</width>
-    <height>651</height>
+    <width>569</width>
+    <height>621</height>
    </rect>
   </property>
   <property name="font">
@@ -41,7 +41,7 @@ font-size: 13px;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>651</width>
+     <width>571</width>
      <height>31</height>
     </rect>
    </property>
@@ -56,7 +56,7 @@ background-color: rgb(157, 196, 229);
    <widget class="QPushButton" name="close">
     <property name="geometry">
      <rect>
-      <x>620</x>
+      <x>540</x>
       <y>5</y>
       <width>21</width>
       <height>21</height>
@@ -75,8 +75,8 @@ background-color: rgb(157, 196, 229);
     <rect>
      <x>0</x>
      <y>30</y>
-     <width>651</width>
-     <height>391</height>
+     <width>571</width>
+     <height>361</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -90,8 +90,8 @@ border: 1px solid #000000;
      <rect>
       <x>0</x>
       <y>60</y>
-      <width>651</width>
-      <height>331</height>
+      <width>571</width>
+      <height>301</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -124,8 +124,8 @@ font-family: '黑体';
     <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
-       <x>40</x>
-       <y>210</y>
+       <x>10</x>
+       <y>180</y>
        <width>511</width>
        <height>72</height>
       </rect>
@@ -571,8 +571,8 @@ font-family: '黑体';
     <widget class="QPushButton" name="pushButton_confirm">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>290</y>
+       <x>490</x>
+       <y>260</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -603,36 +603,11 @@ color: white;
       <string>确认</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_18">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>81</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>黑体</family>
-       <pointsize>-1</pointsize>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">border: 1px solid #000000;</string>
-     </property>
-     <property name="text">
-      <string>厂家信息</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
     <widget class="QWidget" name="widget_3" native="true">
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>80</y>
+       <x>60</x>
+       <y>50</y>
        <width>301</width>
        <height>31</height>
       </rect>
@@ -723,8 +698,8 @@ border: 1px solid #ABABAB;
     <widget class="QLabel" name="label_26">
      <property name="geometry">
       <rect>
-       <x>40</x>
-       <y>80</y>
+       <x>10</x>
+       <y>50</y>
        <width>31</width>
        <height>31</height>
       </rect>
@@ -742,8 +717,8 @@ border: 1px solid #ABABAB;
     <widget class="QLabel" name="label_27">
      <property name="geometry">
       <rect>
-       <x>230</x>
-       <y>40</y>
+       <x>200</x>
+       <y>10</y>
        <width>41</width>
        <height>31</height>
       </rect>
@@ -761,8 +736,8 @@ border: 1px solid #ABABAB;
     <widget class="QComboBox" name="comboBox_data_source">
      <property name="geometry">
       <rect>
-       <x>470</x>
-       <y>40</y>
+       <x>440</x>
+       <y>10</y>
        <width>91</width>
        <height>31</height>
       </rect>
@@ -787,8 +762,8 @@ border: 1px solid #ABABAB;
     <widget class="QLineEdit" name="lineEdit_brand">
      <property name="geometry">
       <rect>
-       <x>280</x>
-       <y>40</y>
+       <x>250</x>
+       <y>10</y>
        <width>111</width>
        <height>31</height>
       </rect>
@@ -803,8 +778,8 @@ border: 1px solid #ABABAB;
     <widget class="QLineEdit" name="lineEdit_model">
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>40</y>
+       <x>60</x>
+       <y>10</y>
        <width>111</width>
        <height>31</height>
       </rect>
@@ -819,8 +794,8 @@ border: 1px solid #ABABAB;
     <widget class="QLabel" name="label_32">
      <property name="geometry">
       <rect>
-       <x>420</x>
-       <y>40</y>
+       <x>390</x>
+       <y>10</y>
        <width>41</width>
        <height>31</height>
       </rect>
@@ -838,8 +813,8 @@ border: 1px solid #ABABAB;
     <widget class="QLabel" name="label_30">
      <property name="geometry">
       <rect>
-       <x>40</x>
-       <y>40</y>
+       <x>10</x>
+       <y>10</y>
        <width>41</width>
        <height>31</height>
       </rect>
@@ -857,8 +832,8 @@ border: 1px solid #ABABAB;
     <widget class="QLabel" name="label_31">
      <property name="geometry">
       <rect>
-       <x>40</x>
-       <y>130</y>
+       <x>10</x>
+       <y>100</y>
        <width>81</width>
        <height>31</height>
       </rect>
@@ -876,8 +851,8 @@ border: 1px solid #ABABAB;
     <widget class="QLabel" name="label_33">
      <property name="geometry">
       <rect>
-       <x>40</x>
-       <y>170</y>
+       <x>10</x>
+       <y>140</y>
        <width>81</width>
        <height>31</height>
       </rect>
@@ -895,8 +870,8 @@ border: 1px solid #ABABAB;
     <widget class="QStackedWidget" name="stackedWidget_reducer_before">
      <property name="geometry">
       <rect>
-       <x>140</x>
-       <y>130</y>
+       <x>110</x>
+       <y>100</y>
        <width>301</width>
        <height>31</height>
       </rect>
@@ -1026,8 +1001,8 @@ border: 1px solid #ABABAB;
     <widget class="QStackedWidget" name="stackedWidget_reducer_after">
      <property name="geometry">
       <rect>
-       <x>140</x>
-       <y>170</y>
+       <x>110</x>
+       <y>140</y>
        <width>301</width>
        <height>31</height>
       </rect>
@@ -1220,8 +1195,8 @@ color : rgb(105, 105, 105);
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>420</y>
-     <width>651</width>
+     <y>390</y>
+     <width>571</width>
      <height>231</height>
     </rect>
    </property>
@@ -1231,7 +1206,7 @@ color : rgb(105, 105, 105);
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>11</x>
       <y>40</y>
       <width>541</width>
       <height>171</height>

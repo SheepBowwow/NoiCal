@@ -51,7 +51,7 @@ font-size: 14px;
 }</string>
    </property>
    <property name="currentIndex">
-    <number>24</number>
+    <number>23</number>
    </property>
    <widget class="QWidget" name="page_fan">
     <property name="minimumSize">
@@ -1597,284 +1597,323 @@ border-bottom:2px solid black;</string>
     border-top: none;
 }</string>
        </property>
-       <widget class="QComboBox" name="comboBox_aircondition_number">
-        <property name="geometry">
-         <rect>
-          <x>190</x>
-          <y>6</y>
-          <width>101</width>
-          <height>25</height>
-         </rect>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <property name="topMargin">
+         <number>1</number>
         </property>
-        <property name="font">
-         <font>
-          <family>黑体</family>
-          <pointsize>-1</pointsize>
-         </font>
+        <property name="bottomMargin">
+         <number>1</number>
         </property>
-        <property name="styleSheet">
-         <string notr="true">border:none;
+        <item>
+         <widget class="QLabel" name="label_959">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>编号:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="comboBox_aircondition_number">
+          <property name="minimumSize">
+           <size>
+            <width>120</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:none;
 border-bottom:1px solid black;</string>
-        </property>
-       </widget>
-       <widget class="QLineEdit" name="lineEdit_aircondition_model">
-        <property name="geometry">
-         <rect>
-          <x>501</x>
-          <y>6</y>
-          <width>131</width>
-          <height>25</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>黑体</family>
-          <pointsize>-1</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">border:none;
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_964">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>类型:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_aircondition_fan_type">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>60</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>60</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:none;
 border-bottom:1px solid black;
 </string>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_955">
-        <property name="geometry">
-         <rect>
-          <x>651</x>
-          <y>3</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>黑体</family>
-          <pointsize>-1</pointsize>
-         </font>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Plain</enum>
-        </property>
-        <property name="text">
-         <string>风量(m³/h):</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_956">
-        <property name="geometry">
-         <rect>
-          <x>461</x>
-          <y>3</y>
-          <width>41</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>黑体</family>
-          <pointsize>-1</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>型号:</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_957">
-        <property name="geometry">
-         <rect>
-          <x>818</x>
-          <y>3</y>
-          <width>71</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>黑体</family>
-          <pointsize>-1</pointsize>
-         </font>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Plain</enum>
-        </property>
-        <property name="text">
-         <string>静压(Pa):</string>
-        </property>
-       </widget>
-       <widget class="QComboBox" name="comboBox_aircondition_noise_locate">
-        <property name="geometry">
-         <rect>
-          <x>382</x>
-          <y>6</y>
-          <width>61</width>
-          <height>25</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>黑体</family>
-          <pointsize>-1</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">border:none;
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_958">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>噪音位置:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="comboBox_aircondition_noise_locate">
+          <property name="minimumSize">
+           <size>
+            <width>60</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>60</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:none;
 border-bottom:1px solid black;</string>
-        </property>
-        <property name="currentIndex">
-         <number>-1</number>
-        </property>
-        <item>
-         <property name="text">
-          <string>进口</string>
-         </property>
+          </property>
+          <property name="currentIndex">
+           <number>-1</number>
+          </property>
+          <item>
+           <property name="text">
+            <string>进口</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>出口</string>
+           </property>
+          </item>
+         </widget>
         </item>
         <item>
-         <property name="text">
-          <string>出口</string>
-         </property>
+         <widget class="QLabel" name="label_956">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>型号:</string>
+          </property>
+         </widget>
         </item>
-       </widget>
-       <widget class="QLineEdit" name="lineEdit_aircondition_air_volume">
-        <property name="geometry">
-         <rect>
-          <x>740</x>
-          <y>6</y>
-          <width>61</width>
-          <height>25</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>黑体</family>
-          <pointsize>-1</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">border:none;
+        <item>
+         <widget class="QLineEdit" name="lineEdit_aircondition_model">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:none;
 border-bottom:1px solid black;
 </string>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_958">
-        <property name="geometry">
-         <rect>
-          <x>310</x>
-          <y>3</y>
-          <width>71</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>黑体</family>
-          <pointsize>-1</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>噪音位置:</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_959">
-        <property name="geometry">
-         <rect>
-          <x>150</x>
-          <y>3</y>
-          <width>41</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>黑体</family>
-          <pointsize>-1</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>编号:</string>
-        </property>
-       </widget>
-       <widget class="QLineEdit" name="lineEdit_aircondition_static_press">
-        <property name="geometry">
-         <rect>
-          <x>890</x>
-          <y>6</y>
-          <width>61</width>
-          <height>25</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>黑体</family>
-          <pointsize>-1</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">border:none;
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_955">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
+          <property name="text">
+           <string>风量(m³/h):</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_aircondition_air_volume">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:none;
 border-bottom:1px solid black;
 </string>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-       <widget class="QComboBox" name="comboBox_aircondition_fan_type">
-        <property name="geometry">
-         <rect>
-          <x>50</x>
-          <y>6</y>
-          <width>81</width>
-          <height>25</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>黑体</family>
-          <pointsize>-1</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">border:none;
-border-bottom:1px solid black;</string>
-        </property>
-        <property name="currentIndex">
-         <number>-1</number>
-        </property>
-        <item>
-         <property name="text">
-          <string>送风机</string>
-         </property>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
         <item>
-         <property name="text">
-          <string>排风机</string>
-         </property>
+         <widget class="QLabel" name="label_957">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
+          <property name="text">
+           <string>静压(Pa):</string>
+          </property>
+         </widget>
         </item>
-       </widget>
-       <widget class="QLabel" name="label_964">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>3</y>
-          <width>41</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>黑体</family>
-          <pointsize>-1</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>类型:</string>
-        </property>
-       </widget>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_aircondition_static_press">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:none;
+border-bottom:1px solid black;
+</string>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>190</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
       </widget>
      </item>
      <item>
@@ -2344,7 +2383,7 @@ border-bottom:2px solid black;</string>
     border-top: none;
 }</string>
        </property>
-       <widget class="QComboBox" name="comboBox_VAV_terminal_number">
+       <widget class="QComboBox" name="comboBox_VAV_terminal_model">
         <property name="geometry">
          <rect>
           <x>50</x>
@@ -2367,7 +2406,7 @@ border-bottom:1px solid black;</string>
        <widget class="QLabel" name="label_960">
         <property name="geometry">
          <rect>
-          <x>408</x>
+          <x>198</x>
           <y>3</y>
           <width>71</width>
           <height>31</height>
@@ -2383,37 +2422,10 @@ border-bottom:1px solid black;</string>
          <string>阀门开度:</string>
         </property>
        </widget>
-       <widget class="QLineEdit" name="lineEdit_VAV_terminal_model">
-        <property name="geometry">
-         <rect>
-          <x>250</x>
-          <y>6</y>
-          <width>131</width>
-          <height>25</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>黑体</family>
-          <pointsize>-1</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">border:none;
-border-bottom:1px solid black;
-</string>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-        <property name="clearButtonEnabled">
-         <bool>false</bool>
-        </property>
-       </widget>
        <widget class="QLabel" name="label_961">
         <property name="geometry">
          <rect>
-          <x>571</x>
+          <x>361</x>
           <y>3</y>
           <width>91</width>
           <height>31</height>
@@ -2432,29 +2444,10 @@ border-bottom:1px solid black;
          <string>风量(m³/h):</string>
         </property>
        </widget>
-       <widget class="QLabel" name="label_962">
-        <property name="geometry">
-         <rect>
-          <x>210</x>
-          <y>3</y>
-          <width>41</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>黑体</family>
-          <pointsize>-1</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>型号:</string>
-        </property>
-       </widget>
        <widget class="QLineEdit" name="lineEdit_VAV_terminal_angle">
         <property name="geometry">
          <rect>
-          <x>480</x>
+          <x>270</x>
           <y>6</y>
           <width>61</width>
           <height>25</height>
@@ -2478,7 +2471,7 @@ border-bottom:1px solid black;
        <widget class="QLineEdit" name="lineEdit_VAV_terminal_air_volume">
         <property name="geometry">
          <rect>
-          <x>660</x>
+          <x>450</x>
           <y>6</y>
           <width>61</width>
           <height>25</height>
@@ -2515,7 +2508,7 @@ border-bottom:1px solid black;
          </font>
         </property>
         <property name="text">
-         <string>编号:</string>
+         <string>型号:</string>
         </property>
        </widget>
       </widget>
@@ -3256,22 +3249,9 @@ border-bottom:2px solid black;</string>
          <string notr="true">border:none;
 border-bottom:1px solid black;</string>
         </property>
-        <property name="currentIndex">
-         <number>-1</number>
-        </property>
         <item>
          <property name="text">
           <string>0°</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>15°</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>30°</string>
          </property>
         </item>
         <item>
@@ -3281,17 +3261,7 @@ border-bottom:1px solid black;</string>
         </item>
         <item>
          <property name="text">
-          <string>60°</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>75°</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>90°</string>
+          <string>65°</string>
          </property>
         </item>
        </widget>
@@ -4134,22 +4104,9 @@ border-bottom:2px solid black;</string>
          <string notr="true">border:none;
 border-bottom:1px solid black;</string>
         </property>
-        <property name="currentIndex">
-         <number>-1</number>
-        </property>
         <item>
          <property name="text">
           <string>0°</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>15°</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>30°</string>
          </property>
         </item>
         <item>
@@ -4159,17 +4116,7 @@ border-bottom:1px solid black;</string>
         </item>
         <item>
          <property name="text">
-          <string>60°</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>75°</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>90°</string>
+          <string>65°</string>
          </property>
         </item>
        </widget>
@@ -19630,14 +19577,90 @@ border-bottom:1px solid black;
         <property name="spacing">
          <number>0</number>
         </property>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_250">
+        <item row="1" column="3">
+         <widget class="QLineEdit" name="lineEdit_room_less425_input_250">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:none;
+border-bottom:none;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="6">
+         <widget class="QLineEdit" name="lineEdit_room_less425_test_press_2k">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:none;
+border-bottom:none;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="4">
+         <widget class="QLineEdit" name="lineEdit_room_less425_input_500">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:none;
+border-bottom:none;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="5">
+         <widget class="QLabel" name="label_249">
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border-left:1px solid black;</string>
+          </property>
+          <property name="text">
+           <string>1kHz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_248">
           <property name="minimumSize">
            <size>
             <width>240</width>
@@ -19650,11 +19673,237 @@ border-bottom:1px solid black;
             <height>41</height>
            </size>
           </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
           <property name="styleSheet">
-           <string notr="true">border-left:2px solid black;</string>
+           <string notr="true">border:1px solid black;
+border-left:2px solid black;
+border-bottom:none;
+border-right:none;
+</string>
           </property>
           <property name="text">
-           <string/>
+           <string>测试点声压（dB）</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_room_input_power">
+          <property name="minimumSize">
+           <size>
+            <width>240</width>
+            <height>41</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>240</width>
+            <height>41</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-left:2px solid black;
+border-right:none;
+border-bottom:none;
+</string>
+          </property>
+          <property name="text">
+           <string>进入房间噪音声功率(dB)</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="3">
+         <widget class="QLineEdit" name="lineEdit_room_less425_amend_250">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:none;
+border-bottom:none;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="6">
+         <widget class="QLabel" name="label_253">
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border-left:1px solid black;</string>
+          </property>
+          <property name="text">
+           <string>2kHz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <widget class="QLineEdit" name="lineEdit_room_less425_amend_125">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:none;
+border-bottom:none;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="7">
+         <widget class="QLabel" name="label_252">
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border-left:1px solid black;</string>
+          </property>
+          <property name="text">
+           <string>4kHz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="6">
+         <widget class="QLineEdit" name="lineEdit_room_less425_amend_2k">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:none;
+border-bottom:none;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="5">
+         <widget class="QLineEdit" name="lineEdit_room_less425_test_press_1k">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:none;
+border-bottom:none;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_Anoise">
+          <property name="minimumSize">
+           <size>
+            <width>240</width>
+            <height>41</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>240</width>
+            <height>41</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-left:2px solid black;
+border-right:none;
+border-bottom:2px solid black;;
+</string>
+          </property>
+          <property name="text">
+           <string>A级计权噪音dB(A)</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLineEdit" name="lineEdit_room_less425_test_press_63">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:none;
+border-bottom:none;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -19697,6 +19946,69 @@ border-bottom:1px solid black;
           </property>
          </widget>
         </item>
+        <item row="3" column="7">
+         <widget class="QLineEdit" name="lineEdit_room_less425_test_press_4k">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:none;
+border-bottom:none;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2">
+         <widget class="QLineEdit" name="lineEdit_room_less425_test_press_125">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:none;
+border-bottom:none;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="8">
+         <widget class="QLineEdit" name="lineEdit_room_less425_amend_8k">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:none;
+border-bottom:none;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="3">
          <widget class="QLabel" name="label_254">
           <property name="font">
@@ -19716,119 +20028,8 @@ border-bottom:1px solid black;
           </property>
          </widget>
         </item>
-        <item row="0" column="4">
-         <widget class="QLabel" name="label_246">
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border-left:1px solid black;</string>
-          </property>
-          <property name="text">
-           <string>500Hz</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="5">
-         <widget class="QLabel" name="label_249">
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border-left:1px solid black;</string>
-          </property>
-          <property name="text">
-           <string>1kHz</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="6">
-         <widget class="QLabel" name="label_253">
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border-left:1px solid black;</string>
-          </property>
-          <property name="text">
-           <string>2kHz</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="7">
-         <widget class="QLabel" name="label_252">
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border-left:1px solid black;</string>
-          </property>
-          <property name="text">
-           <string>4kHz</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_room_input_power">
-          <property name="minimumSize">
-           <size>
-            <width>240</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>240</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-left:2px solid black;
-border-right:none;
-border-bottom:none;
-</string>
-          </property>
-          <property name="text">
-           <string>进入房间噪音声功率(dB)</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="lineEdit_room_less425_input_63">
+        <item row="2" column="4">
+         <widget class="QLineEdit" name="lineEdit_room_less425_amend_500">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -19842,6 +20043,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -19861,10 +20065,13 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
-        <item row="1" column="3">
-         <widget class="QLineEdit" name="lineEdit_room_less425_input_250">
+        <item row="3" column="8">
+         <widget class="QLineEdit" name="lineEdit_room_less425_test_press_8k">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -19879,23 +20086,8 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
-         </widget>
-        </item>
-        <item row="1" column="4">
-         <widget class="QLineEdit" name="lineEdit_room_less425_input_500">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:none;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -19915,23 +20107,8 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
-         </widget>
-        </item>
-        <item row="1" column="6">
-         <widget class="QLineEdit" name="lineEdit_room_less425_input_2k">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:none;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -19947,6 +20124,49 @@ border-bottom:none;</string>
            <string notr="true">border:1px solid black;
 border-right:none;
 border-bottom:none;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="lineEdit_room_less425_amend_63">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:none;
+border-bottom:none;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="8">
+         <widget class="QLabel" name="label_255">
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border-left:1px solid black;</string>
+          </property>
+          <property name="text">
+           <string>8kHz</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -19988,8 +20208,8 @@ border-bottom:none;
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
-         <widget class="QLineEdit" name="lineEdit_room_less425_amend_63">
+        <item row="1" column="6">
+         <widget class="QLineEdit" name="lineEdit_room_less425_input_2k">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -20004,10 +20224,13 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
-        <item row="2" column="2">
-         <widget class="QLineEdit" name="lineEdit_room_less425_amend_125">
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="lineEdit_room_less425_input_63">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -20022,10 +20245,13 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
-        <item row="2" column="3">
-         <widget class="QLineEdit" name="lineEdit_room_less425_amend_250">
+        <item row="3" column="9">
+         <widget class="QLineEdit" name="lineEdit_room_less425_test_press_total">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -20034,16 +20260,19 @@ border-bottom:none;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">border:1px solid black;
-border-right:none;
+border-right:2px solid black;
 border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
-        <item row="2" column="4">
-         <widget class="QLineEdit" name="lineEdit_room_less425_amend_500">
+        <item row="2" column="9">
+         <widget class="QLineEdit" name="lineEdit_room_less425_amend_total">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -20052,82 +20281,22 @@ border-bottom:none;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">border:1px solid black;
-border-right:none;
+border-right:2px solid black;
 border-bottom:none;</string>
+          </property>
+          <property name="text">
+           <string>-</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
-         </widget>
-        </item>
-        <item row="2" column="5">
-         <widget class="QLineEdit" name="lineEdit_room_less425_amend_1k">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:none;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
-        <item row="2" column="6">
-         <widget class="QLineEdit" name="lineEdit_room_less425_amend_2k">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:none;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="7">
-         <widget class="QLineEdit" name="lineEdit_room_less425_amend_4k">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:none;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_248">
-          <property name="minimumSize">
-           <size>
-            <width>240</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>240</width>
-            <height>41</height>
-           </size>
-          </property>
+        <item row="0" column="4">
+         <widget class="QLabel" name="label_246">
           <property name="font">
            <font>
             <family>黑体</family>
@@ -20135,68 +20304,10 @@ border-bottom:none;</string>
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-left:2px solid black;
-border-bottom:none;
-border-right:none;
-</string>
+           <string notr="true">border-left:1px solid black;</string>
           </property>
           <property name="text">
-           <string>测试点声压（dB）</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLineEdit" name="lineEdit_room_less425_test_press_63">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:none;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="2">
-         <widget class="QLineEdit" name="lineEdit_room_less425_test_press_125">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:none;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="3">
-         <widget class="QLineEdit" name="lineEdit_room_less425_test_press_250">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:none;</string>
+           <string>500Hz</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -20219,10 +20330,13 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
-        <item row="3" column="5">
-         <widget class="QLineEdit" name="lineEdit_room_less425_test_press_1k">
+        <item row="3" column="3">
+         <widget class="QLineEdit" name="lineEdit_room_less425_test_press_250">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -20233,146 +20347,6 @@ border-bottom:none;</string>
            <string notr="true">border:1px solid black;
 border-right:none;
 border-bottom:none;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="6">
-         <widget class="QLineEdit" name="lineEdit_room_less425_test_press_2k">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:none;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="7">
-         <widget class="QLineEdit" name="lineEdit_room_less425_test_press_4k">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:none;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="8">
-         <widget class="QLineEdit" name="lineEdit_room_less425_test_press_8k">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:none;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="9">
-         <widget class="QLineEdit" name="lineEdit_room_less425_test_press_total">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:2px solid black;
-border-bottom:none;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="label_Anoise">
-          <property name="minimumSize">
-           <size>
-            <width>240</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>240</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-left:2px solid black;
-border-right:none;
-border-bottom:2px solid black;;
-</string>
-          </property>
-          <property name="text">
-           <string>A级计权噪音dB(A)</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1" colspan="8">
-         <widget class="QLineEdit" name="lineEdit_room_less425_Anoise">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:2px solid black;;</string>
-          </property>
-          <property name="text">
-           <string>-</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -20382,10 +20356,10 @@ border-bottom:2px solid black;;</string>
           </property>
          </widget>
         </item>
-        <item row="4" column="9">
-         <widget class="QLineEdit" name="lineEdit_room_less425_Anoise_total">
+        <item row="2" column="7">
+         <widget class="QLineEdit" name="lineEdit_room_less425_amend_4k">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -20393,11 +20367,55 @@ border-bottom:2px solid black;;</string>
           <property name="styleSheet">
            <string notr="true">border:1px solid black;
 border-right:none;
-border-bottom:2px solid black;;
-border-right:2px solid black;</string>
+border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="8">
+         <widget class="QLineEdit" name="lineEdit_room_less425_input_8k">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:none;
+border-bottom:none;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="5">
+         <widget class="QLineEdit" name="lineEdit_room_less425_amend_1k">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:none;
+border-bottom:none;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -20417,59 +20435,36 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
-        <item row="2" column="9">
-         <widget class="QLineEdit" name="lineEdit_room_less425_amend_total">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_250">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:2px solid black;
-border-bottom:none;</string>
+          <property name="minimumSize">
+           <size>
+            <width>240</width>
+            <height>41</height>
+           </size>
           </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="8">
-         <widget class="QLineEdit" name="lineEdit_room_less425_amend_8k">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+          <property name="maximumSize">
+           <size>
+            <width>240</width>
+            <height>41</height>
+           </size>
           </property>
           <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:none;</string>
+           <string notr="true">border-left:2px solid black;</string>
           </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="8">
-         <widget class="QLineEdit" name="lineEdit_room_less425_input_8k">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:none;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
+          <property name="text">
+           <string/>
           </property>
          </widget>
         </item>
@@ -20493,22 +20488,39 @@ border-right:2px solid black;</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="8">
-         <widget class="QLabel" name="label_255">
-          <property name="font">
-           <font>
-            <family>黑体</family>
-            <pointsize>-1</pointsize>
-           </font>
+        <item row="4" column="1" colspan="9">
+         <widget class="QLineEdit" name="lineEdit_room_less425_Anoise">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>41</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>41</height>
+           </size>
           </property>
           <property name="styleSheet">
-           <string notr="true">border-left:1px solid black;</string>
+           <string notr="true">border:1px solid black;
+border-right:2px solid black;;
+border-bottom:2px solid black;;</string>
           </property>
           <property name="text">
-           <string>8kHz</string>
+           <string>-</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -20864,6 +20876,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="2">
@@ -20881,6 +20896,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -20900,6 +20918,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="4">
@@ -20917,6 +20938,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -20936,6 +20960,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="6">
@@ -20954,6 +20981,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="7">
@@ -20971,6 +21001,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -21025,6 +21058,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="2">
@@ -21042,6 +21078,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -21061,6 +21100,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="4">
@@ -21078,6 +21120,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -21097,6 +21142,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="6">
@@ -21115,6 +21163,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="7">
@@ -21132,6 +21183,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -21186,6 +21240,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="2">
@@ -21203,6 +21260,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -21222,6 +21282,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="4">
@@ -21239,6 +21302,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -21258,6 +21324,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="6">
@@ -21275,6 +21344,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -21294,6 +21366,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="8">
@@ -21312,6 +21387,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="9">
@@ -21329,6 +21407,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -21367,61 +21448,6 @@ border-bottom:2px solid black;;
           </property>
          </widget>
         </item>
-        <item row="4" column="1" colspan="8">
-         <widget class="QLineEdit" name="lineEdit_room_more425_Anoise">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:2px solid black;;</string>
-          </property>
-          <property name="text">
-           <string>-</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="9">
-         <widget class="QLineEdit" name="lineEdit_room_more425_Anoise_total">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:2px solid black;;
-border-right:2px solid black;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
         <item row="1" column="9">
          <widget class="QLineEdit" name="lineEdit_room_more425_input_total">
           <property name="sizePolicy">
@@ -21438,6 +21464,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="9">
@@ -21453,8 +21482,14 @@ border-bottom:none;</string>
 border-right:2px solid black;
 border-bottom:none;</string>
           </property>
+          <property name="text">
+           <string>-</string>
+          </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -21474,6 +21509,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="8">
@@ -21491,6 +21529,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -21530,6 +21571,42 @@ border-right:2px solid black;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1" colspan="9">
+         <widget class="QLineEdit" name="lineEdit_room_more425_Anoise">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>41</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>41</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:2px solid black;;
+border-bottom:2px solid black;;</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -22038,6 +22115,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="2">
@@ -22055,6 +22135,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -22074,6 +22157,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="4">
@@ -22091,6 +22177,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -22110,6 +22199,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="6">
@@ -22128,6 +22220,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="7">
@@ -22145,6 +22240,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -22199,6 +22297,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="2">
@@ -22216,6 +22317,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -22235,6 +22339,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="4">
@@ -22252,6 +22359,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -22271,6 +22381,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="6">
@@ -22289,6 +22402,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="7">
@@ -22306,6 +22422,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -22360,6 +22479,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="2">
@@ -22377,6 +22499,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -22396,6 +22521,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="4">
@@ -22413,6 +22541,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -22432,6 +22563,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="6">
@@ -22449,6 +22583,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -22468,6 +22605,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="8">
@@ -22486,6 +22626,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="9">
@@ -22503,6 +22646,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -22541,55 +22687,6 @@ border-bottom:2px solid black;;
           </property>
          </widget>
         </item>
-        <item row="4" column="1" colspan="8">
-         <widget class="QLineEdit" name="lineEdit_room_noFurniture_Anoise">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:2px solid black;;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="9">
-         <widget class="QLineEdit" name="lineEdit_room_noFurniture_Anoise_total">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:2px solid black;;
-border-right:2px solid black;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
         <item row="1" column="9">
          <widget class="QLineEdit" name="lineEdit_room_noFurniture_input_total">
           <property name="sizePolicy">
@@ -22606,6 +22703,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="9">
@@ -22621,8 +22721,14 @@ border-bottom:none;</string>
 border-right:2px solid black;
 border-bottom:none;</string>
           </property>
+          <property name="text">
+           <string>-</string>
+          </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -22642,6 +22748,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="8">
@@ -22659,6 +22768,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -22698,6 +22810,39 @@ border-right:2px solid black;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1" colspan="9">
+         <widget class="QLineEdit" name="lineEdit_room_noFurniture_Anoise">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>41</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>41</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:2px solid black;;
+border-bottom:2px solid black;;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -23077,6 +23222,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="2">
@@ -23094,6 +23242,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -23113,6 +23264,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="4">
@@ -23130,6 +23284,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -23149,6 +23306,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="6">
@@ -23167,6 +23327,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="7">
@@ -23184,6 +23347,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -23238,6 +23404,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="2">
@@ -23255,6 +23424,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -23274,6 +23446,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="4">
@@ -23291,6 +23466,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -23310,6 +23488,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="6">
@@ -23328,6 +23509,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="7">
@@ -23345,6 +23529,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -23399,6 +23586,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="2">
@@ -23416,6 +23606,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -23435,6 +23628,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="4">
@@ -23452,6 +23648,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -23471,6 +23670,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="6">
@@ -23488,6 +23690,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -23507,6 +23712,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="8">
@@ -23525,6 +23733,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="9">
@@ -23542,6 +23753,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -23580,55 +23794,6 @@ border-bottom:2px solid black;;
           </property>
          </widget>
         </item>
-        <item row="4" column="1" colspan="8">
-         <widget class="QLineEdit" name="lineEdit_room_open_Anoise">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:2px solid black;;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="9">
-         <widget class="QLineEdit" name="lineEdit_room_open_Anoise_total">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:2px solid black;;
-border-right:2px solid black;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
         <item row="1" column="9">
          <widget class="QLineEdit" name="lineEdit_room_open_input_total">
           <property name="sizePolicy">
@@ -23645,6 +23810,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="9">
@@ -23660,8 +23828,14 @@ border-bottom:none;</string>
 border-right:2px solid black;
 border-bottom:none;</string>
           </property>
+          <property name="text">
+           <string>-</string>
+          </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -23681,6 +23855,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="8">
@@ -23698,6 +23875,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -23737,6 +23917,39 @@ border-right:2px solid black;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1" colspan="9">
+         <widget class="QLineEdit" name="lineEdit_room_open_Anoise">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>41</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>41</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:2px solid black;;
+border-bottom:2px solid black;;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -24288,6 +24501,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="2">
@@ -24305,6 +24521,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -24324,6 +24543,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="4">
@@ -24341,6 +24563,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -24360,6 +24585,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="6">
@@ -24378,6 +24606,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="7">
@@ -24395,6 +24626,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -24449,6 +24683,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="2">
@@ -24466,6 +24703,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -24485,6 +24725,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="4">
@@ -24502,6 +24745,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -24521,6 +24767,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="6">
@@ -24539,6 +24788,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="7">
@@ -24556,6 +24808,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -24610,6 +24865,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="2">
@@ -24627,6 +24885,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -24646,6 +24907,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="4">
@@ -24663,6 +24927,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -24682,6 +24949,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="6">
@@ -24699,6 +24969,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -24718,6 +24991,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="8">
@@ -24736,6 +25012,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="9">
@@ -24753,6 +25032,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -24791,55 +25073,6 @@ border-bottom:2px solid black;;
           </property>
          </widget>
         </item>
-        <item row="4" column="1" colspan="8">
-         <widget class="QLineEdit" name="lineEdit_room_gap_tuyere_Anoise">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:2px solid black;;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="9">
-         <widget class="QLineEdit" name="lineEdit_room_gap_tuyere_Anoise_total">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:2px solid black;;
-border-right:2px solid black;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
         <item row="1" column="9">
          <widget class="QLineEdit" name="lineEdit_room_gap_tuyere_input_total">
           <property name="sizePolicy">
@@ -24856,6 +25089,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="9">
@@ -24871,8 +25107,14 @@ border-bottom:none;</string>
 border-right:2px solid black;
 border-bottom:none;</string>
           </property>
+          <property name="text">
+           <string>-</string>
+          </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -24892,6 +25134,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="8">
@@ -24909,6 +25154,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -24948,6 +25196,39 @@ border-right:2px solid black;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1" colspan="9">
+         <widget class="QLineEdit" name="lineEdit_room_gap_tuyere_Anoise">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>41</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>41</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:2px solid black;;
+border-bottom:2px solid black;;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -25370,6 +25651,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="2">
@@ -25387,6 +25671,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -25406,6 +25693,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="4">
@@ -25423,6 +25713,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -25442,6 +25735,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="6">
@@ -25460,6 +25756,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="7">
@@ -25477,6 +25776,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -25531,6 +25833,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="2">
@@ -25548,6 +25853,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -25567,6 +25875,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="4">
@@ -25584,6 +25895,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -25603,6 +25917,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="6">
@@ -25621,6 +25938,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="7">
@@ -25638,6 +25958,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -25692,6 +26015,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="2">
@@ -25709,6 +26035,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -25728,6 +26057,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="4">
@@ -25745,6 +26077,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -25764,6 +26099,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="6">
@@ -25781,6 +26119,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -25800,6 +26141,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="8">
@@ -25818,6 +26162,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="3" column="9">
@@ -25835,6 +26182,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -25873,55 +26223,6 @@ border-bottom:2px solid black;;
           </property>
          </widget>
         </item>
-        <item row="4" column="1" colspan="8">
-         <widget class="QLineEdit" name="lineEdit_room_rain_Anoise">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:2px solid black;;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="9">
-         <widget class="QLineEdit" name="lineEdit_room_rain_Anoise_total">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:1px solid black;
-border-right:none;
-border-bottom:2px solid black;;
-border-right:2px solid black;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
         <item row="1" column="9">
          <widget class="QLineEdit" name="lineEdit_room_rain_input_total">
           <property name="sizePolicy">
@@ -25938,6 +26239,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="2" column="9">
@@ -25953,8 +26257,14 @@ border-bottom:none;</string>
 border-right:2px solid black;
 border-bottom:none;</string>
           </property>
+          <property name="text">
+           <string>-</string>
+          </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -25974,6 +26284,9 @@ border-bottom:none;</string>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="8">
@@ -25991,6 +26304,9 @@ border-bottom:none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -26030,6 +26346,39 @@ border-right:2px solid black;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1" colspan="9">
+         <widget class="QLineEdit" name="lineEdit_room_rain_Anoise">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>41</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>41</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid black;
+border-right:2px solid black;;
+border-bottom:2px solid black;;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -26147,7 +26496,7 @@ border-bottom:1px solid black;</string>
       </property>
       <item>
        <property name="text">
-        <string>噪声源</string>
+        <string>噪音源</string>
        </property>
       </item>
       <item>
@@ -26228,6 +26577,9 @@ border-bottom:1px solid black;</string>
        <string notr="true">border:none;
 border-bottom:1px solid black;</string>
       </property>
+      <property name="currentIndex">
+       <number>2</number>
+      </property>
       <item>
        <property name="text">
         <string>风机</string>
@@ -26240,7 +26592,12 @@ border-bottom:1px solid black;</string>
       </item>
       <item>
        <property name="text">
-        <string>空调器</string>
+        <string>空调器(单风机)</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>空调器(双风机)</string>
        </property>
       </item>
      </widget>
@@ -26297,7 +26654,7 @@ border:none;</string>
        <rect>
         <x>300</x>
         <y>1</y>
-        <width>311</width>
+        <width>121</width>
         <height>31</height>
        </rect>
       </property>
@@ -26313,32 +26670,32 @@ border-bottom:1px solid black;</string>
       </property>
       <item>
        <property name="text">
-        <string>体积小于425m³房间（点噪音源）</string>
+        <string>类型1</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>体积大于425m³房间（点噪音源）</string>
+        <string>类型2</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>无家具空房间（点噪音源）</string>
+        <string>类型3</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>室外开敞处所（点噪音源）</string>
+        <string>类型4</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>条缝风口房间（线噪音源）</string>
+        <string>类型5</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>雨降风口房间（面噪音源）</string>
+        <string>类型6</string>
        </property>
       </item>
      </widget>
@@ -26456,7 +26813,6 @@ border-bottom:1px solid black;</string>
   <tabstop>lineEdit_VAV_terminal_after_4k</tabstop>
   <tabstop>lineEdit_VAV_terminal_after_8k</tabstop>
   <tabstop>lineEdit_VAV_terminal_after_total</tabstop>
-  <tabstop>lineEdit_VAV_terminal_model</tabstop>
   <tabstop>lineEdit_VAV_terminal_angle</tabstop>
   <tabstop>lineEdit_VAV_terminal_air_volume</tabstop>
   <tabstop>comboBox_fanCoil_model</tabstop>
@@ -26467,7 +26823,6 @@ border-bottom:1px solid black;</string>
   <tabstop>comboBox_aircondition_noise_locate</tabstop>
   <tabstop>lineEdit_aircondition_air_volume</tabstop>
   <tabstop>lineEdit_aircondition_static_press</tabstop>
-  <tabstop>comboBox_aircondition_fan_type</tabstop>
   <tabstop>lineEdit_fanCoil_number</tabstop>
   <tabstop>lineEdit_fan_static_press</tabstop>
   <tabstop>comboBox_fan_noise_locate</tabstop>
@@ -26475,7 +26830,7 @@ border-bottom:1px solid black;</string>
   <tabstop>comboBox_fan_number</tabstop>
   <tabstop>lineEdit_fan_air_volume</tabstop>
   <tabstop>lineEdit_fan_model</tabstop>
-  <tabstop>comboBox_VAV_terminal_number</tabstop>
+  <tabstop>comboBox_VAV_terminal_model</tabstop>
   <tabstop>comboBox_circular_damper_angle</tabstop>
   <tabstop>comboBox_circular_damper_model</tabstop>
   <tabstop>lineEdit_circular_damper_63</tabstop>
@@ -26929,7 +27284,6 @@ border-bottom:1px solid black;</string>
   <tabstop>lineEdit_room_less425_test_press_8k</tabstop>
   <tabstop>lineEdit_room_less425_test_press_total</tabstop>
   <tabstop>lineEdit_room_less425_Anoise</tabstop>
-  <tabstop>lineEdit_room_less425_Anoise_total</tabstop>
   <tabstop>lineEdit_room_less425_input_total</tabstop>
   <tabstop>lineEdit_room_less425_amend_total</tabstop>
   <tabstop>lineEdit_room_less425_amend_8k</tabstop>
@@ -26959,7 +27313,6 @@ border-bottom:1px solid black;</string>
   <tabstop>lineEdit_room_more425_test_press_8k</tabstop>
   <tabstop>lineEdit_room_more425_test_press_total</tabstop>
   <tabstop>lineEdit_room_more425_Anoise</tabstop>
-  <tabstop>lineEdit_room_more425_Anoise_total</tabstop>
   <tabstop>lineEdit_room_more425_input_total</tabstop>
   <tabstop>lineEdit_room_more425_amend_total</tabstop>
   <tabstop>lineEdit_room_more425_amend_8k</tabstop>
@@ -26993,7 +27346,6 @@ border-bottom:1px solid black;</string>
   <tabstop>lineEdit_room_noFurniture_test_press_8k</tabstop>
   <tabstop>lineEdit_room_noFurniture_test_press_total</tabstop>
   <tabstop>lineEdit_room_noFurniture_Anoise</tabstop>
-  <tabstop>lineEdit_room_noFurniture_Anoise_total</tabstop>
   <tabstop>lineEdit_room_noFurniture_input_total</tabstop>
   <tabstop>lineEdit_room_noFurniture_amend_total</tabstop>
   <tabstop>lineEdit_room_noFurniture_amend_8k</tabstop>
@@ -27024,7 +27376,6 @@ border-bottom:1px solid black;</string>
   <tabstop>lineEdit_room_open_test_press_8k</tabstop>
   <tabstop>lineEdit_room_open_test_press_total</tabstop>
   <tabstop>lineEdit_room_open_Anoise</tabstop>
-  <tabstop>lineEdit_room_open_Anoise_total</tabstop>
   <tabstop>lineEdit_room_open_input_total</tabstop>
   <tabstop>lineEdit_room_open_amend_total</tabstop>
   <tabstop>lineEdit_room_open_amend_8k</tabstop>
@@ -27059,7 +27410,6 @@ border-bottom:1px solid black;</string>
   <tabstop>lineEdit_room_gap_tuyere_test_press_8k</tabstop>
   <tabstop>lineEdit_room_gap_tuyere_test_press_total</tabstop>
   <tabstop>lineEdit_room_gap_tuyere_Anoise</tabstop>
-  <tabstop>lineEdit_room_gap_tuyere_Anoise_total</tabstop>
   <tabstop>lineEdit_room_gap_tuyere_input_total</tabstop>
   <tabstop>lineEdit_room_gap_tuyere_amend_total</tabstop>
   <tabstop>lineEdit_room_gap_tuyere_amend_8k</tabstop>
@@ -27091,7 +27441,6 @@ border-bottom:1px solid black;</string>
   <tabstop>lineEdit_room_rain_test_press_8k</tabstop>
   <tabstop>lineEdit_room_rain_test_press_total</tabstop>
   <tabstop>lineEdit_room_rain_Anoise</tabstop>
-  <tabstop>lineEdit_room_rain_Anoise_total</tabstop>
   <tabstop>lineEdit_room_rain_input_total</tabstop>
   <tabstop>lineEdit_room_rain_amend_total</tabstop>
   <tabstop>lineEdit_room_rain_amend_8k</tabstop>

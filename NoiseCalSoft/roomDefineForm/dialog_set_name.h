@@ -1,22 +1,21 @@
-#ifndef DIALOG_ADD_ZHUSHUQU_H
-#define DIALOG_ADD_ZHUSHUQU_H
+#ifndef DIALOG_SET_NAME_H
+#define DIALOG_SET_NAME_H
 
 #include <QDialog>
 #include "inputbasedialog.h"
 
 namespace Ui {
-class Dialog_add_zhushuqu;
+class Dialog_set_name;
 }
 
-class Dialog_add_zhushuqu : public InputBaseDialog
+class Dialog_set_name : public InputBaseDialog
 {
     Q_OBJECT
 
 public:
-    explicit Dialog_add_zhushuqu(QWidget *parent = nullptr);
-    ~Dialog_add_zhushuqu();
-    void setlabeltext(QString text);   //
-    QString getname();
+    explicit Dialog_set_name(QString title, QWidget *parent = nullptr);
+    ~Dialog_set_name();
+    QString getName();
 
 private slots:
     void on_close_clicked();
@@ -24,7 +23,7 @@ private slots:
     void on_pushButton_clicked();
 
 private:
-    Ui::Dialog_add_zhushuqu *ui;
+    Ui::Dialog_set_name *ui;
     virtual void* getComponent() override {};
 
     // InputBaseDialog interface
@@ -36,4 +35,4 @@ public:
     void switchToCompontDB(bool inDB) override {};
 };
 
-#endif // DIALOG_ADD_ZHUSHUQU_H
+#endif // DIALOG_SET_NAME_H

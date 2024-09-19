@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>outer_before</class>
- <widget class="QWidget" name="outer_before">
+ <class>Outer_before_widget</class>
+ <widget class="QWidget" name="Outer_before_widget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -319,7 +319,7 @@ font-family: '黑体';
      <string>噪音源支管数量:</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_zhushuqu">
+   <widget class="QLineEdit" name="lineEdit_MVZName">
     <property name="geometry">
      <rect>
       <x>100</x>

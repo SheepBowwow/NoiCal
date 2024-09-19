@@ -5,20 +5,21 @@
 #include <QMenu>
 #include <QDebug>
 #include "globle_var.h"
+#include "databasemanager.h"
+#include <QMessageBox>
 
+///@test
+#include <QJsonObject>
 
-room_cal_baseWidget::room_cal_baseWidget(QWidget *parent, QString m_roomName) :
+Room_cal_baseWidget::Room_cal_baseWidget(QWidget *parent, bool named) :
     QWidget(parent),
     isAllCollapsed(false),
-    roomName(m_roomName),
-    ui(new Ui::room_cal_baseWidget)
+    isNamed(named),
+    _isOuter(false),
+    _systemName(QLatin1String("")),
+    ui(new Ui::Room_cal_baseWidget)
 {   
     ui->setupUi(this);
-
-    if(m_roomName == "")
-    {
-        ui->pushButton_confirm->hide();
-    }
 
     QWidget *scrollWidget = new QWidget;
     QVBoxLayout *scrollLayout = new QVBoxLayout(ui->scrollArea);
@@ -27,7 +28,7 @@ room_cal_baseWidget::room_cal_baseWidget(QWidget *parent, QString m_roomName) :
     if (!globalMenu) {
         globalMenu = new QMenu();
         // 添加初始的菜单项
-        globalMenu->addAction("噪声源");
+        globalMenu->addAction("噪音源");
         globalMenu->addAction("气流噪音");
         globalMenu->addAction("噪音衰减+气流噪音");
         globalMenu->addAction("噪音衰减");
@@ -49,18 +50,19 @@ room_cal_baseWidget::room_cal_baseWidget(QWidget *parent, QString m_roomName) :
     ui->scrollArea->setWidget(scrollWidget);
 }
 
-room_cal_baseWidget::~room_cal_baseWidget()
+Room_cal_baseWidget::~Room_cal_baseWidget()
 {
     delete ui;
 }
 
-void room_cal_baseWidget::handleMenuAction(QString actionName)
+void Room_cal_baseWidget::handleMenuAction(QString actionName)
 {
-    if(actionName == "噪声源" || actionName == "气流噪音" || actionName == "噪音衰减+气流噪音" || actionName == "噪音衰减" || actionName == "声压级计算")
+    if(actionName == "噪音源" || actionName == "气流噪音"
+        || actionName == "噪音衰减+气流噪音" || actionName == "噪音衰减" || actionName == "声压级计算")
     {
         this->addTable(-1,actionName);
     }
-    else
+    else    //典型房间
     {
         if(classicRoomMap.find(actionName) != classicRoomMap.end())
         {
@@ -74,7 +76,7 @@ void room_cal_baseWidget::handleMenuAction(QString actionName)
     }
 }
 
-void room_cal_baseWidget::updateAllTables()
+void Room_cal_baseWidget::updateAllTables()
 {
     QVBoxLayout *layout = qobject_cast<QVBoxLayout *>(ui->scrollArea->widget()->layout());
     for (int i = 1; i < layout->count(); ++i) {
@@ -88,16 +90,16 @@ void room_cal_baseWidget::updateAllTables()
     }
 }
 
-void room_cal_baseWidget::addTable(int index, QString type)
+void Room_cal_baseWidget::addTable(int index, QString type)
 {
     QVBoxLayout *layout = qobject_cast<QVBoxLayout *>(ui->scrollArea->widget()->layout());
     if (!layout || index < -1 || index > layout->count()) {
         return;
     }
 
-    RoomCalTable *newRoomCalTable = new RoomCalTable(systemName,nullptr,type);
+    RoomCalTable *newRoomCalTable = new RoomCalTable(_systemName, nullptr, type);
     //绑定信号与槽，当有数据改变时，更新所有表格
-    connect(newRoomCalTable, &RoomCalTable::tableChanged, this, &room_cal_baseWidget::updateAllTables);
+    connect(newRoomCalTable, &RoomCalTable::tableChanged, this, &Room_cal_baseWidget::updateAllTables);
     if (!newRoomCalTable->isValid) {
         delete newRoomCalTable;
         return;
@@ -121,7 +123,7 @@ void room_cal_baseWidget::addTable(int index, QString type)
 
     //遍历到插入的表格的上一个表格
     RoomCalTable *beforeCalTable = nullptr;
-    for (int i = 0; i < index; ++i) {
+    for (int i = 0; i < layout->count() - 1; ++i) {
         beforeCalTable = qobject_cast<RoomCalTable *>(layout->itemAt(i)->widget());
     }
 
@@ -131,15 +133,61 @@ void room_cal_baseWidget::addTable(int index, QString type)
     }
 
     // Connect signals and slots for the new RoomCalTable
-    connect(newRoomCalTable, &RoomCalTable::addBeforeClicked, this, &room_cal_baseWidget::handleAddBefore);
-    connect(newRoomCalTable, &RoomCalTable::addAfterClicked, this, &room_cal_baseWidget::handleAddAfter);
-    connect(newRoomCalTable, &RoomCalTable::deleteClicked, this, &room_cal_baseWidget::handleDelete);
+    connect(newRoomCalTable, &RoomCalTable::addBeforeClicked, this, &Room_cal_baseWidget::handleAddBefore);
+    connect(newRoomCalTable, &RoomCalTable::addAfterClicked, this, &Room_cal_baseWidget::handleAddAfter);
+    connect(newRoomCalTable, &RoomCalTable::deleteClicked, this, &Room_cal_baseWidget::handleDelete);
 
     // Set the new RoomCalTable as the selected RoomCalTable
     selectedTable = newRoomCalTable;
+    updateAllTables();
 }
 
-void room_cal_baseWidget::handleAddBefore(int index)
+void Room_cal_baseWidget::addTable(const RoomCalTableType &type, const QJsonObject &jsonObj)
+{
+    QVBoxLayout *layout = qobject_cast<QVBoxLayout *>(ui->scrollArea->widget()->layout());
+    if (!layout) {
+        return;
+    }
+
+    RoomCalTable *newRoomCalTable = new RoomCalTable(_systemName, nullptr);
+
+    // 绑定信号与槽，当有数据改变时，更新所有表格
+    connect(newRoomCalTable, &RoomCalTable::tableChanged, this, &Room_cal_baseWidget::updateAllTables);
+
+    if (!newRoomCalTable->isValid) {
+        delete newRoomCalTable;
+        return;
+    }
+
+    // 将表格添加到布局的末尾
+    layout->addWidget(newRoomCalTable);
+    newRoomCalTable->setSerialNum(layout->count());
+
+    // 调用 `callSetTableInfoFunc` 方法来设置表格信息
+    newRoomCalTable->callSetTableInfoFunc(type, jsonObj);
+
+    // 遍历到插入的表格的上一个表格
+    RoomCalTable *beforeCalTable = nullptr;
+    if (layout->count() > 1) {
+        beforeCalTable = qobject_cast<RoomCalTable *>(layout->itemAt(layout->count() - 2)->widget());
+    }
+
+    // 设置表格上一个的值
+    if (beforeCalTable) {
+        newRoomCalTable->noise_before_cal = beforeCalTable->noise_after_cal;
+    }
+
+    // Connect signals and slots for the new RoomCalTable
+    connect(newRoomCalTable, &RoomCalTable::addBeforeClicked, this, &Room_cal_baseWidget::handleAddBefore);
+    connect(newRoomCalTable, &RoomCalTable::addAfterClicked, this, &Room_cal_baseWidget::handleAddAfter);
+    connect(newRoomCalTable, &RoomCalTable::deleteClicked, this, &Room_cal_baseWidget::handleDelete);
+
+    // Set the new RoomCalTable as the selected RoomCalTable
+    selectedTable = newRoomCalTable;
+    updateAllTables();
+}
+
+void Room_cal_baseWidget::handleAddBefore(int index)
 {
     QVBoxLayout *layout = qobject_cast<QVBoxLayout *>(ui->scrollArea->widget()->layout());
     if (!layout || index < 0 || index >= layout->count()) {
@@ -161,7 +209,7 @@ void room_cal_baseWidget::handleAddBefore(int index)
     }, Qt::QueuedConnection);
 }
 
-void room_cal_baseWidget::handleAddAfter(int index)
+void Room_cal_baseWidget::handleAddAfter(int index)
 {
     QVBoxLayout *layout = qobject_cast<QVBoxLayout *>(ui->scrollArea->widget()->layout());
     if (!layout || index < 0 || index >= layout->count()) {
@@ -183,7 +231,7 @@ void room_cal_baseWidget::handleAddAfter(int index)
     }, Qt::QueuedConnection);
 }
 
-void room_cal_baseWidget::handleDelete(int index)
+void Room_cal_baseWidget::handleDelete(int index)
 {
     QVBoxLayout *layout = qobject_cast<QVBoxLayout *>(ui->scrollArea->widget()->layout());
 
@@ -212,13 +260,13 @@ void room_cal_baseWidget::handleDelete(int index)
     }, Qt::QueuedConnection);
 }
 
-void room_cal_baseWidget::addMenuAction(QString itemName)
+void Room_cal_baseWidget::addMenuAction(QString itemName)
 {
     QAction *newAction = new QAction(itemName, this);
     globalMenu->addAction(newAction);
 }
 
-void room_cal_baseWidget::on_pushButton_add_clicked()
+void Room_cal_baseWidget::on_pushButton_add_clicked()
 {
     QPoint buttonPos = ui->pushButton_add->mapToGlobal(ui->pushButton_add->rect().bottomLeft());
 
@@ -236,7 +284,7 @@ void room_cal_baseWidget::on_pushButton_add_clicked()
     }
 }
 
-void room_cal_baseWidget::on_pushButton_fold_clicked()
+void Room_cal_baseWidget::on_pushButton_fold_clicked()
 {
     QVBoxLayout *layout = qobject_cast<QVBoxLayout *>(ui->scrollArea->widget()->layout());
     if (layout) {
@@ -259,44 +307,128 @@ void room_cal_baseWidget::on_pushButton_fold_clicked()
     isAllCollapsed = !isAllCollapsed;
 }
 
-void room_cal_baseWidget::on_pushButton_confirm_clicked()
+void Room_cal_baseWidget::on_pushButton_confirm_clicked()
 {
+    //QVector<QWidget*> widgets;
     QVBoxLayout *layout = qobject_cast<QVBoxLayout *>(ui->scrollArea->widget()->layout());
-    QVector<QWidget*> widgets;
-    if (layout) {
-        // 遍历垂直布局中的所有widget
-        for (int i = 0; i < layout->count(); ++i) {
-            widgets.push_back(layout->itemAt(i)->widget());
+    if (!layout) {
+        qDebug() << "layout is not exist";
+        return;
+    }
+
+    QStringList list;
+    for (int i = 0; i < layout->count(); ++i) {
+        RoomCalTable* table = static_cast<RoomCalTable*>(layout->itemAt(i)->widget());
+        if(!table->isTableCompleted()) {
+            list.append(QString::number(i + 1));
         }
     }
-    if(roomName != "")
-    {
-        classicRoomMap[roomName] = widgets;
+
+    if (!list.isEmpty()) {
+        // 拼接提示信息
+        QString message = "请完善以下表格：\n";
+        for (const QString& item : list) {
+            message += item + "\n";
+        }
+        // 使用 QMessageBox::warning 显示警告对话框
+        QMessageBox::warning(nullptr, "表格不完整", message);
+        return;
     }
+
+    list.clear();
+    int noiseTableNum = 0;
+    int roomCalTableNum = 0;
+    for (int i = 0; i < layout->count(); ++i) {
+        RoomCalTable* table = static_cast<RoomCalTable*>(layout->itemAt(i)->widget());
+        if(table->isRoomCalTable()) {
+            roomCalTableNum++;
+        }
+        if(table->isNoiseTable()) {
+            noiseTableNum++;
+        }
+    }
+    if(noiseTableNum != 1 || roomCalTableNum != 1) {
+        QMessageBox::warning(nullptr, "警告", "请检查噪音源表格和声压级计算表格是否存在,或存在多个");
+        return;
+    }
+
+    //先去除之前的数据再插入新的数据
+    DatabaseManager::getInstance().removeDuctCalTableFromDatabase(_isOuter, _ductNumber);
+    for (int i = 0; i < layout->count(); ++i) {
+        RoomCalTable* table = static_cast<RoomCalTable*>(layout->itemAt(i)->widget());
+        RoomCalTableType type = RoomCalTableType::UNDEFINED;
+        QJsonObject jsonObj;
+        table->createTableInfoJsonObj(type, jsonObj);
+        if(jsonObj.isEmpty() || type == RoomCalTableType::UNDEFINED) {
+            qDebug() << "json is empty or setType faile";
+            return;
+        }
+        QString jsonString = QString(QJsonDocument(jsonObj).toJson());
+
+        //TODO 调用数据库保存数据
+        //需要保存的数据 序号, 类型, json数据, 主风管id
+        if(!DatabaseManager::getInstance().addDuctCalTableToDatabase(_isOuter, i, roomCalTableTypeToString(type),
+                                                                      jsonString, _MVZName, _systemName, _roomOrOuterNumber, _ductNumber)) {
+            return;
+        }
+
+
+    }
+
+    ///TODO 将典型房间的添加改一下
+    // if(roomName != "")
+    // {
+    //     classicRoomMap[roomName] = widgets;
+    // }
 }
 
-void room_cal_baseWidget::setInfo(QString zhushuqu, QString deck, QString room_number, QString noise_limit, QString duct_num)
+void Room_cal_baseWidget::setInfo(QString MVZName, QString deck, QString roomOrOuterNumber, QString noiseLimit, QString ductNum)
 {
-    ui->lineEdit_zhushuqu->setText(zhushuqu);
+    ui->lineEdit_MVZName->setText(MVZName);
     ui->lineEdit_deck->setText(deck);
-    ui->lineEdit_room_number->setText(room_number);
-    ui->lineEdit_noise_limit->setText(noise_limit);
-    ui->lineEdit_duct_num->setText(duct_num);
+    ui->lineEdit_room_number->setText(roomOrOuterNumber);
+    ui->lineEdit_noise_limit->setText(noiseLimit);
+    ui->lineEdit_duct_num->setText(ductNum);
+    _roomOrOuterNumber = roomOrOuterNumber;
+    _MVZName = MVZName;
 }
 
-void room_cal_baseWidget::setMainDuctNumber(QString number) //设置主风管编号
+void Room_cal_baseWidget::setDuctNumber(QString number) //设置主风管编号
 {
     ui->lineEdit_main_duct_number->setText(number);
+    _ductNumber = number;
 }
 
-void room_cal_baseWidget::setSystemName(QString systemName) //设置系统名
+void Room_cal_baseWidget::setAirVolume(QString airVolume)
 {
-    this->systemName = systemName;
+    ui->lineEdit_air_volume->setText(airVolume);
 }
 
-void room_cal_baseWidget::change_outer_cal()
+void Room_cal_baseWidget::setSystemName(QString systemName) //设置系统名
+{
+    this->_systemName = systemName;
+}
+
+void Room_cal_baseWidget::setDuctNum(QString ductNum)
+{
+    ui->lineEdit_duct_num->setText(ductNum);
+}
+
+void Room_cal_baseWidget::setMVZName(QString MVZName)
+{
+    ui->lineEdit_MVZName->setText(MVZName);
+    _MVZName = MVZName;
+}
+
+bool Room_cal_baseWidget::getIsOuter()
+{
+    return _isOuter;
+}
+
+void Room_cal_baseWidget::switch_outer_cal()
 {
     title_label="噪音源支管";
     ui->label_cg1->setText("室外编号:");
     ui->label_cg2->setText("噪音源支管数量:");
+    _isOuter = true;
 }

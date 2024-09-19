@@ -59,7 +59,7 @@ void Widget_Silencer_inputTable::onAdd()
     }
     else
     {
-        Widget_Silencer_inputTable* inputTable = new Widget_Silencer_inputTable(true, nullptr);
+        Widget_Silencer_inputTable* inputTable = new Widget_Silencer_inputTable(true, silencer_type);
         inputTable->initTableWidget();
         inputTable->showConfirmButton();
         inputTable->show();

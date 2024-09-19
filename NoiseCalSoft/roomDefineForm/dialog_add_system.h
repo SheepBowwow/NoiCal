@@ -17,13 +17,13 @@ public:
     ~dialog_add_system();
 
 
-    void setvalues(int,QString,QString);
+    void setvalues(QString type, QString number, QString model);
     QString getType();
     QString getNumber();
     QString getModel();
 
 private slots:
-    void on_pushButton_queding_clicked();
+    void on_pushButton_confirm_clicked();
 
     void on_close_clicked();
 

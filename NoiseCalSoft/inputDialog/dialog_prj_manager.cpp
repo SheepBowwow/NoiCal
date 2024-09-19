@@ -137,8 +137,8 @@ void Dialog_prj_manager::on_pushButton_switch_clicked()
         //清空界面数据和表格数据
         ProjectManager::getInstance().clearCurrentPrjData();            //清空数据, 包括项目基本信息以及所有表格的数据
         ComponentManager::getInstance().clearCurrentPrjComponents();    //清空容器
-        //设置新的数据
         ProjectManager::getInstance().setPrjID(ui->comboBox_prj_num->currentText(), false); //设置项目编号, 第二个为是否为新建的项目编号
+        //设置新的数据
         ProjectManager::getInstance().switchProjectToDo();  //设置基本信息
         ComponentManager::getInstance().loadComponentToHash();  //添加数据库的数据到容器中
     }

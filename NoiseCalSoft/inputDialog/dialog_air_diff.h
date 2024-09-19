@@ -39,7 +39,6 @@ private slots:
     void on_radioButton_rect_clicked();
 
     void on_comboBox_refl_data_source_currentIndexChanged(int index);
-
 private:
     Ui::Dialog_air_diff *ui;
     int editRow;    //当前修改行，如果是新建就为-1

@@ -22,6 +22,8 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
 QT_END_NAMESPACE
 
+class ComponentsDB;
+
 class Widget : public QWidget
 {
     Q_OBJECT
@@ -33,7 +35,6 @@ public:
     void initTableWidget(QTableWidget *tableWidget, const QStringList &headerText, const int *columnWidths, int colCount);
     void addWidgetToPage(QWidget* targetPage, Widget_base_inputTable* widgetToAdd);
     void setTable();
-    double getNoiseLimitByName(const QString& name);
     void prj_TreeWidget();
     void input_TreeWidget();
     void initTableWidget_project_attachment();
@@ -41,7 +42,6 @@ public:
     void initTableWidget_drawing_list();
     void initTableWidget_system_list();
     void initTableWidget_report_cal_room();
-    void initRightButtonMenu();
     void mousePressEvent(QMouseEvent *event);
     void keyPressEvent(QKeyEvent* e);
     bool eventFilter(QObject* obj, QEvent* event);
@@ -50,32 +50,12 @@ public:
     void setNoiseLimit();
     void setPrjBasicInfo();
 
-    /*  调用函数可创建树状列表，并生成对应页面
-    **  item与page对应关系存储在map_system_systemlist_form等map中
-    **  后续可以在这些容器中找到存在的page
-    **
-    **/
-    QTreeWidgetItem* create_zsq(QString zsq_name);
-    QTreeWidgetItem* create_system(QTreeWidgetItem* zsq_item,QString sys_name);
-
-    QTreeWidgetItem* create_room(QTreeWidgetItem* sys_item,QString roomid);
-    QVector<QTreeWidgetItem*> create_pipe(QTreeWidgetItem* room_item,QStringList pipename);
-
-    QTreeWidgetItem* create_outer(QTreeWidgetItem* outersys_item,QString outerid);
-    QVector<QTreeWidgetItem*> create_outer_pipe(QTreeWidgetItem* outer_item,QStringList outer_pipename);
-    QTreeWidgetItem* create_classic_room(QString croom_name);
-
 protected:
     void mouseMoveEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
 private:
     QPoint last;
     int canmove=0;
-
-public slots:
-    void TreeWidgetItemPressed_Slot(QTreeWidgetItem* item, int n);
-    void upDateTreeItem8(QTreeWidgetItem *item,QString,int num, QString jiaban, QString limit);
-    void delroom(QTreeWidgetItem*,QString);
 
 private slots:
     void on_pushButto_prj_manage_clicked();
@@ -234,36 +214,17 @@ private slots:
 
     void on_pushButton_database_clicked();
 
-    void on_pushButton_test_addRoom_clicked();
-
 private:
     Ui::Widget *ui;
+
+    ComponentsDB *componentDB; // 子窗口指针
+
     QTreeWidgetItem *item_prj;   //工程
     QTreeWidgetItem *item_prj_info;   //工程信息
     QTreeWidgetItem *item_input;        //输入模块
     QTreeWidgetItem *item_cal;          //计算模块
     QTreeWidgetItem *item_output;       //输出模块
     QTreeWidgetItem *item_auth_manage;   //权限管理
-
-    QMenu *menusystemlist;        // 系统清单的菜单 1.添加主竖区
-    QAction *actAddzsq;
-    QMenu *menuzsq;        // 主竖区的菜单 1.添加系统 2.修改主竖区名称 3.删除主竖区
-    QAction *actAddsystem;
-    QAction *actModzsqname;
-    QAction *actDelzsq;
-    QMenu *menusystem;      // 系统的菜单 1.修改系统名称 2.删除系统
-    QAction *actModsystemname;
-    QAction *actDelsystem;
-    QMenu *menuzfg;        // 主风管的菜单 1.修改主风管名称 2..删除主风管
-    QAction *actDelzfg;
-    QAction *actModzfgname;
-    QMenu *menucalroom;         // 房间的菜单 1.添加主竖区
-    QAction *actAddzfg;
-    QMenu *menuclassiccabin;      //典型住舱的菜单 1.添加典型房间
-    QAction *actAddclassicroom;
-    QMenu *menuclassicroom;       //典型房间的菜单 1.修改典型房间名称 2.删除典型房间
-    QAction *actModclassicroomname;
-    QAction *actDelclassicroom;
 
     QTreeWidgetItem *item_sound_sorce_noise;   //1音源噪音
     QTreeWidgetItem *item_fan_noise;   //1.1风机噪音 1
@@ -306,39 +267,8 @@ private:
     QTreeWidgetItem *item_system_list;                                 //6.系统清单
     QTreeWidgetItem *item_room_define;                                 //7.定义计算房间
 
-    /**************容器*********************/
-    QVector<QTreeWidgetItem *> vec_zsq;                        //保存主竖区item
-    QVector<QTreeWidgetItem *> vec_system;                     //保存系统item
-    QVector<QTreeWidgetItem *> vec_outersys;                     //保存室外item(指的是主竖区下个层级的室外)
-    QVector<QTreeWidgetItem *> vec_room;                     //保存房间item
-    QVector<QTreeWidgetItem *> vec_outer;                     //保存室外item
-
-    QMap<QTreeWidgetItem *,QTreeWidgetItem *> map_zsq67;       // 第六项的主竖区和第七项的主竖区对应关系
-    QMap<QTreeWidgetItem *,QTreeWidgetItem *> map_zsq68;       // 第六项的主竖区和第八项的主竖区对应关系
-    QMap<QTreeWidgetItem *,QTreeWidgetItem *> map_system67;       // 第六项的系统和第七项的系统对应关系
-    QMap<QTreeWidgetItem *,QTreeWidgetItem *> map_system68;       // 第六项的系统和第八项的系统对应关系
-    QVector<QTreeWidgetItem *> vec_zfg;         // 保存主风管item,方便右键点击
-
-    QMap<QString,QVector<QWidget *>> map_roomid_zfgpage;           //房间编号对应的主风管page 一对多关系
-    QVector<QWidget *> vec_roomzfg;
-    QVector<QTreeWidgetItem *> vec_classicroom;                     //保存典型房间item
-    //2024.5.25
-    QMap<QTreeWidgetItem *,QWidget *> map_system_systemlist_form;       //第6项，系统item->系统清单的page
-    QMap<QTreeWidgetItem *,QWidget *> map_system_roomdefine_form;       //第7项，系统item->定义房间的page
-    QMap<QTreeWidgetItem *,QWidget *> map_outersys_outerdefine_form;             //第7项，室外item->室外的page
-
-    QMap<QTreeWidgetItem *,QWidget *> map_roompipe_roomcal_form;        //第8项，主风管item->主风管的page
-    QMap<QTreeWidgetItem *,QWidget *> map_room_roomcaltotal_form;  //第8项，房间噪音item->房间噪音的page
-
-    QMap<QTreeWidgetItem *,QWidget *> map_outerpipe_roomcal_form;        //第8项，支管item->支管的page
-    QMap<QTreeWidgetItem *,QWidget *> map_outer_before_form;          //第8项，汇合前叠加的item->汇合前叠加的page
-    QMap<QTreeWidgetItem *,QWidget *> map_outer_after_form;       //第8项，汇合后叠加的item->汇合后叠加的page
-    QMap<QTreeWidgetItem *,QWidget *> map_outer_outercaltotal_form;      //第8项，室外噪音的item->室外噪音的page
-
-    /**************容器*********************/
-
     QTreeWidgetItem *item_room_calculate;                             // 8.噪音计算
-    QTreeWidgetItem *item_cabin_classic;        // 8.1典型住舱
+    QTreeWidgetItem *item_classic_cabin;        // 8.1典型住舱
 
     QTreeWidgetItem *item_report;        // 9.报表
     QTreeWidgetItem *item_report_cover;        // 9.1封面
@@ -353,5 +283,9 @@ private:
     QTreeWidgetItem *item_report_cal_room_table;        // 9.6计算房间表格
     QTreeWidgetItem *item_report_cal_summarize;        // 9.7计算结果汇总
     QTreeWidgetItem *item_report_cal_detaile;        // 9.8舱室噪音详细计算
+
+    // QWidget interface
+protected:
+    void closeEvent(QCloseEvent *event) override;
 };
 #endif // WIDGET_H

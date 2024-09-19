@@ -2,13 +2,13 @@
 #include "ui_widget.h"
 /**窗口类**/
 #include "inputDialog/dialog_prj_manager.h""
-#include "roomDefineForm/form_room_define.h"
-#include "roomDefineForm/form_system_list.h"
-#include "roomDefineForm/dialog_add_zhushuqu.h"
+#include "roomDefineForm/room_define_widget.h"
+#include "roomDefineForm/systemcomp_list_widget.h"
+#include "roomDefineForm/dialog_set_name.h"
 #include "roomCal/room_cal_basewidget.h"
-#include "roomCal/room_cal_total.h"
-#include "roomCal/outer_before.h"
-#include "roomCal/outer_after.h"
+#include "roomCal/room_cal_total_widget.h"
+#include "roomCal/outer_before_widget.h"
+#include "roomCal/outer_after_widget.h"
 /**窗口类**/
 /**表格**/
 #include "componentInpuTableWidget/widget_fan_inputtable.h"
@@ -48,29 +48,33 @@
 #include "wordEngine/wordengine.h"
 #include "project/projectmanager.h"
 #include "Component/componentsdb.h"
+#include "roomDefineForm/roomcalinfomanager.h"
 
 WordEngine* wordEngine = new WordEngine();
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Widget)
+    , componentDB(nullptr)
 {
     ui->setupUi(this);
+
+    ui->stackedWidget->setCurrentWidget(ui->page_login);
+    this->initTableWidget_noi_limit();
+    this->initTableWidget_drawing_list();
+    this->setTable();
+    this->initTableWidget_system_list();
+    this->initTableWidget_report_cal_room();
+    this->initTableWidget_project_attachment();
 
     ProjectManager::getInstance();
     DatabaseManager::getInstance();
     DatabaseManager::getInstance().loadComponentsFromComponentDB();
     connect(&ProjectManager::getInstance(), &ProjectManager::clearTable, this, &Widget::clearTable);
     connect(&ProjectManager::getInstance(), &ProjectManager::loadBasicInfoDone, this, &Widget::setBasicPageWhenSwitchPrj);
-
-    ui->stackedWidget->setCurrentWidget(ui->page_login);
-    this->initTableWidget_noi_limit();
-    this->initTableWidget_drawing_list();
-    this->setTable();
-    this->initRightButtonMenu();
-    this->initTableWidget_system_list();
-    this->initTableWidget_report_cal_room();
-    this->initTableWidget_project_attachment();
+    connect(&RoomCalInfoManager::getInstance(), &RoomCalInfoManager::switchWhitePage, this, [=](){
+        ui->stackedWidget->setCurrentWidget(ui->page_white);
+    });
 }
 
 Widget::~Widget()
@@ -101,7 +105,7 @@ void Widget::initTableWidget(QTableWidget *tableWidget, const QStringList &heade
     }
 
     tableWidget->horizontalHeader()->setStretchLastSection(true);
-    tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
 }
 
 // 假设 CustomWidget 是你的自定义界面类
@@ -164,7 +168,7 @@ void Widget::initializeTreeWidget()
     ui->treeWidget->setHeaderItem(item_prj);
     item_prj_info = new QTreeWidgetItem(QStringList("1.项目信息"));   //工程信息
 
-    item_sound_sorce_noise = new QTreeWidgetItem(QStringList("2.噪声源"));   //1音源噪音
+    item_sound_sorce_noise = new QTreeWidgetItem(QStringList("2.噪音源"));   //1音源噪音
     item_fan_noise = new QTreeWidgetItem(item_sound_sorce_noise,QStringList("风机"));   //1.1风机噪音
     item_fan_coil_noise = new QTreeWidgetItem(item_sound_sorce_noise,QStringList("风机盘管"));   //1.2风机盘管噪音
     item_aircondition_noise_single_fan = new QTreeWidgetItem(item_sound_sorce_noise,QStringList("空调器(单风机)"));   //1.3空调器噪音(单风机)
@@ -199,17 +203,17 @@ void Widget::initializeTreeWidget()
 
 
     item_room_atten = new QTreeWidgetItem(QStringList("6.声压级计算类型"));                                   //5. 房间衰减
-    item_room_less425 = new QTreeWidgetItem(item_room_atten,QStringList("<425m³的房间(点噪声源)"));      //5.1 体积小于425m³的房间（点噪声源）
-    item_room_more425 = new QTreeWidgetItem(item_room_atten,QStringList(">425m³的房间(点噪声源)"));       //5.2 体积大于425m³的房间（点噪声源）
-    item_room_noFurniture = new QTreeWidgetItem(item_room_atten,QStringList("无家具房间(点噪声源)"));    //5.3 无家具房间（点噪声源）
-    item_room_open = new QTreeWidgetItem(item_room_atten,QStringList("室外开敞住所(点噪声源)"));           //5.4 室外开敞住所（点噪声源）
-    item_room_gap_tuyere = new QTreeWidgetItem(item_room_atten,QStringList("条缝风口房间(线噪声源)"));     //5.5 条缝风口房间（线噪声源）
-    item_room_rain = new QTreeWidgetItem(item_room_atten,QStringList("雨降风口房间(面噪声源)"));           //5.6 雨降风口房间（面噪声源）
+    item_room_less425 = new QTreeWidgetItem(item_room_atten,QStringList("类型1"));      //5.1 体积小于425m³的房间（点噪声源）
+    item_room_more425 = new QTreeWidgetItem(item_room_atten,QStringList("类型2"));       //5.2 体积大于425m³的房间（点噪声源）
+    item_room_noFurniture = new QTreeWidgetItem(item_room_atten,QStringList("类型3"));    //5.3 无家具房间（点噪声源）
+    item_room_open = new QTreeWidgetItem(item_room_atten,QStringList("类型4"));           //5.4 室外开敞住所（点噪声源）
+    item_room_gap_tuyere = new QTreeWidgetItem(item_room_atten,QStringList("类型5"));     //5.5 条缝风口房间（线噪声源）
+    item_room_rain = new QTreeWidgetItem(item_room_atten,QStringList("类型6"));           //5.6 雨降风口房间（面噪声源）
 
     item_system_list = new QTreeWidgetItem(QStringList("7.系统清单"));                                    //6.系统清单
     item_room_define = new QTreeWidgetItem(QStringList("8.计算房间"));                                    //7.计算房间
     item_room_calculate = new QTreeWidgetItem(QStringList("9.噪音计算"));                                 //8.噪音计算
-    item_cabin_classic = new QTreeWidgetItem(item_room_calculate,QStringList("典型住舱"));                                     //8.1典型住舱
+    item_classic_cabin = new QTreeWidgetItem(item_room_calculate,QStringList("典型住舱"));                                     //8.1典型住舱
 
     item_report = new QTreeWidgetItem(QStringList("10.报表"));        // 9.报表
     item_report_cover = new QTreeWidgetItem(item_report,QStringList("封面"));        // 9.1封面
@@ -243,9 +247,10 @@ void Widget::initializeTreeWidget()
 //部件数据库
 void Widget::on_pushButton_database_clicked()
 {
-    ComponentsDB *componentDB = new ComponentsDB();
-    componentDB->exec();
-    qDebug() << componentDB->height();
+    if (!componentDB) {
+        componentDB = new ComponentsDB();
+    }
+    componentDB->show();
 }
 
 //工程管理按钮
@@ -259,7 +264,18 @@ void Widget::on_pushButto_prj_manage_clicked()
     if (dialog->exec() == QDialog::Accepted)
     {
         ui->lineEdit_prj_ID->setText(ProjectManager::getInstance().getPrjID());
+
         initializeTreeWidget();
+
+        //RoomCalInfoManager初始化tree和stackedwidget
+        RoomCalInfoManager::getInstance().initWidgetElem(item_system_list,
+                                                         item_room_define,
+                                                         item_room_calculate,
+                                                         item_classic_cabin,
+                                                         ui->treeWidget,
+                                                         ui->stackedWidget);
+
+        RoomCalInfoManager::getInstance().loadDataFromDB();
     }
 }
 
@@ -290,19 +306,20 @@ void Widget::on_pushButton_noi_limit_add_clicked()
 
 void Widget::on_pushButton_noi_limit_del_clicked()
 {
+    QList<NoiseLimit> noiseLimits = ProjectManager::getInstance().getNoiseLimits();
     // 获取选中的行索引
     QList<int> selectedRows;
-    QList<QString> selectedNames;
+    QList<QString> selectedRoomTypes;
     for (int row = 0; row < ui->tableWidget_noi_limit->rowCount(); ++row) {
         QWidget* widget = ui->tableWidget_noi_limit->cellWidget(row, 0); // Assuming the checkbox is in the first column (index 0)
         QCheckBox* checkBox = widget->findChild<QCheckBox*>(); // Find the checkbox within the widget
 
         if (checkBox && checkBox->isChecked()) {
             selectedRows.append(row);
-            QTableWidgetItem* item = ui->tableWidget_noi_limit->item(row, 2);
+            QTableWidgetItem* item = ui->tableWidget_noi_limit->item(row, 3);
             if (item != nullptr)
             { // 确保item不为nullptr
-                selectedNames.append(item->text());
+                selectedRoomTypes.append(item->text());
             }
         }
     }
@@ -331,13 +348,13 @@ void Widget::on_pushButton_noi_limit_del_clicked()
             ui->tableWidget_noi_limit->removeRow(row);
         }
 
-        for (const QString& name : selectedNames)
+        for (const QString& roomType : selectedRoomTypes)
         {
-            auto it = std::remove_if(rooms.begin(), rooms.end(),
-                                     [&name](const Room& room) {
-                                         return room.name == name;
+            auto it = std::remove_if(noiseLimits.begin(), noiseLimits.end(),
+                                     [&roomType](const NoiseLimit& noiseLimit) {
+                                         return noiseLimit.roomType == roomType;
                                      });
-            rooms.erase(it, rooms.end()); // 实际删除 those elements
+            noiseLimits.erase(it, noiseLimits.end()); // 实际删除 those elements
         }
 
 
@@ -520,12 +537,13 @@ void Widget::on_pushButton_project_attachment_add_clicked()
     // 打开文件选择对话框，让用户选择文件
     QString filePath = QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("All Files (*)"));
     QString fileName = "";
-    if (!filePath.isEmpty()) {
-        QFileInfo fileInfo(filePath);
-
-        // 保存文件名（包括后缀）
-        fileName = fileInfo.fileName();
+    if (filePath.isEmpty()) {
+        return;
     }
+
+    QFileInfo fileInfo(filePath);
+    // 保存文件名（包括后缀）
+    fileName = fileInfo.fileName();
 
     QTableWidget *tableWidget = ui->tableWidget_project_attachment;
 
@@ -672,7 +690,7 @@ void Widget::setAttachmentTable()
                 label->setCursor(Qt::PointingHandCursor); // 设置鼠标悬停时为手形光标
                 label->setAlignment(Qt::AlignCenter);
                 // 存储attachPath作为自定义属性
-                label->setProperty("attachPath", attach.attachPath);
+                label->setProperty("fileName", attach.attachName);
                 tableWidget->setCellWidget(rowCount, col, label);
 
                 connect(label, &QLabel::linkActivated, [localFilePath=attach.attachPath](const QString &){
@@ -707,14 +725,23 @@ void Widget::setDrawingTable()
         QTableWidgetItem *itemSerial = new QTableWidgetItem(drawing.tableID);
         ui->tableWidget_drawing_list->setItem(rowCount, 1, itemSerial);
         itemSerial->setTextAlignment(Qt::AlignCenter);
+        itemSerial->setFlags(itemSerial->flags() & ~Qt::ItemIsEditable); // 设置为只读
+        itemSerial->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
+        itemSerial->setData(Qt::ForegroundRole, QColor(70,70,70)); // 只读单元格文本颜色设置为深灰色
 
         QTableWidgetItem *itemDrawingNum = new QTableWidgetItem(drawing.drawingNum);
         ui->tableWidget_drawing_list->setItem(rowCount, 2, itemDrawingNum);
         itemDrawingNum->setTextAlignment(Qt::AlignCenter);
+        itemDrawingNum->setFlags(itemDrawingNum->flags() & ~Qt::ItemIsEditable); // 设置为只读
+        itemDrawingNum->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
+        itemDrawingNum->setData(Qt::ForegroundRole, QColor(70,70,70)); // 只读单元格文本颜色设置为深灰色
 
         QTableWidgetItem *itemDrawingName = new QTableWidgetItem(drawing.drawingName);
         ui->tableWidget_drawing_list->setItem(rowCount, 3, itemDrawingName);
         itemDrawingName->setTextAlignment(Qt::AlignCenter);
+        itemDrawingName->setFlags(itemDrawingName->flags() & ~Qt::ItemIsEditable); // 设置为只读
+        itemDrawingName->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
+        itemDrawingName->setData(Qt::ForegroundRole, QColor(70,70,70)); // 只读单元格文本颜色设置为深灰色
 
         rowCount++;
     }
@@ -742,21 +769,33 @@ void Widget::setNoiseLimit()
         QTableWidgetItem *itemTableID = new QTableWidgetItem(noiseLimit.tableID);
         itemTableID->setTextAlignment(Qt::AlignCenter);
         ui->tableWidget_noi_limit->setItem(rowCount, 1, itemTableID);
+        itemTableID->setFlags(itemTableID->flags() & ~Qt::ItemIsEditable); // 设置为只读
+        itemTableID->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
+        itemTableID->setData(Qt::ForegroundRole, QColor(70,70,70)); // 只读单元格文本颜色设置为深灰色
+
+        // 设置处所类型
+        QTableWidgetItem *itemPlaceType = new QTableWidgetItem(noiseLimit.placeType);
+        itemPlaceType->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget_noi_limit->setItem(rowCount, 2, itemPlaceType);
+        itemPlaceType->setFlags(itemPlaceType->flags() & ~Qt::ItemIsEditable); // 设置为只读
+        itemPlaceType->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
+        itemPlaceType->setData(Qt::ForegroundRole, QColor(70,70,70)); // 只读单元格文本颜色设置为深灰色
 
         // 设置房间类型
         QTableWidgetItem *itemRoomType = new QTableWidgetItem(noiseLimit.roomType);
         itemRoomType->setTextAlignment(Qt::AlignCenter);
-        ui->tableWidget_noi_limit->setItem(rowCount, 2, itemRoomType);
+        ui->tableWidget_noi_limit->setItem(rowCount, 3, itemRoomType);
+        itemRoomType->setFlags(itemRoomType->flags() & ~Qt::ItemIsEditable); // 设置为只读
+        itemRoomType->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
+        itemRoomType->setData(Qt::ForegroundRole, QColor(70,70,70)); // 只读单元格文本颜色设置为深灰色
 
         // 设置噪声限值dB(A)
         QTableWidgetItem *itemNoiseLimit = new QTableWidgetItem(noiseLimit.noiseLimit);
         itemNoiseLimit->setTextAlignment(Qt::AlignCenter);
-        ui->tableWidget_noi_limit->setItem(rowCount, 3, itemNoiseLimit);
-
-        // 设置处所类型
-        QTableWidgetItem *itemPremissType = new QTableWidgetItem(noiseLimit.premissType);
-        itemPremissType->setTextAlignment(Qt::AlignCenter);
-        ui->tableWidget_noi_limit->setItem(rowCount, 4, itemPremissType);
+        ui->tableWidget_noi_limit->setItem(rowCount, 4, itemNoiseLimit);
+        itemNoiseLimit->setFlags(itemNoiseLimit->flags() & ~Qt::ItemIsEditable); // 设置为只读
+        itemNoiseLimit->setBackground(QBrush(Qt::lightGray)); // 只读单元格背景颜色设置为灰色
+        itemNoiseLimit->setData(Qt::ForegroundRole, QColor(70,70,70)); // 只读单元格文本颜色设置为深灰色
 
         rowCount++;
     }
@@ -770,7 +809,7 @@ void Widget::setPrjBasicInfo()
     for(auto& lineEdit: lineEdits)
     {
         lineEdit->setReadOnly(true);
-        lineEdit->setStyleSheet("QLineEdit{background-color: rgb(240, 240, 240); border: 1px solid #9C9C9C;}");
+        lineEdit->setStyleSheet("QLineEdit{background-color: rgb(192, 192, 192); border: 1px solid #9C9C9C; color: rgb(70, 70, 70);}");
     }
 
     ProjectInfo prjInfo = ProjectManager::getInstance().getPrjInfo();
@@ -781,297 +820,6 @@ void Widget::setPrjBasicInfo()
     ui->lineEdit_shipyard->setText(prjInfo.shipyard);
     ui->lineEdit_prj_manager->setText(prjInfo.prjManager);
     ui->lineEdit_class_soc->setText(prjInfo.classSoc);
-}
-
-
-// 创建主竖区item，同时把item保存到vec_zsq中，使右键点击的时候识别到该item并进行弹窗
-QTreeWidgetItem* Widget::create_zsq(QString zsq_name)
-{
-    QTreeWidgetItem *treeitem=new QTreeWidgetItem(item_system_list,QStringList(zsq_name));
-    QTreeWidgetItem *treeitemcp1=new QTreeWidgetItem(item_room_define,QStringList(zsq_name));
-    QTreeWidgetItem *treeitemcp2=new QTreeWidgetItem(QStringList(zsq_name));
-
-    //  保证典型房间一直在最后一行
-    int n=item_room_calculate->childCount();
-    int insertIndex = qMax(0, n - 1);
-    item_room_calculate->insertChild(insertIndex, treeitemcp2);
-
-    map_zsq67.insert(treeitem,treeitemcp1);  // 保存第6项和第7项主竖区对应关系
-    map_zsq68.insert(treeitem,treeitemcp2);  // 保存第6项和第8项主竖区对应关系
-    vec_zsq.append(treeitem);
-
-    connect(ui->treeWidget,&QTreeWidget::itemClicked,this,[=](QTreeWidgetItem *item1,int n){
-        if(item1 == treeitemcp1 || item1 == treeitem || item1 == treeitemcp1)     //     点击甲板会显示空白
-            ui->stackedWidget->setCurrentWidget(ui->page_white);
-    });
-    return treeitem;
-
-}
-// 添加系统（系统清单、计算房间）、室外系统和form的映射
-QTreeWidgetItem* Widget::create_system(QTreeWidgetItem* zsq_item,QString sys_name)
-{
-    Form_system_list *form_sl;
-    Form_room_define *form;
-    Form_room_define *formouter;
-
-    QTreeWidgetItem *sys_item = new QTreeWidgetItem(zsq_item,QStringList(sys_name));
-    vec_system.append(sys_item);  // 添加到容器记录
-
-    // 添加室外的时候先判断之前有没有
-    int flag=0;
-    for(int i=0;i<map_zsq67.value(zsq_item)->childCount();i++){
-        if (map_zsq67.value(zsq_item)->child(i)->text(0) == "室外") {
-            flag=1;
-        }
-    }
-    if(flag==0){
-        QTreeWidgetItem *treeitem_outer1=new QTreeWidgetItem(map_zsq67.value(zsq_item),QStringList("室外"));
-        QTreeWidgetItem *treeitem_outer2=new QTreeWidgetItem(map_zsq68.value(zsq_item),QStringList("室外"));
-        vec_outersys.append(treeitem_outer2);
-        formouter=new Form_room_define;
-        formouter->change_outer(); // 设置为室外界面
-        formouter->setjiabanItem(treeitem_outer2);   // 房间位于该“室外”下
-        ui->stackedWidget->addWidget(formouter);
-        // 关联form发出的添加房间、删除房间信号
-        connect(formouter,SIGNAL(roomadd(QTreeWidgetItem*,QString,int, QString, QString)),
-                this,SLOT(upDateTreeItem8(QTreeWidgetItem*,QString,int, QString, QString)));
-        connect(formouter,SIGNAL(roomdel(QTreeWidgetItem*,QString)),
-                this,SLOT(delroom(QTreeWidgetItem*,QString)));
-
-        connect(ui->treeWidget,&QTreeWidget::itemClicked,this,[=](QTreeWidgetItem *item1,int n){
-            if(item1==treeitem_outer1)     //     点击"室外"会显示添加的页面
-                ui->stackedWidget->setCurrentWidget(formouter);
-        });
-
-        //2024.5.25
-        map_outersys_outerdefine_form.insert(treeitem_outer1,formouter);
-    }
-
-    //在78项下添加
-    int indexToInsert1 = map_zsq67.value(zsq_item)->childCount() - 1; // 始终在室外之前添加
-    QTreeWidgetItem *treeitemcp1=new QTreeWidgetItem(QStringList(sys_name)); // 系统item
-    map_zsq67.value(zsq_item)->insertChild(indexToInsert1, treeitemcp1);
-    int indexToInsert2 = map_zsq68.value(zsq_item)->childCount() - 1; // 始终在室外之前添加
-    QTreeWidgetItem *treeitemcp2=new QTreeWidgetItem(QStringList(sys_name));
-    map_zsq68.value(zsq_item)->insertChild(indexToInsert2, treeitemcp2);
-    map_system67.insert(sys_item,treeitemcp1);
-    map_system68.insert(sys_item,treeitemcp2);
-
-    //  添加系统同时在6、7项的系统编号下添加界面
-    //6
-    form_sl = new Form_system_list(sys_name);
-    ui->stackedWidget->addWidget(form_sl);
-    connect(ui->treeWidget,&QTreeWidget::itemClicked,this,[=](QTreeWidgetItem *item1,int n){
-        if(item1 == sys_item)     //     点击系统会显示系统清单界面
-            ui->stackedWidget->setCurrentWidget(form_sl);
-    });
-    vec_system.append(sys_item);
-
-    //7
-    form=new Form_room_define;
-    form->setjiabanItem(treeitemcp2);   // 房间位于的系统item
-    ui->stackedWidget->addWidget(form);
-    // 关联form发出的添加房间、删除房间信号
-    connect(form,SIGNAL(roomadd(QTreeWidgetItem*,QString,int, QString, QString)),
-            this,SLOT(upDateTreeItem8(QTreeWidgetItem*,QString,int, QString, QString)));
-    connect(form,SIGNAL(roomdel(QTreeWidgetItem*,QString)),
-            this,SLOT(delroom(QTreeWidgetItem*,QString)));
-
-    connect(ui->treeWidget,&QTreeWidget::itemClicked,this,[=](QTreeWidgetItem *item1,int n){
-        if(item1==treeitemcp1)     //     点击系统会显示添加的页面
-            ui->stackedWidget->setCurrentWidget(form);
-    });
-
-    //2024.5.25保存item与form的映射，后续可通过遍历去找form
-    map_system_roomdefine_form.insert(treeitemcp1,form);
-    map_system_systemlist_form.insert(sys_item,form_sl);
-
-    return sys_item;
-
-}
-
-QTreeWidgetItem* Widget::create_room(QTreeWidgetItem* sys_item,QString roomid)
-{
-    QTreeWidgetItem *room_item=new QTreeWidgetItem(sys_item,QStringList(roomid));
-    return room_item;
-
-}
-// 添加主风管、房间噪音和form的映射
-QVector<QTreeWidgetItem*> Widget::create_pipe(QTreeWidgetItem* room_item,QStringList pipename)
-{
-    QVector<QTreeWidgetItem*> pipe_items;
-    int num = pipename.count();
-
-    for(int i=0;i<num;i++)
-    {
-        room_cal_baseWidget *pipe_page = new room_cal_baseWidget; // 创建 房间主风管 页面对象
-        pipe_page->setSystemName(room_item->parent()->text(0));
-        // 将页面添加到堆栈窗口部件
-        ui->stackedWidget->addWidget(pipe_page);
-
-        // 主风管还要关联对应page页面
-        QTreeWidgetItem *pipe_item = new QTreeWidgetItem(room_item,QStringList(pipename.at(i)));
-        vec_zfg.append(pipe_item);     // 保存主风管ID
-
-        // 关联页面和子项
-
-        connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
-            if (itemClicked == pipe_item)
-            {
-                // 设置当前页面为对应的页面
-                ui->stackedWidget->setCurrentWidget(pipe_page);
-                if(pipe_page->flag_firstopen)
-                {
-                    Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
-                    box->setlabeltext("主风管命名");
-                    if(box->exec()==QDialog::Accepted)
-                    {
-                        pipe_item->setText(0,box->getname());
-                        pipe_page->setMainDuctNumber(box->getname());    //room_cal_table设置名称
-                    }
-                    pipe_page->flag_firstopen=0;
-                }
-            }
-        });
-        pipe_items.append(pipe_item);
-        map_roompipe_roomcal_form.insert(pipe_item,pipe_page);
-    }
-
-    QTreeWidgetItem *pipe_total_item=new QTreeWidgetItem(room_item,QStringList("房间噪音"));
-
-    //房间噪音item对应的page页面
-    room_cal_total *pipe_total_page = new room_cal_total;
-    ui->stackedWidget->addWidget(pipe_total_page);
-    connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
-        if (itemClicked == pipe_total_item)
-        {
-            // 设置当前页面为对应的页面
-            ui->stackedWidget->setCurrentWidget(pipe_total_page);
-        }
-    });
-    pipe_items.append(pipe_total_item);
-    map_room_roomcaltotal_form.insert(pipe_total_item,pipe_total_page);
-
-    return pipe_items;
-}
-
-QTreeWidgetItem *Widget::create_outer(QTreeWidgetItem *outersys_item, QString outerid)
-{
-    QTreeWidgetItem *outer_item=new QTreeWidgetItem(outersys_item,QStringList(outerid));
-    return outer_item;
-}
-// 添加支风管、室外噪音、汇合前、汇合后和form的映射
-QVector<QTreeWidgetItem*> Widget::create_outer_pipe(QTreeWidgetItem* outer_item,QStringList outer_pipename)
-{
-    QVector<QTreeWidgetItem*> outer_pipe_items;
-    int num=outer_pipename.count();
-
-    for(int i=0;i<num;i++)
-    {
-        room_cal_baseWidget *pipe_page = new room_cal_baseWidget; // 创建 房间主风管 页面对象
-        pipe_page->change_outer_cal(); // 改变为室外页面
-
-        // 将页面添加到堆栈窗口部件
-        ui->stackedWidget->addWidget(pipe_page);
-
-        // 主风管还要关联对应page页面
-        QString name = outer_pipename[i];
-        QTreeWidgetItem *outer_pipe_item = new QTreeWidgetItem(outer_item,QStringList(name));
-        vec_zfg.append(outer_pipe_item);     // 保存主风管ID
-
-        // 关联页面和子项
-
-        connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
-            if (itemClicked == outer_pipe_item)
-            {
-                // 设置当前页面为对应的页面
-                ui->stackedWidget->setCurrentWidget(pipe_page);
-                if(pipe_page->flag_firstopen)
-                {
-                    Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
-                    box->setlabeltext("主风管命名");
-                    if(box->exec()==QDialog::Accepted)
-                    {
-                        outer_pipe_item->setText(0,box->getname());
-                        pipe_page->setMainDuctNumber(box->getname());    //room_cal_table设置名称
-                    }
-                    pipe_page->flag_firstopen=0;
-                }
-            }
-        });
-        //2024.5.26
-        outer_pipe_items.append(outer_pipe_item);//添加到返回容器
-        map_outerpipe_roomcal_form.insert(outer_pipe_item,pipe_page);
-        qDebug()<<"map_outerpipe_roomcal_form.insert";
-    }
-
-    if(num>=2){
-        QTreeWidgetItem *pipeb_item=new QTreeWidgetItem(outer_item,QStringList("汇合前叠加"));
-        //汇合前叠加item对应的page页面
-        outer_before *page1 = new outer_before;
-        ui->stackedWidget->addWidget(page1);
-        connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
-            if (itemClicked == pipeb_item)
-            {
-                // 设置当前页面为对应的页面
-                ui->stackedWidget->setCurrentWidget(page1);
-            }
-        });
-
-        QTreeWidgetItem *pipea_item=new QTreeWidgetItem(outer_item,QStringList("汇合后总管"));
-        //汇合后总管item对应的page页面
-        outer_after *page2 = new outer_after;
-        ui->stackedWidget->addWidget(page2);
-        connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
-            if (itemClicked == pipea_item)
-            {
-                // 设置当前页面为对应的页面
-                ui->stackedWidget->setCurrentWidget(page2);
-            }
-        });
-        //2024.5.26
-        outer_pipe_items.append(pipeb_item);//添加到返回容器
-        outer_pipe_items.append(pipea_item);//添加到返回容器
-        map_outer_before_form.insert(pipeb_item,page1);
-        map_outer_after_form.insert(pipea_item,page2);
-    }
-
-
-    QTreeWidgetItem *pipe_total_item=new QTreeWidgetItem(outer_item,QStringList("室外噪音"));
-    //室外噪音item对应的page页面
-    room_cal_total *page = new room_cal_total;
-    page->change_outer_cal();
-
-    ui->stackedWidget->addWidget(page);
-    connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
-        if (itemClicked == pipe_total_item)
-        {
-            // 设置当前页面为对应的页面
-            ui->stackedWidget->setCurrentWidget(page);
-        }
-    });
-    //2024.5.26
-    outer_pipe_items.append(pipe_total_item);//添加到返回容器
-    map_outer_outercaltotal_form.insert(pipe_total_item,page);
-    return outer_pipe_items;
-
-}
-
-QTreeWidgetItem* Widget::create_classic_room(QString croom_name)
-{
-    QTreeWidgetItem *treeitem=new QTreeWidgetItem(item_cabin_classic,QStringList(croom_name));
-    vec_classicroom.append(treeitem);
-    room_cal_baseWidget *page = new room_cal_baseWidget(nullptr,croom_name);
-    ui->stackedWidget->addWidget(page);
-
-    page->addMenuAction(croom_name);
-
-    connect(ui->treeWidget, &QTreeWidget::itemClicked,this, [=](QTreeWidgetItem *itemClicked, int column) {
-        if (itemClicked == treeitem)
-        {
-            ui->stackedWidget->setCurrentWidget(page);
-        }
-    });
 }
 
 void Widget::setBasicPageWhenSwitchPrj()
@@ -1125,7 +873,11 @@ void Widget::on_pushButton_drawing_list_save_clicked()
                 ui->tableWidget_drawing_list->setItem(row, col, item);
             }
             // 设置背景色为灰色
-            item->setBackground(QBrush(QColor(240, 240, 240)));
+            item->setBackground(QBrush(QColor(192, 192, 192)));
+            item->setData(Qt::ForegroundRole, QColor(70,70,70)); // 只读单元格文本颜色设置为深灰色
+
+            // Center text in the table items
+            item->setTextAlignment(Qt::AlignCenter);
 
             // 如果你也想设置这些单元格为只读，可以取消以下注释
             item->setFlags(item->flags() & ~Qt::ItemIsEditable);
@@ -1139,16 +891,21 @@ void Widget::on_pushButton_drawing_list_revise_clicked()
 {
     // 遍历表格中的每一行和列，除了第一列
     for (int row = 0; row < ui->tableWidget_drawing_list->rowCount(); ++row) {
-        for (int col = 1; col < ui->tableWidget_drawing_list->columnCount(); ++col) {
-            QTableWidgetItem* item = ui->tableWidget_drawing_list->item(row, col);
-            if (!item) {
-                item = new QTableWidgetItem();
-                ui->tableWidget_drawing_list->setItem(row, col, item);
-            }
-            item->setBackground(QBrush(Qt::white));
+        QWidget* widget = ui->tableWidget_drawing_list->cellWidget(row, 0);
+        QCheckBox* checkBox = widget ? widget->findChild<QCheckBox*>() : nullptr;
+        if (checkBox && checkBox->isChecked()) {
+            for (int col = 1; col < ui->tableWidget_drawing_list->columnCount(); ++col) {
+                QTableWidgetItem* item = ui->tableWidget_drawing_list->item(row, col);
+                if (!item) {
+                    item = new QTableWidgetItem();
+                    ui->tableWidget_drawing_list->setItem(row, col, item);
+                }
+                item->setBackground(QBrush(Qt::white));
+                item->setData(Qt::ForegroundRole, QBrush(Qt::black));
 
-            // 如果之前设置了只读，这里恢复为可编辑状态
-            item->setFlags(item->flags() | Qt::ItemIsEditable);
+                // 如果之前设置了只读，这里恢复为可编辑状态
+                item->setFlags(item->flags() | Qt::ItemIsEditable);
+            }
         }
     }
 }
@@ -1158,15 +915,15 @@ void Widget::initTableWidget_noi_limit()
     int colCount = 5;
     // 设置表头标题
     QStringList headerText;
-    headerText << "" << "序号" << "房间类型" << "噪声限值dB(A)" << "处所类型";
+    headerText << "" << "序号" << "处所类型"  << "房间类型" << "噪声限值dB(A)";
     // 设置每列的宽度
-    int columnWidths[] = {30, 38, 130, 90, 130};
+    int columnWidths[] = {30, 38, 130, 130, 90};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_noi_limit, headerText, columnWidths, colCount);
     colCount = 4;
     QStringList headerText1;
-    headerText1 << "序号" << "房间类型" << "噪声限值dB(A)" << "处所类型";
-    int columnWidths1[] = {38, 130, 90, 130};
+    headerText1 << "序号" << "处所类型"  << "房间类型" << "噪声限值dB(A)";
+    int columnWidths1[] = {38, 130, 130, 90};
     //初始化报表部分的表格
     initTableWidget(ui->tableWidget_noise_require, headerText1, columnWidths1, colCount);
 }
@@ -1178,7 +935,7 @@ void Widget::initTableWidget_drawing_list()
     QStringList headerText;
     headerText << "" << "序号" << "图号" << "图名";
     // 设置每列的宽度
-    int columnWidths[] = {1, 2, 9, 9};
+    int columnWidths[] = {1, 2, 8, 11};
     // 调用封装好的初始化表格函数
     initTableWidget(ui->tableWidget_drawing_list, headerText, columnWidths, colCount);
 }
@@ -1197,20 +954,20 @@ void Widget::on_pushButton_noi_limit_save_clicked()
     }
 
     ui->lineEdit_class_soc->setReadOnly(true);
-    ui->lineEdit_class_soc->setStyleSheet("QLineEdit{background-color: rgb(240, 240, 240); border: 1px solid #9C9C9C;}");
+    ui->lineEdit_class_soc->setStyleSheet("QLineEdit{background-color: rgb(192, 192, 192); border: 1px solid #9C9C9C; color: rgb(70, 70, 70);}");
     QList<NoiseLimit> noiseLimits; // 创建一个Drawing的列表用来存储所有行的数据
 
     // 遍历每一行
     for (int row = 0; row < ui->tableWidget_noi_limit->rowCount(); ++row) {
         QTableWidgetItem* tableIDItem = ui->tableWidget_noi_limit->item(row, 1);
-        QTableWidgetItem* roomTypeItem = ui->tableWidget_noi_limit->item(row, 2);
-        QTableWidgetItem* noiseLimitItem = ui->tableWidget_noi_limit->item(row, 3);
-        QTableWidgetItem* premisesTypeItem = ui->tableWidget_noi_limit->item(row, 4);
+        QTableWidgetItem* placeTypeItem = ui->tableWidget_noi_limit->item(row, 2);
+        QTableWidgetItem* roomTypeItem = ui->tableWidget_noi_limit->item(row, 3);
+        QTableWidgetItem* noiseLimitItem = ui->tableWidget_noi_limit->item(row, 4);
 
         // 检查是否有空字段
         if (!roomTypeItem || roomTypeItem->text().isEmpty() ||
             !noiseLimitItem || noiseLimitItem->text().isEmpty() ||
-            !premisesTypeItem || premisesTypeItem->text().isEmpty()) {
+            !placeTypeItem || placeTypeItem->text().isEmpty()) {
             QMessageBox::critical(this, tr("空字段错误"),
                                  tr("第%1行中发现空字段，请检查并填写完整。").arg(row + 1));
             return; // 直接退出函数
@@ -1219,9 +976,9 @@ void Widget::on_pushButton_noi_limit_save_clicked()
         // 无空字段，创建NoiseLimit对象并添加到列表
         NoiseLimit noiseLimit;
         noiseLimit.tableID = tableIDItem->text();
+        noiseLimit.placeType = placeTypeItem->text();
         noiseLimit.roomType = roomTypeItem->text();
         noiseLimit.noiseLimit = noiseLimitItem->text();
-        noiseLimit.premissType = premisesTypeItem->text();
         noiseLimits.append(noiseLimit);
     }
 
@@ -1234,7 +991,11 @@ void Widget::on_pushButton_noi_limit_save_clicked()
                 ui->tableWidget_noi_limit->setItem(row, col, item);
             }
             // 设置背景色为灰色
-            item->setBackground(QBrush(QColor(240, 240, 240)));
+            item->setBackground(QBrush(QColor(192, 192, 192)));
+            item->setData(Qt::ForegroundRole, QColor(70,70,70)); // 只读单元格文本颜色设置为深灰色
+
+            // Center text in the table items
+            item->setTextAlignment(Qt::AlignCenter);
 
             // 如果你也想设置这些单元格为只读，可以取消以下注释
             item->setFlags(item->flags() & ~Qt::ItemIsEditable);
@@ -1248,23 +1009,28 @@ void Widget::on_pushButton_noi_limit_save_clicked()
 void Widget::on_pushButton_noi_limit_revise_clicked()
 {
     ui->lineEdit_class_soc->setReadOnly(false);
-    ui->lineEdit_class_soc->setStyleSheet("QLineEdit{background-color: white; border: 1px solid #9C9C9C;}");
-
+    ui->lineEdit_class_soc->setStyleSheet("QLineEdit{background-color: white; border: 1px solid #9C9C9C; color: black;}");
     // 遍历表格中的每一行和列，除了第一列
     for (int row = 0; row < ui->tableWidget_noi_limit->rowCount(); ++row) {
-        for (int col = 1; col < ui->tableWidget_noi_limit->columnCount(); ++col) {
-            QTableWidgetItem* item = ui->tableWidget_noi_limit->item(row, col);
-            if (!item) {
-                item = new QTableWidgetItem();
-                ui->tableWidget_noi_limit->setItem(row, col, item);
+        QWidget* widget = ui->tableWidget_noi_limit->cellWidget(row, 0); // Assuming the checkbox is in the first column
+        QCheckBox* checkBox = widget ? widget->findChild<QCheckBox*>() : nullptr;
+        if (checkBox && checkBox->isChecked()) {
+            for (int col = 1; col < ui->tableWidget_noi_limit->columnCount(); ++col) {
+                QTableWidgetItem* item = ui->tableWidget_noi_limit->item(row, col);
+                if (!item) {
+                    item = new QTableWidgetItem();
+                    ui->tableWidget_noi_limit->setItem(row, col, item);
+                }
+                // 恢复单元格的背景色（清除之前设置的灰色背景）
+                item->setBackground(QBrush(Qt::white)); // 或者使用 item->setBackground(QBrush()); 来清除背景色
+                item->setData(Qt::ForegroundRole, QBrush(Qt::black));
+                // 如果之前设置了只读，这里恢复为可编辑状态
+                item->setFlags(item->flags() | Qt::ItemIsEditable);
             }
-            // 恢复单元格的背景色（清除之前设置的灰色背景）
-            item->setBackground(QBrush(Qt::white)); // 或者使用 item->setBackground(QBrush()); 来清除背景色
-
-            // 如果之前设置了只读，这里恢复为可编辑状态
-            item->setFlags(item->flags() | Qt::ItemIsEditable);
         }
     }
+
+
 }
 
 //当表格item改变，rooms跟着改变
@@ -1274,7 +1040,7 @@ void Widget::on_tableWidget_noi_limit_itemChanged(QTableWidgetItem *item)
         return;
 
     int rowCount = ui->tableWidget_noi_limit->rowCount();
-    QVector<Room> tempRooms; // 使用临时列表来收集数据
+    QList<NoiseLimit> noiseLimits; // 创建一个Drawing的列表用来存储所有行的数据
 
     for (int i = 0; i < rowCount; i++) {
         if (!ui->tableWidget_noi_limit->item(i, 2) || ui->tableWidget_noi_limit->item(i, 2)->text().isEmpty() ||
@@ -1283,27 +1049,16 @@ void Widget::on_tableWidget_noi_limit_itemChanged(QTableWidgetItem *item)
             // 如果任一必需的单元格为空，则跳过这一行
             continue;
         }
-        Room room;
-        room.name = ui->tableWidget_noi_limit->item(i, 2)->text();
-        room.noise = ui->tableWidget_noi_limit->item(i, 3)->text();
-        room.type = ui->tableWidget_noi_limit->item(i, 4)->text();
-        tempRooms.push_back(room); // 将这个房间添加到临时列表中
+
+        NoiseLimit noiseLimit;
+        noiseLimit.tableID = ui->tableWidget_noi_limit->item(i, 1)->text();
+        noiseLimit.placeType = ui->tableWidget_noi_limit->item(i, 2)->text();
+        noiseLimit.roomType = ui->tableWidget_noi_limit->item(i, 3)->text();
+        noiseLimit.noiseLimit = ui->tableWidget_noi_limit->item(i, 4)->text();
+        noiseLimits.append(noiseLimit);
     }
 
-    rooms = tempRooms; // 使用收集到的数据更新rooms列表
-}
-
-//通过名字获取噪声限制
-double Widget::getNoiseLimitByName(const QString& name)
-{
-    for(int i = 0; i < rooms.size(); i++)
-    {
-        if(rooms[i].name == name)
-        {
-            return rooms[i].noise.toDouble();
-        }
-    }
-    return -1;
+    ProjectManager::getInstance().setNoiseLimits(noiseLimits);
 }
 
 //输入模块按钮
@@ -1373,294 +1128,6 @@ void Widget::clearTable()
 
 #pragma endregion }
 /**********主界面**********/
-
-
-
-
-
-
-// 右键点击响应
-void Widget::TreeWidgetItemPressed_Slot(QTreeWidgetItem *item, int n)
-{
-    if (qApp->mouseButtons() == Qt::RightButton) // 1、首先判断是否为右键点击
-    {
-        if(item==item_system_list) //  点击了6.系统清单
-        {
-            if(actAddzsq==menusystemlist->exec(QCursor::pos()))   // 弹出添加主竖区菜单
-            {
-                Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
-                box->setlabeltext("主竖区");
-                if(box->exec()==QDialog::Accepted)
-                {
-                    create_zsq(box->getname());
-                    return;
-                }
-            }
-        }
-        // 右击主竖区
-        if(vec_zsq.contains(item))
-        {
-            QAction *act=menuzsq->exec(QCursor::pos());
-            Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
-            if(actAddsystem==act)   // 添加系统,同时添加对应form
-            {
-                box->setlabeltext("系统编号");
-                if(box->exec()==QDialog::Accepted)
-                {
-                    create_system(item,box->getname());
-                }
-            }
-            if(actModzsqname==act)
-            {
-                box->setlabeltext("修改名称");
-                if(box->exec()==QDialog::Accepted)
-                {
-                    QString oldname=item->text(0);
-
-                    item->setText(0,box->getname());
-                    map_zsq67.value(item)->setText(0,box->getname());
-                    map_zsq68.value(item)->setText(0,box->getname());
-                }
-            }
-            if(actDelzsq==act)
-            {
-                delete(item);
-                delete(map_zsq67.value(item));
-                delete(map_zsq68.value(item));
-                map_zsq67.remove(item);
-                map_zsq68.remove(item);
-                vec_zsq.removeOne(item);
-            }
-        }
-        // 右击系统
-        if(vec_system.contains(item))
-        {
-            QAction *act=menusystem->exec(QCursor::pos());
-            if(actModsystemname==act) //修改名称
-            {
-                Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
-                box->setlabeltext("修改系统名称");
-                if(box->exec()==QDialog::Accepted)
-                {
-                    QString oldname=item->text(0);
-
-                    item->setText(0,box->getname());
-                    map_system67.value(item)->setText(0,box->getname());
-                    map_system68.value(item)->setText(0,box->getname());
-
-                }
-            }
-            if(actDelsystem==act)   //删除系统
-            {
-
-                delete(item);
-                //如果系统删除之前就剩一个了,要删除室外项
-                if(map_system67.value(item)->parent()->childCount()<=2){
-                    delete(map_system67.value(item)->parent()->child(1));
-                    delete(map_system68.value(item)->parent()->child(1));
-                }
-                delete(map_system67.value(item));
-                delete(map_system68.value(item));
-                map_system67.remove(item);
-                map_system68.remove(item);
-                vec_system.removeOne(item);
-            }
-        }
-        // 右击典型舱室
-        if(item==item_cabin_classic)
-        {
-            if(actAddclassicroom==menuclassiccabin->exec(QCursor::pos()))
-            {
-                Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
-                box->setlabeltext("典型房间类型");
-                if(box->exec()==QDialog::Accepted)
-                {
-                    create_classic_room(box->getname());
-                }
-            }
-        }
-        // 右击典型房间
-        if(vec_classicroom.contains(item))
-        {
-            //典型房间
-            QAction *act = menuclassicroom->exec(QCursor::pos());
-            if(actModclassicroomname==act)
-            {
-                Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
-                box->setlabeltext("修改房间名称");
-                if(box->exec()==QDialog::Accepted)
-                {
-                    item->setText(0,box->getname());
-                }
-            }
-            if(actDelclassicroom==act)
-            {
-                delete(item);
-                vec_classicroom.removeOne(item);
-
-            }
-        }
-        // 右击主风管
-        if(vec_zfg.contains(item))
-        {
-            QAction *act=menuzfg->exec(QCursor::pos());
-            if(actModzfgname==act)
-            {
-                Dialog_add_zhushuqu *box=new Dialog_add_zhushuqu;
-                box->setlabeltext("修改主风管名称");
-                if(box->exec()==QDialog::Accepted)
-                {
-                    item->setText(0,box->getname());
-                }
-            }
-            if(actDelzfg==act)
-            {
-                delete(item);
-                vec_zfg.removeOne(item);
-            }
-        }
-
-    }
-}
-
-//  在第7项定义房间后，主界面接收到信号，item就是第八项系统item
-// 添加第八项房间底下的主风管item，并生成对应form
-void Widget::upDateTreeItem8(QTreeWidgetItem *item,QString roomid,int num, QString jiaban, QString limit) //
-{
-    if(vec_outersys.contains(item))
-    {
-        QStringList pipename;
-        for(int i=0;i<num;i++){
-            pipename<<"噪音源支管"+QString::number(i+1);
-        }
-        QVector<QTreeWidgetItem *> pipe_items;
-
-        QTreeWidgetItem *outer_item=create_outer(item,roomid);
-        pipe_items=create_outer_pipe(outer_item,pipename);
-
-        // 给每个新生成的form设置信息
-        for (QTreeWidgetItem *pipe_item : pipe_items) {
-            //
-            if(map_outerpipe_roomcal_form.contains(pipe_item)){
-                QWidget *widget=map_outerpipe_roomcal_form.value(pipe_item);
-                //把对应的QWidget界面转换为具体的子类
-                room_cal_baseWidget *pipe_page=dynamic_cast<room_cal_baseWidget*>(widget);
-                pipe_page->setInfo(item->parent()->text(0),jiaban,roomid,limit,QString::number(num));
-
-            }
-            //
-            if(map_outer_before_form.contains(pipe_item)){
-                QWidget *widget=map_outer_before_form.value(pipe_item);
-                outer_before *pipe_page=dynamic_cast<outer_before*>(widget);
-                pipe_page->setInfo(item->parent()->text(0),jiaban,roomid,limit,QString::number(num));
-            }
-            if(map_outer_after_form.contains(pipe_item)){
-                QWidget *widget=map_outer_after_form.value(pipe_item);
-                outer_after *pipe_page=dynamic_cast<outer_after*>(widget);
-                pipe_page->setInfo(item->parent()->text(0),jiaban,roomid,limit,QString::number(num));
-            }
-            //
-            if(map_outer_outercaltotal_form.contains(pipe_item)){
-                QWidget *widget=map_outer_outercaltotal_form.value(pipe_item);
-                room_cal_total *pipe_page=dynamic_cast<room_cal_total*>(widget);
-                pipe_page->setInfo(item->parent()->text(0),jiaban,roomid,limit,QString::number(num));
-            }
-            //
-        }
-        //
-
-    }
-    else{
-        QStringList pipename;
-        for(int i=0;i<num;i++){
-            pipename<<"主风管"+QString::number(i+1);
-        }
-        QVector<QTreeWidgetItem *> pipe_items;
-
-        QTreeWidgetItem *room_item=create_room(item,roomid);
-        pipe_items=create_pipe(room_item,pipename);
-
-        // 给每个新生成的form设置信息
-        for (QTreeWidgetItem *pipe_item : pipe_items) {
-            if(map_roompipe_roomcal_form.contains(pipe_item)){
-                QWidget *widget=map_roompipe_roomcal_form.value(pipe_item);
-                room_cal_baseWidget *pipe_page=dynamic_cast<room_cal_baseWidget*>(widget);
-                pipe_page->setInfo(item->parent()->text(0),jiaban,roomid,limit,QString::number(num));
-            }
-            if(map_room_roomcaltotal_form.contains(pipe_item)){
-                QWidget *widget=map_room_roomcaltotal_form.value(pipe_item);
-                room_cal_total *pipe_page=dynamic_cast<room_cal_total*>(widget);
-                pipe_page->setInfo(item->parent()->text(0),jiaban,roomid,limit,QString::number(num));
-            }
-        }
-        //
-    }
-
-}
-
-void Widget::delroom(QTreeWidgetItem* item_system,QString roomid)
-{
-
-    for(int i=0;i<item_system->childCount();i++)         // 遍历房间
-    {
-        if(item_system->child(i)->text(0)==roomid) // 删除房间
-        {
-            QTreeWidgetItem* itemfj=item_system->child(i);
-            for(int j=0;j<itemfj->childCount();j++) // 首先删除房间下的主风管以及页面
-            {
-                delete map_roompipe_roomcal_form.value(itemfj->child(j)); //释放主风管关联的page
-                map_roompipe_roomcal_form.remove(itemfj->child(j));      // 删除记录
-                vec_zfg.removeOne(itemfj->child(j));
-            }
-            delete item_system->child(i);            // 系统下的房间子项全部移走
-
-        }
-    }
-}
-
-
-void Widget::initRightButtonMenu()
-{
-    menusystemlist = new QMenu(this);
-    menuzsq = new QMenu(this);
-    menusystem = new QMenu(this);
-    menuclassiccabin = new QMenu(this);
-    menuclassicroom = new QMenu(this);
-    menucalroom = new QMenu(this);
-    menuzfg = new QMenu(this);
-
-    actAddzsq = new QAction("添加主竖区");
-    actAddsystem = new QAction("添加系统");
-    actModzsqname = new QAction("修改主竖区名称");
-    actDelzsq = new QAction("删除主竖区");
-    actModsystemname = new QAction("修改系统名称");
-    actDelsystem = new QAction("删除系统");
-
-    actAddzfg = new QAction("添加主风管");
-    actModzfgname = new QAction("修改主风管名称");
-    actDelzfg = new QAction("删除主风管");
-
-    actAddclassicroom = new QAction("添加典型房间");
-    actModclassicroomname = new QAction("修改房间名称");
-    actDelclassicroom = new QAction("删除房间");
-
-    menusystemlist->addAction(actAddzsq);
-    menuzsq->addAction(actAddsystem);
-    menuzsq->addAction(actModzsqname);
-    menuzsq->addAction(actDelzsq);
-    menusystem->addAction(actModsystemname);
-    menusystem->addAction(actDelsystem);
-    menuclassiccabin->addAction(actAddclassicroom);
-    menuclassicroom->addAction(actModclassicroomname);
-    menuclassicroom->addAction(actDelclassicroom);
-    menucalroom->addAction(actAddzfg);
-    menuzfg->addAction(actModzfgname);
-    menuzfg->addAction(actDelzfg);
-
-    // 关联树Item的点击信号，但是在槽中判断是不是右键
-    connect(ui->treeWidget, SIGNAL(itemPressed(QTreeWidgetItem*, int)),
-            this, SLOT(TreeWidgetItemPressed_Slot(QTreeWidgetItem*, int)));
-}
 
 
 
@@ -2874,15 +2341,14 @@ void Widget::LoadExeclData_noisourse(QTableWidget *table,int spancolfirst,int sp
 #pragma end}
 /******************导入导出表格********************/
 
-
-void Widget::on_pushButton_test_addRoom_clicked()
+void Widget::closeEvent(QCloseEvent *event)
 {
-    if(!ProjectManager::getInstance().isProjectOpened())
-    {
-        QMessageBox::critical(this, "错误", "当前未打开任何项目");
-        return;
+    if (componentDB) {
+        componentDB->close(); // 关闭子窗口
+        delete componentDB; // 释放内存
+        componentDB = nullptr; // 将指针设为nullptr
     }
-    QTreeWidgetItem* treeItem = create_zsq("MVZ1");
-    QTreeWidgetItem* sysItem = create_system(treeItem ,"SYS1");
+
+    QWidget::closeEvent(event); // 调用基类的关闭事件处理
 }
 

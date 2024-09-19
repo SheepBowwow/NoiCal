@@ -380,7 +380,7 @@ font-family: '黑体';
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_queding">
+        <widget class="QPushButton" name="pushButton_confirm">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -506,7 +506,7 @@ background-color : rgb(105, 105, 105);
  </widget>
  <tabstops>
   <tabstop>lineEdit_model</tabstop>
-  <tabstop>pushButton_queding</tabstop>
+  <tabstop>pushButton_confirm</tabstop>
   <tabstop>comboBox_type</tabstop>
   <tabstop>comboBox_num</tabstop>
   <tabstop>close</tabstop>

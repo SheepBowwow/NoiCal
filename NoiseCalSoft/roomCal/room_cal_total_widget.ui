@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>room_cal_total</class>
- <widget class="QWidget" name="room_cal_total">
+ <class>Room_cal_total_widget</class>
+ <widget class="QWidget" name="Room_cal_total_widget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1201</width>
+    <width>1203</width>
     <height>691</height>
    </rect>
   </property>
@@ -151,7 +151,7 @@ font-family: '黑体';
        <string>主风管数量 : </string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_zhushuqu">
+     <widget class="QLineEdit" name="lineEdit_MVZName">
       <property name="geometry">
        <rect>
         <x>110</x>
