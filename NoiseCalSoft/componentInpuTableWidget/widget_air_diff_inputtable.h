@@ -28,6 +28,7 @@ public slots:
     void onInput() override;
     void onOutput() override;
     void onFilter() override;
+    void onGenerateTemplate() override;
     void handleConfirmation(QSet<QString> uuids) override;
 
     // Widget_base_inputTable interface

@@ -22,6 +22,7 @@ bool addOrUpdateDispVentTerminalToDatabase(const ComponentBase& component, QSqlD
 bool addOrUpdateOtherSendTerminalToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update = false);
 bool addOrUpdateStaticBoxToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update = false);
 bool addOrUpdateMultiRancToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update = false);
+bool addOrUpdateDiffuserBranchToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update = false);
 bool addOrUpdateTeeToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update = false);
 bool addOrUpdatePipeToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update = false);
 bool addOrUpdateElbowToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update = false);

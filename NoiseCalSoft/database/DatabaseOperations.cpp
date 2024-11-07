@@ -634,7 +634,7 @@ bool addOrUpdateAirDiffToDatabase(const ComponentBase& component, QSqlDatabase& 
         qWarning() << "Insert operation failed:" << query.lastError();
         return false;
     }
-    qDebug() << "Executed query:" << query.lastQuery();
+    //qDebug() << "Executed query:" << query.lastQuery();
     return true;
 }
 
@@ -1123,6 +1123,72 @@ bool addOrUpdateMultiRancToDatabase(const ComponentBase& component, QSqlDatabase
     if (!query.exec()) {
       qWarning() << "Insert operation failed:" << query.lastError();
       return false;
+    }
+
+    return true;
+}
+
+bool addOrUpdateDiffuserBranchToDatabase(const ComponentBase& component, QSqlDatabase& db, bool update)
+{
+    // Check if the database is open
+    if (!db.isOpen()) {
+        qWarning() << "Database is not open!";
+        return false;
+    }
+
+    // Attempt to cast ComponentBase to Branch
+    const Branch* branch = dynamic_cast<const Branch*>(&component);
+    if (!branch) {
+        qWarning() << "Component is not a Branch";
+        return false;
+    }
+
+    // Convert atten array to JSON
+    QJsonDocument attenJson(QJsonArray::fromStringList(QList<QString>::fromStdList(std::list<QString>(branch->atten.begin(), branch->atten.end()))));
+    QString attenJsonString = attenJson.toJson(QJsonDocument::Compact);
+
+    // Prepare SQL insert statement
+    QSqlQuery query(db);
+    if(db.connectionName() != DatabaseManager::getInstance().getComponent_db().connectionName())
+    {
+        if (update) {
+            query.prepare("UPDATE diffuser_branch "
+                          "SET projectID=:projectID, table_id=:table_id, model=:model, brand=:brand, "
+                          "q=:q, q1=:q1, atten_json=:atten_json, data_source=:data_source "
+                          "WHERE UUID=:UUID");
+        } else {
+            query.prepare("INSERT INTO diffuser_branch (projectID, table_id, model, brand, q, q1, atten_json, data_source, UUID) "
+                          "VALUES (:projectID, :table_id, :model, :brand, :q, :q1, :atten_json, :data_source, :UUID)");
+        }
+    }
+    else
+    {
+        if (update) {
+            query.prepare("UPDATE diffuser_branch "
+                          "SET table_id=:table_id, model=:model, brand=:brand, "
+                          "q=:q, q1=:q1, atten_json=:atten_json, data_source=:data_source "
+                          "WHERE UUID=:UUID");
+        } else {
+            query.prepare("INSERT INTO diffuser_branch (table_id, model, brand, q, q1, atten_json, data_source, UUID) "
+                          "VALUES (:table_id, :model, :brand, :q, :q1, :atten_json, :data_source, :UUID)");
+        }
+    }
+
+    // Bind values to the insert statement
+    query.bindValue(":projectID", ProjectManager::getInstance().getPrjID());
+    query.bindValue(":table_id", component.table_id);
+    query.bindValue(":model", branch->model);
+    query.bindValue(":brand", branch->brand);
+    query.bindValue(":q", branch->q);
+    query.bindValue(":q1", branch->q1);
+    query.bindValue(":atten_json", attenJsonString);
+    query.bindValue(":data_source", component.data_source);
+    query.bindValue(":UUID", component.UUID);
+
+    // Execute the insert operation
+    if (!query.exec()) {
+        qWarning() << "Insert operation failed:" << query.lastError();
+        return false;
     }
 
     return true;

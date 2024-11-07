@@ -108,6 +108,11 @@ void Widget_Other_send_terminal_inputTable::onOutput()
 
 }
 
+void Widget_Other_send_terminal_inputTable::onGenerateTemplate()
+{
+
+}
+
 void Widget_Other_send_terminal_inputTable::loadComponentToTable()
 {
     auto componentList = ComponentManager::getInstance().getComponentsByType(inComponentDB, component_type_name::OTHER_SEND_TERMINAL);

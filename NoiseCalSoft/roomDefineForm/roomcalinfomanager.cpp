@@ -304,16 +304,26 @@ void RoomCalInfoManager::slot_treeWidgetItem_pressed(QTreeWidgetItem *item, int 
                 if(dialog->exec() == QDialog::Accepted)
                 {
                     QString newNumber = dialog->getName();
+                    QString originNumber = duct->number;
                     if(allNamesSet.find(newNumber) != allNamesSet.end()) {
                         QMessageBox::critical(nullptr, "命名重复", dialog_title.remove("编号") + " \'" + newNumber + "\' 已经存在");
                         return;
                     } else {
                         allNamesSet.insert(newNumber);
-                        allNamesSet.remove(duct->number);
+                        allNamesSet.remove(originNumber);
                     }
+                    Duct* oldDuct = new Duct(*duct);
+
                     duct->number = dialog->getName();
                     duct->ductItem->setText(0, duct->number);
                     duct->ductCalPage->setDuctNumber(duct->number);
+                    duct->ductCalPage->handle_duct_number_revise(originNumber, newNumber);
+
+                    if(item->parent()->parent()->text(0) == "室外") {
+                        DatabaseManager::getInstance().updateDuctInDatabase(true, const_cast<const Duct*&>(oldDuct), const_cast<const Duct*&>(duct));
+                    } else {
+                        DatabaseManager::getInstance().updateDuctInDatabase(false, const_cast<const Duct*&>(oldDuct), const_cast<const Duct*&>(duct));
+                    }
                 }
             }
             if(act == _act_del_duct)
@@ -591,6 +601,7 @@ void RoomCalInfoManager::loadDuctCalTable()
                 QJsonObject jsonObj = QJsonDocument::fromJson(data.jsonString.toUtf8()).object();
                 duct->ductCalPage->addTable(stringToRoomCalTableType(data.type), jsonObj);
             }
+            duct->ductCalPage->loadDataToCalTotalTable();
         }
     }
 }
@@ -886,8 +897,10 @@ void RoomCalInfoManager::addCompToSystemList(QString systemName, QString type, Q
         return;
     }
 
-    if(!loadDataMode)
+    if(!loadDataMode) {
         DatabaseManager::getInstance().addSystemCompToDatabase(system, const_cast<const SystemListComp*&>(comp));
+        emit
+    }
 }
 
 void RoomCalInfoManager::deleteCompInSystemList(QString systemName, QString type, QString number, QString model)
@@ -1415,6 +1428,7 @@ void RoomCalInfoManager::createDuct(bool isOuter, QString room_or_outer_number, 
         outer->outerItem->insertChild(insertIndex, ductItem);
 
         Room_cal_baseWidget* ductCalPage = new Room_cal_baseWidget(nullptr, isNamed);   //风管计算界面
+        ductCalPage->set_cal_total_page(outer->calTotalPage);
         Duct* duct = new Duct{ductNumber, airVolume, ductItem, ductCalPage};
         ductCalPage->setInfo(duct->getParentMVZName(), outer->deck, outer->number, QString::number(outer->limit), QString::number(outer->ductNum));
         ductCalPage->setSystemName(outer->outerItem->parent()->text(0));
@@ -1534,10 +1548,12 @@ void RoomCalInfoManager::createDuct(bool isOuter, QString room_or_outer_number, 
         room->roomItem->insertChild(insertIndex, ductItem);
 
         Room_cal_baseWidget* ductCalPage = new Room_cal_baseWidget(nullptr, isNamed);
+        ductCalPage->set_cal_total_page(room->calTotalPage);
         Duct* duct = new Duct{ductNumber, airVolume, ductItem, ductCalPage};
         ductCalPage->setInfo(room->roomItem->parent()->parent()->text(0), room->deck, room->number, QString::number(room->limit), QString::number(room->ductNum));
         ductCalPage->setSystemName(room->roomItem->parent()->text(0));
-        if(isNamed) ductCalPage->setDuctNumber(duct->number);
+        if(isNamed)
+            ductCalPage->setDuctNumber(duct->number);
         stackedWidget->addWidget(ductCalPage);
         ducts[room->number].append(duct);
         connect(treeWidget, &QTreeWidget::itemClicked, this, [=](QTreeWidgetItem* item, int n) mutable {
@@ -1670,10 +1686,12 @@ void RoomCalInfoManager::deleteDuct(QString number)
     {
         ductNum = --room->ductNum;    //将room的主风管数量-1
         room->calTotalPage->setDuctNum(QString::number(ductNum)); //给汇总界面设置主风管数量
+        room->calTotalPage->handle_duct_remove(duct->number); //汇总界面删除对应风管
     }
     else if(outer && !room) {
         ductNum = --outer->ductNum;
-        outer->calTotalPage->setDuctNum(QString::number(ductNum));
+        outer->calTotalPage->setDuctNum(QString::number(ductNum)); //给汇总界面设置主风管数量
+        outer->calTotalPage->handle_duct_remove(duct->number); //汇总界面删除对应风管
         if(outer->ductNum >= 2)
         {
             outer->convergeBeforePage->setDuctNum(QString::number(ductNum));
@@ -1694,6 +1712,7 @@ void RoomCalInfoManager::deleteDuct(QString number)
         qDebug() << "error";
         return;
     }
+
 
     //删除容器中的以及page和item
     ducts[room_or_outer_number].removeOne(duct);

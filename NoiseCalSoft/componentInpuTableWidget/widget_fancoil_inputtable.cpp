@@ -162,6 +162,11 @@ void Widget_fanCoil_inputTable::onOutput()
 
 }
 
+void Widget_fanCoil_inputTable::onGenerateTemplate()
+{
+
+}
+
 void Widget_fanCoil_inputTable::handleConfirmation(QSet<QString> uuids)
 {
     for(auto uuid : uuids)

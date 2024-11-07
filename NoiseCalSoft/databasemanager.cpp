@@ -25,6 +25,7 @@ QHash<QString, QString> typeNameToTableName = {
     {component_type_name::OTHER_SEND_TERMINAL, "other_send_terminal"},
     {component_type_name::STATICBOX, "static_box"},
     {component_type_name::MULTI_RANC, "multi_ranc"},
+    {component_type_name::DIFFUSER_BRANCH, "diffuser_branch"},
     {component_type_name::TEE, "tee"},
     {component_type_name::PIPE, "pipe"},
     {component_type_name::ELBOW, "elbow"},
@@ -332,6 +333,10 @@ void DatabaseManager::registerAddFunctions()
 
     componentAddFuncMap[component_type_name::MULTI_RANC] = [this](const ComponentBase& component, bool componentDB) -> bool {
         return DBComponentAddOperations::addOrUpdateMultiRancToDatabase(component, componentDB ? this->component_db : this->project_db);
+    };
+
+    componentAddFuncMap[component_type_name::DIFFUSER_BRANCH] = [this](const ComponentBase& component, bool componentDB) -> bool {
+        return DBComponentAddOperations::addOrUpdateDiffuserBranchToDatabase(component, componentDB ? this->component_db : this->project_db);
     };
 
     componentAddFuncMap[component_type_name::TEE] = [this](const ComponentBase& component, bool componentDB) -> bool {
@@ -857,6 +862,8 @@ void DatabaseManager::loadComponentsFromPrjDB()
                     component = QSharedPointer<ComponentBase>(new Static_box(record));
                 } else if (componentTypeName == component_type_name::MULTI_RANC) {
                     component = QSharedPointer<ComponentBase>(new Multi_ranc(record));
+                } else if (componentTypeName == component_type_name::DIFFUSER_BRANCH) {
+                    component = QSharedPointer<ComponentBase>(new Diffuser_branch(record));
                 } else if (componentTypeName == component_type_name::TEE) {
                     component = QSharedPointer<ComponentBase>(new Tee(record));
                 } else if (componentTypeName == component_type_name::PIPE) {
@@ -931,6 +938,8 @@ void DatabaseManager::loadComponentsFromComponentDB()
                 component = QSharedPointer<ComponentBase>(new Static_box(record));
             } else if (componentTypeName == component_type_name::MULTI_RANC) {
                 component = QSharedPointer<ComponentBase>(new Multi_ranc(record));
+            } else if (componentTypeName == component_type_name::DIFFUSER_BRANCH) {
+                component = QSharedPointer<ComponentBase>(new Diffuser_branch(record));
             } else if (componentTypeName == component_type_name::TEE) {
                 component = QSharedPointer<ComponentBase>(new Tee(record));
             } else if (componentTypeName == component_type_name::PIPE) {

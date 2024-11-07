@@ -112,6 +112,11 @@ void Widget_Pump_Send_inputTable::onOutput()
 
 }
 
+void Widget_Pump_Send_inputTable::onGenerateTemplate()
+{
+
+}
+
 void Widget_Pump_Send_inputTable::loadComponentToTable()
 {
     // 从组件管理器获取所有可能相关的组件

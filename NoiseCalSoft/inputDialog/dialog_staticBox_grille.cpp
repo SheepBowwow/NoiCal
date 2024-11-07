@@ -120,28 +120,28 @@ void Dialog_staticBox_grille::on_pushButton_confirm_clicked()
 
     for(size_t i = 0; i < noi.size(); i++)
     {
-        noi[i] = noi_lineEdits[i]->text();
+        noi[i] = noi_lineEdits[i]->text().trimmed();
     }
 
     for(size_t i = 0; i < atten.size(); i++)
     {
-        atten[i] = atten_lineEdits[i]->text();
+        atten[i] = atten_lineEdits[i]->text().trimmed();
     }
 
     for(size_t i = 0; i < refl.size(); i++)
     {
-        refl[i] = refl_lineEdits[i]->text();
+        refl[i] = refl_lineEdits[i]->text().trimmed();
     }
 
 
     if(ui->radioButton_circle->isChecked())
     {
-        size = ui->lineEdit_diameter->text();
+        size = ui->lineEdit_diameter->text().trimmed();
         shape = "圆形";
     }
     if(ui->radioButton_rect->isChecked())
     {
-        size = ui->lineEdit_length->text() + "x" + ui->lineEdit_width->text();
+        size = ui->lineEdit_length->text().trimmed() + "x" + ui->lineEdit_width->text().trimmed();
         shape = "方形";
     }
 
@@ -164,10 +164,10 @@ void Dialog_staticBox_grille::on_pushButton_confirm_clicked()
                 noi,
                 atten,
                 refl,
-                ui->lineEdit_static_box_model->text(),
-                ui->lineEdit_static_box_brand->text(),
-                ui->lineEdit_grille_model->text(),
-                ui->lineEdit_grille_brand->text());
+                ui->lineEdit_static_box_model->text().trimmed(),
+                ui->lineEdit_static_box_brand->text().trimmed(),
+                ui->lineEdit_grille_model->text().trimmed(),
+                ui->lineEdit_grille_brand->text().trimmed());
 
 
     this->accept(); // 关闭对话框

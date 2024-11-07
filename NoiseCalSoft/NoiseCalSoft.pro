@@ -25,6 +25,7 @@ SOURCES += \
     componentInpuTableWidget/widget_aircondition_singlefan_inputtable.cpp \
     componentInpuTableWidget/widget_base_inputtable.cpp \
     componentInpuTableWidget/widget_circular_damper_inputtable.cpp \
+    componentInpuTableWidget/widget_diffuser_branch_inputtable.cpp \
     componentInpuTableWidget/widget_disp_vent_terminal_inputtable.cpp \
     componentInpuTableWidget/widget_elbow_inputtable.cpp \
     componentInpuTableWidget/widget_fan_inputtable.cpp \
@@ -47,6 +48,7 @@ SOURCES += \
     inputDialog/dialog_air_diff.cpp \
     inputDialog/dialog_aircondition.cpp \
     inputDialog/dialog_circular_damper.cpp \
+    inputDialog/dialog_diffuser_branch.cpp \
     inputDialog/dialog_disp_vent_terminal.cpp \
     inputDialog/dialog_duct_with_multi_ranc.cpp \
     inputDialog/dialog_elbow.cpp \
@@ -65,6 +67,8 @@ SOURCES += \
     inputDialog/dialog_vav_terminal.cpp \
     inputbasedialog.cpp \
     main.cpp \
+    office/excelengine.cpp \
+    office/wordengine.cpp \
     project/projectmanager.cpp \
     roomCal/outer_after_widget.cpp \
     roomCal/outer_before_widget.cpp \
@@ -78,8 +82,7 @@ SOURCES += \
     roomDefineForm/roomcalinfomanager.cpp \
     roomDefineForm/systemcomp_list_widget.cpp \
     subclass/clickablecombobox.cpp \
-    widget.cpp \
-    wordEngine/wordengine.cpp
+    widget.cpp
 
 HEADERS += \
     Component/ComponentManager.h \
@@ -91,6 +94,7 @@ HEADERS += \
     componentInpuTableWidget/widget_aircondition_singlefan_inputtable.h \
     componentInpuTableWidget/widget_base_inputtable.h \
     componentInpuTableWidget/widget_circular_damper_inputtable.h \
+    componentInpuTableWidget/widget_diffuser_branch_inputtable.h \
     componentInpuTableWidget/widget_disp_vent_terminal_inputtable.h \
     componentInpuTableWidget/widget_elbow_inputtable.h \
     componentInpuTableWidget/widget_fan_inputtable.h \
@@ -113,6 +117,7 @@ HEADERS += \
     inputDialog/dialog_air_diff.h \
     inputDialog/dialog_aircondition.h \
     inputDialog/dialog_circular_damper.h \
+    inputDialog/dialog_diffuser_branch.h \
     inputDialog/dialog_disp_vent_terminal.h \
     inputDialog/dialog_duct_with_multi_ranc.h \
     inputDialog/dialog_elbow.h \
@@ -130,6 +135,8 @@ HEADERS += \
     inputDialog/dialog_tee.h \
     inputDialog/dialog_vav_terminal.h \
     inputbasedialog.h \
+    office/excelengine.h \
+    office/wordengine.h \
     project/projectmanager.h \
     roomCal/outer_after_widget.h \
     roomCal/outer_before_widget.h \
@@ -143,8 +150,7 @@ HEADERS += \
     roomDefineForm/roomcalinfomanager.h \
     roomDefineForm/systemcomp_list_widget.h \
     subclass/clickablecombobox.h \
-    widget.h \
-    wordEngine/wordengine.h
+    widget.h
 
 FORMS += \
     Component/componentsdb.ui \
@@ -152,6 +158,7 @@ FORMS += \
     inputDialog/dialog_air_diff.ui \
     inputDialog/dialog_aircondition.ui \
     inputDialog/dialog_circular_damper.ui \
+    inputDialog/dialog_diffuser_branch.ui \
     inputDialog/dialog_disp_vent_terminal.ui \
     inputDialog/dialog_duct_with_multi_ranc.ui \
     inputDialog/dialog_elbow.ui \

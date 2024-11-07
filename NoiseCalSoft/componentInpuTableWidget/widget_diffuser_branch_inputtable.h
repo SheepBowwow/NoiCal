@@ -1,17 +1,15 @@
-#ifndef WIDGET_PIPE_INPUTTABLE_H
-#define WIDGET_PIPE_INPUTTABLE_H
+#ifndef WIDGET_DIFFUSER_BRANCH_INPUTTABLE_H
+#define WIDGET_DIFFUSER_BRANCH_INPUTTABLE_H
 
-#include "widget_base_inputtable.h"
 #include <QObject>
 #include <QWidget>
+#include "widget_base_inputtable.h"
 
-class Widget_Pipe_inputTable : public Widget_base_inputTable
+class Widget_Diffuser_branch_inputTable : public Widget_base_inputTable
 {
     Q_OBJECT
 public:
-    Widget_Pipe_inputTable(bool inComponentDB, QWidget* parent = nullptr);
-
-
+    Widget_Diffuser_branch_inputTable(bool inComponentDB, QWidget* parent = nullptr);
 
     // Widget_base_inputTable interface
 public:
@@ -31,4 +29,4 @@ public:
     void loadComponentToTable() override;
 };
 
-#endif // WIDGET_PIPE_INPUTTABLE_H
+#endif // WIDGET_DIFFUSER_BRANCH_INPUTTABLE_H

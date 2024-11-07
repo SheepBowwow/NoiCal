@@ -75,18 +75,18 @@ void Dialog_elbow::on_pushButton_confirm_clicked()
 
     for(size_t i = 0; i < atten.size(); i++)
     {
-        atten[i] = atten_lineEdits[i]->text();
+        atten[i] = atten_lineEdits[i]->text().trimmed();
     }
 
     if(ui->radioButton_circle->isChecked())
     {
         elbow_shape = "圆形";
-        size = ui->lineEdit_diameter->text();
+        size = ui->lineEdit_diameter->text().trimmed();
     }
     else if(ui->radioButton_rect->isChecked())
     {
         elbow_shape = "方形";
-        size = ui->lineEdit_width->text();
+        size = ui->lineEdit_width->text().trimmed();
         if(ui->radioButton_lined->isChecked())
         {
             elbow_shape += "有内衬";
@@ -105,8 +105,8 @@ void Dialog_elbow::on_pushButton_confirm_clicked()
     }
 
     this->component = new Elbow(
-                ui->lineEdit_model->text(),
-                ui->lineEdit_brand->text(),
+                ui->lineEdit_model->text().trimmed(),
+                ui->lineEdit_brand->text().trimmed(),
                 table_id,
                 UUID,
                 ui->comboBox_data_source->currentText(),

@@ -393,6 +393,11 @@ void Widget_air_diff_inputTable::onFilter()
     dialog->deleteLater();
 }
 
+void Widget_air_diff_inputTable::onGenerateTemplate()
+{
+
+}
+
 void Widget_air_diff_inputTable::loadComponentToTable()
 {
     // 获取所有AirDiff组件

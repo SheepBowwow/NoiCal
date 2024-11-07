@@ -104,6 +104,7 @@ QHeaderView::section {
      <widget class="QWidget" name="page_other_send_terminal"/>
      <widget class="QWidget" name="page_static_box"/>
      <widget class="QWidget" name="page_duct_with_multi_ranc"/>
+     <widget class="QWidget" name="page_diffuser_branch"/>
      <widget class="QWidget" name="page_tee"/>
      <widget class="QWidget" name="page_pipe"/>
      <widget class="QWidget" name="page_elbow"/>

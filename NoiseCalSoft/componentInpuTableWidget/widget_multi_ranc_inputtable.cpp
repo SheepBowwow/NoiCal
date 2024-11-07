@@ -74,11 +74,9 @@ void Widget_Multi_ranc_inputTable::onRevise()
     {
         // 假设你的复选框在第一列
         QWidget* widget = tableWidget->cellWidget(row, 0);
-        QCheckBox* checkBox = widget ? qobject_cast<QCheckBox*>(widget) : nullptr;
+        QCheckBox* checkBox = widget ? widget->findChild<QCheckBox*>() : nullptr;
         if(checkBox && checkBox->isChecked())
         {
-            // 获取UUID，假设它在最后一列
-            QString UUID = tableWidget->item(row, tableWidget->columnCount() - 1)->text();
             // 调用通用的修订函数，传入正确的类型参数
             componentRevision<Multi_ranc, Dialog_duct_with_multi_ranc>(tableWidget, row);
         }
@@ -93,6 +91,11 @@ void Widget_Multi_ranc_inputTable::onInput()
 void Widget_Multi_ranc_inputTable::onOutput()
 {
     
+}
+
+void Widget_Multi_ranc_inputTable::onGenerateTemplate()
+{
+
 }
 
 void Widget_Multi_ranc_inputTable::loadComponentToTable()

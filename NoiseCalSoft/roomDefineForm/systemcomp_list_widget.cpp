@@ -6,6 +6,7 @@
 
 #include <QCheckBox>
 #include <QMessageBox>
+#include <QTimer>
 
 SystemComp_list_widget::SystemComp_list_widget(QString system_name, QWidget *parent) :
     QWidget(parent),
@@ -14,8 +15,6 @@ SystemComp_list_widget::SystemComp_list_widget(QString system_name, QWidget *par
 {
     ui->setupUi(this);
     ui->tableWidget->verticalHeader()->setVisible(false);
-
-    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch); // 自适应大小
 
     // 连接 RoomCalInfoManager 的信号和槽函数
     connect(&RoomCalInfoManager::getInstance(), &RoomCalInfoManager::compAddToSystemList,
@@ -74,6 +73,46 @@ void SystemComp_list_widget::addCompToTable(const QString &systemName, const QSt
     ui->tableWidget->setItem(rowToInsert, 1, typeItem);
     ui->tableWidget->setItem(rowToInsert, 2, numberItem);
     ui->tableWidget->setItem(rowToInsert, 3, modelItem);
+}
+
+void SystemComp_list_widget::setTableHeaderColWidth()
+{
+    QTableWidget* tableWidget = ui->tableWidget; // 获取表格对象
+
+    // 固定第一列宽度
+    int firstColumnWidth = 30;
+    tableWidget->setColumnWidth(0, firstColumnWidth); // 设置第一列宽度
+    tableWidget->horizontalHeader()->setStretchLastSection(true);
+    // 使用 QTimer 延迟执行以获取实际宽度
+    QTimer::singleShot(0, this, [=]() {
+        int totalWidth = tableWidget->viewport()->width(); // 获取实际宽度
+
+        // 计算剩余宽度
+        int remainingWidth = totalWidth - firstColumnWidth;
+        int remainingColumnCount = tableWidget->columnCount() - 1; // 剩余列数
+
+        if (remainingColumnCount > 0) {
+            int equalWidth = remainingWidth / remainingColumnCount; // 平分剩余宽度
+
+            // 设置其余列初始宽度
+            for (int col = 1; col < tableWidget->columnCount() - 1; ++col) {
+                tableWidget->setColumnWidth(col, equalWidth);
+            }
+        }
+
+        // 设置所有列为可以调整
+        for (int col = 0; col < tableWidget->columnCount(); ++col) {
+            tableWidget->horizontalHeader()->setSectionResizeMode(col, QHeaderView::Interactive);
+        }
+    });
+}
+
+void SystemComp_list_widget::showEvent(QShowEvent *event)
+{
+    QWidget::showEvent(event);
+    std::call_once(_flag, [this]() {
+        setTableHeaderColWidth();
+    }); // 只执行一次
 }
 
 

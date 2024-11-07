@@ -75,7 +75,7 @@ void Widget_Elbow_inputTable::onRevise()
     {
         // 假设你的复选框在第一列
         QWidget* widget = tableWidget->cellWidget(row, 0);
-        QCheckBox* checkBox = widget ? qobject_cast<QCheckBox*>(widget) : nullptr;
+        QCheckBox* checkBox = widget ? widget->findChild<QCheckBox*>() : nullptr;
         if(checkBox && checkBox->isChecked())
         {
             // 获取UUID，假设它在最后一列
@@ -94,6 +94,11 @@ void Widget_Elbow_inputTable::onInput()
 void Widget_Elbow_inputTable::onOutput()
 {
     
+}
+
+void Widget_Elbow_inputTable::onGenerateTemplate()
+{
+
 }
 
 void Widget_Elbow_inputTable::loadComponentToTable()

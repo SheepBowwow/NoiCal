@@ -2,6 +2,7 @@
 #define SYSTEMCOMP_LIST_WIDGET_H
 
 #include <QWidget>
+#include <mutex>
 
 namespace Ui {
 class SystemComp_list_widget;
@@ -28,6 +29,12 @@ public slots:
 private:
     Ui::SystemComp_list_widget *ui;
     QString system_name;
+    std::once_flag _flag; // 静态 once_flag 变量
+    void setTableHeaderColWidth();
+
+    // QWidget interface
+protected:
+    void showEvent(QShowEvent *event) override;
 };
 
 #endif // SYSTEMCOMP_LIST_WIDGET_H

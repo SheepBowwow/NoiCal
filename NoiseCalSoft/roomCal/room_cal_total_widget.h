@@ -23,8 +23,16 @@ public:
     void setDuctNum(QString ductNum);
 
     void setMVZName(QString MVZName);
+
+    void addDuctToTable(QString ductNumber, double test_point_distance, double A_widget_noise);
+
+    void handle_duct_number_revise(QString origin_number, QString new_number);
+    void handle_duct_remove(QString remove_number);
+
 private:
     Ui::Room_cal_total_widget *ui;
+
+    void initTableWidget();
 };
 
 #endif // ROOM_CAL_TOTAL_WIDGET_H

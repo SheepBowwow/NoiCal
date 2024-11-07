@@ -62,6 +62,7 @@ public slots:
     virtual void onRevise() = 0;
     virtual void onInput() = 0;
     virtual void onOutput() = 0;
+    virtual void onGenerateTemplate() = 0;
     void onSelectAll();
     void onUnSelectAll();
     virtual void onConfirm();

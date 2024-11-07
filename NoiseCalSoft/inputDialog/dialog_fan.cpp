@@ -65,8 +65,8 @@ void Dialog_fan::on_pushButton_confirm_clicked()
 
     for(size_t i = 0; i < noi_in.size(); i++)
     {
-        noi_in[i] = noi_in_lineEdits[i]->text();
-        noi_out[i] = noi_out_lineEdits[i]->text();
+        noi_in[i] = noi_in_lineEdits[i]->text().trimmed();
+        noi_out[i] = noi_out_lineEdits[i]->text().trimmed();
     }
 
     /**点击确认前检查，数据是否填完整**/
@@ -76,14 +76,14 @@ void Dialog_fan::on_pushButton_confirm_clicked()
     }
 
     this->component = new Fan(
-                ui->lineEdit_model->text(),
-                ui->lineEdit_brand->text(),
+                ui->lineEdit_model->text().trimmed(),
+                ui->lineEdit_brand->text().trimmed(),
                 table_id,
                 UUID,
                 ui->comboBox_data_source->currentText(),
-                ui->lineEdit_number->text(),
-                ui->lineEdit_air_volume->text(),
-                ui->lineEdit_static_pressure->text(),
+                ui->lineEdit_number->text().trimmed(),
+                ui->lineEdit_air_volume->text().trimmed(),
+                ui->lineEdit_static_pressure->text().trimmed(),
                 noi_in,
                 noi_out);
 

@@ -74,7 +74,7 @@ void Widget_static_box_inputTable::onRevise()
     {
         // 假设你的复选框在第一列
         QWidget* widget = tableWidget->cellWidget(row, 0);
-        QCheckBox* checkBox = widget ? qobject_cast<QCheckBox*>(widget) : nullptr;
+        QCheckBox* checkBox = widget ? widget->findChild<QCheckBox*>() : nullptr;
         if(checkBox && checkBox->isChecked())
         {
             // 调用通用的修订函数，传入正确的类型参数
@@ -91,6 +91,11 @@ void Widget_static_box_inputTable::onInput()
 void Widget_static_box_inputTable::onOutput()
 {
     
+}
+
+void Widget_static_box_inputTable::onGenerateTemplate()
+{
+
 }
 
 void Widget_static_box_inputTable::loadComponentToTable()

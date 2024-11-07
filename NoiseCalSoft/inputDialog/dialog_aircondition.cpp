@@ -3,7 +3,7 @@
 #include "calFunction/cal_function.h"
 #include <cmath>
 
-Dialog_aircondition::Dialog_aircondition(QWidget *parent, int editRow, int fan_counts,  const Aircondition& data) :
+Dialog_aircondition::Dialog_aircondition(QWidget *parent, int editRow, int fan_counts, const Aircondition& data) :
     InputBaseDialog(parent),
     editRow(editRow), // 初始化editRow
     fan_counts(fan_counts),
@@ -120,8 +120,8 @@ void Dialog_aircondition::on_pushButton_confirm_clicked()
 
     for(size_t i = 0; i < noi_send_in.size(); i++)
     {
-        noi_send_in[i] = noi_send_in_lineEdits[i]->text();
-        noi_send_out[i] = noi_send_out_lineEdits[i]->text();
+        noi_send_in[i] = noi_send_in_lineEdits[i]->text().trimmed();
+        noi_send_out[i] = noi_send_out_lineEdits[i]->text().trimmed();
     }
     if(fan_counts == 2)
     {
@@ -130,8 +130,8 @@ void Dialog_aircondition::on_pushButton_confirm_clicked()
 
         for(size_t i = 0; i < noi_exhaust_in.size(); i++)
         {
-            noi_exhaust_in[i] = noi_exhaust_in_lineEdits[i]->text();
-            noi_exhaust_out[i] = noi_exhaust_out_lineEdits[i]->text();
+            noi_exhaust_in[i] = noi_exhaust_in_lineEdits[i]->text().trimmed();
+            noi_exhaust_out[i] = noi_exhaust_out_lineEdits[i]->text().trimmed();
         }
 
         /**点击确认前检查，数据是否填完整**/
@@ -141,18 +141,18 @@ void Dialog_aircondition::on_pushButton_confirm_clicked()
         }
 
         this->component = new Aircondition(
-                    ui->lineEdit_model->text(),
-                    ui->lineEdit_brand->text(),
+                    ui->lineEdit_model->text().trimmed(),
+                    ui->lineEdit_brand->text().trimmed(),
                     table_id,
                     UUID,
                     ui->comboBox_data_source->currentText(),
                     fan_counts,
-                    ui->lineEdit_send_number->text(),
-                    ui->lineEdit_send_air_volume->text(),
-                    ui->lineEdit_send_static_pressure->text(),
-                    ui->lineEdit_exhaust_number->text(),
-                    ui->lineEdit_exhaust_air_volume->text(),
-                    ui->lineEdit_exhaust_static_pressure->text(),
+                    ui->lineEdit_send_number->text().trimmed(),
+                    ui->lineEdit_send_air_volume->text().trimmed(),
+                    ui->lineEdit_send_static_pressure->text().trimmed(),
+                    ui->lineEdit_exhaust_number->text().trimmed(),
+                    ui->lineEdit_exhaust_air_volume->text().trimmed(),
+                    ui->lineEdit_exhaust_static_pressure->text().trimmed(),
                     noi_send_in,
                     noi_send_out,
                     noi_exhaust_in,
@@ -166,15 +166,15 @@ void Dialog_aircondition::on_pushButton_confirm_clicked()
             return;
         }
         this->component = new Aircondition(
-                    ui->lineEdit_model->text(),
-                    ui->lineEdit_brand->text(),
+                    ui->lineEdit_model->text().trimmed(),
+                    ui->lineEdit_brand->text().trimmed(),
                     table_id,
                     UUID,
                     ui->comboBox_data_source->currentText(),
                     fan_counts,
-                    ui->lineEdit_send_number->text(),
-                    ui->lineEdit_send_air_volume->text(),
-                    ui->lineEdit_send_static_pressure->text(),
+                    ui->lineEdit_send_number->text().trimmed(),
+                    ui->lineEdit_send_air_volume->text().trimmed(),
+                    ui->lineEdit_send_static_pressure->text().trimmed(),
                     noi_send_in,
                     noi_send_out);
     }

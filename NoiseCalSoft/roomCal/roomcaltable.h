@@ -68,6 +68,8 @@ public:
     bool isTableCompleted();
     bool isRoomCalTable();
     bool isNoiseTable();
+    double getDuctAWidgetNoise();
+    double getDuctTestPointDistance();
 
 signals:
     void addBeforeClicked(int index);
@@ -81,7 +83,7 @@ protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
 
 private slots:
-    void updateModelComboBoxItems(const QString& uuid);         //用于更新型号comboBox
+    void updateModelComboBoxItems(const QString& typeName);         //用于更新型号comboBox
 
     void sendTableChangedSignal();          //发送表格修改信号
 
@@ -95,6 +97,7 @@ private slots:
 
     void static_box_atten_cal();
     void multi_ranc_atten_cal();
+    void diffuser_branch_atten_cal();
     void tee_atten_cal();
     void pipe_atten_cal();
     void elbow_atten_cal();
@@ -189,6 +192,8 @@ private slots:
 
     void on_comboBox_elbow_type_currentTextChanged(const QString &arg1);
 
+    void on_comboBox_diffuser_branch_model_currentTextChanged(const QString &arg1);
+
 private:
     Ui::RoomCalTable *ui;
     void clearPage(QWidget *widget, bool isPageChanged);
@@ -201,6 +206,7 @@ private:
     std::pair<int, int> splitDimension(const QString &size);    //用来分割矩形的size
     void registerSetTableInfoFuncMap();
     void registerCreateTableInfoJsonFuncMap();
+    void registerCompUpdateFuncMap();
     void initRoomCalSlotFuncConn();
 
 private:
@@ -209,8 +215,11 @@ private:
     QVector<QLineEdit*> noi_after_cal_lineEdits;
     QVector<QLineEdit*> noi_lineEdits;       //噪音
     QVector<QLineEdit*> terminal_atten_lineEdits;       //末端衰减
+    QVector<QLineEdit*> terminal_atten_after_lineEdits;       //末端衰减后
     QVector<QLineEdit*> terminal_refl_lineEdits;       //末端反射衰减
+    QVector<QLineEdit*> terminal_refl_after_lineEdits;       //末端反射衰减后
     QVector<QLineEdit*> terminal_noi_lineEdits;       //末端气流噪音
+    QVector<QLineEdit*> terminal_noi_after_lineEdits;       //末端气流噪音叠加后
     QVector<QLineEdit*> each_atten_lineEdits;       //1米直管或单个弯头衰减
     QVector<QLineEdit*> sum_atten_lineEdits;       //衰减汇总
     QVector<QLineEdit*> atten_lineEdits;       //衰减
@@ -218,6 +227,7 @@ private:
     QVector<QLineEdit*> room_noi_revise_lineEdits;       // 房间声压与声功率修正(dB)
     QVector<QLineEdit*> test_point_noi_lineEdits;       //衰减
     QLineEdit*  A_weighted_noi_lineEdit;                //A级计权噪音
+    QLineEdit*  test_point_distance_lineEdit;                //A级计权噪音
     QVector<QLineEdit*> currentConnectedLineEdits;  //用来保存当前连接的lineEdit
     /**
      * @brief currentAllComponentList
@@ -229,6 +239,7 @@ private:
 
     QMap<RoomCalTableType, std::function<void(QJsonObject)>> setTableInfoFunc;
     QMap<RoomCalTableType, std::function<void(QJsonObject&)>> createTableInfoJsonFunc;
+    QMap<RoomCalTableType, std::function<void()>> compUpdateFunc;
 };
 
 #endif // ROOMCALTABLE_H

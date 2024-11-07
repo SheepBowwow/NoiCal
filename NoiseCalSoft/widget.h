@@ -247,6 +247,7 @@ private:
     QTreeWidgetItem *item_branch_atten;                             //4.1 分支衰减
     QTreeWidgetItem *item_static_box;                               //4.1.1 静压箱
     QTreeWidgetItem *item_duct_with_multi_ranc;                     //4.1.2 风道多分支
+    QTreeWidgetItem *item_diffuser_branch;                     //4.1.2 空调器风口分支
     QTreeWidgetItem *item_tee_atten;                                //4.1.3 三通衰减
     QTreeWidgetItem *item_pipe_atten;                                //4.2 直管衰减
     QTreeWidgetItem *item_elbow_atten;                                //4.3 弯头衰减

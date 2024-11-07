@@ -109,6 +109,11 @@ void Widget_static_box_grille_inputTable::onOutput()
     
 }
 
+void Widget_static_box_grille_inputTable::onGenerateTemplate()
+{
+
+}
+
 void Widget_static_box_grille_inputTable::loadComponentToTable()
 {
     auto componentList = ComponentManager::getInstance().getComponentsByType(inComponentDB, component_type_name::STATICBOX_GRILLE);

@@ -29,6 +29,7 @@ const QString DISP_VENT_TERMINAL = QStringLiteral("置换通风末端");
 const QString OTHER_SEND_TERMINAL = QStringLiteral("其他送风末端");
 const QString STATICBOX = QStringLiteral("静压箱");
 const QString MULTI_RANC = QStringLiteral("风道多分支");
+const QString DIFFUSER_BRANCH = QStringLiteral("空调器风口分支");
 const QString TEE = QStringLiteral("三通");
 const QString PIPE = QStringLiteral("直管");
 const QString ELBOW = QStringLiteral("弯头");
@@ -1618,8 +1619,8 @@ typedef struct Static_box : Branch
         this->data_source = record.value("data_source").toString();
 
         // Branch specific member variables
-        this->q1 = record.value("q1").toDouble(); // Assuming real is stored as double in QSqlRecord
-        this->q = record.value("q").toDouble(); // Assuming real is stored as double in QSqlRecord
+        this->q1 = record.value("q1").toString(); // Assuming real is stored as double in QSqlRecord
+        this->q = record.value("q").toString(); // Assuming real is stored as double in QSqlRecord
 
         // Handle attenuation data (assuming `deserializeAttenuation` function exists)
         QString attenJson = record.value("atten_json").toString();
@@ -1685,8 +1686,8 @@ typedef struct Multi_ranc : Branch
         this->data_source = record.value("data_source").toString();
 
         // Branch specific member variables
-        this->q1 = record.value("q1").toDouble(); // Assuming real is stored as double in QSqlRecord
-        this->q = record.value("q").toDouble(); // Assuming real is stored as double in QSqlRecord
+        this->q1 = record.value("q1").toString(); // Assuming real is stored as double in QSqlRecord
+        this->q = record.value("q").toString(); // Assuming real is stored as double in QSqlRecord
 
         // Handle attenuation data (assuming `deserializeAttenuation` function exists)
         QString attenJson = record.value("atten_json").toString();
@@ -1737,6 +1738,72 @@ public:
     }
 }Multi_ranc;
 
+typedef struct Diffuser_branch : Branch
+{
+    // 默认构造函数
+    Diffuser_branch() = default;
+
+    Diffuser_branch(const QSqlRecord& record) {
+        // Base class member variables (inherited from ComponentBase)
+        this->model = record.value("model").toString();
+        this->brand = record.value("brand").toString();
+        this->table_id = record.value("table_id").toString();
+        this->UUID = record.value("UUID").toString();
+        this->data_source = record.value("data_source").toString();
+
+        // Branch specific member variables
+        this->q1 = record.value("q1").toString(); // Assuming real is stored as double in QSqlRecord
+        this->q = record.value("q").toString(); // Assuming real is stored as double in QSqlRecord
+
+        // Handle attenuation data (assuming `deserializeAttenuation` function exists)
+        QString attenJson = record.value("atten_json").toString();
+        this->atten = deserializeAtten(attenJson);
+    }
+
+    // 构造函数，包含atten数组参数
+    Diffuser_branch(const QString& model, const QString& brand, const QString& table_id,
+               const QString& UUID, const QString& data_source,
+               const QString& q1, const QString& q, const array<QString, 8>& atten)
+        : Branch(model, brand, table_id, UUID, data_source, q1, q, atten) {}
+
+    // 构造函数，不包含atten数组参数
+    Diffuser_branch(const QString& model, const QString& brand, const QString& table_id,
+               const QString& UUID, const QString& data_source,
+               const QString& q1, const QString& q)
+        : Branch(model, brand, table_id, UUID, data_source, q1, q) {}
+
+    // ComponentBase interface
+public:
+    QString typeName() const override{
+        return component_type_name::DIFFUSER_BRANCH;
+    }
+
+    // ComponentBase interface
+public:
+    QList<QStringList> getComponentDataAsStringList(bool inDB = false) const override
+    {
+        QList<QStringList> dataLists;
+        QStringList data = {
+            table_id,
+            model,
+            brand,
+            q,
+            q1
+        };
+
+        // 迭代 noi_out 数组来填充 QStringList
+        for (const auto& noi_value : atten) {
+            data.push_back(noi_value);
+        }
+
+        data.push_back(data_source);
+        data.push_back(UUID);
+
+        dataLists.append(data);
+        return dataLists;
+    }
+}Diffuser_branch;
+
 typedef struct Tee : Branch
 {
     // 默认构造函数
@@ -1751,8 +1818,8 @@ typedef struct Tee : Branch
         this->data_source = record.value("data_source").toString();
 
         // Branch specific member variables
-        this->q1 = record.value("q1").toDouble(); // Assuming real is stored as double in QSqlRecord
-        this->q = record.value("q").toDouble(); // Assuming real is stored as double in QSqlRecord
+        this->q1 = record.value("q1").toString(); // Assuming real is stored as double in QSqlRecord
+        this->q = record.value("q").toString(); // Assuming real is stored as double in QSqlRecord
 
         // Handle attenuation data (assuming `deserializeAttenuation` function exists)
         QString attenJson = record.value("atten_json").toString();

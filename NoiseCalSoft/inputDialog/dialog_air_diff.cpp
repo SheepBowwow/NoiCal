@@ -149,28 +149,28 @@ void Dialog_air_diff::on_pushButton_confirm_clicked()
 
     for(size_t i = 0; i < noi.size(); i++)
     {
-        noi[i] = noi_lineEdits[i]->text();
+        noi[i] = noi_lineEdits[i]->text().trimmed();
     }
 
     for(size_t i = 0; i < atten.size(); i++)
     {
-        atten[i] = atten_lineEdits[i]->text();
+        atten[i] = atten_lineEdits[i]->text().trimmed();
     }
 
     for(size_t i = 0; i < refl.size(); i++)
     {
-        refl[i] = refl_lineEdits[i]->text();
+        refl[i] = refl_lineEdits[i]->text().trimmed();
     }
 
 
     if(ui->radioButton_circle->isChecked())
     {
-        size = ui->lineEdit_diameter->text();
+        size = ui->lineEdit_diameter->text().trimmed();
         shape = "圆形";
     }
     if(ui->radioButton_rect->isChecked())
     {
-        size = ui->lineEdit_length->text() + "x" + ui->lineEdit_width->text();
+        size = ui->lineEdit_length->text().trimmed() + "x" + ui->lineEdit_width->text().trimmed();
         shape = "方形";
     }
 
@@ -186,18 +186,18 @@ void Dialog_air_diff::on_pushButton_confirm_clicked()
                 "",
                 table_id,
                 UUID,
-                ui->comboBox_noi_data_source->currentText(),
-                ui->comboBox_atten_data_source->currentText(),
-                ui->comboBox_refl_data_source->currentText(),
+                ui->comboBox_noi_data_source->currentText().trimmed(),
+                ui->comboBox_atten_data_source->currentText().trimmed(),
+                ui->comboBox_refl_data_source->currentText().trimmed(),
                 shape,
                 size,
                 noi,
                 atten,
                 refl,
-                ui->lineEdit_air_distributor_model->text(),
-                ui->lineEdit_air_distributor_brand->text(),
-                ui->lineEdit_diffuser_model->text(),
-                ui->lineEdit_diffuser_brand->text());
+                ui->lineEdit_air_distributor_model->text().trimmed(),
+                ui->lineEdit_air_distributor_brand->text().trimmed(),
+                ui->lineEdit_diffuser_model->text().trimmed(),
+                ui->lineEdit_diffuser_brand->text().trimmed());
 
 
     this->accept(); // 关闭对话框

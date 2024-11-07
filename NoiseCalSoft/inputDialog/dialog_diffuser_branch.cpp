@@ -1,28 +1,24 @@
-#include "inputDialog/dialog_silencer.h"
-#include "ui_dialog_silencer.h"
-#include <QDir>
-#include <cmath>
-#include <QSet>
+#include "dialog_diffuser_branch.h"
+#include "ui_dialog_diffuser_branch.h"
 
-Dialog_silencer::Dialog_silencer(QString type, QWidget *parent, int editRow,  const Silencer& data) :
+Dialog_diffuser_branch::Dialog_diffuser_branch(QWidget *parent, int editRow,  const Diffuser_branch& data) :
     InputBaseDialog(parent),
     editRow(editRow), // 初始化editRow
-    ui(new Ui::Dialog_silencer)
+    ui(new Ui::Dialog_diffuser_branch)
 {
     ui->setupUi(this);
     setTopWidget(ui->widget_top);  // 设置顶部部件
 
     atten_lineEdits = { ui->lineEdit_63, ui->lineEdit_125, ui->lineEdit_250, ui->lineEdit_500,
-                      ui->lineEdit_1k, ui->lineEdit_2k, ui->lineEdit_4k, ui->lineEdit_8k};
-
-    ui->label_title->setText(type);
-    ui->label_title->adjustSize();
-
+                       ui->lineEdit_1k, ui->lineEdit_2k, ui->lineEdit_4k, ui->lineEdit_8k};
 
     if(editRow != -1)
     {
         ui->lineEdit_brand->setText(data.brand);
         ui->lineEdit_model->setText(data.model);
+        ui->lineEdit_q->setText(data.q);
+        ui->lineEdit_q1->setText(data.q1);
+        ui->comboBox_data_source->setCurrentText(data.data_source);
         table_id = data.table_id;
         UUID = data.UUID;
 
@@ -32,23 +28,27 @@ Dialog_silencer::Dialog_silencer(QString type, QWidget *parent, int editRow,  co
         }
     }
 
-
     this->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint | Qt::WindowStaysOnTopHint);
+
 }
 
-Dialog_silencer::~Dialog_silencer()
+Dialog_diffuser_branch::~Dialog_diffuser_branch()
 {
     delete ui;
 }
 
-void* Dialog_silencer::getComponent()
+void Dialog_diffuser_branch::on_close_clicked()
+{
+    this->close();
+}
+
+void* Dialog_diffuser_branch::getComponent()
 {
     return component == nullptr ? nullptr : component;
 }
 
-
 //点击确认键
-void Dialog_silencer::on_pushButton_confirm_clicked()
+void Dialog_diffuser_branch::on_pushButton_confirm_clicked()
 {
     array<QString,8> atten;
 
@@ -63,37 +63,42 @@ void Dialog_silencer::on_pushButton_confirm_clicked()
         return;
     }
 
-    this->component = new Silencer(
-                ui->lineEdit_model->text().trimmed(),
-                ui->lineEdit_brand->text().trimmed(),
-                table_id,
-                UUID,
-                ui->comboBox_data_source->currentText(),
-                ui->label_title->text().trimmed(),
-                atten);
-
+    this->component = new Diffuser_branch(
+        ui->lineEdit_model->text().trimmed(),
+        ui->lineEdit_brand->text().trimmed(),
+        table_id,
+        UUID,
+        ui->comboBox_data_source->currentText(),
+        ui->lineEdit_q1->text().trimmed(),
+        ui->lineEdit_q->text().trimmed(),
+        atten);
     this->accept(); // 关闭对话框
 }
 
-bool Dialog_silencer::check_lineedit()
+bool Dialog_diffuser_branch::check_lineedit()
 {
     for(size_t i = 0; i < atten_lineEdits.size(); i++){
         if(atten_lineEdits[i]->text().isEmpty())
             return false;
     }
-    if(ui->lineEdit_model->text().isEmpty()||
-       ui->lineEdit_brand->text().isEmpty())
-        return false;
+    if(ui->lineEdit_model->text().isEmpty() ||
+        ui->lineEdit_brand->text().isEmpty() ||
+        ui->lineEdit_q1->text().isEmpty()    ||
+        ui->lineEdit_q->text().isEmpty()
+        )return false;
+
     return true;
 }
 
-QList<QStringList> Dialog_silencer::getComponentDataAsStringList() const
+QList<QStringList> Dialog_diffuser_branch::getComponentDataAsStringList() const
 {
     QList<QStringList> dataLists;
     QStringList data = {
         component->table_id,
         component->model,
-        component->brand
+        component->brand,
+        component->q,
+        component->q1
     };
 
     // 迭代 noi_out 数组来填充 QStringList
@@ -106,9 +111,4 @@ QList<QStringList> Dialog_silencer::getComponentDataAsStringList() const
 
     dataLists.append(data);
     return dataLists;
-}
-
-void Dialog_silencer::on_close_clicked()
-{
-    this->close();
 }

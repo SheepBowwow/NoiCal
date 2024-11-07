@@ -154,6 +154,11 @@ void Widget_aircondition_singleFan_inputTable::onOutput()
 
 }
 
+void Widget_aircondition_singleFan_inputTable::onGenerateTemplate()
+{
+
+}
+
 void Widget_aircondition_singleFan_inputTable::handleConfirmation(QSet<QString> uuids)
 {
     for(auto uuid : uuids)

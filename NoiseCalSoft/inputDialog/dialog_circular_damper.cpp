@@ -98,7 +98,7 @@ void Dialog_circular_damper::on_pushButton_confirm_clicked()
 
     for(size_t i = 0; i < noi.size(); i++)
     {
-        noi[i] = noi_lineEdits[i]->text();
+        noi[i] = noi_lineEdits[i]->text().trimmed();
     }
 
     /**点击确认前检查，数据是否填完整**/
@@ -108,14 +108,14 @@ void Dialog_circular_damper::on_pushButton_confirm_clicked()
     }
 
     this->component = new Circular_damper(
-                ui->lineEdit_model->text(),
-                ui->lineEdit_brand->text(),
+                ui->lineEdit_model->text().trimmed(),
+                ui->lineEdit_brand->text().trimmed(),
                 table_id,
                 UUID,
                 ui->comboBox_data_source->currentText(),
-                ui->lineEdit_diameter->text(),
+                ui->lineEdit_diameter->text().trimmed(),
                 ui->comboBox_angle->currentText(),
-                ui->lineEdit_air_volume->text(),
+                ui->lineEdit_air_volume->text().trimmed(),
                 noi);
 
     this->accept(); // 关闭对话框

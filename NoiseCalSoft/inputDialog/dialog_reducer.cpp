@@ -117,32 +117,32 @@ void Dialog_reducer::on_pushButton_confirm_clicked()
 
     for(size_t i = 0; i < atten.size(); i++)
     {
-        atten[i] = atten_lineEdits[i]->text();
+        atten[i] = atten_lineEdits[i]->text().trimmed();
     }
 
     if(ui->radioButton_circle_to_circle->isChecked())
     {
         reducer_type = "圆-圆";
-        reducer_before_size = ui->lineEdit_before_diameter->text();
-        reducer_after_size = ui->lineEdit_after_diameter->text();
+        reducer_before_size = ui->lineEdit_before_diameter->text().trimmed();
+        reducer_after_size = ui->lineEdit_after_diameter->text().trimmed();
     }
     else if(ui->radioButton_circle_to_rect->isChecked())
     {
         reducer_type = "圆-方";
-        reducer_before_size = ui->lineEdit_before_diameter->text();
-        reducer_after_size = ui->lineEdit_after_length->text() + "x" + ui->lineEdit_after_width->text();
+        reducer_before_size = ui->lineEdit_before_diameter->text().trimmed();
+        reducer_after_size = ui->lineEdit_after_length->text().trimmed() + "x" + ui->lineEdit_after_width->text().trimmed();
     }
     else if(ui->radioButton_rect_to_circle->isChecked())
     {
         reducer_type = "方-圆";
-        reducer_before_size = ui->lineEdit_before_length->text() + "x" + ui->lineEdit_before_width->text();
-        reducer_after_size = ui->lineEdit_after_diameter->text();
+        reducer_before_size = ui->lineEdit_before_length->text().trimmed() + "x" + ui->lineEdit_before_width->text().trimmed();
+        reducer_after_size = ui->lineEdit_after_diameter->text().trimmed();
     }
     else if(ui->radioButton_rect_to_rect->isChecked())
     {
         reducer_type = "方-方";
-        reducer_before_size = ui->lineEdit_before_length->text() + "x" + ui->lineEdit_before_width->text();
-        reducer_after_size = ui->lineEdit_after_length->text() + "x" + ui->lineEdit_after_width->text();
+        reducer_before_size = ui->lineEdit_before_length->text().trimmed() + "x" + ui->lineEdit_before_width->text().trimmed();
+        reducer_after_size = ui->lineEdit_after_length->text().trimmed() + "x" + ui->lineEdit_after_width->text().trimmed();
     }
 
     /**点击确认前检查，数据是否填完整**/
@@ -152,8 +152,8 @@ void Dialog_reducer::on_pushButton_confirm_clicked()
     }
 
     this->component = new Reducer(
-                ui->lineEdit_model->text(),
-                ui->lineEdit_brand->text(),
+                ui->lineEdit_model->text().trimmed(),
+                ui->lineEdit_brand->text().trimmed(),
                 table_id,
                 UUID,
                 ui->comboBox_data_source->currentText(),

@@ -103,6 +103,9 @@ font-family: '黑体';
             <pointsize>12</pointsize>
            </font>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="0" column="0">
@@ -181,6 +184,9 @@ font-family: '黑体';
             <pointsize>12</pointsize>
            </font>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="0" column="9">
@@ -196,6 +202,9 @@ font-family: '黑体';
             <family>黑体</family>
             <pointsize>12</pointsize>
            </font>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -244,6 +253,9 @@ font-family: '黑体';
             <pointsize>12</pointsize>
            </font>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="0" column="4">
@@ -290,6 +302,9 @@ font-family: '黑体';
             <family>黑体</family>
             <pointsize>12</pointsize>
            </font>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -368,6 +383,9 @@ font-family: '黑体';
             <family>黑体</family>
             <pointsize>12</pointsize>
            </font>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>

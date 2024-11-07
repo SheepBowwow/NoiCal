@@ -5,6 +5,8 @@
 
 #include <QCheckBox>
 #include <QMessageBox>
+#include <QTimer>
+#include <mutex>
 
 
 Room_define_widget::Room_define_widget(QString systemName, QWidget *parent) :
@@ -14,8 +16,6 @@ Room_define_widget::Room_define_widget(QString systemName, QWidget *parent) :
 {
     ui->setupUi(this);
     ui->tableWidget_room_define->verticalHeader()->setVisible(false);
-
-    ui->tableWidget_room_define->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     //添加房间同时创建主风管
     connect(&RoomCalInfoManager::getInstance(), &RoomCalInfoManager::roomAdd,
@@ -140,6 +140,46 @@ void Room_define_widget::addRoomToTable(const QString& systemName, const QString
         item->setBackground(QBrush(Qt::lightGray)); // 背景颜色设置为灰色
         ui->tableWidget_room_define->setItem(rowToInsert, col++, item);
     }
+}
+
+void Room_define_widget::setTableHeaderColWidth()
+{
+    QTableWidget* tableWidget = ui->tableWidget_room_define; // 获取表格对象
+
+    // 固定第一列宽度
+    int firstColumnWidth = 30;
+    tableWidget->setColumnWidth(0, firstColumnWidth); // 设置第一列宽度
+    tableWidget->horizontalHeader()->setStretchLastSection(true);
+    // 使用 QTimer 延迟执行以获取实际宽度
+    QTimer::singleShot(0, this, [=]() {
+        int totalWidth = tableWidget->viewport()->width(); // 获取实际宽度
+
+        // 计算剩余宽度
+        int remainingWidth = totalWidth - firstColumnWidth;
+        int remainingColumnCount = tableWidget->columnCount() - 1; // 剩余列数
+
+        if (remainingColumnCount > 0) {
+            int equalWidth = remainingWidth / remainingColumnCount; // 平分剩余宽度
+
+            // 设置其余列初始宽度
+            for (int col = 1; col < tableWidget->columnCount() - 1; ++col) {
+                tableWidget->setColumnWidth(col, equalWidth);
+            }
+        }
+
+        // 设置所有列为可以调整
+        for (int col = 0; col < tableWidget->columnCount(); ++col) {
+            tableWidget->horizontalHeader()->setSectionResizeMode(col, QHeaderView::Interactive);
+        }
+    });
+}
+
+void Room_define_widget::showEvent(QShowEvent *event)
+{
+    QWidget::showEvent(event);
+    std::call_once(_flag, [this]() {
+        setTableHeaderColWidth();
+    }); // 只执行一次
 }
 
 void Room_define_widget::on_pushButton_del_clicked()

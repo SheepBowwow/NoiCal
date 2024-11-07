@@ -107,6 +107,11 @@ void Widget_Disp_vent_terminal_inputTable::onOutput()
     
 }
 
+void Widget_Disp_vent_terminal_inputTable::onGenerateTemplate()
+{
+
+}
+
 void Widget_Disp_vent_terminal_inputTable::loadComponentToTable()
 {
     // 从组件管理器获取所有的分散通风末端组件

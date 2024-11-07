@@ -111,28 +111,28 @@ void Dialog_pump_send::on_pushButton_confirm_clicked()
 
     for(size_t i = 0; i < noi.size(); i++)
     {
-        noi[i] = noi_lineEdits[i]->text();
+        noi[i] = noi_lineEdits[i]->text().trimmed();
     }
 
     for(size_t i = 0; i < atten.size(); i++)
     {
-        atten[i] = atten_lineEdits[i]->text();
+        atten[i] = atten_lineEdits[i]->text().trimmed();
     }
 
     for(size_t i = 0; i < refl.size(); i++)
     {
-        refl[i] = refl_lineEdits[i]->text();
+        refl[i] = refl_lineEdits[i]->text().trimmed();
     }
 
 
     if(ui->radioButton_circle->isChecked())
     {
-        size = ui->lineEdit_diameter->text();
+        size = ui->lineEdit_diameter->text().trimmed();
         shape = "圆形";
     }
     if(ui->radioButton_rect->isChecked())
     {
-        size = ui->lineEdit_length->text() + "x" + ui->lineEdit_width->text();
+        size = ui->lineEdit_length->text().trimmed() + "x" + ui->lineEdit_width->text().trimmed();
         shape = "方形";
     }
 
@@ -143,8 +143,8 @@ void Dialog_pump_send::on_pushButton_confirm_clicked()
     }
 
     this->component = new PumpSend(
-                ui->lineEdit_model->text(),
-                ui->lineEdit_brand->text(),
+                ui->lineEdit_model->text().trimmed(),
+                ui->lineEdit_brand->text().trimmed(),
                 table_id,
                 UUID,
                 ui->comboBox_noi_data_source->currentText(),
@@ -155,7 +155,7 @@ void Dialog_pump_send::on_pushButton_confirm_clicked()
                 noi,
                 atten,
                 refl,
-                ui->label_title->text());
+                ui->label_title->text().trimmed());
 
     this->accept(); // 关闭对话框
 }

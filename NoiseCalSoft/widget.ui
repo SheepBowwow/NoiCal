@@ -647,7 +647,7 @@ font-size: 13px;
 }</string>
    </property>
    <property name="currentIndex">
-    <number>29</number>
+    <number>9</number>
    </property>
    <widget class="QWidget" name="page_login">
     <layout class="QGridLayout" name="gridLayout" rowstretch="2,5,4">
@@ -2103,6 +2103,7 @@ color: white;
    <widget class="QWidget" name="page_other_send_terminal"/>
    <widget class="QWidget" name="page_static_box"/>
    <widget class="QWidget" name="page_duct_with_multi_ranc"/>
+   <widget class="QWidget" name="page_diffuser_branch"/>
    <widget class="QWidget" name="page_tee"/>
    <widget class="QWidget" name="page_pipe"/>
    <widget class="QWidget" name="page_elbow"/>

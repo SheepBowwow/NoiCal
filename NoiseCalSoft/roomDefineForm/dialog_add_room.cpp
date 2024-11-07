@@ -106,11 +106,6 @@ void Dialog_add_room::switchOuterMode()
     ui->label_duct_num->setText("噪音源支管数量:");
     ui->label_reference->setText("引用室外编号");
 
-    ui->comboBox_place_type->addItem("外部区域");
-    ui->comboBox_place_type->setCurrentText("外部区域");
-    // 设置为只读
-    ui->comboBox_place_type->setEnabled(false);
-
     ui->comboBox_reference->clear();
     for(auto& referenceOuterNumber : RoomCalInfoManager::getInstance().getCalOuterNumbers(_systemOrMVZName)) {
         ui->comboBox_reference->addItem(referenceOuterNumber);

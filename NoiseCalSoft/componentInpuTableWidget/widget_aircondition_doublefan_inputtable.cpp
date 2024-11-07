@@ -1,6 +1,9 @@
 #include "widget_aircondition_doublefan_inputtable.h"
 #include "ui_widget_base_inputtable.h"
 #include "inputDialog/dialog_aircondition.h"
+#include "office/excelengine.h"
+#include <QFileDialog>
+#include <QResource>
 
 Widget_aircondition_doubleFan_inputTable::Widget_aircondition_doubleFan_inputTable(bool inComponentDB, QWidget *parent) :
     Widget_base_inputTable(inComponentDB, parent)
@@ -19,20 +22,31 @@ Widget_aircondition_doubleFan_inputTable::~Widget_aircondition_doubleFan_inputTa
 {
 }
 
-
 void Widget_aircondition_doubleFan_inputTable::mergeCells(int startRow)
 {
     QTableWidget *tableWidget = ui->tableWidget;
     for(int i = 0; i < tableWidget->columnCount(); i++)
     {
-        if(i == 7 || (i == 2 && !inComponentDB) || i == 5 || i == 6)
-        {
-            tableWidget->setSpan(startRow, i, 2, 1);
-            tableWidget->setSpan(startRow + 2, i, 2, 1);
-        }
-        else if(i < 7 || i > 17)
-        {
-            tableWidget->setSpan(startRow, i, 4, 1);
+        if(inComponentDB) {
+            if(i == 4 || i == 5 || i == 6)
+            {
+                tableWidget->setSpan(startRow, i, 2, 1);
+                tableWidget->setSpan(startRow + 2, i, 2, 1);
+            }
+            else if(i < 4 || i > 16)
+            {
+                tableWidget->setSpan(startRow, i, 4, 1);
+            }
+        } else {
+            if(i == 2 || i == 5 || i == 6 || i == 7)
+            {
+                tableWidget->setSpan(startRow, i, 2, 1);
+                tableWidget->setSpan(startRow + 2, i, 2, 1);
+            }
+            else if(i < 5 || i > 17)
+            {
+                tableWidget->setSpan(startRow, i, 4, 1);
+            }
         }
     }
 
@@ -58,6 +72,23 @@ void Widget_aircondition_doubleFan_inputTable::mergeCells(int startRow)
     layout->setAlignment(Qt::AlignCenter);
     layout->setContentsMargins(0, 0, 0, 0);
     tableWidget->setCellWidget(startRow, 0, widget);
+}
+
+void Widget_aircondition_doubleFan_inputTable::addComponent(QSharedPointer<Aircondition> &component)
+{
+    component->table_id = QString::number(ui->tableWidget->rowCount() / 4 + 1);
+    if (component != nullptr) {
+        auto lists = component->getComponentDataAsStringList(inComponentDB);
+
+        // 使用通用函数添加行
+        addRowToTable(ui->tableWidget, lists[0]);
+        addRowToTable(ui->tableWidget, lists[1]);
+        addRowToTable(ui->tableWidget, lists[2]);
+        addRowToTable(ui->tableWidget, lists[3]);
+        componentManager.addComponent(component, inComponentDB);
+
+        mergeCells(ui->tableWidget->rowCount() - 4);
+    }
 }
 
 void Widget_aircondition_doubleFan_inputTable::loadComponentToTable()
@@ -132,20 +163,7 @@ void Widget_aircondition_doubleFan_inputTable::onAdd()
                 component = QSharedPointer<Aircondition>(rawPointer);
             else
                 return;
-            component->table_id = QString::number(tableWidget->rowCount() / 4 + 1);
-            if (component != nullptr) {
-                auto lists = component->getComponentDataAsStringList(inComponentDB);
-
-                // 使用通用函数添加行
-                addRowToTable(tableWidget, lists[0]);
-                addRowToTable(tableWidget, lists[1]);
-                addRowToTable(tableWidget, lists[2]);
-                addRowToTable(tableWidget, lists[3]);
-
-                componentManager.addComponent(component, inComponentDB);
-
-                mergeCells(rowCount);
-            }
+            addComponent(component);
         }
     }
     else
@@ -172,7 +190,7 @@ void Widget_aircondition_doubleFan_inputTable::onDel()
 
 void Widget_aircondition_doubleFan_inputTable::handleConfirmation(QSet<QString> uuids)
 {
-    for(auto uuid : uuids)
+    for(auto& uuid : uuids)
     {
         QSharedPointer<ComponentBase> componentBase = ComponentManager::getInstance().findComponent(true, uuid);;
         if(QSharedPointer<Aircondition> component = qSharedPointerCast<Aircondition>(componentBase))
@@ -180,6 +198,11 @@ void Widget_aircondition_doubleFan_inputTable::handleConfirmation(QSet<QString> 
             // 使用深拷贝构造函数来创建一个新的 Fan 对象
             QSharedPointer<Aircondition> newComponent = QSharedPointer<Aircondition>(new Aircondition(*component));
             if (newComponent != nullptr) {
+
+                if(newComponent->send_number.isEmpty() && newComponent->exhaust_number.isEmpty()) {
+                    newComponent->send_number = "-";
+                    newComponent->exhaust_number = "-";
+                }
 
                 auto lists = newComponent->getComponentDataAsStringList(false);
 
@@ -193,7 +216,7 @@ void Widget_aircondition_doubleFan_inputTable::handleConfirmation(QSet<QString> 
 
                 // 重新编号
                 for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
-                    QTableWidgetItem* item = new QTableWidgetItem(QString::number(4 == 1 ? (row + 1) : (row / 4 + 1)));
+                    QTableWidgetItem* item = new QTableWidgetItem(QString::number(row / 4 + 1));
                     ui->tableWidget->setItem(row, 1, item); // Assuming the sequence numbers are in the second column (index 1)
                     item->setTextAlignment(Qt::AlignCenter);
                     item->setFlags(Qt::ItemIsEditable);
@@ -260,11 +283,80 @@ void Widget_aircondition_doubleFan_inputTable::onRevise()
 
 void Widget_aircondition_doubleFan_inputTable::onInput()
 {
+    if(!inComponentDB)
+        return;
+    QStringList dataList;
+    ExcelEngine* excelEngine = new ExcelEngine(this);
+    excelEngine->importData(dataList);
+
+    for(auto& data: dataList) {
+        qDebug() << data;
+    }
+    for(int rowGroup = 0; rowGroup < dataList.size(); rowGroup += 4) {
+        QList<QStringList> parsedData; // 用于存储每一行的分割结果
+        for(int row = rowGroup; row < rowGroup + 4; row++) {
+            QStringList fields = dataList[row].split(","); // 按逗号分割每一行
+            parsedData.append(fields);
+        }
+        QString model = parsedData[0][1];
+        QString brand = parsedData[0][2];
+        QString table_id = "-1";
+        QString UUID = "";
+        QString data_source = parsedData[0][16];
+        int fan_counts = 2;
+        QString send_number = "-";
+        QString send_air_volume = parsedData[0][3];
+        QString send_static_pressure = parsedData[0][4];
+        QString exhaust_number = "-";
+        QString exhaust_air_volume = parsedData[2][3];
+        QString exhaust_static_pressure = parsedData[2][4];
+
+        array<QString, 9> noi_send_in = {""};
+        array<QString, 9> noi_send_out = {""};
+        array<QString, 9> noi_exhaust_in = {""};
+        array<QString, 9> noi_exhaust_out = {""};
+
+        QVector<array<QString, 9>*> arrayList = {&noi_send_in, &noi_send_out, &noi_exhaust_in, &noi_exhaust_out};
+        for(int i = 0; i < 4; i++) {
+            for(int j = 0; j < 9; j++) {
+                (*arrayList[i])[j] = parsedData[i][j + 7];
+            }
+        }
+
+        Aircondition* componentRaw = new Aircondition(model, brand, table_id, UUID, data_source, fan_counts, send_number,
+                                                   send_air_volume, send_static_pressure, exhaust_number, exhaust_air_volume,
+                                                   exhaust_static_pressure, noi_send_in,
+                                                   noi_send_out, noi_exhaust_in, noi_exhaust_out);
+
+        QSharedPointer<Aircondition> component = QSharedPointer<Aircondition>(componentRaw);
+        addComponent(component);
+    }
 
 }
 
 void Widget_aircondition_doubleFan_inputTable::onOutput()
 {
+    ExcelEngine* excelEngine = new ExcelEngine(this);
+    excelEngine->deriveExecl(ui->tableWidget, "空调器(双风机)");
+}
 
+void Widget_aircondition_doubleFan_inputTable::onGenerateTemplate()
+{
+    // 打开文件对话框获取保存路径
+    QString savePath = QFileDialog::getSaveFileName(this, "保存文件", "空调器(双风机)导入模板", "Excel文件 (*.xlsx)");
+
+    if (!savePath.isEmpty()) {
+        // 读取qrc中的文件内容
+        QResource resource(":/componentImportTemplate/componentImportTemplate/aircondition_doublefan.xlsx");
+        if (resource.isValid()) {
+            QFile file(savePath);
+            if (file.open(QIODevice::WriteOnly)) {
+                // 将QResource的数据转换为QByteArray
+                QByteArray data(reinterpret_cast<const char*>(resource.data()), resource.size());
+                file.write(data);  // 写入数据
+                file.close();
+            }
+        }
+    }
 }
 

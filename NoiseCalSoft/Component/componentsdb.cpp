@@ -14,6 +14,7 @@
 #include "componentInpuTableWidget/widget_other_send_terminal_inputtable.h"
 #include "componentInpuTableWidget/widget_static_box_inputtable.h"
 #include "componentInpuTableWidget/widget_multi_ranc_inputtable.h"
+#include "componentInpuTableWidget/widget_diffuser_branch_inputtable.h"
 #include "componentInpuTableWidget/widget_tee_inputtable.h"
 #include "componentInpuTableWidget/widget_pipe_inputtable.h"
 #include "componentInpuTableWidget/widget_elbow_inputtable.h"
@@ -69,6 +70,7 @@ void ComponentsDB::initTree()
     item_branch_atten = new QTreeWidgetItem(item_noise_atten,QStringList("分支"));                             //3.1 分支衰减
     item_static_box = new QTreeWidgetItem(item_branch_atten,QStringList("静压箱"));                               //3.1.1 静压箱
     item_duct_with_multi_ranc = new QTreeWidgetItem(item_branch_atten,QStringList("风道多分支"));                     //3.1.2 风道多分支
+    item_diffuser_branch = new QTreeWidgetItem(item_branch_atten,QStringList("空调器风口分支"));                     //3.1.2 空调器风口分支
     item_tee_atten = new QTreeWidgetItem(item_branch_atten,QStringList("三通"));                                //3.1.3 三通衰减
     item_pipe_atten = new QTreeWidgetItem(item_noise_atten,QStringList("直管"));                                //3.2 直管衰减
     item_elbow_atten = new QTreeWidgetItem(item_noise_atten,QStringList("弯头"));                                //3.3 弯头衰减
@@ -119,6 +121,7 @@ void ComponentsDB::setTable()
     addWidgetToPage(ui->page_other_send_terminal, new Widget_Other_send_terminal_inputTable(true));
     addWidgetToPage(ui->page_static_box, new Widget_static_box_inputTable(true));
     addWidgetToPage(ui->page_duct_with_multi_ranc, new Widget_Multi_ranc_inputTable(true));
+    addWidgetToPage(ui->page_diffuser_branch, new Widget_Diffuser_branch_inputTable(true));
     addWidgetToPage(ui->page_tee, new Widget_Tee_inputTable(true));
     addWidgetToPage(ui->page_pipe, new Widget_Pipe_inputTable(true));
     addWidgetToPage(ui->page_elbow, new Widget_Elbow_inputTable(true));
@@ -190,6 +193,10 @@ void ComponentsDB::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QT
     else if(current == item_duct_with_multi_ranc)         //风道多分支
     {
         ui->stackedWidget->setCurrentWidget(ui->page_duct_with_multi_ranc);
+    }
+    else if(current == item_diffuser_branch)         //风道多分支
+    {
+        ui->stackedWidget->setCurrentWidget(ui->page_diffuser_branch);
     }
     else if(current == item_tee_atten)         //三通
     {

@@ -174,6 +174,11 @@ void Widget_fan_inputTable::onOutput()
 
 }
 
+void Widget_fan_inputTable::onGenerateTemplate()
+{
+
+}
+
 void Widget_fan_inputTable::handleConfirmation(QSet<QString> uuids)
 {
     for(auto& uuid : uuids)

@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QTreeWidget>
 #include "roomDefineForm/dialog_add_room.h"
+#include <mutex>
 
 
 namespace Ui {
@@ -22,6 +23,7 @@ public:
     void switchOuter();
     void setSystemItem(QTreeWidgetItem *item);
     void setTableRowDuctNum(QString room_or_outer_number, QString ductNum);
+    void setTableHeaderColWidth();
 
 signals:
     void roomAdd(QTreeWidgetItem* item,QString name,int num, QString jiaban, QString limit);
@@ -45,7 +47,12 @@ private:
     Dialog_add_room *dialog;
     QString system_name;
     QString mvz_name;
+    std::once_flag _flag; // 静态 once_flag 变量
     bool isOuter{false};
+
+    // QWidget interface
+protected:
+    void showEvent(QShowEvent *event) override;
 };
 
 #endif // ROOM_DEFINE_WIDGET_H

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1183</width>
-    <height>658</height>
+    <height>661</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -227,6 +227,47 @@ color: white;
           <property name="spacing">
            <number>6</number>
           </property>
+          <item>
+           <widget class="QPushButton" name="pushButton_generate_template">
+            <property name="minimumSize">
+             <size>
+              <width>81</width>
+              <height>31</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>81</width>
+              <height>31</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>黑体</family>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton
+{
+	color:#ffffff; /*文字颜色*/
+    background-color: #00ACB9;/*背景色*/
+    border-radius:0px; /*边框倒角*/
+	border: 1px solid #000000;
+}
+
+
+QPushButton:hover 
+{
+background-color: rgb(0,142,153);
+color: white;
+}</string>
+            </property>
+            <property name="text">
+             <string>生成模板</string>
+            </property>
+           </widget>
+          </item>
           <item>
            <widget class="QPushButton" name="pushButton_output">
             <property name="minimumSize">

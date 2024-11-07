@@ -6,6 +6,8 @@
 #include <QMenu>
 #include "roomCal/roomcaltable.h"
 
+class Room_cal_total_widget;
+
 namespace Ui {
 class Room_cal_baseWidget;
 }
@@ -28,9 +30,13 @@ public:
     void setDuctNum(QString ductNum);   //设置主风管数量
     void setMVZName(QString MVZName);   //设置主竖区名
     bool getIsOuter();
+    void loadDataToCalTotalTable();
+    void handle_duct_number_revise(QString origin_number, QString new_number);
 
     void switch_outer_cal();
     QString title_label="主风管";
+
+    void set_cal_total_page(Room_cal_total_widget *newCal_total_page);
 
 private slots:
     void handleAddBefore(int index);
@@ -53,7 +59,11 @@ private:
     QString _MVZName;
     bool _isOuter;
     bool isAllCollapsed;
+    Room_cal_total_widget* _cal_total_page;
     void handleMenuAction(QString actionName);
+    double getDuctAWeightNoise();
+    double getDuctTestPointDistance();
+    bool _loadDataMod;
 };
 
 #endif // ROOM_CAL_BASEWIDGET_H

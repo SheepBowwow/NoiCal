@@ -22,10 +22,13 @@ public slots:
     void onRevise() override;
     void onInput() override;
     void onOutput() override;
+    void onGenerateTemplate() override;
     void handleConfirmation(QSet<QString> uuids) override;
 
 private:
     void mergeCells(int startRow);
+
+    void addComponent(QSharedPointer<Aircondition>& component);
 
     // Widget_base_inputTable interface
 public:

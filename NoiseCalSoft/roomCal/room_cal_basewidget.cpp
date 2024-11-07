@@ -6,6 +6,7 @@
 #include <QDebug>
 #include "globle_var.h"
 #include "databasemanager.h"
+#include "room_cal_total_widget.h"
 #include <QMessageBox>
 
 ///@test
@@ -17,6 +18,8 @@ Room_cal_baseWidget::Room_cal_baseWidget(QWidget *parent, bool named) :
     isNamed(named),
     _isOuter(false),
     _systemName(QLatin1String("")),
+    _cal_total_page(nullptr),
+    _loadDataMod(false),
     ui(new Ui::Room_cal_baseWidget)
 {   
     ui->setupUi(this);
@@ -74,6 +77,20 @@ void Room_cal_baseWidget::handleMenuAction(QString actionName)
             }
         }
     }
+}
+
+double Room_cal_baseWidget::getDuctAWeightNoise()
+{
+    QVBoxLayout *layout = qobject_cast<QVBoxLayout *>(ui->scrollArea->widget()->layout());
+    RoomCalTable *lastTable = qobject_cast<RoomCalTable *>(layout->itemAt(layout->count() - 1)->widget());
+    return lastTable->getDuctAWidgetNoise();
+}
+
+double Room_cal_baseWidget::getDuctTestPointDistance()
+{
+    QVBoxLayout *layout = qobject_cast<QVBoxLayout *>(ui->scrollArea->widget()->layout());
+    RoomCalTable *lastTable = qobject_cast<RoomCalTable *>(layout->itemAt(layout->count() - 1)->widget());
+    return lastTable->getDuctTestPointDistance();
 }
 
 void Room_cal_baseWidget::updateAllTables()
@@ -348,31 +365,32 @@ void Room_cal_baseWidget::on_pushButton_confirm_clicked()
         }
     }
     if(noiseTableNum != 1 || roomCalTableNum != 1) {
-        QMessageBox::warning(nullptr, "警告", "请检查噪音源表格和声压级计算表格是否存在,或存在多个");
+        if(!_loadDataMod)
+            QMessageBox::warning(nullptr, "警告", "请检查噪音源表格和声压级计算表格是否存在,或存在多个");
         return;
     }
 
-    //先去除之前的数据再插入新的数据
-    DatabaseManager::getInstance().removeDuctCalTableFromDatabase(_isOuter, _ductNumber);
-    for (int i = 0; i < layout->count(); ++i) {
-        RoomCalTable* table = static_cast<RoomCalTable*>(layout->itemAt(i)->widget());
-        RoomCalTableType type = RoomCalTableType::UNDEFINED;
-        QJsonObject jsonObj;
-        table->createTableInfoJsonObj(type, jsonObj);
-        if(jsonObj.isEmpty() || type == RoomCalTableType::UNDEFINED) {
-            qDebug() << "json is empty or setType faile";
-            return;
+    _cal_total_page->addDuctToTable(_ductNumber, getDuctTestPointDistance(), getDuctAWeightNoise());
+
+    if(!_loadDataMod)
+    {
+        //先去除之前的数据再插入新的数据
+        DatabaseManager::getInstance().removeDuctCalTableFromDatabase(_isOuter, _ductNumber);
+        for (int i = 0; i < layout->count(); ++i) {
+            RoomCalTable* table = static_cast<RoomCalTable*>(layout->itemAt(i)->widget());
+            RoomCalTableType type = RoomCalTableType::UNDEFINED;
+            QJsonObject jsonObj;
+            table->createTableInfoJsonObj(type, jsonObj);
+            if(jsonObj.isEmpty() || type == RoomCalTableType::UNDEFINED) {
+                qDebug() << "json is empty or setType faile";
+                return;
+            }
+            QString jsonString = QString(QJsonDocument(jsonObj).toJson());
+            if(!DatabaseManager::getInstance().addDuctCalTableToDatabase(_isOuter, i, roomCalTableTypeToString(type),
+                                                                          jsonString, _MVZName, _systemName, _roomOrOuterNumber, _ductNumber)) {
+                return;
+            }
         }
-        QString jsonString = QString(QJsonDocument(jsonObj).toJson());
-
-        //TODO 调用数据库保存数据
-        //需要保存的数据 序号, 类型, json数据, 主风管id
-        if(!DatabaseManager::getInstance().addDuctCalTableToDatabase(_isOuter, i, roomCalTableTypeToString(type),
-                                                                      jsonString, _MVZName, _systemName, _roomOrOuterNumber, _ductNumber)) {
-            return;
-        }
-
-
     }
 
     ///TODO 将典型房间的添加改一下
@@ -380,6 +398,11 @@ void Room_cal_baseWidget::on_pushButton_confirm_clicked()
     // {
     //     classicRoomMap[roomName] = widgets;
     // }
+}
+
+void Room_cal_baseWidget::set_cal_total_page(Room_cal_total_widget *newCal_total_page)
+{
+    _cal_total_page = newCal_total_page;
 }
 
 void Room_cal_baseWidget::setInfo(QString MVZName, QString deck, QString roomOrOuterNumber, QString noiseLimit, QString ductNum)
@@ -423,6 +446,18 @@ void Room_cal_baseWidget::setMVZName(QString MVZName)
 bool Room_cal_baseWidget::getIsOuter()
 {
     return _isOuter;
+}
+
+void Room_cal_baseWidget::loadDataToCalTotalTable()
+{
+    _loadDataMod = true;
+    on_pushButton_confirm_clicked();
+    _loadDataMod = false;
+}
+
+void Room_cal_baseWidget::handle_duct_number_revise(QString origin_number, QString new_number)
+{
+    _cal_total_page->handle_duct_number_revise(origin_number, new_number);
 }
 
 void Room_cal_baseWidget::switch_outer_cal()

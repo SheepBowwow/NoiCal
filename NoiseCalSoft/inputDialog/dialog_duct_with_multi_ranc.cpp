@@ -56,7 +56,7 @@ void Dialog_duct_with_multi_ranc::on_pushButton_confirm_clicked()
 
     for(size_t i = 0; i < atten.size(); i++)
     {
-        atten[i] = atten_lineEdits[i]->text();
+        atten[i] = atten_lineEdits[i]->text().trimmed();
     }
 
     /**点击确认前检查，数据是否填完整**/
@@ -66,13 +66,13 @@ void Dialog_duct_with_multi_ranc::on_pushButton_confirm_clicked()
     }
 
     this->component = new Multi_ranc(
-                ui->lineEdit_model->text(),
-                ui->lineEdit_brand->text(),
+                ui->lineEdit_model->text().trimmed(),
+                ui->lineEdit_brand->text().trimmed(),
                 table_id,
                 UUID,
                 ui->comboBox_data_source->currentText(),
-                ui->lineEdit_q1->text(),
-                ui->lineEdit_q->text(),
+                ui->lineEdit_q1->text().trimmed(),
+                ui->lineEdit_q->text().trimmed(),
                 atten);
     this->accept(); // 关闭对话框
 }

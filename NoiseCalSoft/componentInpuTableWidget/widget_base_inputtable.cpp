@@ -17,6 +17,11 @@ Widget_base_inputTable::Widget_base_inputTable(bool inComponentDB, QWidget *pare
     // 假设horizontalLayout包含一个按钮和一个弹簧
     ui->pushButton_confirm->hide(); // 隐藏按钮
 
+    if(!inComponentDB) {
+        ui->pushButton_input->hide();
+        ui->pushButton_generate_template->hide();
+    }
+
     // 假设horizontalLayout是在verticalLayout中
     // 我们需要找到并移除弹簧，因为弹簧不能直接隐藏
     for (int i = 0; i < ui->horizontalLayout_confirm->count(); ++i) {
@@ -38,6 +43,7 @@ Widget_base_inputTable::Widget_base_inputTable(bool inComponentDB, QWidget *pare
     connect(ui->pushButton_confirm, &QPushButton::clicked, this, &Widget_base_inputTable::onConfirm);
     connect(ui->pushButton_selectAll, &QPushButton::clicked, this, &Widget_base_inputTable::onSelectAll);
     connect(ui->pushButton_unSelectAll, &QPushButton::clicked, this, &Widget_base_inputTable::onUnSelectAll);
+    connect(ui->pushButton_generate_template, &QPushButton::clicked, this, &Widget_base_inputTable::onGenerateTemplate);
 }
 
 Widget_base_inputTable::~Widget_base_inputTable()
