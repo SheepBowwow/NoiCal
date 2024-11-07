@@ -51,4 +51,9 @@ compile_commands.json
 # QtCreator local machine specific files for imported projects
 *creator.user*
 
+# Qt Qml Cache
 *_qmlcache.qrc
+
+# Ignore the contents of the build folder, but keep the folder itself
+/build/*
+!/build
