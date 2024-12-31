@@ -17,17 +17,16 @@ class Room_cal_baseWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit Room_cal_baseWidget(QWidget *parent = nullptr, bool named = false);
+    explicit Room_cal_baseWidget(QWidget *parent = nullptr, bool isOuter = false, bool named = false);
     ~Room_cal_baseWidget();
     bool isNamed;
     void addMenuAction(QString itemName);
     void addTable(int index, QString type = "");
     void addTable(const RoomCalTableType &type, const QJsonObject &jsonObj);
-    void setInfo(QString MVZName, QString deck, QString roomOrOuterNumber, QString noiseLimit, QString ductNum);    //设置基本信息，主竖区、甲板、房间编号、噪声限值、主风管数量
+    void setInfo(QString MVZName, QString deck, QString roomOrOuterNumber);    //设置基本信息，主竖区、甲板、房间编号、噪声限值、主风管数量
     void setDuctNumber(QString number); //设置主风管编号
     void setAirVolume(QString airVolume); //设置风量
     void setSystemName(QString systemName); //设置系统名
-    void setDuctNum(QString ductNum);   //设置主风管数量
     void setMVZName(QString MVZName);   //设置主竖区名
     bool getIsOuter();
     void loadDataToCalTotalTable();

@@ -28,6 +28,9 @@ public slots:
     // Widget_base_inputTable interface
 public:
     void loadComponentToTable() override;
+
+private:
+    void addComponent(QSharedPointer<Reducer>& component);
 };
 
 #endif // WIDGET_REDUCER_INPUTTABLE_H

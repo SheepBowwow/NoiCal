@@ -32,6 +32,9 @@ public slots:
     // Widget_base_inputTable interface
 public:
     void loadComponentToTable() override;
+
+private:
+    void addComponent(QSharedPointer<Silencer>& component);
 };
 
 #endif // WIDGET_SILENCER_INPUTTABLE_H

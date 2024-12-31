@@ -30,6 +30,9 @@ public slots:
     // Widget_base_inputTable interface
 public:
     void loadComponentToTable() override;
+
+private:
+    void addComponent(QSharedPointer<StaticBox_grille>& component);
 };
 
 #endif // WIDGET_STATIC_BOX_GRILLE_INPUTTABLE_H

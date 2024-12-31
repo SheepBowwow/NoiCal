@@ -41,6 +41,27 @@
         <file>image/room_noFurniture.png</file>
         <file>image/room_open.png</file>
         <file>image/room_rain.png</file>
+        <file>componentImportTemplate/air_diff.xlsx</file>
+        <file>componentImportTemplate/aircondition_doublefan.xlsx</file>
+        <file>componentImportTemplate/aricondition_singlefan.xlsx</file>
+        <file>componentImportTemplate/circular_damper.xlsx</file>
+        <file>componentImportTemplate/diffuser_branch.xlsx</file>
+        <file>componentImportTemplate/disp_vent_terminal.xlsx</file>
+        <file>componentImportTemplate/elbow.xlsx</file>
+        <file>componentImportTemplate/fan.xlsx</file>
+        <file>componentImportTemplate/fanCoil.xlsx</file>
+        <file>componentImportTemplate/multi_ranc.xlsx</file>
+        <file>componentImportTemplate/other_send_terminal.xlsx</file>
+        <file>componentImportTemplate/pipe.xlsx</file>
+        <file>componentImportTemplate/pump.xlsx</file>
+        <file>componentImportTemplate/rect_damper.xlsx</file>
+        <file>componentImportTemplate/reducer.xlsx</file>
+        <file>componentImportTemplate/send.xlsx</file>
+        <file>componentImportTemplate/silencer.xlsx</file>
+        <file>componentImportTemplate/static_box.xlsx</file>
+        <file>componentImportTemplate/static_box_grille.xlsx</file>
+        <file>componentImportTemplate/tee.xlsx</file>
+        <file>componentImportTemplate/vav_terminal.xlsx</file>
     </qresource>
     <qresource prefix="/qt/etc">
         <file>qt.conf</file>
@@ -51,5 +72,24 @@
     </qresource>
     <qresource prefix="/componentImportTemplate">
         <file>componentImportTemplate/aircondition_doublefan.xlsx</file>
+        <file>componentImportTemplate/air_diff.xlsx</file>
+        <file>componentImportTemplate/aricondition_singlefan.xlsx</file>
+        <file>componentImportTemplate/circular_damper.xlsx</file>
+        <file>componentImportTemplate/diffuser_branch.xlsx</file>
+        <file>componentImportTemplate/disp_vent_terminal.xlsx</file>
+        <file>componentImportTemplate/elbow.xlsx</file>
+        <file>componentImportTemplate/fan.xlsx</file>
+        <file>componentImportTemplate/multi_ranc.xlsx</file>
+        <file>componentImportTemplate/other_send_terminal.xlsx</file>
+        <file>componentImportTemplate/pipe.xlsx</file>
+        <file>componentImportTemplate/pump.xlsx</file>
+        <file>componentImportTemplate/rect_damper.xlsx</file>
+        <file>componentImportTemplate/reducer.xlsx</file>
+        <file>componentImportTemplate/send.xlsx</file>
+        <file>componentImportTemplate/silencer.xlsx</file>
+        <file>componentImportTemplate/static_box.xlsx</file>
+        <file>componentImportTemplate/static_box_grille.xlsx</file>
+        <file>componentImportTemplate/tee.xlsx</file>
+        <file>componentImportTemplate/vav_terminal.xlsx</file>
     </qresource>
 </RCC>

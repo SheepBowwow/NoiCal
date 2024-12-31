@@ -36,7 +36,8 @@ void ComponentManager::addComponent(const QSharedPointer<ComponentBase> &compone
         }
     }
 
-    emit componentsUpdate(component->typeName());
+    if(!inComponentDB)
+        emit componentsUpdate(component->typeName());
 }
 
 /**
@@ -73,7 +74,8 @@ bool ComponentManager::removeComponent(const QString &uuid, bool inComponentDB, 
 
     if(!update)
         DatabaseManager::getInstance().delComponentInDatabase(typeName, uuid, inComponentDB);
-    emit componentsUpdate(typeName);
+    if(!inComponentDB)
+        emit componentsUpdate(component->typeName());
     return true;
 }
 
@@ -119,7 +121,8 @@ bool ComponentManager::updateComponent(const QString &uuid, const QSharedPointer
     } else {
         qDebug() << "Failed to update" << newComponent->typeName() << "to database.";
     }
-    emit componentsUpdate(newComponent->typeName());
+    if(!inComponentDB)
+        emit componentsUpdate(newComponent->typeName());
     return true;
 }
 

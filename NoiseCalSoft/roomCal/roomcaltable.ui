@@ -45,7 +45,7 @@ font-size: 14px;
 }</string>
    </property>
    <property name="currentIndex">
-    <number>25</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="page_fan">
     <property name="minimumSize">
@@ -20269,8 +20269,14 @@ border-bottom:none;</string>
 border-right:2px solid black;
 border-bottom:none;</string>
           </property>
+          <property name="text">
+           <string>-</string>
+          </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -20634,8 +20640,14 @@ border-bottom:none;
 border-right:2px solid black;
 border-bottom:none;</string>
           </property>
+          <property name="text">
+           <string>-</string>
+          </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>

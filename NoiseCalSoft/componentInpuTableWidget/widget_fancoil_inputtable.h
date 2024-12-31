@@ -39,6 +39,9 @@ public:
     // QWidget interface
 protected:
     void resizeEvent(QResizeEvent *event) override;
+
+private:
+    void addComponent(QSharedPointer<FanCoil>& component);
 };
 
 #endif // WIDGET_FANCOIL_INPUTTABLE_H

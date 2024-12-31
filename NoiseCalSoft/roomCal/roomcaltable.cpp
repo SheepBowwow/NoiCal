@@ -17,10 +17,11 @@
 #include <QJsonObject>
 #define Pi 3.14159265358979323846
 
-RoomCalTable::RoomCalTable(QString systemName, QWidget *parent, QString currentTableType) :
+RoomCalTable::RoomCalTable(QString systemName, QWidget *parent, bool isOuter, QString currentTableType) :
     QWidget(parent),
     systemName(systemName),
     isCollapsed(false),
+    _isOuter(isOuter),
     ui(new Ui::RoomCalTable)
 {   
     ui->setupUi(this);
@@ -372,8 +373,11 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
         ui->comboBox_fan_number->blockSignals(true);
         ui->comboBox_fan_number->clear();
 
-        QList<QString> list =
-            RoomCalInfoManager::getInstance().getCompUUIDsFromSystemList(systemName, noise_src_component::FAN);
+        QList<QString> list;
+        if(!_isOuter)
+            list = RoomCalInfoManager::getInstance().getCompUUIDsFromSystemList(systemName, noise_src_component::FAN);
+        else
+            list = RoomCalInfoManager::getInstance().getCompUUIDsFromMVZsSystemList(systemName, noise_src_component::FAN);
         for(auto& uuid : list)
         {
             auto component = ComponentManager::getInstance().findComponent(false, uuid);
@@ -402,8 +406,11 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
                                    ui->lineEdit_aircondition_total };
 
         if(arg1 == "空调器(单风机)"){
-            QList<QString> list_single =
-                RoomCalInfoManager::getInstance().getCompUUIDsFromSystemList(systemName, noise_src_component::AIRCONDITION_SINGLE);
+            QList<QString> list_single;
+            if(!_isOuter)
+                list_single = RoomCalInfoManager::getInstance().getCompUUIDsFromSystemList(systemName, noise_src_component::AIRCONDITION_SINGLE);
+            else
+                list_single = RoomCalInfoManager::getInstance().getCompUUIDsFromMVZsSystemList(systemName, noise_src_component::AIRCONDITION_SINGLE);
             for(auto& uuid : list_single)
             {
                 auto component = ComponentManager::getInstance().findComponent(false, uuid);
@@ -416,8 +423,11 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
             }
         }
         else if(arg1 == "空调器(双风机)") {
-            QList<QString> list_double =
-                RoomCalInfoManager::getInstance().getCompUUIDsFromSystemList(systemName,noise_src_component::AIRCONDITION_DOUBLE);
+            QList<QString> list_double;
+            if(!_isOuter)
+                list_double = RoomCalInfoManager::getInstance().getCompUUIDsFromSystemList(systemName,noise_src_component::AIRCONDITION_DOUBLE);
+            else
+                list_double = RoomCalInfoManager::getInstance().getCompUUIDsFromMVZsSystemList(systemName,noise_src_component::AIRCONDITION_DOUBLE);
             for(auto& uuid : list_double)
             {
                 auto component = ComponentManager::getInstance().findComponent(false, uuid);
@@ -439,8 +449,11 @@ void RoomCalTable::on_comboBox_unit_name_currentTextChanged(const QString &arg1)
     {
         ui->comboBox_fanCoil_model->blockSignals(true);
         ui->comboBox_fanCoil_model->clear();
-        QList<QString> list =
-            RoomCalInfoManager::getInstance().getCompUUIDsFromSystemList(systemName, noise_src_component::FANCOIL);
+        QList<QString> list;
+        if(!_isOuter)
+            list = RoomCalInfoManager::getInstance().getCompUUIDsFromSystemList(systemName, noise_src_component::FANCOIL);
+        else
+            list = RoomCalInfoManager::getInstance().getCompUUIDsFromMVZsSystemList(systemName, noise_src_component::FANCOIL);
         for(auto& uuid : list)
         {
             auto component = ComponentManager::getInstance().findComponent(false, uuid);
@@ -3374,8 +3387,8 @@ void RoomCalTable::calVariations()
             if(ui->lineEdit_pipe_length && ui->lineEdit_pipe_length->text() != "")
             {
                 double each_atten = each_atten_lineEdits[i]->text().toDouble();
-                sum_atten_lineEdits[i]->setText(QString::number(each_atten * ui->lineEdit_pipe_length->text().toInt(),'f',2));
-                variations[i] = QString::number(-each_atten * ui->lineEdit_pipe_length->text().toInt(),'f',2);
+                sum_atten_lineEdits[i]->setText(QString::number(each_atten * ui->lineEdit_pipe_length->text().toDouble(),'f',2));
+                variations[i] = QString::number(-each_atten * ui->lineEdit_pipe_length->text().toDouble(),'f',2);
             }
             else if(ui->lineEdit_elbow_count && ui->lineEdit_elbow_count->text() != "")
             {

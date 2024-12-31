@@ -862,6 +862,14 @@ typedef struct Rect_damper : Valve
         : Valve(model, brand, table_id, data_source, UUID, angle, air_volume, noi),
           length(length), width(width), size(length + "x" + width) {}
 
+    // 使用Valve的全部参数构造函数初始化基类部分
+    Rect_damper(const QString& model, const QString& brand, const QString& table_id,
+                const QString& UUID, const QString& data_source,
+                const QString& angle, const QString& air_volume,
+                const array<QString, 9>& noi, const QString& size)
+        : Valve(model, brand, table_id, data_source, UUID, angle, air_volume, noi),
+        length(length), width(width), size(size) {}
+
     // 使用Valve的不包含噪音数组的构造函数初始化基类部分
     Rect_damper(const QString& model, const QString& brand, const QString& table_id,
                 const QString& UUID, const QString& data_source,
@@ -944,15 +952,14 @@ typedef struct AirDiff : Terminal
         this->diffuser_brand = record.value("diffuser_brand").toString();
     }
 
-    AirDiff(const QString& model, const QString& brand, const QString& table_id,
-            const QString& UUID, const QString& noi_data_source,
+    AirDiff(const QString& table_id, const QString& UUID, const QString& noi_data_source,
             const QString& atten_data_source, const QString& refl_data_source,
             const QString& shape, const QString& terminal_size,
             const array<QString, 9>& noi, const array<QString, 8>& atten,
             const array<QString, 8>& refl,
             const QString& air_distributor_model, const QString& air_distributor_brand,
             const QString& diffuser_model, const QString& diffuser_brand)
-        : Terminal(model, brand, table_id, UUID, noi_data_source, atten_data_source, refl_data_source,
+        : Terminal("", "", table_id, UUID, noi_data_source, atten_data_source, refl_data_source,
                    shape, terminal_size, noi, atten, refl),
           air_distributor_model(air_distributor_model),
           air_distributor_brand(air_distributor_brand),
@@ -1234,7 +1241,7 @@ typedef struct StaticBox_grille : Terminal
         this->grille_brand = record.value("grille_brand").toString();
     }
 
-    StaticBox_grille(const QString& model, const QString& brand, const QString& table_id,
+    StaticBox_grille(const QString& table_id,
                      const QString& UUID, const QString& noi_data_source,
                      const QString& atten_data_source, const QString& refl_data_source,
                      const QString& shape, const QString& size,
@@ -1242,7 +1249,7 @@ typedef struct StaticBox_grille : Terminal
                      const array<QString, 8>& refl,
                      const QString& staticBox_model, const QString& staticBox_brand,
                      const QString& grille_model, const QString& grille_brand)
-        : Terminal(model, brand, table_id, UUID, noi_data_source, atten_data_source, refl_data_source,
+        : Terminal("", "", table_id, UUID, noi_data_source, atten_data_source, refl_data_source,
                    shape, size, noi, atten, refl),
           staticBox_model(staticBox_model), staticBox_brand(staticBox_brand),
           grille_model(grille_model), grille_brand(grille_brand)

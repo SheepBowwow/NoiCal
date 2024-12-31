@@ -1,6 +1,7 @@
 #include "widget_reducer_inputtable.h"
 #include "ui_widget_base_inputtable.h"
 #include "inputDialog/dialog_reducer.h"
+#include "office/excelengine.h"
 
 Widget_Reducer_inputTable::Widget_Reducer_inputTable(bool inComponentDB, QWidget *parent)
     :Widget_base_inputTable(inComponentDB, parent)
@@ -40,15 +41,7 @@ void Widget_Reducer_inputTable::onAdd()
                 component = QSharedPointer<Reducer>(rawPointer);
             else
                 return;
-            component->table_id = QString::number(tableWidget->rowCount() + 1);
-            if (component != nullptr) {
-                auto lists = component->getComponentDataAsStringList(inComponentDB);
-
-                // 使用通用函数添加行
-                addRowToTable(tableWidget, lists[0]);
-
-                componentManager.addComponent(component, inComponentDB);
-            }
+            addComponent(component);
         }
     }
     else
@@ -86,17 +79,51 @@ void Widget_Reducer_inputTable::onRevise()
 
 void Widget_Reducer_inputTable::onInput()
 {
+    if(!inComponentDB)
+        return;
+    QStringList dataList;
+    ExcelEngine* excelEngine = new ExcelEngine(this);
+    excelEngine->importData(dataList);
 
+    for(auto& data: dataList) {
+        qDebug() << data;
+    }
+    for(int row = 0; row < dataList.size(); row++) {
+        QStringList parsedData = dataList[row].split(","); // 用于存储每一行的分割结果
+
+        QString model = parsedData[1];
+        QString brand = parsedData[2];
+        QString table_id = "-1";
+        QString UUID = "";
+        QString data_source = parsedData[14];
+        QString reducer_type = parsedData[3];
+        QString reducer_before_size = parsedData[4];
+        QString reducer_after_size = parsedData[5];
+
+        array<QString, 8> atten = {""};
+
+        for(int i = 0; i < 8; i++) {
+            atten[i] = parsedData[i][i + 6];
+        }
+
+        Reducer* componentRaw = new Reducer(model, brand, table_id, UUID, data_source, reducer_type,
+                                            reducer_before_size, reducer_after_size, atten);
+
+        QSharedPointer<Reducer> component = QSharedPointer<Reducer>(componentRaw);
+        addComponent(component);
+    }
 }
 
 void Widget_Reducer_inputTable::onOutput()
 {
-    
+    ExcelEngine* excelEngine = new ExcelEngine(this);
+    excelEngine->deriveExecl(ui->tableWidget, "变径");
 }
 
 void Widget_Reducer_inputTable::onGenerateTemplate()
 {
-
+    getTemplate(":/componentImportTemplate/componentImportTemplate/reducer.xlsx",
+                "变径导入模板");
 }
 
 void Widget_Reducer_inputTable::loadComponentToTable()
@@ -109,6 +136,20 @@ void Widget_Reducer_inputTable::loadComponentToTable()
                 addRowToTable(ui->tableWidget, list);
             }
         }
+    }
+}
+
+void Widget_Reducer_inputTable::addComponent(QSharedPointer<Reducer> &component)
+{
+    QTableWidget* tableWidget = ui->tableWidget;
+    component->table_id = QString::number(tableWidget->rowCount() + 1);
+    if (component != nullptr) {
+        auto lists = component->getComponentDataAsStringList(inComponentDB);
+
+        // 使用通用函数添加行
+        addRowToTable(tableWidget, lists[0]);
+
+        componentManager.addComponent(component, inComponentDB);
     }
 }
 

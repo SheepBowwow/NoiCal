@@ -32,6 +32,9 @@ public slots:
     // Widget_base_inputTable interface
 public:
     void loadComponentToTable() override;
+
+private:
+    void addComponent(QSharedPointer<PumpSend>& component);
 };
 
 #endif // WIDGET_PUMP_SEND_INPUTTABLE_H

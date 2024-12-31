@@ -1,6 +1,7 @@
 #include "widget_diffuser_branch_inputtable.h"
 #include "ui_widget_base_inputtable.h"
 #include "inputDialog/dialog_diffuser_branch.h"
+#include "office/excelengine.h"
 
 Widget_Diffuser_branch_inputTable::Widget_Diffuser_branch_inputTable(bool inComponentDB, QWidget* parent)
     :Widget_base_inputTable(inComponentDB, parent)
@@ -39,15 +40,7 @@ void Widget_Diffuser_branch_inputTable::onAdd()
                 component = QSharedPointer<Diffuser_branch>(rawPointer);
             else
                 return;
-            component->table_id = QString::number(tableWidget->rowCount() + 1);
-            if (component != nullptr) {
-                auto lists = component->getComponentDataAsStringList(inComponentDB);
-
-                // 使用通用函数添加行
-                addRowToTable(tableWidget, lists[0]);
-
-                componentManager.addComponent(component, inComponentDB);
-            }
+            addComponent(component);
         }
     }
     else
@@ -85,17 +78,50 @@ void Widget_Diffuser_branch_inputTable::onRevise()
 
 void Widget_Diffuser_branch_inputTable::onInput()
 {
+    if(!inComponentDB)
+        return;
+    QStringList dataList;
+    ExcelEngine* excelEngine = new ExcelEngine(this);
+    excelEngine->importData(dataList);
 
+    for(auto& data: dataList) {
+        qDebug() << data;
+    }
+    for(int row = 0; row < dataList.size(); row++) {
+        QStringList parsedData = dataList[row].split(","); // 用于存储每一行的分割结果
+
+        QString model = parsedData[1];
+        QString brand = parsedData[2];
+        QString table_id = "-1";
+        QString UUID = "";
+        QString data_source = parsedData[13];
+        QString q = parsedData[3];
+        QString q1 = parsedData[4];
+
+        array<QString, 8> atten = {""};
+
+        for(int i = 0; i < 8; i++) {
+            atten[i] = parsedData[i][i + 5];
+        }
+
+        Diffuser_branch* componentRaw = new Diffuser_branch(model, brand, table_id, UUID, data_source, q1, q,
+                                                            atten);
+
+        QSharedPointer<Diffuser_branch> component = QSharedPointer<Diffuser_branch>(componentRaw);
+        addComponent(component);
+    }
 }
 
 void Widget_Diffuser_branch_inputTable::onOutput()
 {
-
+    ExcelEngine* excelEngine = new ExcelEngine(this);
+    excelEngine->deriveExecl(ui->tableWidget, "空调器风口分支");
 }
 
 void Widget_Diffuser_branch_inputTable::onGenerateTemplate()
 {
-
+    getTemplate(":/componentImportTemplate/componentImportTemplate/diffuser_branch.xlsx",
+                "空调器风口分支导入模板");
 }
 
 void Widget_Diffuser_branch_inputTable::loadComponentToTable()
@@ -108,6 +134,20 @@ void Widget_Diffuser_branch_inputTable::loadComponentToTable()
                 addRowToTable(ui->tableWidget, list);
             }
         }
+    }
+}
+
+void Widget_Diffuser_branch_inputTable::addComponent(QSharedPointer<Diffuser_branch> &component)
+{
+    QTableWidget* tableWidget = ui->tableWidget;
+    component->table_id = QString::number(tableWidget->rowCount() + 1);
+    if (component != nullptr) {
+        auto lists = component->getComponentDataAsStringList(inComponentDB);
+
+        // 使用通用函数添加行
+        addRowToTable(tableWidget, lists[0]);
+
+        componentManager.addComponent(component, inComponentDB);
     }
 }
 

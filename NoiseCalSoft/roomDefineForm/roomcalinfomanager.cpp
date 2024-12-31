@@ -417,6 +417,36 @@ QString RoomCalInfoManager::getSystemListCompUUID(QString type, QString number, 
     return compUUID;
 }
 
+QList<QString> RoomCalInfoManager::getCompUUIDsFromMVZsSystemList(const QString &systemName, const QString &compType)
+{
+    QString MVZName;
+    // 遍历 systems 中的每个 MVZ
+    for (auto it = systems.begin(); it != systems.end(); ++it) {
+        // 遍历该 MVZ 下的所有系统
+        for (auto& system : it.value()) {
+            // 如果找到了与 systemName 匹配的系统
+            if (system->name == systemName) {
+                // 返回该系统所属的 MVZName
+                MVZName = it.key();  // it.key() 就是该 MVZ 的名称
+                break;
+            }
+        }
+    }
+
+    if(MVZName.isEmpty()) {
+        return QList<QString>();
+    }
+
+    QList<QString> compUUIDs;
+    for(auto& system : systems[MVZName]) {
+        QList<QString> sysCompUUIDs = getCompUUIDsFromSystemList(system->name, compType);
+        for(auto& compUUID : sysCompUUIDs) {
+            compUUIDs.append(compUUID);
+        }
+    }
+    return compUUIDs;
+}
+
 QList<QString> RoomCalInfoManager::getCompUUIDsFromSystemList(const QString &systemName, const QString &compType)
 {
     QList<QString> compUUIDs;
@@ -1180,9 +1210,7 @@ void RoomCalInfoManager::updateRoom(QString systemName, RoomDBData& old_room_dat
         for(auto& duct : ductsToMove) {
             duct->ductCalPage->setInfo(duct->ductItem->parent()->parent()->parent()->text(0),
                                        new_room_data.deck,
-                                       new_room_data.number,
-                                       QString::number(new_room_data.limit),
-                                       QString::number(new_room_data.ductNum));
+                                       new_room_data.number);
         }
         ducts.remove(old_room_data.number);
         ducts.insert(new_room_data.number, ductsToMove);
@@ -1344,9 +1372,7 @@ void RoomCalInfoManager::updateOuter(QString MVZName, OuterDBData &old_outer_dat
         for(auto& duct : ductsToMove) {
             duct->ductCalPage->setInfo(duct->ductItem->parent()->parent()->parent()->text(0),
                                        new_outer_data.deck,
-                                       new_outer_data.number,
-                                       QString::number(new_outer_data.limit),
-                                       QString::number(new_outer_data.ductNum));
+                                       new_outer_data.number);
         }
         ducts.remove(old_outer_data.number);
         ducts.insert(new_outer_data.number, ductsToMove);
@@ -1427,10 +1453,10 @@ void RoomCalInfoManager::createDuct(bool isOuter, QString room_or_outer_number, 
         }
         outer->outerItem->insertChild(insertIndex, ductItem);
 
-        Room_cal_baseWidget* ductCalPage = new Room_cal_baseWidget(nullptr, isNamed);   //风管计算界面
+        Room_cal_baseWidget* ductCalPage = new Room_cal_baseWidget(nullptr, isOuter, isNamed);   //风管计算界面
         ductCalPage->set_cal_total_page(outer->calTotalPage);
         Duct* duct = new Duct{ductNumber, airVolume, ductItem, ductCalPage};
-        ductCalPage->setInfo(duct->getParentMVZName(), outer->deck, outer->number, QString::number(outer->limit), QString::number(outer->ductNum));
+        ductCalPage->setInfo(duct->getParentMVZName(), outer->deck, outer->number);
         ductCalPage->setSystemName(outer->outerItem->parent()->text(0));
         if(isNamed) ductCalPage->setDuctNumber(duct->number);
         stackedWidget->addWidget(ductCalPage);
@@ -1467,15 +1493,6 @@ void RoomCalInfoManager::createDuct(bool isOuter, QString room_or_outer_number, 
         if(!loadDataMode)
             DatabaseManager::getInstance().addDuctToDatabase(isOuter, const_cast<const Duct*&>(duct));
 
-        //修改ductCalPage的主风管数量
-        for(auto& findDuct : ducts[outer->number]) {
-            findDuct->ductCalPage->setDuctNum(QString::number(outer->ductNum));  //给主风管计算界面设置主风管数量
-        }
-
-        if(outer->calTotalPage)
-        {
-            outer->calTotalPage->setDuctNum(QString::number(outer->ductNum));
-        }
         if(outer->convergeBeforePage && outer->convergeAfterPage)
         {
             outer->convergeBeforePage->setDuctNum(QString::number(outer->ductNum));
@@ -1547,10 +1564,10 @@ void RoomCalInfoManager::createDuct(bool isOuter, QString room_or_outer_number, 
         int insertIndex = qMax(0, n - 1);
         room->roomItem->insertChild(insertIndex, ductItem);
 
-        Room_cal_baseWidget* ductCalPage = new Room_cal_baseWidget(nullptr, isNamed);
+        Room_cal_baseWidget* ductCalPage = new Room_cal_baseWidget(nullptr, isOuter, isNamed);
         ductCalPage->set_cal_total_page(room->calTotalPage);
         Duct* duct = new Duct{ductNumber, airVolume, ductItem, ductCalPage};
-        ductCalPage->setInfo(room->roomItem->parent()->parent()->text(0), room->deck, room->number, QString::number(room->limit), QString::number(room->ductNum));
+        ductCalPage->setInfo(room->roomItem->parent()->parent()->text(0), room->deck, room->number);
         ductCalPage->setSystemName(room->roomItem->parent()->text(0));
         if(isNamed)
             ductCalPage->setDuctNumber(duct->number);
@@ -1585,11 +1602,6 @@ void RoomCalInfoManager::createDuct(bool isOuter, QString room_or_outer_number, 
 
         if(!loadDataMode)
             DatabaseManager::getInstance().addDuctToDatabase(isOuter, const_cast<const Duct*&>(duct));
-
-        // 修改ductCalPage的主风管数量
-        for (auto& findDuct : ducts[room->number]) {
-            findDuct->ductCalPage->setDuctNum(QString::number(room->ductNum));
-        }
 
         room->calTotalPage->setDuctNum(QString::number(room->ductNum));
 
@@ -1726,11 +1738,6 @@ void RoomCalInfoManager::deleteDuct(QString number)
     duct->ductCalPage = nullptr;
     delete duct;
     duct = nullptr;
-
-    //修改ductCalPage的主风管数量
-    for(auto& findDuct : ducts[room_or_outer_number]) {
-        findDuct->ductCalPage->setDuctNum(QString::number(ductNum));  //给主风管计算界面设置主风管数量
-    }
 
     //如果没有风管了, 就移除汇总界面
     if(ducts[room_or_outer_number].size() == 0) {

@@ -1,6 +1,7 @@
 #include "widget_vav_terminal_inputtable.h"
 #include "ui_widget_base_inputtable.h"
 #include "inputDialog/dialog_vav_terminal.h"
+#include "office/excelengine.h"
 
 Widget_VAV_terminal_inputTable::Widget_VAV_terminal_inputTable(bool inComponentDB, QWidget *parent) :
     Widget_base_inputTable(inComponentDB, parent)
@@ -49,17 +50,7 @@ void Widget_VAV_terminal_inputTable::onAdd()
                 component = QSharedPointer<VAV_terminal>(rawPointer);
             else
                 return;
-
-            component->table_id = QString::number(tableWidget->rowCount() + 1);
-            if (component != nullptr) {
-
-                auto lists = component->getComponentDataAsStringList(inComponentDB);
-
-                // 使用通用函数添加行
-                addRowToTable(tableWidget, lists[0]);
-
-                componentManager.addComponent(component, inComponentDB);
-            }
+            addComponent(component);
         }
     }
     else
@@ -97,17 +88,50 @@ void Widget_VAV_terminal_inputTable::onRevise()
 
 void Widget_VAV_terminal_inputTable::onInput()
 {
+    if(!inComponentDB)
+        return;
+    QStringList dataList;
+    ExcelEngine* excelEngine = new ExcelEngine(this);
+    excelEngine->importData(dataList);
 
+    for(auto& data: dataList) {
+        qDebug() << data;
+    }
+    for(int row = 0; row < dataList.size(); row++) {
+        QStringList parsedData = dataList[row].split(","); // 用于存储每一行的分割结果
+
+        QString model = parsedData[1];
+        QString brand = parsedData[2];
+        QString table_id = "-1";
+        QString UUID = "";
+        QString data_source = parsedData[14];
+        QString air_volume = parsedData[4];
+        QString angle = parsedData[3];
+
+        array<QString, 9> noi = {""};
+
+        for(int i = 0; i < 9; i++) {
+            noi[i] = parsedData[i][i + 5];
+        }
+
+        VAV_terminal* componentRaw = new VAV_terminal(model, brand, table_id, UUID, data_source, angle,
+                                                    air_volume, noi);
+
+        QSharedPointer<VAV_terminal> component = QSharedPointer<VAV_terminal>(componentRaw);
+        addComponent(component);
+    }
 }
 
 void Widget_VAV_terminal_inputTable::onOutput()
 {
-    
+    ExcelEngine* excelEngine = new ExcelEngine(this);
+    excelEngine->deriveExecl(ui->tableWidget, "变风量末端");
 }
 
 void Widget_VAV_terminal_inputTable::onGenerateTemplate()
 {
-
+    getTemplate(":/componentImportTemplate/componentImportTemplate/vav_terminal.xlsx",
+                "变风量末端导入模板");
 }
 
 void Widget_VAV_terminal_inputTable::loadComponentToTable()
@@ -120,6 +144,21 @@ void Widget_VAV_terminal_inputTable::loadComponentToTable()
                 addRowToTable(ui->tableWidget, list);
             }
         }
+    }
+}
+
+void Widget_VAV_terminal_inputTable::addComponent(QSharedPointer<VAV_terminal> &component)
+{
+    QTableWidget* tableWidget = ui->tableWidget;
+    component->table_id = QString::number(tableWidget->rowCount() + 1);
+    if (component != nullptr) {
+
+        auto lists = component->getComponentDataAsStringList(inComponentDB);
+
+        // 使用通用函数添加行
+        addRowToTable(tableWidget, lists[0]);
+
+        componentManager.addComponent(component, inComponentDB);
     }
 }
 

@@ -1,6 +1,7 @@
 #include "widget_pipe_inputtable.h"
 #include "ui_widget_base_inputtable.h"
 #include "inputDialog/dialog_pipe.h"
+#include "office/excelengine.h"
 
 Widget_Pipe_inputTable::Widget_Pipe_inputTable(bool inComponentDB, QWidget* parent)
     :Widget_base_inputTable(inComponentDB, parent)
@@ -41,15 +42,7 @@ void Widget_Pipe_inputTable::onAdd()
                 component = QSharedPointer<Pipe>(rawPointer);
             else
                 return;
-            component->table_id = QString::number(tableWidget->rowCount() + 1);
-            if (component != nullptr) {
-                auto lists = component->getComponentDataAsStringList();
-
-                // 使用通用函数添加行
-                addRowToTable(tableWidget, lists[0]);
-
-                componentManager.addComponent(component, inComponentDB);
-            }
+            addComponent(component);
         }
     }
     else
@@ -86,17 +79,49 @@ void Widget_Pipe_inputTable::onRevise()
 
 void Widget_Pipe_inputTable::onInput()
 {
+    if(!inComponentDB)
+        return;
+    QStringList dataList;
+    ExcelEngine* excelEngine = new ExcelEngine(this);
+    excelEngine->importData(dataList);
 
+    for(auto& data: dataList) {
+        qDebug() << data;
+    }
+    for(int row = 0; row < dataList.size(); row++) {
+        QStringList parsedData = dataList[row].split(","); // 用于存储每一行的分割结果
+
+        QString model = parsedData[1];
+        QString brand = parsedData[2];
+        QString table_id = "-1";
+        QString UUID = "";
+        QString data_source = parsedData[13];
+        QString pipe_shape = parsedData[3];
+        QString size = parsedData[4];
+
+        array<QString, 8> atten = {""};
+
+        for(int i = 0; i < 8; i++) {
+            atten[i] = parsedData[i][i + 5];
+        }
+
+        Pipe* componentRaw = new Pipe(model, brand, table_id, UUID, data_source, pipe_shape, size, atten);
+
+        QSharedPointer<Pipe> component = QSharedPointer<Pipe>(componentRaw);
+        addComponent(component);
+    }
 }
 
 void Widget_Pipe_inputTable::onOutput()
 {
-
+    ExcelEngine* excelEngine = new ExcelEngine(this);
+    excelEngine->deriveExecl(ui->tableWidget, "直管");
 }
 
 void Widget_Pipe_inputTable::onGenerateTemplate()
 {
-
+    getTemplate(":/componentImportTemplate/componentImportTemplate/pipe.xlsx",
+                "直管导入模板");
 }
 
 void Widget_Pipe_inputTable::loadComponentToTable()
@@ -109,6 +134,20 @@ void Widget_Pipe_inputTable::loadComponentToTable()
                 addRowToTable(ui->tableWidget, list);
             }
         }
+    }
+}
+
+void Widget_Pipe_inputTable::addComponent(QSharedPointer<Pipe> &component)
+{
+    QTableWidget* tableWidget = ui->tableWidget;
+    component->table_id = QString::number(tableWidget->rowCount() + 1);
+    if (component != nullptr) {
+        auto lists = component->getComponentDataAsStringList();
+
+        // 使用通用函数添加行
+        addRowToTable(tableWidget, lists[0]);
+
+        componentManager.addComponent(component, inComponentDB);
     }
 }
 

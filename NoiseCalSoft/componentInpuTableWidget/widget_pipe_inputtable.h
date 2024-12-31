@@ -29,6 +29,8 @@ public slots:
     // Widget_base_inputTable interface
 public:
     void loadComponentToTable() override;
+private:
+    void addComponent(QSharedPointer<Pipe>& component);
 };
 
 #endif // WIDGET_PIPE_INPUTTABLE_H

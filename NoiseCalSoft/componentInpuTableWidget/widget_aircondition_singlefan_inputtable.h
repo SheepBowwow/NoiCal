@@ -28,6 +28,9 @@ public slots:
     // Widget_base_inputTable interface
 public:
     void loadComponentToTable() override;
+
+private:
+    void addComponent(QSharedPointer<Aircondition>& component);
 };
 
 #endif // WIDGET_AIRCONDITION_SINGLEFAN_INPUTTABLE_H

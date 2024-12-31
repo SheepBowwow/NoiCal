@@ -29,6 +29,9 @@ public slots:
     // Widget_base_inputTable interface
 public:
     void loadComponentToTable() override;
+
+private:
+    void addComponent(QSharedPointer<Tee>& component);
 };
 
 #endif // WIDGET_TEE_INPUTTABLE_H

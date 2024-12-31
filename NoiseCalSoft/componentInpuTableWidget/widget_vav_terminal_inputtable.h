@@ -29,6 +29,9 @@ public slots:
     // Widget_base_inputTable interface
 public:
     void loadComponentToTable() override;
+
+private:
+    void addComponent(QSharedPointer<VAV_terminal>& component);
 };
 
 #endif // WIDGET_VAV_TERMINAL_INPUTTABLE_H

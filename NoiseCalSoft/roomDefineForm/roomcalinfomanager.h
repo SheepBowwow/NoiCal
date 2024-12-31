@@ -212,6 +212,7 @@ public:
     void loadDataFromDB();
 
     QString getSystemListCompUUID(QString type, QString number, QString model);   //获得系统清单部件的UUID
+    QList<QString> getCompUUIDsFromMVZsSystemList(const QString& systemName, const QString& compType);
     QList<QString> getCompUUIDsFromSystemList(const QString& systemName, const QString& compType);
 
     void createMVZ(QString name);   //创建主竖区

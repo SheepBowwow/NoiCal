@@ -1,6 +1,7 @@
 #include "widget_fancoil_inputtable.h"
 #include "ui_widget_base_inputtable.h"
 #include "inputDialog/dialog_fancoil.h"
+#include "office/excelengine.h"
 
 Widget_fanCoil_inputTable::Widget_fanCoil_inputTable(bool inComponentDB, QWidget *parent) :
     Widget_base_inputTable(inComponentDB, parent)
@@ -92,6 +93,24 @@ void Widget_fanCoil_inputTable::resizeEvent(QResizeEvent *event)
     qDebug() << ui->tableWidget->width();
 }
 
+void Widget_fanCoil_inputTable::addComponent(QSharedPointer<FanCoil> &component)
+{
+    QTableWidget* tableWidget = ui->tableWidget;
+    component->table_id = QString::number(tableWidget->rowCount() / 2 + 1);
+    if (component != nullptr) {
+
+        auto lists = component->getComponentDataAsStringList(inComponentDB);
+
+        // 使用通用函数添加行
+        addRowToTable(tableWidget, lists[0]);
+        addRowToTable(tableWidget, lists[1]);
+
+        componentManager.addComponent(component, inComponentDB);
+
+        mergeColumnsByNames(ui->tableWidget, mergeCols, 2);
+    }
+}
+
 void Widget_fanCoil_inputTable::onAdd()
 {
     if(inComponentDB)
@@ -106,20 +125,7 @@ void Widget_fanCoil_inputTable::onAdd()
                 component = QSharedPointer<FanCoil>(rawPointer);
             else
                 return;
-
-            component->table_id = QString::number(tableWidget->rowCount() / 2 + 1);
-            if (component != nullptr) {
-
-                auto lists = component->getComponentDataAsStringList(inComponentDB);
-
-                // 使用通用函数添加行
-                addRowToTable(tableWidget, lists[0]);
-                addRowToTable(tableWidget, lists[1]);
-
-                componentManager.addComponent(component, inComponentDB);
-
-                mergeColumnsByNames(ui->tableWidget, mergeCols, 2);
-            }
+            addComponent(component);
         }
     }
     else
@@ -154,17 +160,57 @@ void Widget_fanCoil_inputTable::onRevise()
 
 void Widget_fanCoil_inputTable::onInput()
 {
+    if(!inComponentDB)
+        return;
+    QStringList dataList;
+    ExcelEngine* excelEngine = new ExcelEngine(this);
+    excelEngine->importData(dataList);
 
+    for(auto& data: dataList) {
+        qDebug() << data;
+    }
+    for(int rowGroup = 0; rowGroup < dataList.size(); rowGroup += 2) {
+        QList<QStringList> parsedData; // 用于存储每一行的分割结果
+        for(int row = rowGroup; row < rowGroup + 2; row++) {
+            QStringList fields = dataList[row].split(","); // 按逗号分割每一行
+            parsedData.append(fields);
+        }
+        QString model = parsedData[0][2];
+        QString brand = parsedData[0][3];
+        QString table_id = "-1";
+        QString UUID = "";
+        QString data_source = parsedData[0][16];
+        QString air_volume = parsedData[0][4];
+        QString static_pressure = parsedData[0][5];
+        QString type = parsedData[0][1];
+        array<QString, 9> noi_in = {""};
+        array<QString, 9> noi_out = {""};
+
+        QVector<array<QString, 9>*> arrayList = {&noi_in, &noi_out};
+        for(int i = 0; i < 2; i++) {
+            for(int j = 0; j < 9; j++) {
+                (*arrayList[i])[j] = parsedData[i][j + 7];
+            }
+        }
+
+        FanCoil* componentRaw = new FanCoil(model, brand, table_id, UUID, data_source, air_volume,
+                                    static_pressure, type, noi_in, noi_out);
+
+        QSharedPointer<FanCoil> component = QSharedPointer<FanCoil>(componentRaw);
+        addComponent(component);
+    }
 }
 
 void Widget_fanCoil_inputTable::onOutput()
 {
-
+    ExcelEngine* excelEngine = new ExcelEngine(this);
+    excelEngine->deriveExecl(ui->tableWidget, "风机盘管");
 }
 
 void Widget_fanCoil_inputTable::onGenerateTemplate()
 {
-
+    getTemplate(":/componentImportTemplate/componentImportTemplate/fanCoil.xlsx",
+                "风机盘管导入模板");
 }
 
 void Widget_fanCoil_inputTable::handleConfirmation(QSet<QString> uuids)

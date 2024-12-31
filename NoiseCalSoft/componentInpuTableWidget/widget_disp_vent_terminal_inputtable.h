@@ -29,6 +29,9 @@ public slots:
     // Widget_base_inputTable interface
 public:
     void loadComponentToTable() override;
+
+private:
+    void addComponent(QSharedPointer<Disp_vent_terminal>& component);
 };
 
 #endif // WIDGET_DISP_VENT_TERMINAL_INPUTTABLE_H

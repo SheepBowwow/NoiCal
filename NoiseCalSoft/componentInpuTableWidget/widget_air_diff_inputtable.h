@@ -37,6 +37,8 @@ public:
 
 private:
     QDialog* dialog;
+
+    void addComponent(QSharedPointer<AirDiff>& component);
 };
 
 #endif // WIDGET_AIR_DIFF_INPUTTABLE_H

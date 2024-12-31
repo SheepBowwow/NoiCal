@@ -29,6 +29,9 @@ public slots:
     // Widget_base_inputTable interface
 public:
     void loadComponentToTable() override;
+
+private:
+    void addComponent(QSharedPointer<Multi_ranc>& component);
 };
 
 #endif // WIDGET_MULTI_RANC_INPUTTABLE_H

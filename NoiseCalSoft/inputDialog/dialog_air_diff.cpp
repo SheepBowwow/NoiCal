@@ -182,8 +182,6 @@ void Dialog_air_diff::on_pushButton_confirm_clicked()
 
 
     this->component = new AirDiff(
-                "",
-                "",
                 table_id,
                 UUID,
                 ui->comboBox_noi_data_source->currentText().trimmed(),

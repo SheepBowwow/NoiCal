@@ -29,6 +29,9 @@ public slots:
     // Widget_base_inputTable interface
 public:
     void loadComponentToTable() override;
+
+private:
+    void addComponent(QSharedPointer<Static_box>& component);
 };
 
 #endif // WIDGET_STATIC_BOX_INPUTTABLE_H

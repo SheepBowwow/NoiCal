@@ -31,6 +31,9 @@ private:
     // Widget_base_inputTable interface
 public:
     void loadComponentToTable() override;
+
+private:
+    void addComponent(QSharedPointer<Other_send_terminal>& component);
 };
 
 #endif // WIDGET_OTHER_SEND_TERMINAL_INPUTTABLE_H

@@ -33,6 +33,7 @@ private:
     Ui::Room_cal_total_widget *ui;
 
     void initTableWidget();
+    void calTotalNoise();
 };
 
 #endif // ROOM_CAL_TOTAL_WIDGET_H

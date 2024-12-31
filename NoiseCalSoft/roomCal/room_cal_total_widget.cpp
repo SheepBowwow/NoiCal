@@ -1,5 +1,6 @@
 #include "room_cal_total_widget.h"
 #include "ui_room_cal_total_widget.h"
+#include <math.h>
 
 Room_cal_total_widget::Room_cal_total_widget(QWidget *parent) :
     QWidget(parent),
@@ -161,4 +162,16 @@ void Room_cal_total_widget::initTableWidget()
 
     // 强制更新表格布局
     ui->tableWidget->update();
+}
+
+void Room_cal_total_widget::calTotalNoise()
+{
+    double sum = 0;
+    for(int i = 0; i < ui->tableWidget->rowCount(); i++) {
+        double ductNoise = ui->tableWidget->item(i, 2)->text().toDouble();
+        ductNoise = pow(10, ductNoise/10.0);
+        sum += ductNoise;
+    }
+    double totalNoise = 10 * log10(sum);
+    ui->lineEdit_totalNoise->setText(QString::number(totalNoise));
 }

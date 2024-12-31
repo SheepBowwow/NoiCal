@@ -2,8 +2,6 @@
 #include "ui_widget_base_inputtable.h"
 #include "inputDialog/dialog_aircondition.h"
 #include "office/excelengine.h"
-#include <QFileDialog>
-#include <QResource>
 
 Widget_aircondition_doubleFan_inputTable::Widget_aircondition_doubleFan_inputTable(bool inComponentDB, QWidget *parent) :
     Widget_base_inputTable(inComponentDB, parent)
@@ -254,6 +252,8 @@ void Widget_aircondition_doubleFan_inputTable::onRevise()
             QSharedPointer<Aircondition> component = componentManager.findComponent(inComponentDB, uuid).dynamicCast<Aircondition>();
 
             Dialog_aircondition *dialog = new Dialog_aircondition(this, row, 2, *component);
+            if(inComponentDB)
+                dialog->switchToCompontDB(inComponentDB);
             if (dialog->exec() == QDialog::Accepted) {
                 QSharedPointer<Aircondition> newComponent = QSharedPointer<Aircondition>(static_cast<Aircondition*>(dialog->getComponent()));
 
@@ -342,21 +342,7 @@ void Widget_aircondition_doubleFan_inputTable::onOutput()
 
 void Widget_aircondition_doubleFan_inputTable::onGenerateTemplate()
 {
-    // 打开文件对话框获取保存路径
-    QString savePath = QFileDialog::getSaveFileName(this, "保存文件", "空调器(双风机)导入模板", "Excel文件 (*.xlsx)");
-
-    if (!savePath.isEmpty()) {
-        // 读取qrc中的文件内容
-        QResource resource(":/componentImportTemplate/componentImportTemplate/aircondition_doublefan.xlsx");
-        if (resource.isValid()) {
-            QFile file(savePath);
-            if (file.open(QIODevice::WriteOnly)) {
-                // 将QResource的数据转换为QByteArray
-                QByteArray data(reinterpret_cast<const char*>(resource.data()), resource.size());
-                file.write(data);  // 写入数据
-                file.close();
-            }
-        }
-    }
+    getTemplate(":/componentImportTemplate/componentImportTemplate/aircondition_doublefan.xlsx",
+                "空调器(双风机)导入模板");
 }
 

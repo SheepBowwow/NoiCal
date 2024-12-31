@@ -12,11 +12,11 @@
 ///@test
 #include <QJsonObject>
 
-Room_cal_baseWidget::Room_cal_baseWidget(QWidget *parent, bool named) :
+Room_cal_baseWidget::Room_cal_baseWidget(QWidget *parent, bool isOuter, bool named) :
     QWidget(parent),
     isAllCollapsed(false),
     isNamed(named),
-    _isOuter(false),
+    _isOuter(isOuter),
     _systemName(QLatin1String("")),
     _cal_total_page(nullptr),
     _loadDataMod(false),
@@ -114,7 +114,7 @@ void Room_cal_baseWidget::addTable(int index, QString type)
         return;
     }
 
-    RoomCalTable *newRoomCalTable = new RoomCalTable(_systemName, nullptr, type);
+    RoomCalTable *newRoomCalTable = new RoomCalTable(_systemName, nullptr, _isOuter, type);
     //绑定信号与槽，当有数据改变时，更新所有表格
     connect(newRoomCalTable, &RoomCalTable::tableChanged, this, &Room_cal_baseWidget::updateAllTables);
     if (!newRoomCalTable->isValid) {
@@ -166,7 +166,7 @@ void Room_cal_baseWidget::addTable(const RoomCalTableType &type, const QJsonObje
         return;
     }
 
-    RoomCalTable *newRoomCalTable = new RoomCalTable(_systemName, nullptr);
+    RoomCalTable *newRoomCalTable = new RoomCalTable(_systemName, nullptr, _isOuter);
 
     // 绑定信号与槽，当有数据改变时，更新所有表格
     connect(newRoomCalTable, &RoomCalTable::tableChanged, this, &Room_cal_baseWidget::updateAllTables);
@@ -405,13 +405,11 @@ void Room_cal_baseWidget::set_cal_total_page(Room_cal_total_widget *newCal_total
     _cal_total_page = newCal_total_page;
 }
 
-void Room_cal_baseWidget::setInfo(QString MVZName, QString deck, QString roomOrOuterNumber, QString noiseLimit, QString ductNum)
+void Room_cal_baseWidget::setInfo(QString MVZName, QString deck, QString roomOrOuterNumber)
 {
     ui->lineEdit_MVZName->setText(MVZName);
     ui->lineEdit_deck->setText(deck);
     ui->lineEdit_room_number->setText(roomOrOuterNumber);
-    ui->lineEdit_noise_limit->setText(noiseLimit);
-    ui->lineEdit_duct_num->setText(ductNum);
     _roomOrOuterNumber = roomOrOuterNumber;
     _MVZName = MVZName;
 }
@@ -430,11 +428,6 @@ void Room_cal_baseWidget::setAirVolume(QString airVolume)
 void Room_cal_baseWidget::setSystemName(QString systemName) //设置系统名
 {
     this->_systemName = systemName;
-}
-
-void Room_cal_baseWidget::setDuctNum(QString ductNum)
-{
-    ui->lineEdit_duct_num->setText(ductNum);
 }
 
 void Room_cal_baseWidget::setMVZName(QString MVZName)
@@ -464,6 +457,5 @@ void Room_cal_baseWidget::switch_outer_cal()
 {
     title_label="噪音源支管";
     ui->label_cg1->setText("室外编号:");
-    ui->label_cg2->setText("噪音源支管数量:");
     _isOuter = true;
 }

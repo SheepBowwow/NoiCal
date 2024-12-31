@@ -28,6 +28,9 @@ public slots:
     // Widget_base_inputTable interface
 public:
     void loadComponentToTable() override;
+
+private:
+    void addComponent(QSharedPointer<Fan>& component);
 };
 
 #endif // WIDGET_FAN_INPUTTABLE_H

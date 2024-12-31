@@ -28,6 +28,9 @@ public slots:
     // Widget_base_inputTable interface
 public:
     void loadComponentToTable() override;
+
+private:
+    void addComponent(QSharedPointer<Circular_damper>& component);
 };
 
 #endif // WIDGET_CIRCULAR_DAMPER_INPUTTABLE_H

@@ -27,6 +27,9 @@ public slots:
     // Widget_base_inputTable interface
 public:
     void loadComponentToTable() override;
+
+private:
+    void addComponent(QSharedPointer<Diffuser_branch>& component);
 };
 
 #endif // WIDGET_DIFFUSER_BRANCH_INPUTTABLE_H

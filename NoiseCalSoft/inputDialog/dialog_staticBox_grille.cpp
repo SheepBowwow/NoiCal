@@ -152,8 +152,6 @@ void Dialog_staticBox_grille::on_pushButton_confirm_clicked()
     }
 
     this->component = new StaticBox_grille(
-                "",
-                "",
                 table_id,
                 UUID,
                 ui->comboBox_noi_data_source->currentText(),

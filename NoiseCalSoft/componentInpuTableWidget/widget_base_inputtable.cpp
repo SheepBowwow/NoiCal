@@ -6,6 +6,8 @@
 #include <QQueue>
 #include <QComboBox>
 #include <QLabel>
+#include <QFileDialog>
+#include <QResource>
 
 Widget_base_inputTable::Widget_base_inputTable(bool inComponentDB, QWidget *parent) :
     QWidget(parent),
@@ -153,6 +155,26 @@ void Widget_base_inputTable::filterByBrandModel(int brandIndex, int modelIndex, 
             item->setFlags(Qt::ItemIsEditable);
             item->setBackground(QBrush(Qt::lightGray));
             item->setData(Qt::ForegroundRole, QColor(70, 70, 70));
+        }
+    }
+}
+
+void Widget_base_inputTable::getTemplate(const QString &resourcePath, const QString &saveFileName)
+{
+    // 打开文件对话框获取保存路径
+    QString savePath = QFileDialog::getSaveFileName(nullptr, "保存文件", saveFileName, "Excel文件 (*.xlsx)");
+
+    if (!savePath.isEmpty()) {
+        // 读取qrc中的文件内容
+        QResource resource(resourcePath);
+        if (resource.isValid()) {
+            QFile file(savePath);
+            if (file.open(QIODevice::WriteOnly)) {
+                // 将QResource的数据转换为QByteArray
+                QByteArray data(reinterpret_cast<const char*>(resource.data()), resource.size());
+                file.write(data);  // 写入数据
+                file.close();
+            }
         }
     }
 }

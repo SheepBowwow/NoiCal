@@ -2,6 +2,7 @@
 #include "ui_widget_base_inputtable.h"
 #include "inputDialog/dialog_silencer.h"
 #include <QQueue>
+#include "office/excelengine.h"
 
 Widget_Silencer_inputTable::Widget_Silencer_inputTable(bool inComponentDB, const QString& type, QWidget *parent) :
     Widget_base_inputTable(inComponentDB, parent),
@@ -46,15 +47,7 @@ void Widget_Silencer_inputTable::onAdd()
                 component = QSharedPointer<Silencer>(rawPointer);
             else
                 return;
-            component->table_id = QString::number(tableWidget->rowCount() + 1);
-            if (component != nullptr) {
-                auto lists = component->getComponentDataAsStringList(inComponentDB);
-
-                // 使用通用函数添加行
-                addRowToTable(tableWidget, lists[0]);
-
-                componentManager.addComponent(component, inComponentDB);
-            }
+            addComponent(component);
         }
     }
     else
@@ -91,17 +84,47 @@ void Widget_Silencer_inputTable::onRevise()
 
 void Widget_Silencer_inputTable::onInput()
 {
+    if(!inComponentDB)
+        return;
+    QStringList dataList;
+    ExcelEngine* excelEngine = new ExcelEngine(this);
+    excelEngine->importData(dataList);
 
+    for(auto& data: dataList) {
+        qDebug() << data;
+    }
+    for(int row = 0; row < dataList.size(); row++) {
+        QStringList parsedData = dataList[row].split(","); // 用于存储每一行的分割结果
+
+        QString model = parsedData[1];
+        QString brand = parsedData[2];
+        QString table_id = "-1";
+        QString UUID = "";
+        QString data_source = parsedData[11];
+
+        array<QString, 8> atten = {""};
+
+        for(int i = 0; i < 8; i++) {
+            atten[i] = parsedData[i][i + 3];
+        }
+
+        Silencer* componentRaw = new Silencer(model, brand, table_id, UUID, data_source, silencer_type, atten);
+
+        QSharedPointer<Silencer> component = QSharedPointer<Silencer>(componentRaw);
+        addComponent(component);
+    }
 }
 
 void Widget_Silencer_inputTable::onOutput()
 {
-
+    ExcelEngine* excelEngine = new ExcelEngine(this);
+    excelEngine->deriveExecl(ui->tableWidget, silencer_type);
 }
 
 void Widget_Silencer_inputTable::onGenerateTemplate()
 {
-
+    getTemplate(":/componentImportTemplate/componentImportTemplate/silencer.xlsx",
+                silencer_type + "导入模板");
 }
 
 void Widget_Silencer_inputTable::loadComponentToTable()
@@ -118,6 +141,20 @@ void Widget_Silencer_inputTable::loadComponentToTable()
                 addRowToTable(tableWidget, list);
             }
         }
+    }
+}
+
+void Widget_Silencer_inputTable::addComponent(QSharedPointer<Silencer> &component)
+{
+    QTableWidget* tableWidget = ui->tableWidget;
+    component->table_id = QString::number(tableWidget->rowCount() + 1);
+    if (component != nullptr) {
+        auto lists = component->getComponentDataAsStringList(inComponentDB);
+
+        // 使用通用函数添加行
+        addRowToTable(tableWidget, lists[0]);
+
+        componentManager.addComponent(component, inComponentDB);
     }
 }
 

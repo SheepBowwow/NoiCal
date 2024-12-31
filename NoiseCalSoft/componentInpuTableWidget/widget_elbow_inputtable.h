@@ -29,6 +29,9 @@ public slots:
     // Widget_base_inputTable interface
 public:
     void loadComponentToTable() override;
+
+private:
+    void addComponent(QSharedPointer<Elbow>& component);
 };
 
 #endif // WIDGET_ELBOW_INPUTTABLE_H

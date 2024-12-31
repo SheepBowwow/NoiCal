@@ -27,6 +27,9 @@ public slots:
     // Widget_base_inputTable interface
 public:
     void loadComponentToTable() override;
+
+private:
+    void addComponent(QSharedPointer<Rect_damper>& component);
 };
 
 #endif // WIDGET_RECT_DAMPER_INPUTTABLE_H

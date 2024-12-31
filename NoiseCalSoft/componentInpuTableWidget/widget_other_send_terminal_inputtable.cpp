@@ -1,11 +1,12 @@
 #include "widget_other_send_terminal_inputtable.h"
 #include "ui_widget_base_inputtable.h"
 #include "inputDialog/dialog_other_send_terminal.h"
+#include "office/excelengine.h"
 
 Widget_Other_send_terminal_inputTable::Widget_Other_send_terminal_inputTable(bool inComponentDB, QWidget *parent)
     : Widget_base_inputTable(inComponentDB, parent)
 {
-    setTitle("其他通风末端");
+    setTitle("其他送风末端");
     mergeRowCount = 3;
     //连接槽函数
     connect(ui->pushButton_add, &QPushButton::clicked, this, &Widget_Other_send_terminal_inputTable::onAdd);
@@ -54,18 +55,7 @@ void Widget_Other_send_terminal_inputTable::onAdd()
                 component = QSharedPointer<Other_send_terminal>(rawPointer);
             else
                 return;
-            component->table_id = QString::number(tableWidget->rowCount() / 3 + 1);
-            if (component != nullptr) {
-                auto lists = component->getComponentDataAsStringList();
-                // 使用通用函数添加行
-                addRowToTable(tableWidget, lists[0]);
-                addRowToTable(tableWidget, lists[1]);
-                addRowToTable(tableWidget, lists[2]);
-
-                mergeColumnsByNames(tableWidget, mergeCols, 3);
-
-                componentManager.addComponent(component, inComponentDB);
-            }
+            addComponent(component);
         }
     }
     else
@@ -100,17 +90,69 @@ void Widget_Other_send_terminal_inputTable::onRevise()
 
 void Widget_Other_send_terminal_inputTable::onInput()
 {
+    if(!inComponentDB)
+        return;
+    QStringList dataList;
+    ExcelEngine* excelEngine = new ExcelEngine(this);
+    excelEngine->importData(dataList);
 
+    for(auto& data: dataList) {
+        qDebug() << data;
+    }
+    for(int rowGroup = 0; rowGroup < dataList.size(); rowGroup += 3) {
+        QList<QStringList> parsedData; // 用于存储每一行的分割结果
+        for(int row = rowGroup; row < rowGroup + 3; row++) {
+            QStringList fields = dataList[row].split(","); // 按逗号分割每一行
+            parsedData.append(fields);
+        }
+        QString model = parsedData[0][1];
+        QString brand = parsedData[0][2];
+        QString shape = parsedData[0][3];
+        QString terminal_size = parsedData[0][4];
+        QString table_id = "-1";
+        QString UUID = "";
+        QString noi_data_source = parsedData[0][15];
+        QString atten_data_source = parsedData[1][15];
+        QString refl_data_source = parsedData[2][15];
+        QString remark = parsedData[0][16];
+
+        array<QString, 9> noi = {""};
+        array<QString, 8> atten = {""};
+        array<QString, 8> refl = {""};
+
+        QVector<array<QString, 8>*> arrayList = {&atten, &refl};
+
+        //噪音填充数据
+        for(int i = 0; i < 3; i++) {
+            for(int j = 0; j < 9; j++) {
+                noi[j] = parsedData[i][j + 6];
+            }
+        }
+        //衰减填充数据
+        for(int i = 0; i < 3; i++) {
+            for(int j = 0; j < 8; j++) {
+                (*arrayList[i])[j] = parsedData[i][j + 6];
+            }
+        }
+
+        Other_send_terminal* componentRaw = new Other_send_terminal(model, brand, table_id, UUID, noi_data_source, atten_data_source, refl_data_source,
+                                                                  shape, terminal_size, noi, atten, refl, remark);
+
+        QSharedPointer<Other_send_terminal> component = QSharedPointer<Other_send_terminal>(componentRaw);
+        addComponent(component);
+    }
 }
 
 void Widget_Other_send_terminal_inputTable::onOutput()
 {
-
+    ExcelEngine* excelEngine = new ExcelEngine(this);
+    excelEngine->deriveExecl(ui->tableWidget, "其他送风末端");
 }
 
 void Widget_Other_send_terminal_inputTable::onGenerateTemplate()
 {
-
+    getTemplate(":/componentImportTemplate/componentImportTemplate/other_send_terminal.xlsx",
+                "其他送风末端导入模板");
 }
 
 void Widget_Other_send_terminal_inputTable::loadComponentToTable()
@@ -132,6 +174,23 @@ void Widget_Other_send_terminal_inputTable::loadComponentToTable()
         }
     }
     mergeColumnsByNames(ui->tableWidget, mergeCols, 3);
+}
+
+void Widget_Other_send_terminal_inputTable::addComponent(QSharedPointer<Other_send_terminal> &component)
+{
+    QTableWidget* tableWidget = ui->tableWidget;
+    component->table_id = QString::number(tableWidget->rowCount() / 3 + 1);
+    if (component != nullptr) {
+        auto lists = component->getComponentDataAsStringList();
+        // 使用通用函数添加行
+        addRowToTable(tableWidget, lists[0]);
+        addRowToTable(tableWidget, lists[1]);
+        addRowToTable(tableWidget, lists[2]);
+
+        mergeColumnsByNames(tableWidget, mergeCols, 3);
+
+        componentManager.addComponent(component, inComponentDB);
+    }
 }
 
 void Widget_Other_send_terminal_inputTable::handleConfirmation(QSet<QString> uuids)

@@ -50,7 +50,7 @@ class RoomCalTable : public QWidget
     Q_OBJECT
 
 public:
-    explicit RoomCalTable(QString systemName, QWidget *parent = nullptr, QString currentTableType = "");
+    explicit RoomCalTable(QString systemName, QWidget *parent = nullptr, bool isOuter = false, QString currentTableType = "");
     ~RoomCalTable();
     int getIndexInLayout() const;
     void setCollapsed();
@@ -208,6 +208,7 @@ private:
     void registerCreateTableInfoJsonFuncMap();
     void registerCompUpdateFuncMap();
     void initRoomCalSlotFuncConn();
+    bool _isOuter;
 
 private:
     void clearPageControlVectors();

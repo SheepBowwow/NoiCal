@@ -1,6 +1,7 @@
 #include "widget_aircondition_singlefan_inputtable.h"
 #include "ui_widget_base_inputtable.h"
 #include "inputDialog/dialog_aircondition.h"
+#include "office/excelengine.h"
 
 Widget_aircondition_singleFan_inputTable::Widget_aircondition_singleFan_inputTable(bool inComponentDB, QWidget *parent) :
     Widget_base_inputTable(inComponentDB, parent)
@@ -78,19 +79,7 @@ void Widget_aircondition_singleFan_inputTable::onAdd()
             else
                 return;
 
-            component->table_id = QString::number(tableWidget->rowCount() / 2 + 1);
-            if (component != nullptr) {
-
-                auto lists = component->getComponentDataAsStringList(inComponentDB);
-
-                // 使用通用函数添加行
-                addRowToTable(tableWidget, lists[0]);
-                addRowToTable(tableWidget, lists[1]);
-
-                componentManager.addComponent(component, inComponentDB);
-
-                mergeColumnsByNames(ui->tableWidget, mergeCols, 2);
-            }
+            addComponent(component);
         }
     }
     else
@@ -121,6 +110,8 @@ void Widget_aircondition_singleFan_inputTable::onRevise()
             QSharedPointer<Aircondition> component = componentManager.findComponent(inComponentDB, uuid).dynamicCast<Aircondition>();
 
             Dialog_aircondition *dialog = new Dialog_aircondition(this, row, 1, *component);
+            if(inComponentDB)
+                dialog->switchToCompontDB(inComponentDB);
             if (dialog->exec() == QDialog::Accepted) {
                 QSharedPointer<Aircondition> newComponent = QSharedPointer<Aircondition>(static_cast<Aircondition*>(dialog->getComponent()));
 
@@ -146,12 +137,53 @@ void Widget_aircondition_singleFan_inputTable::onRevise()
 
 void Widget_aircondition_singleFan_inputTable::onInput()
 {
+    if(!inComponentDB)
+        return;
+    QStringList dataList;
+    ExcelEngine* excelEngine = new ExcelEngine(this);
+    excelEngine->importData(dataList);
 
+    for(auto& data: dataList) {
+        qDebug() << data;
+    }
+    for(int rowGroup = 0; rowGroup < dataList.size(); rowGroup += 2) {
+        QList<QStringList> parsedData; // 用于存储每一行的分割结果
+        for(int row = rowGroup; row < rowGroup + 2; row++) {
+            QStringList fields = dataList[row].split(","); // 按逗号分割每一行
+            parsedData.append(fields);
+        }
+        QString model = parsedData[0][1];
+        QString brand = parsedData[0][2];
+        QString table_id = "-1";
+        QString UUID = "";
+        QString data_source = parsedData[0][16];
+        int fan_counts = 1;
+        QString send_number = "-";
+        QString send_air_volume = parsedData[0][3];
+        QString send_static_pressure = parsedData[0][4];
+
+        array<QString, 9> noi_send_in = {""};
+        array<QString, 9> noi_send_out = {""};
+
+        QVector<array<QString, 9>*> arrayList = {&noi_send_in, &noi_send_out};
+        for(int i = 0; i < 2; i++) {
+            for(int j = 0; j < 9; j++) {
+                (*arrayList[i])[j] = parsedData[i][j + 7];
+            }
+        }
+
+        Aircondition* componentRaw = new Aircondition(model, brand, table_id, UUID, data_source, fan_counts, send_number,
+                                                      send_air_volume, send_static_pressure, noi_send_in, noi_send_out);
+
+        QSharedPointer<Aircondition> component = QSharedPointer<Aircondition>(componentRaw);
+        addComponent(component);
+    }
 }
 
 void Widget_aircondition_singleFan_inputTable::onOutput()
 {
-
+    ExcelEngine* excelEngine = new ExcelEngine(this);
+    excelEngine->deriveExecl(ui->tableWidget, "空调器(单风机)");
 }
 
 void Widget_aircondition_singleFan_inputTable::onGenerateTemplate()
@@ -226,4 +258,22 @@ void Widget_aircondition_singleFan_inputTable::loadComponentToTable()
         }
     }
     mergeColumnsByNames(ui->tableWidget, mergeCols, 2);
+}
+
+void Widget_aircondition_singleFan_inputTable::addComponent(QSharedPointer<Aircondition> &component)
+{
+    QTableWidget* tableWidget = ui->tableWidget;
+    component->table_id = QString::number(tableWidget->rowCount() / 2 + 1);
+    if (component != nullptr) {
+
+        auto lists = component->getComponentDataAsStringList(inComponentDB);
+
+        // 使用通用函数添加行
+        addRowToTable(tableWidget, lists[0]);
+        addRowToTable(tableWidget, lists[1]);
+
+        componentManager.addComponent(component, inComponentDB);
+
+        mergeColumnsByNames(ui->tableWidget, mergeCols, 2);
+    }
 }

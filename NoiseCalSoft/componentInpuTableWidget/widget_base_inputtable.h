@@ -82,6 +82,8 @@ protected:
     QVector<int> columnWidths; // 确保这是动态分配的或者足够大的静态数组
     QStringList headerText;
 
+    void getTemplate(const QString &resourcePath, const QString &saveFileName);
+
 
     // QWidget interface
 protected:
