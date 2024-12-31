@@ -54,6 +54,6 @@ compile_commands.json
 # Qt Qml Cache
 *_qmlcache.qrc
 
-# Ignore the contents of the build folder, but keep the folder itself
+# Ignore all content in the build folder
 /build/*
 !/build
